@@ -1,0 +1,53 @@
+modules = ["python-3.12", "web", "nodejs-20"]
+run = "python app.py"
+
+[nix]
+channel = "stable-24_05"
+packages = ["cargo", "ffmpeg-full", "glibcLocales", "imagemagickBig", "libGL", "libGLU", "libiconv", "libsndfile", "libxcrypt", "openssl", "pkg-config", "rustc", "tesseract", "xcodebuild", "zlib"]
+
+[env]
+PYTHONPATH = "$REPL_HOME"
+REPLIT_DISABLE_PACKAGE_LAYER = "1"
+REPLIT_KEEP_PACKAGE_DEV_DEPENDENCIES = "1"
+
+[deployment]
+run = ["sh", "-c", "python app.py"]
+deploymentTarget = "cloudrun"
+
+[workflows]
+runButton = "Run Application"
+
+[[workflows.workflow]]
+name = "Install Dependencies"
+author = 43118765
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install --upgrade pip setuptools wheel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install -r requirements.txt"
+
+[[workflows.workflow]]
+name = "Run Application"
+author = 43118765
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
+
+[[workflows.workflow]]
+name = "Restart Application"
+author = 43118765
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
+
+[[ports]]
+localPort = 5000
+externalPort = 80

@@ -1,0 +1,71 @@
+{
+  "session_id": "test_vision_session_1753359768",
+  "session_info": {
+    "session_id": "test_vision_session_1753359768",
+    "user_query": "Analyser l'interface utilisateur et l'UX de ce site web",
+    "navigation_goals": [
+      "extract_content",
+      "analyze_ui",
+      "capture_visuals"
+    ],
+    "created_at": "2025-07-24T14:22:48.837592",
+    "status": "closed",
+    "sites_visited": [],
+    "captures_taken": [],
+    "analyses_performed": [],
+    "total_content_extracted": 0,
+    "closed_at": "2025-07-24T14:22:48.839714",
+    "final_stats": {
+      "sites_visited": 0,
+      "total_captures": 0,
+      "total_analyses": 0,
+      "session_duration": 0.002122
+    }
+  },
+  "navigation_data": {
+    "type": "final_report",
+    "session_summary": {
+      "session_id": "test_vision_session_1753359768",
+      "user_query": "Analyser l'interface utilisateur et l'UX de ce site web",
+      "navigation_goals": [
+        "extract_content",
+        "analyze_ui",
+        "capture_visuals"
+      ],
+      "created_at": "2025-07-24T14:22:48.837592",
+      "status": "closed",
+      "sites_visited": [],
+      "captures_taken": [],
+      "analyses_performed": [],
+      "total_content_extracted": 0,
+      "closed_at": "2025-07-24T14:22:48.839714",
+      "final_stats": {
+        "sites_visited": 0,
+        "total_captures": 0,
+        "total_analyses": 0,
+        "session_duration": 0.002122
+      }
+    },
+    "final_stats": {
+      "sites_visited": 0,
+      "total_captures": 0,
+      "total_analyses": 0,
+      "session_duration": 0.002122
+    }
+  },
+  "system_stats": {
+    "sessions_created": 1,
+    "active_sessions": 1,
+    "sites_navigated": 0,
+    "captures_taken": 0,
+    "analyses_performed": 0,
+    "average_processing_time": 0.0,
+    "total_processing_time": 0,
+    "components_status": {
+      "visual_adapter": true,
+      "capture_system": true,
+      "web_navigator": true
+    }
+  },
+  "generated_at": "2025-07-24T14:22:48.839714"
+}

@@ -1,0 +1,19 @@
+services:
+  searx:
+    image: searxng/searxng:latest
+    container_name: ai_searx
+    ports:
+      - "8081:8080"  # Utiliser le port 8081 à la place
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8081
+      - SEARXNG_SECRET_KEY=ai_search_secret_key_2025
+    volumes:
+      - ./searx-config:/etc/searxng:rw
+      - ./searx-data:/var/lib/searxng:rw
+    restart: unless-stopped
+    networks:
+      - ai_network
+
+networks:
+  ai_network:
+    driver: bridge

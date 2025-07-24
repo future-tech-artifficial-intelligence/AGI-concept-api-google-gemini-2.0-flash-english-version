@@ -1,0 +1,19 @@
+{
+  "start_url": "https://fr.wikipedia.org/wiki/Intelligence_artificielle",
+  "navigation_depth": 3,
+  "total_content_extracted": 254461,
+  "navigation_strategy": "quality_first",
+  "session_id": "nav_1753356944",
+  "created_at": "2025-07-24T13:35:44.033711",
+  "visited_pages_count": 8,
+  "visited_urls": [
+    "https://fr.wikipedia.org/wiki/Intelligence_artificielle",
+    "https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard",
+    "https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Contact",
+    "https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Pages_sp%C3%A9ciales",
+    "https://fr.wikipedia.org/wiki/Sp%C3%A9cial:EventDetails",
+    "https://fr.wikipedia.org/w/index.php?title=Intelligence_artificielle&action=history",
+    "https://fr.wikipedia.org/w/index.php?title=Intelligence_artificielle&action=info",
+    "https://fr.wikipedia.org/wiki/Cat%C3%A9gorie:Article_%C3%A0_r%C3%A9f%C3%A9rence_n%C3%A9cessaire"
+  ]
+}

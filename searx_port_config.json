@@ -1,0 +1,6 @@
+{
+  "searx_port": 8080,
+  "compose_file": "docker-compose.searx-port-8080.yml",
+  "timestamp": 1753138738.0408335,
+  "url": "http://localhost:8080"
+}

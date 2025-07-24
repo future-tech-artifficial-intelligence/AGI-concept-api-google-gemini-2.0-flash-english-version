@@ -1,0 +1,57 @@
+# Requirements.txt optimisé pour Termux/Android
+# Version allégée et compatible avec l'architecture ARM d'Android
+
+# Framework web de base
+flask>=2.3.0
+flask-compress>=1.14
+werkzeug>=2.3.0
+
+# Requêtes HTTP et web scraping léger
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+aiohttp>=3.8.0
+
+# Analyse de données (versions compatibles ARM)
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Traitement d'images (version headless pour Termux)
+pillow>=10.0.0
+opencv-python-headless>=4.8.0
+
+# Graphiques et visualisation (peut nécessiter plus de temps d'installation)
+matplotlib>=3.7.0
+
+# Calcul scientifique (compilation longue sur Termux)
+scipy>=1.10.0
+
+# Traitement de texte
+textblob>=0.17.1
+nltk>=3.8.1
+
+# Utilitaires système
+psutil>=5.9.6
+tenacity>=8.2.3
+
+# Analyse de réseau
+networkx>=3.0
+
+# Compression et formats de fichiers
+py7zr>=0.20.8
+xlsxwriter>=3.1.9
+feedparser>=6.0.10
+
+# Base de données SQLite (incluse avec Python)
+# sqlite3 est inclus dans la distribution Python standard
+
+# Sécurité et chiffrement léger
+cryptography>=41.0.0
+
+# Formats de données
+pyyaml>=6.0
+toml>=0.10.2
+
+# Optimisations mémoire pour Termux
+wheel>=0.40.0
+setuptools>=68.0.0

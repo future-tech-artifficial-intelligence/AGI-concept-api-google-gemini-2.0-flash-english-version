@@ -1,0 +1,346 @@
+{
+  "test_summary": {
+    "timestamp": "2025-07-24T13:36:22.998573",
+    "total_tests": 14,
+    "passed_tests": 13,
+    "failed_tests": 1,
+    "success_rate": 92.85714285714286,
+    "overall_status": "PASSED"
+  },
+  "test_results": {
+    "Import Navigateur Web Avancé": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:21.728602"
+    },
+    "Import Intégration Gemini-Web": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:21.773769"
+    },
+    "Import Adaptateur Navigation Gemini": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:21.792713"
+    },
+    "Import API REST Navigation Web": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:22.333491"
+    },
+    "Import Adaptateur Gemini Original": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:27.817829"
+    },
+    "Import Global": {
+      "success": true,
+      "message": "5/5 modules importés",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:27.817829"
+    },
+    "Création Instance Gemini": {
+      "success": true,
+      "message": "API Gemini créée",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:28.095274"
+    },
+    "Initialisation Adaptateur Navigation": {
+      "success": true,
+      "message": "Adaptateur initialisé",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:28.106954"
+    },
+    "Vérification Intégration": {
+      "success": true,
+      "message": "Intégration active",
+      "data": null,
+      "timestamp": "2025-07-24T13:35:28.106954"
+    },
+    "Détection Navigation": {
+      "success": false,
+      "message": "Taux de réussite: 66.7% (4/6)",
+      "data": {
+        "results": [
+          {
+            "prompt": "Recherche et navigue sur l'intelligence artificielle",
+            "expected_navigation": true,
+            "detected_navigation": true,
+            "expected_type": "search_and_navigate",
+            "detected_type": "search_and_navigate",
+            "confidence": 0.9,
+            "correct": true,
+            "status": "✅"
+          },
+          {
+            "prompt": "Extrait le contenu de https://example.com",
+            "expected_navigation": true,
+            "detected_navigation": true,
+            "expected_type": "content_extraction",
+            "detected_type": "content_extraction",
+            "confidence": 0.8,
+            "correct": true,
+            "status": "✅"
+          },
+          {
+            "prompt": "Explore le site https://wikipedia.org en profondeur",
+            "expected_navigation": true,
+            "detected_navigation": true,
+            "expected_type": "deep_navigation",
+            "detected_type": "deep_navigation",
+            "confidence": 0.9,
+            "correct": true,
+            "status": "✅"
+          },
+          {
+            "prompt": "Simule un parcours d'achat sur ce site",
+            "expected_navigation": true,
+            "detected_navigation": false,
+            "expected_type": "user_journey",
+            "detected_type": null,
+            "confidence": 0.0,
+            "correct": false,
+            "status": "❌"
+          },
+          {
+            "prompt": "Qu'est-ce que l'apprentissage automatique ?",
+            "expected_navigation": true,
+            "detected_navigation": true,
+            "expected_type": "search_and_navigate",
+            "detected_type": "search_and_navigate",
+            "confidence": 0.6,
+            "correct": true,
+            "status": "✅"
+          },
+          {
+            "prompt": "Bonjour, comment allez-vous ?",
+            "expected_navigation": false,
+            "detected_navigation": true,
+            "expected_type": null,
+            "detected_type": "search_and_navigate",
+            "confidence": 0.6,
+            "correct": false,
+            "status": "❌"
+          }
+        ],
+        "success_rate": 66.66666666666666
+      },
+      "timestamp": "2025-07-24T13:35:28.114678"
+    },
+    "Extraction Web": {
+      "success": true,
+      "message": "Taux de réussite: 100.0% (2/2)",
+      "data": {
+        "results": [
+          {
+            "url": "https://httpbin.org/json",
+            "success": true,
+            "details": {
+              "title": "Page sans titre",
+              "content_length": 286,
+              "quality_score": 2.0,
+              "language": "en",
+              "links_count": 0,
+              "images_count": 0,
+              "keywords": [
+                "title",
+                "wonderwidgets",
+                "date",
+                "type",
+                "all"
+              ],
+              "extraction_time": 1.4520273208618164
+            },
+            "status": "✅"
+          },
+          {
+            "url": "https://httpbin.org/html",
+            "success": true,
+            "details": {
+              "title": "Herman Melville - Moby-Dick",
+              "content_length": 3594,
+              "quality_score": 4.0,
+              "language": "en",
+              "links_count": 0,
+              "images_count": 0,
+              "keywords": [
+                "had",
+                "old",
+                "blacksmith",
+                "was",
+                "now"
+              ],
+              "extraction_time": 2.902703046798706
+            },
+            "status": "✅"
+          }
+        ]
+      },
+      "timestamp": "2025-07-24T13:35:34.480009"
+    },
+    "Intégration Complète Gemini": {
+      "success": true,
+      "message": "Taux de réussite: 100.0% (3/3)",
+      "data": {
+        "results": [
+          {
+            "prompt": "Recherche des informations sur l'intelligence artificielle",
+            "success": true,
+            "details": {
+              "response_length": 2222,
+              "navigation_used": false,
+              "processing_time": 7.517996788024902,
+              "status": "success",
+              "has_emotional_state": true
+            },
+            "status": "✅"
+          },
+          {
+            "prompt": "Qu'est-ce que Python ?",
+            "success": true,
+            "details": {
+              "response_length": 1624,
+              "navigation_used": false,
+              "processing_time": 28.227563858032227,
+              "status": "success",
+              "has_emotional_state": true
+            },
+            "status": "✅"
+          },
+          {
+            "prompt": "Extrait le contenu de https://httpbin.org/json",
+            "success": true,
+            "details": {
+              "response_length": 1138,
+              "navigation_used": false,
+              "processing_time": 4.974308729171753,
+              "status": "success",
+              "has_emotional_state": true
+            },
+            "status": "✅"
+          }
+        ]
+      },
+      "timestamp": "2025-07-24T13:36:21.216940"
+    },
+    "API REST Endpoints": {
+      "success": true,
+      "message": "Taux de réussite: 100.0% (4/4)",
+      "data": {
+        "results": [
+          {
+            "method": "GET",
+            "endpoint": "/api/web-navigation/health",
+            "description": "Health Check",
+            "success": true,
+            "details": {
+              "status_code": 200,
+              "has_json": true,
+              "content_length": 211,
+              "api_success": true
+            },
+            "status": "✅"
+          },
+          {
+            "method": "GET",
+            "endpoint": "/api/web-navigation/docs",
+            "description": "Documentation",
+            "success": true,
+            "details": {
+              "status_code": 200,
+              "has_json": true,
+              "content_length": 2394
+            },
+            "status": "✅"
+          },
+          {
+            "method": "GET",
+            "endpoint": "/api/web-navigation/stats",
+            "description": "Statistiques",
+            "success": true,
+            "details": {
+              "status_code": 200,
+              "has_json": true,
+              "content_length": 294,
+              "api_success": true
+            },
+            "status": "✅"
+          },
+          {
+            "method": "POST",
+            "endpoint": "/api/web-navigation/create-session",
+            "description": "Création Session",
+            "success": true,
+            "details": {
+              "status_code": 200,
+              "has_json": true,
+              "content_length": 229,
+              "api_success": true
+            },
+            "status": "✅"
+          }
+        ]
+      },
+      "timestamp": "2025-07-24T13:36:21.348132"
+    },
+    "Benchmark Performance": {
+      "success": true,
+      "message": "Temps moyen: 0.04s, Réussite: 100.0%",
+      "data": {
+        "metrics": {
+          "total_requests": 3,
+          "successful_requests": 3,
+          "success_rate": 100.0,
+          "total_time": 0.1337442398071289,
+          "overall_time": 1.6450779438018799,
+          "avg_time_per_request": 0.04458141326904297,
+          "requests_per_second": 1.8236217993822281
+        },
+        "results": [
+          {
+            "url": "https://httpbin.org/json",
+            "success": true,
+            "details": {
+              "processing_time": 0.0005815029144287109,
+              "content_length": 286,
+              "quality_score": 2.0,
+              "extraction_rate": 491829.0053300533
+            },
+            "status": "✅"
+          },
+          {
+            "url": "https://httpbin.org/html",
+            "success": true,
+            "details": {
+              "processing_time": 0.0,
+              "content_length": 3594,
+              "quality_score": 4.0,
+              "extraction_rate": 0
+            },
+            "status": "✅"
+          },
+          {
+            "url": "https://httpbin.org/robots.txt",
+            "success": true,
+            "details": {
+              "processing_time": 0.1331627368927002,
+              "content_length": 29,
+              "quality_score": 1.0,
+              "extraction_rate": 217.7786419587306
+            },
+            "status": "✅"
+          }
+        ]
+      },
+      "timestamp": "2025-07-24T13:36:22.998573"
+    }
+  },
+  "errors": [
+    "Détection Navigation: Taux de réussite: 66.7% (4/6)"
+  ]
+}

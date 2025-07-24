@@ -1,0 +1,175 @@
+{
+  "test_summary": {
+    "total_tests": 14,
+    "passed_tests": 10,
+    "failed_tests": 4,
+    "success_rate": 71.42857142857143
+  },
+  "test_results": {
+    "Service Searx": {
+      "success": true,
+      "message": "Accessible sur http://localhost:8080",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:19.584756"
+    },
+    "Service App Flask": {
+      "success": true,
+      "message": "Accessible sur http://localhost:5000",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:21.645280"
+    },
+    "Setup Searx Interface": {
+      "success": true,
+      "message": "Interface Searx initialisée",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:22.168967"
+    },
+    "Setup Navigateur": {
+      "success": true,
+      "message": "Navigateur et session initialisés",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:24.950988"
+    },
+    "Setup Gemini Interactif": {
+      "success": true,
+      "message": "Adaptateur Gemini initialisé",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:27.180581"
+    },
+    "Recherche Searx 'Python programming t'": {
+      "success": true,
+      "message": "20 résultats trouvés",
+      "data": {
+        "query": "Python programming tutorial",
+        "results_count": 20,
+        "first_result": {
+          "title": "ThePythonTutorial—Python3.13.5 documentation",
+          "url": "https://docs.python.org/3/tutorial/index.html",
+          "content": "22 mai 2025 - The same site also contains ... modules, programs and tools, and additional documentation. ThePythoninterpreter is easily extended with new functions and data types implemented in C or C++ (or other languages callable from C).Pythonis also suitable as an extension language for customizable applications. Thistutorialintroduces ...",
+          "engine": "unknown",
+          "score": 1.0,
+          "metadata": {
+            "position": 1,
+            "html_snippet": "<article class=\"result result-default category-general\"><a class=\"url_header\" href=\"https://docs.python.org/3/tutorial/index.html\" rel=\"noreferrer\"><div class=\"url_wrapper\"><span class=\"url_o1\"><span class=\"url_i1\">https://docs.python.org</span></span><span class=\"url_o2\"><span class=\"url_i2\"> › 3 › tutorial › index.html</span></span> </div></a><h3><a href=\"https://docs.python.org/3/tutorial/index.html\" rel=\"noreferrer\">The <span class=\"highlight\">Python</span> <span class=\"highlight\">Tutorial</"
+          }
+        }
+      },
+      "timestamp": "2025-07-24T15:38:31.652083"
+    },
+    "Recherche Searx 'What is artificial i'": {
+      "success": true,
+      "message": "20 résultats trouvés",
+      "data": {
+        "query": "What is artificial intelligence",
+        "results_count": 20,
+        "first_result": {
+          "title": "WhatisArtificialIntelligence(AI)? | Glossary | HPE France",
+          "url": "https://www.hpe.com/fr/fr/what-is/artificial-intelligence.html",
+          "content": "Artificialintelligenceisa branch of computer science that seeks to simulate humanintelligencein a machine. AI systems are powered by algorithms, using ...",
+          "engine": "unknown",
+          "score": 1.0,
+          "metadata": {
+            "position": 1,
+            "html_snippet": "<article class=\"result result-default category-general\"><a class=\"url_header\" href=\"https://www.hpe.com/fr/fr/what-is/artificial-intelligence.html\" rel=\"noreferrer\"><div class=\"url_wrapper\"><span class=\"url_o1\"><span class=\"url_i1\">https://www.hpe.com</span></span><span class=\"url_o2\"><span class=\"url_i2\"> › fr › fr › what-is › artificial-intelligence.html</span></span> </div></a><h3><a href=\"https://www.hpe.com/fr/fr/what-is/artificial-intelligence.html\" rel=\"noreferrer\"><span class=\"highlight\""
+          }
+        }
+      },
+      "timestamp": "2025-07-24T15:38:34.664731"
+    },
+    "Recherche Searx 'Weather forecast tod'": {
+      "success": true,
+      "message": "20 résultats trouvés",
+      "data": {
+        "query": "Weather forecast today",
+        "results_count": 20,
+        "first_result": {
+          "title": "PREVISIONS METEO FRANCE - Site Officiel de Météo-France - Prévisions ...",
+          "url": "https://meteofrance.com/",
+          "content": "Les orages s'annoncent plus virulents vers le Massif central et la moitié nord du pays, avec risque de grêle et de rafales de vent. Le pourtour du golfe du Lion ...",
+          "engine": "unknown",
+          "score": 1.0,
+          "metadata": {
+            "position": 1,
+            "html_snippet": "<article class=\"result result-default category-general\"><a class=\"url_header\" href=\"https://meteofrance.com/\" rel=\"noreferrer\"><div class=\"url_wrapper\"><span class=\"url_o1\"><span class=\"url_i1\">https://meteofrance.com</span></span><span class=\"url_o2\"><span class=\"url_i2\"></span></span> </div></a><h3><a href=\"https://meteofrance.com/\" rel=\"noreferrer\">PREVISIONS METEO FRANCE - Site Officiel de Météo-France - Prévisions ...</a></h3> <p class=\"content\">\n    Les orages s'annoncent plus virulents ve"
+          }
+        }
+      },
+      "timestamp": "2025-07-24T15:38:38.982772"
+    },
+    "Intégration Gemini-Searx 'Python programming t'": {
+      "success": false,
+      "message": "Erreur HTTP: 401",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:43.038397"
+    },
+    "Intégration Gemini-Searx 'What is artificial i'": {
+      "success": false,
+      "message": "Erreur HTTP: 401",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:48.121254"
+    },
+    "Recherche Searx 'Python tutorial'": {
+      "success": true,
+      "message": "20 résultats trouvés",
+      "data": {
+        "query": "Python tutorial",
+        "results_count": 20,
+        "first_result": {
+          "title": "Les meilleurs cours et tutoriels pour apprendrePython",
+          "url": "https://python.developpez.com/cours/",
+          "content": "18 sept. 2022 ... Documentation générale pour apprendrePython· Bien débuter la programmationPython· Notions avancées enPython· Toolkit graphique · Tkinter ...",
+          "engine": "unknown",
+          "score": 1.0,
+          "metadata": {
+            "position": 1,
+            "html_snippet": "<article class=\"result result-default category-general\"><a class=\"url_header\" href=\"https://python.developpez.com/cours/\" rel=\"noreferrer\"><div class=\"url_wrapper\"><span class=\"url_o1\"><span class=\"url_i1\">https://python.developpez.com</span></span><span class=\"url_o2\"><span class=\"url_i2\"> › cours</span></span> </div></a><h3><a href=\"https://python.developpez.com/cours/\" rel=\"noreferrer\">Les meilleurs cours et tutoriels pour apprendre <span class=\"highlight\">Python</span></a></h3> <p class=\"con"
+          }
+        }
+      },
+      "timestamp": "2025-07-24T15:38:52.451918"
+    },
+    "Navigation 'Python tutorial'": {
+      "success": false,
+      "message": "Erreur: unhashable type: 'NavigationSession'",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:52.452286"
+    },
+    "Recherche Searx 'Wikipedia artificial'": {
+      "success": true,
+      "message": "20 résultats trouvés",
+      "data": {
+        "query": "Wikipedia artificial intelligence",
+        "results_count": 20,
+        "first_result": {
+          "title": "Intelligenceartificielle — Wikipédia",
+          "url": "https://fr.wikipedia.org/wiki/Intelligence_artificielle",
+          "content": "L'intelligenceartificielle (IA) est l'ensemble des programmes ou algorithmes permettant aux machines d'effectuer des tâches typiquement associées à l'intelligencehumaine, comme l' apprentissage, le raisonnement, la résolution de problème, la perception ou la prise de décision.",
+          "engine": "unknown",
+          "score": 1.0,
+          "metadata": {
+            "position": 1,
+            "html_snippet": "<article class=\"result result-default category-general\"><a class=\"url_header\" href=\"https://fr.wikipedia.org/wiki/Intelligence_artificielle\" rel=\"noreferrer\"><div class=\"url_wrapper\"><span class=\"url_o1\"><span class=\"url_i1\">https://fr.wikipedia.org</span></span><span class=\"url_o2\"><span class=\"url_i2\"> › wiki › Intelligence_artificielle</span></span> </div></a><h3><a href=\"https://fr.wikipedia.org/wiki/Intelligence_artificielle\" rel=\"noreferrer\"><span class=\"highlight\">Intelligence</span> arti"
+          }
+        }
+      },
+      "timestamp": "2025-07-24T15:38:56.563114"
+    },
+    "Navigation 'Wikipedia artificial'": {
+      "success": false,
+      "message": "Erreur: unhashable type: 'NavigationSession'",
+      "data": null,
+      "timestamp": "2025-07-24T15:38:56.563657"
+    }
+  },
+  "errors": [
+    "Intégration Gemini-Searx 'Python programming t': Erreur HTTP: 401",
+    "Intégration Gemini-Searx 'What is artificial i': Erreur HTTP: 401",
+    "Navigation 'Python tutorial': Erreur: unhashable type: 'NavigationSession'",
+    "Navigation 'Wikipedia artificial': Erreur: unhashable type: 'NavigationSession'"
+  ],
+  "services_info": {
+    "searx_url": "http://localhost:8080",
+    "app_url": "http://localhost:5000"
+  },
+  "timestamp": "2025-07-24T15:38:59.566078"
+}

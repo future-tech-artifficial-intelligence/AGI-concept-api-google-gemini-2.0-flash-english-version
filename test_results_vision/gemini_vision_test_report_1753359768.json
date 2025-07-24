@@ -1,0 +1,202 @@
+{
+  "test_summary": {
+    "total_tests": 34,
+    "passed_tests": 33,
+    "failed_tests": 1,
+    "success_rate": 97.06,
+    "total_time": 7.82,
+    "system_ready": true
+  },
+  "test_results": {
+    "Import Adaptateur Vision Gemini": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:41.722820"
+    },
+    "Import Système de Capture Intelligent": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:41.848328"
+    },
+    "Import Intégration Vision Web": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.356280"
+    },
+    "Import API REST Vision": {
+      "success": true,
+      "message": "Module importé avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.797989"
+    },
+    "Import Global Vision": {
+      "success": true,
+      "message": "4/4 modules importés",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.797989"
+    },
+    "Création Adaptateur Visual": {
+      "success": true,
+      "message": "Adaptateur créé",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.797989"
+    },
+    "Vérification Adaptateur Global": {
+      "success": true,
+      "message": "Adaptateur accessible",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.797989"
+    },
+    "Statistiques Adaptateur": {
+      "success": true,
+      "message": "Stats récupérées: 6 métriques",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.876216"
+    },
+    "Création Système Capture": {
+      "success": true,
+      "message": "Système créé",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.816147"
+    },
+    "Vérification Capture Globale": {
+      "success": true,
+      "message": "Système accessible",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.817149"
+    },
+    "Statistiques Capture": {
+      "success": true,
+      "message": "Stats récupérées: 6 métriques",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.876216"
+    },
+    "Création Intégration Vision": {
+      "success": true,
+      "message": "Intégration créée",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.829288"
+    },
+    "Vérification Intégration Globale": {
+      "success": true,
+      "message": "Intégration accessible",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.830289"
+    },
+    "Statistiques Intégration": {
+      "success": true,
+      "message": "Stats récupérées: 8 métriques",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.876216"
+    },
+    "Création Session Vision": {
+      "success": true,
+      "message": "Session créée: test_vision_session_1753359768",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.838705"
+    },
+    "Vérification Session Active": {
+      "success": true,
+      "message": "Session trouvée dans les sessions actives",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.839714"
+    },
+    "Fermeture Session": {
+      "success": true,
+      "message": "Session fermée avec succès",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.840761"
+    },
+    "Validation Config Desktop": {
+      "success": true,
+      "message": "Configuration valide",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.840761"
+    },
+    "Validation Config Mobile": {
+      "success": true,
+      "message": "Configuration valide",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.845838"
+    },
+    "Validation Config Tablet": {
+      "success": true,
+      "message": "Configuration valide",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.845838"
+    },
+    "Capture Simulation Globale": {
+      "success": true,
+      "message": "Taux de réussite: 100.0% (3/3)",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.846837"
+    },
+    "Validation Analyse UI": {
+      "success": true,
+      "message": "Prompt valide",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.850741"
+    },
+    "Validation Analyse Contenu": {
+      "success": true,
+      "message": "Prompt valide",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.850741"
+    },
+    "Validation Analyse Design": {
+      "success": true,
+      "message": "Prompt valide",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.850741"
+    },
+    "Analyse Visuelle Simulation": {
+      "success": true,
+      "message": "Taux de réussite: 100.0% (3/3)",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.850741"
+    },
+    "Création API Vision": {
+      "success": true,
+      "message": "API créée",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.870640"
+    },
+    "Vérification API Globale": {
+      "success": true,
+      "message": "API accessible",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.876216"
+    },
+    "Vérification App Flask": {
+      "success": true,
+      "message": "Application Flask initialisée",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.876216"
+    },
+    "Intégration Système Complète": {
+      "success": true,
+      "message": "Tous les composants fonctionnels (3/3)",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.876216"
+    },
+    "Gestion Session Inexistante": {
+      "success": true,
+      "message": "Erreur correctement gérée",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.886259"
+    },
+    "Gestion Paramètres Invalides": {
+      "success": false,
+      "message": "Paramètres invalides non détectés",
+      "data": null,
+      "timestamp": "2025-07-24T14:22:48.887588"
+    }
+  },
+  "errors": [
+    "Gestion Paramètres Invalides: Paramètres invalides non détectés"
+  ],
+  "timestamp": "2025-07-24T14:22:48.887588"
+}

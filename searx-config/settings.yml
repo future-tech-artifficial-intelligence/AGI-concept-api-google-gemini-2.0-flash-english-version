@@ -1,0 +1,80 @@
+# Configuration Searx pour l'IA
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "AI Search Engine"
+  contact_url: false
+  donation_url: false
+  privacypolicy_url: false
+  enable_metrics: false
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  default_lang: "fr"
+  ban_time_on_fail: 5
+  max_ban_time_on_fail: 120
+  formats:
+    - html
+    - json
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "ai_search_secret_key_2025"
+  base_url: http://localhost:8080
+  image_proxy: false
+  http_protocol_version: "1.0"
+  method: "POST"
+
+ui:
+  static_use_hash: false
+  default_locale: "fr"
+  theme_args:
+    simple_style: auto
+  results_on_new_tab: false
+  advanced_search: true
+  search_on_category_select: true
+  hotkeys: default
+
+# Moteurs de recherche activés
+engines:
+  - name: google
+    engine: google
+    shortcut: go
+    categories: general
+    disabled: false
+    use_mobile_ui: false
+
+  - name: bing
+    engine: bing
+    shortcut: bi
+    categories: general
+    disabled: false
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    categories: general
+    disabled: false
+
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+    categories: general
+    base_url: 'https://{language}.wikipedia.org/'
+    number_of_results: 10
+    disabled: false
+
+  - name: youtube
+    engine: youtube_noapi
+    shortcut: yt
+    categories: videos
+    disabled: false
+
+  - name: github
+    engine: github
+    shortcut: gh
+    categories: it
+    disabled: false

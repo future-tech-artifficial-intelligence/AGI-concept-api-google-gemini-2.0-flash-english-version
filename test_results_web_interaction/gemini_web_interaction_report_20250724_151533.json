@@ -1,0 +1,96 @@
+{
+  "test_summary": {
+    "total_tests": 13,
+    "passed_tests": 2,
+    "failed_tests": 11,
+    "success_rate": 15.384615384615385
+  },
+  "test_results": {
+    "Setup Navigateur": {
+      "success": true,
+      "message": "Navigateur initialisé",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:21.939753"
+    },
+    "Setup Gemini API": {
+      "success": false,
+      "message": "Erreur: No module named 'ai_api_config'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:31.109354"
+    },
+    "Setup Adaptateur Interactif": {
+      "success": true,
+      "message": "Adaptateur initialisé",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.797172"
+    },
+    "Analyse Example.com": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.801778"
+    },
+    "Identification simple_page": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.846002"
+    },
+    "Identification search_page": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.810644"
+    },
+    "Identification navigation_page": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.814643"
+    },
+    "Identification interactive_page": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.823981"
+    },
+    "Clic simple_page": {
+      "success": false,
+      "message": "Aucun élément à cliquer",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.855943"
+    },
+    "Identification w3schools": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.862944"
+    },
+    "Clic w3schools": {
+      "success": false,
+      "message": "Aucun élément à cliquer",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.864970"
+    },
+    "Interaction Formulaire": {
+      "success": false,
+      "message": "Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+      "data": null,
+      "timestamp": "2025-07-24T15:15:33.882087"
+    }
+  },
+  "errors": [
+    "Setup Gemini API: Erreur: No module named 'ai_api_config'",
+    "Analyse Example.com: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Identification simple_page: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Identification search_page: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Identification navigation_page: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Identification interactive_page: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Identification simple_page: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Clic simple_page: Aucun élément à cliquer",
+    "Identification w3schools: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'",
+    "Clic w3schools: Aucun élément à cliquer",
+    "Interaction Formulaire: Erreur: InteractiveWebNavigator.navigate_to_url() missing 1 required positional argument: 'url'"
+  ],
+  "timestamp": "2025-07-24T15:15:33.882087"
+}

@@ -1,0 +1,110 @@
+{
+  "test_summary": {
+    "total_tests": 14,
+    "passed_tests": 5,
+    "failed_tests": 9,
+    "success_rate": 35.714285714285715
+  },
+  "test_results": {
+    "Service Searx": {
+      "success": true,
+      "message": "Accessible sur http://localhost:8080",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:31.911876"
+    },
+    "Service App Flask": {
+      "success": true,
+      "message": "Accessible sur http://localhost:5000",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:33.961030"
+    },
+    "Setup Searx Interface": {
+      "success": true,
+      "message": "Interface Searx initialisée",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:34.659767"
+    },
+    "Setup Navigateur": {
+      "success": true,
+      "message": "Navigateur et session initialisés",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:37.169045"
+    },
+    "Setup Gemini Interactif": {
+      "success": true,
+      "message": "Adaptateur Gemini initialisé",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:39.686454"
+    },
+    "Recherche Searx 'Python programming t'": {
+      "success": false,
+      "message": "Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:39.689454"
+    },
+    "Recherche Searx 'What is artificial i'": {
+      "success": false,
+      "message": "Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:41.692075"
+    },
+    "Recherche Searx 'Weather forecast tod'": {
+      "success": false,
+      "message": "Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:43.695441"
+    },
+    "Intégration Gemini-Searx 'Python programming t'": {
+      "success": false,
+      "message": "Erreur HTTP: 404",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:51.463608"
+    },
+    "Intégration Gemini-Searx 'What is artificial i'": {
+      "success": false,
+      "message": "Erreur HTTP: 404",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:56.505519"
+    },
+    "Recherche Searx 'Python tutorial'": {
+      "success": false,
+      "message": "Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:59.509131"
+    },
+    "Navigation 'Python tutorial'": {
+      "success": false,
+      "message": "Prérequis non remplis",
+      "data": null,
+      "timestamp": "2025-07-24T15:35:59.509131"
+    },
+    "Recherche Searx 'Wikipedia artificial'": {
+      "success": false,
+      "message": "Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+      "data": null,
+      "timestamp": "2025-07-24T15:36:02.510505"
+    },
+    "Navigation 'Wikipedia artificial'": {
+      "success": false,
+      "message": "Prérequis non remplis",
+      "data": null,
+      "timestamp": "2025-07-24T15:36:02.510505"
+    }
+  },
+  "errors": [
+    "Recherche Searx 'Python programming t': Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+    "Recherche Searx 'What is artificial i': Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+    "Recherche Searx 'Weather forecast tod': Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+    "Intégration Gemini-Searx 'Python programming t': Erreur HTTP: 404",
+    "Intégration Gemini-Searx 'What is artificial i': Erreur HTTP: 404",
+    "Recherche Searx 'Python tutorial': Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+    "Navigation 'Python tutorial': Prérequis non remplis",
+    "Recherche Searx 'Wikipedia artificial': Erreur: SearxInterface.search() got an unexpected keyword argument 'engines'",
+    "Navigation 'Wikipedia artificial': Prérequis non remplis"
+  ],
+  "services_info": {
+    "searx_url": "http://localhost:8080",
+    "app_url": "http://localhost:5000"
+  },
+  "timestamp": "2025-07-24T15:36:05.513960"
+}

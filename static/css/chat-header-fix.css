@@ -1,0 +1,96 @@
+/* Fix for chat header layout */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+}
+
+.chat-header {
+    margin: 0;
+    padding: 0.8rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+}
+
+.chat-title-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.app-title {
+    color: white;
+    font-size: 1.8rem;
+    margin: 0;
+    padding: 0;
+    font-weight: 700;
+}
+
+.chat-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-top: 5px;
+}
+
+.chat-header-main {
+    margin: 15px 0;
+}
+
+.chat-header-main p {
+    color: white;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.chat-header-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.conversation-info,
+.time-display,
+.emotional-state-display {
+    flex: 1;
+    min-width: 120px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 0.95rem;
+}
+
+/* Mobile optimizations */
+@media screen and (max-width: 767px) {
+    .chat-header {
+        padding: 0.6rem;
+        margin: 0;
+        border-radius: 10px;
+    }
+
+    .app-title {
+        font-size: 1.5rem;
+    }
+
+    .chat-subtitle {
+        font-size: 1rem;
+    }
+
+    .chat-header-info {
+        gap: 8px;
+    }
+
+    .conversation-info,
+    .time-display,
+    .emotional-state-display {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+}
