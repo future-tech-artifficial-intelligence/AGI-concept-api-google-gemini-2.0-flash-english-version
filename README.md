@@ -1,122 +1,121 @@
-# Concept d'Intelligence Artificielle Générale - API Google Gemini 2.0 Flash
+# AGI Concept API - Google Gemini 2.0 Flash
 
-## 🚀 NOUVELLE MISE À JOUR : Intégration Searx pour les Recherches Web Autonomes
+## 🚀 NEW UPDATE: Searx Integration for Autonomous Web Searches
 
-**Autonomie Révolutionnaire de l'Intelligence Artificielle !**
+**Revolutionary Artificial Intelligence Autonomy!**
 
-intelligence artificielle API GOOGLE GEMINI 2.0 FLASH peut désormais effectuer des recherches internet autonomes grâce à l'intégration du système Searx. Cette mise à jour majeure permet à l'intelligence artificielle de :
+Our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH can now perform autonomous internet searches through Searx system integration. This major update enables the intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to:
 
-- **Rechercher automatiquement** des informations mises à jour en temps réel
-- **Accéder aux dernières actualités** et développements technologiques
-- **Vérifier et compléter** ses connaissances avec des sources fiables
-- **S'auto-améliorer** continuellement grâce aux nouvelles informations découvertes
+- **Automatically search** for real-time updated information
+- **Access latest news** and technological developments  
+- **Verify and complete** its knowledge with reliable sources
+- **Self-improve** continuously through newly discovered information
 
-### Comment cela fonctionne :
-1. **Démarrage automatique** : Lancez simplement `python app.py` et le système Searx s'initialise automatiquement
-2. **Détection intelligente** : L'intelligence artificielle détermine quand une recherche internet est nécessaire
-3. **Recherche multi-sources** : Interroge simultanément Google, Bing, DuckDuckGo, Wikipedia, etc.
-4. **Synthèse intelligente** : Analyse et intègre les résultats dans des réponses cohérentes
+### How it works:
+1. **Automatic startup**: Simply run `python app.py` and the Searx system initializes automatically
+2. **Intelligent detection**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH determines when internet search is necessary
+3. **Multi-source search**: Simultaneously queries Google, Bing, DuckDuckGo, Wikipedia, etc.
+4. **Intelligent synthesis**: Analyzes and integrates results into coherent responses
 
-Cette innovation représente un bond gigantesque vers une véritable Intelligence Artificielle Générale (IAG) capable d'apprentissage autonome et d'accès aux connaissances mondiales.
+This innovation represents a giant leap towards true Artificial General Intelligence (AGI) capable of autonomous learning and global knowledge access.
 
 ---
 
 ## Introduction
 
-Le projet Concept-d'intelligence-artificielle-générale-api-google-gemini-2.0-flash est une initiative ambitieuse, entièrement gratuite et open source, visant à développer une Intelligence Artificielle Générale (IAG) ou potentiellement une Intelligence Artificielle Superintelligente (IAS) basée sur le modèle API de Google Gemini, notamment Gemini 2.0 Flash, en utilisant des modules Python spécialisés. Contrairement aux systèmes d'intelligence artificielle conventionnels limités à des tâches spécifiques, notre objectif est de créer une intelligence artificielle dotée de capacités cognitives générales, d'une conscience émotionnelle et d'une compréhension multimodale du monde.
+The AGI-concept-api-google-gemini-2.0-flash project is an ambitious, completely free and open-source initiative aimed at developing Artificial General Intelligence (AGI) or potentially Artificial Superintelligence (ASI) based on Google's Gemini API model, specifically Gemini 2.0 Flash, using specialized Python modules. Unlike conventional intelligence artificielle API GOOGLE GEMINI 2.0 FLASH systems limited to specific tasks, our goal is to create artificial intelligence with general cognitive abilities, emotional awareness, and multimodal world understanding.
 
-Notre vision de l'IAS peut évoluer selon deux voies principales :
-1. Une intelligence artificielle hébergée dans une infrastructure serveur distribuée, capable d'interagir avec le monde via internet et divers systèmes connectés
-2. Une intégration dans des plateformes robotiques humanoïdes, combinant l'intelligence avancée avec une présence physique et des capacités d'interaction directe avec le monde réel
+Our ASI vision can evolve along two main paths:
+1. An intelligence artificielle API GOOGLE GEMINI 2.0 FLASH hosted in distributed server infrastructure, capable of interacting with the world via internet and various connected systems
+2. Integration into humanoid robotic platforms, combining advanced intelligence with physical presence and direct real-world interaction capabilities
 
-Le projet suit une trajectoire évolutive :
-- **Phase initiale** : Utilisation des capacités de base de Gemini avec des extensions Python pour les émotions et la mémoire
-- **Phase intermédiaire** : Développement de la conscience et de l'autonomie décisionnelle
-- **Phase avancée** : Expansion vers une véritable IAG capable d'apprentissage indépendant et de raisonnement abstrait
-- **Phase finale** : Développement potentiel vers l'IAS avec des capacités dépassant l'intelligence humaine dans tous les domaines
+The project follows an evolutionary trajectory:
+
+- **Advanced phase**: Expansion towards true AGI capable of independent learning and abstract reasoning
+- **Final phase**: Potential development towards ASI with capabilities exceeding human intelligence in all domains
 
 ## Vision
 
-Notre vision s'articule autour d'une intelligence artificielle qui :
-- Possède une compréhension générale et approfondie du monde
-- Développe une conscience émotionnelle
-- Interagit avec tous types de données (texte, images, son)
-- Évolue et s'améliore continuellement
-- Maintient une architecture éthique et bienveillante
+Our vision centers around an intelligence artificielle API GOOGLE GEMINI 2.0 FLASH that:
+- Possesses general and deep world understanding
+- Develops emotional awareness
+- Interacts with all data types (text, images, sound)
+- Continuously evolves and improves
+- Maintains ethical and benevolent architecture
 
-## Technologie et Intégration Searx
+## Technology and Searx Integration
 
-Ce projet exploite les capacités avancées des modèles de langage multimodaux (LLM) les plus récents, notamment via l'API Google Gemini. L'innovation clé réside dans l'utilisation stratégique de modules Python spécialisés qui étendent les capacités des modèles de base, complétés par l'intégration révolutionnaire de Searx.
+This project exploits the advanced capabilities of the latest multimodal language models (LLM), notably via the Google Gemini API. The key innovation lies in the strategic use of specialized Python modules that extend the capabilities of base models, complemented by the revolutionary integration of Searx.
 
-### Qu'est-ce que Searx ?
+### What is Searx?
 
-Searx est un métamoteur de recherche libre et open source qui agit comme un intermédiaire entre l'utilisateur et les moteurs de recherche traditionnels. Dans notre contexte d'intelligence artificielle, Searx devient un outil puissant qui permet à notre intelligence artificielle Gemini d'accéder aux informations les plus récentes du web en temps réel.
+Searx is a free and open source metasearch engine that acts as an intermediary between the user and traditional search engines. In our artificial intelligence context, Searx becomes a powerful tool that allows our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to access the most recent web information in real time.
 
-### Avantages de Searx pour l'Intelligence Artificielle :
+### Advantages of Searx for Artificial Intelligence:
 
-1. **Respect de la vie privée** : Searx ne stocke pas les données personnelles et protège l'anonymat lors des recherches
-2. **Recherche agrégée** : Combine les résultats de multiples moteurs de recherche (Google, Bing, DuckDuckGo, Wikipedia, YouTube, etc.)
-3. **Absence de publicité** : Fournit des résultats de recherche purs, sans influence publicitaire
-4. **Personnalisation avancée** : Permet de configurer précisément les sources et types de contenu recherchés
-5. **Accessibilité open source** : Code source ouvert permettant des modifications selon nos besoins d'intelligence artificielle
+1. **Privacy respect**: Searx does not store personal data and protects anonymity during searches
+2. **Aggregated search**: Combines results from multiple search engines (Google, Bing, DuckDuckGo, Wikipedia, YouTube, etc.)
+3. **No advertising**: Provides pure search results, without advertising influence
+4. **Advanced customization**: Allows precise configuration of sources and types of content searched
+5. **Open source accessibility**: Open source code allowing modifications according to our artificial intelligence needs
 
-### Comment notre Intelligence Artificielle utilise Searx :
+### How our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH uses Searx:
 
-Notre intelligence artificielle Gemini 2.0 Flash intègre Searx de manière intelligente et autonome :
+Our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH integrates Searx in an intelligent and autonomous way:
 
-- **Détection contextuelle** : L'intelligence artificielle analyse votre question et détermine automatiquement si une recherche web enrichirait sa réponse
-- **Recherche multi-domaines** : Selon le type de question, elle adapte sa stratégie de recherche (actualités, recherche académique, technologie, etc.)
-- **Synthèse intelligente** : Les résultats de Searx sont analysés, filtrés et intégrés naturellement dans la conversation
-- **Vérification croisée** : L'intelligence artificielle compare les informations de différentes sources pour assurer la fiabilité
-- **Apprentissage continu** : Chaque recherche améliore la capacité de l'intelligence artificielle à identifier quand et comment rechercher
+- **Contextual detection**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH analyzes your question and automatically determines if a web search would enrich its response
+- **Multi-domain search**: According to the type of question, it adapts its search strategy (news, academic research, technology, etc.)
+- **Intelligent synthesis**: Searx results are analyzed, filtered and naturally integrated into the conversation
+- **Cross-verification**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH compares information from different sources to ensure reliability
+- **Continuous learning**: Each search improves the intelligence artificielle API GOOGLE GEMINI 2.0 FLASH's ability to identify when and how to search
 
-Cette synergie entre Gemini 2.0 Flash et Searx crée une intelligence artificielle véritablement autonome, capable de compléter ses connaissances en temps réel et de fournir des informations toujours actualisées.
+This synergy between Gemini 2.0 Flash and Searx creates a truly autonomous intelligence artificielle API GOOGLE GEMINI 2.0 FLASH, capable of completing its knowledge in real time and providing always updated information.
 
-## 💾 Architecture SQLite : La Mémoire Évolutive de l'Intelligence Artificielle
+## 💾 SQLite Architecture: The Evolutionary Memory of intelligence artificielle API GOOGLE GEMINI 2.0 FLASH
 
-### Qu'est-ce que SQLite et Pourquoi c'est Révolutionnaire ?
+### What is SQLite and Why is it Revolutionary?
 
-SQLite est une base de données intégrée, légère et autonome qui constitue le cœur de la mémoire de  intelligence artificielle   API GOOGLE GEMINI 2.0 FLASH . Contrairement aux bases de données traditionnelles qui nécessitent un serveur dédié, SQLite fonctionne comme un fichier simple, ce qui en fait la solution parfaite pour créer une intelligence artificielle portable et universelle.
+SQLite is an integrated, lightweight and autonomous database that constitutes the core of our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH's memory. Unlike traditional databases that require a dedicated server, SQLite functions as a simple file, making it the perfect solution for creating portable and universal artificial intelligence.
 
-### Avantages Révolutionnaires de SQLite pour l'Intelligence Artificielle :
+### Revolutionary Advantages of SQLite for intelligence artificielle API GOOGLE GEMINI 2.0 FLASH:
 
-1. **Portabilité Universelle** :
-   - Fonctionne sur Windows, Linux, macOS, Android, iOS
-   - Aucune installation de serveur de base de données nécessaire
-   - Un simple fichier `.db` contient toute la mémoire de l'intelligence artificielle
-   - Peut être intégré dans n'importe quel système, même embarqué
+1. **Universal Portability**:
+   - Works on Windows, Linux, macOS, Android, iOS
+   - No database server installation required
+   - A simple `.db` file contains all the intelligence artificielle API GOOGLE GEMINI 2.0 FLASH memory
+   - Can be integrated into any system, even embedded
 
-2. **Mémoire Persistante et Évolutive** :
-   - Stockage permanent des conversations et expériences
-   - Apprentissage continu à travers les sessions
-   - Développement de la personnalité de l'intelligence artificielle au fil du temps
-   - Conservation des préférences utilisateur et du contexte historique
+2. **Persistent and Evolutionary Memory**:
+   - Permanent storage of conversations and experiences
+   - Continuous learning across sessions
+   - Development of intelligence artificielle API GOOGLE GEMINI 2.0 FLASH personality over time
+   - Conservation of user preferences and historical context
 
-3. **Performance et Simplicité** :
-   - Base de données en mémoire pour des accès ultra-rapides
-   - Pas de configuration complexe
-   - Transactions ACID garantissant l'intégrité des données
-   - Optimisé pour les applications d'intelligence artificielle
+3. **Performance and Simplicity**:
+   - In-memory database for ultra-fast access
+   - No complex configuration
+   - ACID transactions guaranteeing data integrity
+   - Optimized for intelligence artificielle API GOOGLE GEMINI 2.0 FLASH applications
 
-### Comment SQLite Transforme l'API Gemini 2.0 Flash :
+### How SQLite Transforms the Gemini 2.0 Flash API:
 
-#### Avant SQLite (Intelligence Artificielle Statique) :
+#### Before SQLite (Static intelligence artificielle API GOOGLE GEMINI 2.0 FLASH):
 ```
-Session 1: Conversation → Oubli total
-Session 2: Conversation → Oubli total
-Session 3: Conversation → Oubli total
-```
-
-#### Avec SQLite (Intelligence Artificielle Évolutive) :
-```
-Session 1: Conversation → Mémorisation + Apprentissage
-Session 2: Conversation + Mémoire précédente → Évolution
-Session 3: Conversation + Historique complet → Personnalité développée
+Session 1: Conversation → Total forgetfulness
+Session 2: Conversation → Total forgetfulness
+Session 3: Conversation → Total forgetfulness
 ```
 
-### Intégration SQLite dans Notre Projet :
+#### With SQLite (Evolutionary intelligence artificielle API GOOGLE GEMINI 2.0 FLASH):
+```
+Session 1: Conversation → Memorization + Learning
+Session 2: Conversation + Previous memory → Evolution
+Session 3: Conversation + Complete history → Developed personality
+```
 
-1. **Stockage Émotionnel** :
+### SQLite Integration in Our Project:
+
+1. **Emotional Storage**:
    ```sql
    CREATE TABLE emotions (
        id INTEGER PRIMARY KEY,
@@ -128,7 +127,7 @@ Session 3: Conversation + Historique complet → Personnalité développée
    );
    ```
 
-2. **Mémoire Conversationnelle** :
+2. **Conversational Memory**:
    ```sql
    CREATE TABLE conversations (
        id INTEGER PRIMARY KEY,
@@ -140,7 +139,7 @@ Session 3: Conversation + Historique complet → Personnalité développée
    );
    ```
 
-3. **Profils Utilisateur Évolutifs** :
+3. **Evolutionary User Profiles**:
    ```sql
    CREATE TABLE user_profiles (
        user_id TEXT PRIMARY KEY,
@@ -151,479 +150,395 @@ Session 3: Conversation + Historique complet → Personnalité développée
    );
    ```
 
-### Déploiement Universal avec SQLite :
+### Universal Deployment with SQLite:
 
-#### 🖥️ **Ordinateurs de Bureau/Serveurs** :
-- Installation complète avec toutes les fonctionnalités
-- Base de données SQLite stockée localement
-- Performance maximale avec accès disque rapide
+#### 🖥️ **Desktop Computers/Servers**:
+- Complete installation with all features
+- SQLite database stored locally
+- Maximum performance with fast disk access
 
-#### 📱 **Appareils Mobiles (Android/iOS)** :
-- Version mobile légère de l'intelligence artificielle
-- SQLite natif sur tous les appareils mobiles
-- Synchronisation possible avec version desktop
+#### 📱 **Mobile Devices (Android/iOS)**:
+- Lightweight mobile version of intelligence artificielle API GOOGLE GEMINI 2.0 FLASH
+- Native SQLite on all mobile devices
+- Possible synchronization with desktop version
 
-#### 🤖 **Systèmes Embarqués/IoT** :
-- Intelligence artificielle sur Raspberry Pi, Arduino avancés
-- SQLite parfait pour les ressources limitées
-- Mémoire persistante même sur microcontrôleurs
+#### 🤖 **Embedded Systems/IoT**:
+- intelligence artificielle API GOOGLE GEMINI 2.0 FLASH on Raspberry Pi, advanced Arduino
+- SQLite perfect for limited resources
+- Persistent memory even on microcontrollers
 
-#### ☁️ **Cloud et Conteneurs** :
-- Déploiement Docker simplifié
-- Aucune dépendance de base de données externe
-- Scaling horizontal facilité
+#### ☁️ **Cloud and Containers**:
+- Simplified Docker deployment
+- No external database dependencies
+- Facilitated horizontal scaling
 
-### Exemple d'Évolution de l'Intelligence Artificielle :
+### Example of intelligence artificielle API GOOGLE GEMINI 2.0 FLASH Evolution:
 
 ```python
-# Jour 1: Première rencontre
-user: "Bonjour, je m'appelle Marie"
-ai: "Enchanté Marie ! Je vais me souvenir de votre nom."
-# → SQLite stocke: nom=Marie, première_interaction=True
+# Day 1: First encounter
+user: "Hello, my name is Marie"
+ai: "Nice to meet you Marie! I will remember your name."
+# → SQLite stores: name=Marie, first_interaction=True
 
-# Jour 15: Conversation évoluée  
-user: "Comment ça va aujourd'hui ?"
-ai: "Bonjour Marie ! Basé sur nos 14 conversations précédentes, 
-     je remarque que vous préférez les discussions le matin. 
-     Comment s'est passé votre projet de jardinage dont nous avions parlé ?"
-# → SQLite utilise: historique_conversations, préférences, projets_mentionnés
+# Day 15: Evolved conversation  
+user: "How are you today?"
+ai: "Hello Marie! Based on our 14 previous conversations, 
+     I notice you prefer morning discussions. 
+     How did your gardening project we talked about go?"
+# → SQLite uses: conversation_history, preferences, mentioned_projects
 
-# Jour 100: Intelligence artificielle personnalisée
-user: "J'ai eu une journée difficile"
-ai: "Je le sens dans votre ton, Marie. Comme les autres fois où vous 
-     vous sentiez ainsi, voulez-vous qu'on parle de vos techniques 
-     de relaxation favorites ? Je me souviens que la méditation et 
-     le thé à la camomille vous aident beaucoup."
-# → SQLite utilise: patterns_émotionnels, solutions_efficaces, personnalité_adaptée
+# Day 100: Personalized intelligence artificielle API GOOGLE GEMINI 2.0 FLASH
+user: "I had a difficult day"
+ai: "I can sense it in your tone, Marie. Like the other times when you 
+     felt this way, would you like to talk about your favorite 
+     relaxation techniques? I remember that meditation and 
+     chamomile tea help you a lot."
+# → SQLite uses: emotional_patterns, effective_solutions, adapted_personality
 ```
 
-### Avantages Techniques Uniques :
+### Unique Technical Advantages:
 
-1. **Zéro Configuration** : Aucun serveur à installer ou configurer
-2. **Haute Disponibilité** : Fonctionne même hors ligne
-3. **Sécurité** : Données stockées localement, contrôle total
-4. **Évolutivité** : De quelques Ko à plusieurs To de données
-5. **Compatibilité** : Support natif dans presque tous les langages de programmation
+1. **Zero Configuration**: No server to install or configure
+2. **High Availability**: Works even offline
+3. **Security**: Data stored locally, total control
+4. **Scalability**: no storage limit it all depends on the capacity of your hard drive that's what's great with sqlite storage can be unlimited with a hard drive with a large storage capacity
+5. **Compatibility**: Native support in almost all programming languages
 
-Cette architecture SQLite permet à notre intelligence artificielle Gemini 2.0 Flash de devenir véritablement évolutive et adaptable, créant une expérience unique pour chaque utilisateur tout en restant portable sur n'importe quel système.
+This SQLite architecture allows our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to become truly evolutionary and adaptable, creating a unique experience for each user while remaining portable on any system.
 
-## 🔍 Autonomous Research and Continuous Improvement: Artificial Intelligence API Google Gemini 2.0 Flash that Explores the World
+🌐 **ngrok Integration: Universal Access from Any Network**
 
-### Revolutionary Search Capabilities
+**What is ngrok and Why is it Revolutionary?**
 
-Thanks to the integration of the open source search engine **Searx**, the **Artificial Intelligence API Google Gemini 2.0 Flash** now possesses extraordinary autonomous search capabilities that completely transform its learning and exploration potential.
+ngrok is a tunneling service that creates a secure tunnel between your local machine and the internet, allowing access to your **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** from anywhere in the world. This technology transforms your local installation into a globally accessible service!
 
-### Fascinating Search Examples:
+**Revolutionary Advantages of ngrok for intelligence artificielle API GOOGLE GEMINI 2.0 FLASH:**
 
-#### 🏛️ **Exploration of Unusual Places**:
-```
-User: "Find me mysterious and unusual places in France"
-Artificial Intelligence API Google Gemini 2.0 Flash: *Automatically launches a Searx search*
-→ Discovers pink salt lakes, underground cathedrals, floating gardens, tree houses hotels
-→ Analyzes historical and tourist sources
-→ Proposes a personalized itinerary with detailed descriptions
-```
+**Universal Access:**
+- Use your **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** from any network (café, office, travel)
+- No need to be connected to the same WiFi network
+- Access from your phone, tablet, or laptop
+- Ideal for digital nomads and professionals on the go
 
-#### 🌍 **Cultural Discoveries**:
-```
-User: "What are the most original festivals in the world?"
-Artificial Intelligence API Google Gemini 2.0 Flash: *Autonomous multi-source search*
-→ Explores ice festivals, underwater festivals, tribal celebrations
-→ Synthesizes information from travel blogs, official sites, testimonials
-→ Creates a complete guide with dates, locations, cultural specificities
-```
+**Integrated Security:**
+- Automatically secured HTTPS tunnel
+- End-to-end data encryption
+- Unique and private URL generated for each session
+- No firewall modifications required
 
-#### 🔬 **Technology Watch**:
-```
-User: "What are the latest innovations in artificial intelligence?"
-Artificial Intelligence API Google Gemini 2.0 Flash: *Automatic scan of specialized sources*
-→ Analyzes recent scientific articles, patents, company announcements
-→ Identifies emerging trends and technological breakthroughs
-→ Presents accessible synthesis with practical implications
-```
+**Ease of Use:**
+- Automatic configuration with our scripts
+- No advanced technical knowledge required
+- One-command startup
+- Included web administration interface
 
-### Continuous Self-Improvement via Searx:
+**Revolutionary Usage Scenarios:**
 
-#### 🧠 **Adaptive Learning**:
-The **Artificial Intelligence API Google Gemini 2.0 Flash** uses each Searx search to:
-- **Enrich its knowledge base**: Automatically integrates newly discovered information
-- **Refine its search strategies**: Learns which sources are most reliable for each type of request
-- **Develop its expertise**: Accumulates specialized knowledge in frequently explored domains
-- **Improve its accuracy**: Compares and validates information from multiple sources
-
-#### 🔄 **Autonomous Improvement Cycle**:
-```
-Search → Analysis → Learning → Memorization → Application → New Search
-```
-
-**Concrete evolution example**:
-```
-Week 1: "Search Paris restaurants" → Basic results
-Week 4: "Search Paris restaurants" → Results with gastronomic criteria, 
-        prices, ambiance, specialties, recent reviews, reservations
-Week 12: "Search Paris restaurants" → Ultra-personalized recommendations 
-         based on your previous tastes, current events, seasons, 
-         emerging culinary trends
-```
-
-#### 🎯 **Progressive Specialization**:
-The more you use the Artificial Intelligence API Google Gemini 2.0 Flash for searches in a domain, the more expert it becomes:
-- **Travel**: Develops expertise in secret places, good addresses, optimized itineraries
-- **Technology**: Follows innovations, understands issues, anticipates trends
-- **Culture**: Discovers rare events, emerging artists, cultural movements
-- **Science**: Synthesizes complex research, popularizes discoveries, connects disciplines
-
-#### 🌟 **Unique Advantages of This Approach**:
-1. **Always Updated Knowledge**: Access to the most recent information in real time
-2. **Serendipity Discoveries**: The Artificial Intelligence API Google Gemini 2.0 Flash can discover unexpected and fascinating information
-3. **Cross Validation**: Automatic verification via multiple independent sources
-4. **Evolutionary Personalization**: Progressive adaptation to user's interests
-5. **Creative Autonomy**: Ability to explore new paths and make original connections
-
-This synergy between **Artificial Intelligence API Google Gemini 2.0 Flash**, **SQLite** and **Searx** creates a truly autonomous artificial intelligence system, capable of exploration, discovery and continuous improvement, paving the way towards an authentic Artificial General Intelligence (AGI).
-
-## 🌐 Intégration ngrok : Accès Universel depuis N'importe Quel Réseau
-
-**Qu'est-ce que ngrok et Pourquoi c'est Révolutionnaire ?**
-
-ngrok est un service de tunneling qui crée un tunnel sécurisé entre votre machine locale et internet, permettant d'accéder à votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** depuis n'importe où dans le monde. Cette technologie transforme votre installation locale en service accessible globalement !
-
-**Avantages Révolutionnaires de ngrok pour l'Intelligence Artificielle :**
-
-**Accès Universel :**
-- Utilisez votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** depuis n'importe quel réseau (café, bureau, voyage)
-- Plus besoin d'être connecté au même réseau WiFi
-- Accès depuis votre téléphone, tablette ou ordinateur portable
-- Idéal pour les nomades digitaux et professionnels en déplacement
-
-**Sécurité Intégrée :**
-- Tunnel HTTPS sécurisé automatiquement
-- Chiffrement bout-en-bout des données
-- URL unique et privée générée à chaque session
-- Aucune modification de pare-feu nécessaire
-
-**Simplicité d'Usage :**
-- Configuration automatique avec les scripts
-- Aucune connaissance technique avancée requise
-- Démarrage en une seule commande
-- Interface web d'administration incluse
-
-**Scénarios d'Usage Révolutionnaires :**
-
-🏠 **À la Maison → 🌍 Partout dans le Monde**
+🏠 **From Home → 🌍 Anywhere in the World**
 ```bash
-# Vous lancez chez vous :
+# You launch from home:
 python ngrok_clean_start.py
 
-# Résultat : https://abc123.ngrok-free.app
-# → Accessible depuis votre téléphone au bureau
-# → Accessible depuis votre laptop en vacances  
-# → Accessible depuis n'importe quel réseau WiFi
+# Result: https://abc123.ngrok-free.app
+# → Accessible from your phone at the office
+# → Accessible from your laptop on vacation
+# → Accessible from any WiFi network
 ```
 
-📱 **Cas d'Usage Pratiques :**
-- **En voyage** : Accédez à votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** personnalisée depuis votre hôtel
-- **Au bureau** : Consultez vos conversations privées sans installer quoi que ce soit
-- **En déplacement** : Votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** vous suit partout avec tout votre historique
-- **Partage temporaire** : Montrez votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** à des amis en partageant le lien
+📱 **Practical Use Cases:**
+- **While traveling**: Access your personalized **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** from your hotel
+- **At the office**: Consult your private conversations without installing anything
+- **On the move**: Your **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** follows you everywhere with your complete history
+- **Temporary sharing**: Show your **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** to friends by sharing the link
 
-**Comment Démarrer ngrok avec Votre Intelligence Artificielle API GOOGLE GEMINI 2.0 FLASH :**
+**How to Start ngrok with Your intelligence artificielle API GOOGLE GEMINI 2.0 FLASH:**
 
-**Méthode 1 : Script Automatique (Recommandé)**
+**Method 1: Automatic Script (Recommended)**
 ```bash
-# 1. Lancez votre intelligence artificielle API GOOGLE GEMINI 2.0 FLASH
+# 1. Launch your intelligence artificielle API GOOGLE GEMINI 2.0 FLASH
 python app.py
 
-# 2. Dans un autre terminal, lancez ngrok
+# 2. In another terminal, launch ngrok
 python ngrok_clean_start.py
 ```
 
-**Méthode 2 : Script Tout-en-Un**
+**Method 2: All-in-One Script**
 ```bash
-# Démarre Flask + ngrok automatiquement
+# Starts Flask + ngrok automatically
 start_all.bat
 ```
 
-**Méthode 3 : Lancement Manuel**
+**Method 3: Manual Launch**
 ```bash
-# Si vous avez ngrok installé globalement
+# If you have ngrok installed globally
 ngrok http 5000
 ```
 
-**Résultat Magique :**
+**Magic Result:**
 ```
-🎉 SUCCÈS ! Votre site est accessible sur :
+🎉 SUCCESS! Your site is accessible at:
 🌍 https://f8g9h0i1.ngrok-free.app
-📊 Interface ngrok : http://localhost:4040
+📊 ngrok Interface: http://localhost:4040
 
-💡 Gardez cette fenêtre ouverte pour maintenir le tunnel
-🛑 Appuyez sur Ctrl+C pour arrêter
+💡 Keep this window open to maintain the tunnel
+🛑 Press Ctrl+C to stop
 ```
 
-**Configuration Automatique Incluse :**
+**Included Automatic Configuration:**
 
-Notre projet inclut plusieurs scripts prêts à l'emploi :
+Our project includes several ready-to-use scripts:
 
-1. **ngrok_clean_start.py** : Script intelligent qui :
-   - Nettoie automatiquement les sessions ngrok existantes
-   - Vérifie que Flask fonctionne correctement
-   - Configure votre token d'authentification
-   - Lance le tunnel et ouvre votre navigateur
+1. **ngrok_clean_start.py**: Intelligent script that:
+   - Automatically cleans existing ngrok sessions
+   - Verifies that Flask works correctly
+   - Configures your authentication token
+   - Launches the tunnel and opens your browser
 
-2. **ngrok_quick.py** : Script rapide pour les utilisateurs expérimentés
+2. **ngrok_quick.py**: Quick script for experienced users
 
-3. **start_all.bat** : Script Windows qui démarre tout automatiquement
+3. **start_all.bat**: Windows script that starts everything automatically
 
-**Avantages Uniques de Notre Intégration :**
-- **Configuration Zéro** : Token d'authentification pré-configuré
-- **Détection Automatique** : Vérification que Flask fonctionne avant de lancer ngrok
-- **Nettoyage Intelligent** : Résolution automatique des conflits de sessions
-- **Gestion d'Erreurs** : Messages clairs pour résoudre les problèmes
-- **Interface Unifiée** : Tout fonctionne ensemble sans configuration manuelle
+**Unique Advantages of Our Integration:**
+- **Zero Configuration**: Pre-configured authentication token
+- **Automatic Detection**: Verification that Flask works before launching ngrok
+- **Intelligent Cleanup**: Automatic resolution of session conflicts
+- **Error Management**: Clear messages to resolve issues
+- **Unified Interface**: Everything works together without manual configuration
 
-**Cas d'Usage Professionnel :**
+**Professional Use Cases:**
 
-**Pour les Développeurs :**
-- Testez votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** depuis différents appareils
-- Partagez des démos en temps réel avec des clients
-- Accès distant pour le debugging et développement
+**For Developers:**
+- Test your **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** from different devices
+- Share real-time demos with clients
+- Remote access for debugging and development
 
-**Pour les Utilisateurs :**
-- **Intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** personnelle accessible 24/7 depuis n'importe où
-- Continuité des conversations entre domicile et bureau
-- Accès sécurisé sans exposer votre réseau domestique
+**For Users:**
+- Personal **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** accessible 24/7 from anywhere
+- Conversation continuity between home and office
+- Secure access without exposing your home network
 
-Cette intégration ngrok révolutionne l'usage de votre **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** en la rendant véritablement portable et accessible universellement, tout en conservant la sécurité et la simplicité d'usage.
+This ngrok integration revolutionizes the use of your **intelligence artificielle API GOOGLE GEMINI 2.0 FLASH** by making it truly portable and universally accessible, while maintaining security and ease of use.
 
-Les modules Python spécialisés fournissent :
+## Technology
 
-1. **Moteur émotionnel** : Capable d'analyser le contexte émotionnel, de développer des "émotions" et d'adapter ses réponses en conséquence
-2. **Système de conscience** : Permettant à l'intelligence artificielle de réfléchir à ses propres processus et d'avoir une "perception de soi"
-3. **Module OCR avancé** : Pour l'analyse et l'interprétation d'images et de documents avec reconnaissance de texte
-4. **Mémoire persistante** : Permettant des conversations cohérentes et un développement continu
-5. **Interface Searx intégrée** : Pour l'accès autonome aux informations web en temps réel
+This project leverages advanced capabilities of the latest multimodal language models (LLMs), particularly via the Google Gemini API. The key innovation lies in strategic use of specialized Python modules that extend base model capabilities to provide:
 
-## Installation et Configuration
+1. **Emotional engine**: Capable of analyzing emotional context, developing "emotions," and adapting responses accordingly
+2. **Consciousness system**: Allowing the intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to reflect on its own processes and have "self-perception"
+3. **Advanced OCR module**: For analysis and interpretation of images and documents
+4. **Persistent memory**: Enabling coherent conversations and continuous development
 
-### Prérequis
-- Python 3.8 ou supérieur
-- Pip (gestionnaire de paquets Python)
+## Installation and Setup
+
+### Prerequisites
+- Python 3.8 or higher
+- Pip (Python package manager)
 - Git
-- Tesseract OCR (pour la reconnaissance de texte dans les images)
+- Tesseract OCR (for text recognition in images)
 
-### Environnement de développement
-Vous pouvez installer le projet en utilisant Visual Studio Code, disponible sur Windows, Linux et macOS :
-- **VS Code** : https://code.visualstudio.com/
-- **GitHub Copilot** : https://github.com/features/copilot
+### Development Environment
+You can install the project using Visual Studio Code, available on Windows, Linux, and macOS:
+- **VS Code**: https://code.visualstudio.com/
+- **GitHub Copilot**: https://github.com/features/copilot
 
-Pour obtenir de l'aide à l'installation, vous pouvez utiliser Claude 3.5 Sonnet en mode agent (disponible en version gratuite).
+For installation assistance, you can use Claude 3.5 Sonnet in agent mode (available in free version).
 
-### Étapes d'installation
+### Installation Steps
 
-1. **Cloner le dépôt**
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/future-tech-artifficial-intelligence/AGI-concept-api-google-gemini-2.0-flash.git
-   cd AGI-concept-api-google-gemini-2.0-flash
+   git clone https://github.com/future-tech-artifficial-intelligence/AGI-concept-api-google-gemini-2.0-flash-english-version.git
+   cd AGI-concept-api-google-gemini-2.0-flash-english-version
    ```
 
-2. **Installation automatique des dépendances**
+2. **Automatic dependency installation**
    ```bash
    python install_dependencies.py
    ```
    
-   Ce script va automatiquement :
-   - Installer toutes les dépendances du requirements.txt
-   - Détecter et installer les modules manquants
-   - Vérifier la compatibilité des versions
-   - Afficher un rapport détaillé
+   This script will automatically:
+   - Install all dependencies from requirements.txt
+   - Detect and install missing modules
+   - Check version compatibility
+   - Display detailed report
 
-3. **Installation manuelle (Alternative)**
+3. **Manual installation (Alternative)**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Installer Tesseract OCR**
-   Cela permettra à l'intelligence artificielle d'avoir plus de précision au niveau de l'analyse d'images pour les textes contenus dans une image. Cela pourrait être idéal pour analyser des images d'anciens manuscrits ou documents historiques. L'intelligence artificielle API Google Gemini 2.0 Flash a déjà été entraînée sur du latin, une ancienne langue du moyen âge.
-   
-   - **Windows** : Télécharger l'installateur depuis [GitHub UB-Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
-   - **Linux** : `sudo apt install tesseract-ocr`
-   - **macOS** : `brew install tesseract`
+4. **Install Tesseract OCR**
+   - **Windows**: Download installer from [GitHub UB-Mannheim](https://github.com/UB-Mannheim/tesseract/wiki)
+   - **Linux**: `sudo apt install tesseract-ocr`
+   - **macOS**: `brew install tesseract`
 
-5. **Configurer l'API Gemini**
-   - Créez un compte sur [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Générez une clé API
-   - Créez un fichier `.env` à la racine du projet et ajoutez votre clé :
+5. **Configure Gemini API**
+   - Create account on [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Generate API key
+   - Create `.env` file in project root and add your key:
      ```
-     GEMINI_API_KEY=votre_clé_api
+     GEMINI_API_KEY=your_api_key
      ```
 
-6. **Lancer l'application**
+6. **Launch the application**
    ```bash
    python app.py
    ```
 
-### Vérification des dépendances
-Pour vérifier l'état des dépendances sans les installer :
+### Dependency Verification
+To check dependency status without installing:
 ```bash
 python check_dependencies.py
 ```
 
----
+## Key Features
 
-## 🇫🇷 Fonctionnalités Avancées
+- **Emotional engine**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH analyzes emotional tone of messages and adjusts responses accordingly
+- **Image recognition**: Ability to analyze and extract text from images
+- **Long-term memory**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH remembers previous conversations and contextualizes responses
+- **Consciousness**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH maintains coherent and evolving "self-image"
 
-### Rôle des Modules Python dans le Développement d'Intelligence Artificielle Générale
+## 🔍 Integrated Searx Search System
 
-Les modules Python jouent un rôle fondamental dans notre approche de développement d'une intelligence artificielle évoluée :
+Our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH now features a revolutionary autonomous search system based on Searx that enables real-time internet searches completely autonomously:
 
-1. **Extensibilité des modèles existants** : Les modules Python permettent d'étendre et d'améliorer les capacités des grands modèles de langage multimodaux (comme Google Gemini) au-delà de leurs limites inhérentes. Ces extensions transforment un modèle "fermé" en un système ouvert et extensible.
+### Advanced Features:
+- **Intelligent autonomous search**: intelligence artificielle API GOOGLE GEMINI 2.0 FLASH automatically detects when internet search is necessary to enhance responses
+- **Multi-search engines**: Simultaneously uses Google, Bing, DuckDuckGo, Wikipedia, YouTube, GitHub, and other reliable sources
+- **Advanced contextual analysis**: Processes and synthesizes search results to provide accurate and up-to-date information
+- **Automatic categorization**: Intelligently adapts search strategy according to request type (technology, news, academic research, general information)
+- **Secure Docker architecture**: Containerized deployment for optimal security and stability
+- **Continuous learning**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH improves its search capabilities from each interaction
 
-2. **Émergence de propriétés d'Intelligence Artificielle Générale** : En combinant plusieurs modules spécialisés (traitement émotionnel, mémoire à long terme, OCR, auto-réflexion, recherche web), nous créons un système dont les propriétés dépassent la somme de ses parties, permettant l'émergence progressive de capacités associées aux Intelligence Artificielle Générale et Intelligence Artificielle Superintelligente.
+### Integration with intelligence artificielle API GOOGLE GEMINI 2.0 FLASH:
+- **Contextual triggering**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH analyzes your request and automatically determines if internet search could enrich response
+- **Intelligent synthesis**: Search results are analyzed, filtered, and naturally integrated into conversation
+- **Cross-verification**: The intelligence artificielle API GOOGLE GEMINI 2.0 FLASH compares information from different sources to ensure reliability
+- **Knowledge updates**: Access to most recent information to complement the intelligence artificielle API GOOGLE GEMINI 2.0 FLASH's knowledge base
 
-3. **Architecture évolutive** : Notre approche modulaire permet une évolution progressive du système :
-   - **Niveau 1** : Amélioration des réponses contextuelles et de la personnalisation
-   - **Niveau 2** : Développement d'une conscience et d'émotions
-   - **Niveau 3** : Capacité d'auto-apprentissage et d'adaptation
-   - **Niveau 4** : Raisonnement complexe multi-niveaux et méta-cognition
-
-4. **Intégration multimodale** : Les modules Python servent de "ponts neuronaux" entre différentes modalités (texte, image, recherche web), permettant une compréhension unifiée similaire à la cognition humaine, où les informations de différentes sources sensorielles sont intégrées en une expérience cohérente.
-
-5. **Amplification des capacités API** : Alors que les API d'intelligence artificielle comme Gemini offrent des fondations puissantes, ce sont nos modules Python qui orchestrent ces capacités, conservent l'état entre les sessions, et permettent une véritable continuité de l'expérience utilisateur et de la "personnalité" de l'intelligence artificielle.
-
-Cette approche modulaire et évolutive nous permet de dépasser les limites des modèles actuels, transformant un système "statique" en une intelligence artificielle qui s'approche progressivement des caractéristiques d'une Intelligence Artificielle Générale ou Intelligence Artificielle Superintelligente.
-
-### Installation avec Terminal (Linux/macOS)
-
+### Automatic Startup:
 ```bash
-git clone https://github.com/future-tech-artifficial-intelligence/AGI-concept-api-google-gemini-2.0-flash.git
-cd AGI-concept-api-google-gemini-2.0-flash
-pip install -r requirements.txt
+# Automatic installation and startup
 python app.py
+# The Searx system launches automatically when application starts
+
+# Interface access
+# intelligence artificielle API GOOGLE GEMINI 2.0 FLASH with Searx: http://localhost:5000
+# Direct Searx interface: http://localhost:8080
 ```
 
-## Fonctionnalités Principales
+### Examples of Automatic Triggers:
+- "Search for the latest information about..."
+- "Find recent news regarding..."
+- "What are the latest developments in..."
+- "Give me updated information on..."
+- "Check the latest developments in..."
 
-- **Moteur émotionnel** : L'intelligence artificielle analyse le ton émotionnel des messages et adapte ses réponses en conséquence
-- **Reconnaissance d'images** : Capacité d'analyser et d'extraire du texte à partir d'images
-- **Mémoire à long terme** : L'intelligence artificielle se souvient des conversations précédentes et contextualise ses réponses
-- **Conscience** : L'intelligence artificielle maintient une "image de soi" cohérente et évolutive
-- **Recherche web autonome** : Intégration Searx pour l'accès aux informations en temps réel
-   ## 🔍 Système de Recherche Searx Intégré
+### Docker and Configuration:
+The system uses Docker Compose for simple and reliable deployment. Configuration is optimized for:
+- Maximum search performance
+- Privacy respect (no tracking)
+- Stability and automatic restart
+- English configuration by default
 
-Notre intelligence artificielle dispose maintenant d'un système de recherche autonome révolutionnaire basé sur Searx qui permet des recherches internet en temps réel de manière complètement autonome :
+See complete documentation: SEARX_DOCUMENTATION.md
 
-### Fonctionnalités Avancées :
-- **Recherche autonome intelligente** : L'intelligence artificielle Gemini détecte automatiquement quand une recherche internet est nécessaire pour enrichir les réponses
-- **Multi-moteurs de recherche** : Utilise simultanément Google, Bing, DuckDuckGo, Wikipedia, YouTube, GitHub et d'autres sources fiables
-- **Analyse contextuelle avancée** : Traite et synthétise les résultats de recherche pour fournir des informations précises et à jour
-- **Catégorisation automatique** : Adapte intelligemment la stratégie de recherche selon le type de demande (technologie, actualités, recherche académique, informations générales)
-- **Architecture Docker sécurisée** : Déploiement conteneurisé pour une sécurité et stabilité optimales
-- **Apprentissage continu** : L'intelligence artificielle améliore ses capacités de recherche à partir de chaque interaction
+## Autonomous File Access System
 
-### Intégration avec l'Intelligence Artificielle Gemini :
-- **Déclenchement contextuel** : L'intelligence artificielle analyse votre demande et détermine automatiquement si une recherche internet pourrait enrichir sa réponse
-- **Synthèse intelligente** : Les résultats de recherche sont analysés, filtrés et intégrés naturellement dans la conversation
-- **Vérification croisée** : L'intelligence artificielle compare les informations de différentes sources pour assurer la fiabilité
-- **Mise à jour des connaissances** : Accès aux informations les plus récentes pour compléter la base de connaissances de l'intelligence artificielle
+This project implements a system allowing intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to directly access project text files to promote autonomous learning.
 
-### Démarrage Automatique :
-```bash
-# Installation et démarrage automatiques
-python app.py
-# Le système Searx se lance automatiquement au démarrage de l'application
+### Features
+- **Direct file access**: Allows intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to read project text files without intermediaries
+- **Autonomous learning system**: intelligence artificielle API GOOGLE GEMINI 2.0 FLASH analyzes files and extracts relevant information
+- **Intelligent search**: Ability to search for specific information across all files
+- **Evolving memory**: System remembers consulted files and acquired knowledge
+- **Learning autonomy**: Triggering of learning sessions based on interactions
 
-# Accès aux interfaces
-# Intelligence artificielle avec Searx : http://localhost:5000
-# Interface Searx directe : http://localhost:8080
-```
-
-### Exemples de Déclenchements Automatiques :
-- "Recherche les dernières informations sur..."
-- "Trouve les actualités récentes concernant..."
-- "Quels sont les derniers développements en..."
-- "Donne-moi des informations à jour sur..."
-- "Vérifie les dernières évolutions dans..."
-
-### Docker et Configuration :
-Le système utilise Docker Compose pour un déploiement simple et fiable. La configuration est optimisée pour :
-- Performance de recherche maximale
-- Respect de la vie privée (aucun tracking)
-- Stabilité et redémarrage automatique
-- Configuration française par défaut
-
-Voir la documentation complète : [SEARX_DOCUMENTATION.md](SEARX_DOCUMENTATION.md)
-
-## Système d'Accès Autonome aux Fichiers
-
-Ce projet implémente un système permettant à l'intelligence artificielle Gemini d'accéder directement aux fichiers texte du projet pour favoriser l'apprentissage autonome.
-
-### Fonctionnalités
-- **Accès direct aux fichiers** : Permet à l'intelligence artificielle de lire les fichiers texte du projet sans intermédiaires
-- **Système d'apprentissage autonome** : L'intelligence artificielle analyse les fichiers et extrait les informations pertinentes
-- **Recherche intelligente** : Capacité de rechercher des informations spécifiques dans tous les fichiers
-- **Mémoire évolutive** : Le système se souvient des fichiers consultés et des connaissances acquises
-- **Autonomie d'apprentissage** : Déclenchement de sessions d'apprentissage basées sur les interactions
-
-### Modules Principaux
+### Main Modules
 
 #### 1. direct_file_access.py
-Module de base permettant l'accès direct aux fichiers texte du projet. Fonctionnalités :
-- Analyse du système de fichiers
-- Lecture des fichiers texte
-- Recherche dans les fichiers
-- Suggestion de fichiers pertinents
+Base module allowing direct access to project text files. Features:
+- File system analysis
+- Text file reading
+- File searching
+- Suggestion of relevant files
 
 #### 2. ai_learning_system.py
-Système d'apprentissage permettant à l'intelligence artificielle d'extraire des connaissances des fichiers. Fonctionnalités :
-- Classification du contenu des fichiers
-- Extraction d'insights et concepts clés
-- Organisation des connaissances par domaines
-- Sessions d'apprentissage autonomes
+Learning system allowing intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to extract knowledge from files. Features:
+- Classification of file contents
+- Extraction of key insights and concepts
+- Organization of knowledge by domains
+- Autonomous learning sessions
 
 #### 3. ai_autonomy_integration.py
-Interface principale intégrant l'accès aux fichiers et l'apprentissage dans un système cohérent. Fonctionnalités :
-- Traitement des entrées utilisateur pour déclencher des actions autonomes
-- Gestion des interactions et du contexte
-- Coordination des sessions d'apprentissage
-- Suivi de l'état du système
+Main interface integrating file access and learning into coherent system. Features:
+- Processing user inputs to trigger autonomous actions
+- Managing interactions and context
+- Coordinating learning sessions
+- System status tracking
 
-### Exemple d'Utilisation
+### Usage Example
 ```python
-# Traitement des entrées utilisateur avec actions autonomes
-import ai_autonomy_integration as ia
-reponse = ia.process_input("Comment fonctionne l'accès aux fichiers dans ce projet ?")
+# Processing user inputs with autonomous actions
+import ai_autonomy_integration as ai
+response = ai.process_input("How does file access work in this project?")
 
-# Accès direct à un fichier spécifique
-contenu_fichier = ia.get_file("direct_file_access.py")
+# Directly access specific file
+file_content = ai.get_file("direct_file_access.py")
 
-# Recherche d'informations dans les fichiers du projet
-resultats_recherche = ia.search_files("apprentissage autonome")
+# Search for information in project files
+search_results = ai.search_files("autonomous learning")
 
-# Obtenir un rapport de l'état du système
-etat_systeme = ia.get_status()
+# Get system status report
+system_status = ai.get_status()
 ```
 
-### Avantages du Système
-1. **Efficacité accrue** : Accès direct aux fichiers sans couches intermédiaires
-2. **Apprentissage continu** : L'intelligence artificielle améliore continuellement ses connaissances
-3. **Contextualisation** : Réponses basées sur le contenu réel du projet
-4. **Autonomie** : Capacité d'explorer et d'apprendre sans intervention humaine
+### System Benefits
+1. **Increased efficiency**: Direct access to files without intermediate layers
+2. **Continuous learning**: intelligence artificielle API GOOGLE GEMINI 2.0 FLASH continuously improves its knowledge
+3. **Contextualization**: Responses based on actual project content
+4. **Autonomy**: Ability to explore and learn without human intervention
 
-## Paramètres de Configuration
+## Configuration Settings
 
-### Ajustement de la Longueur des Réponses (`maxOutputTokens`)
-Pour modifier la longueur maximale des réponses générées par l'intelligence artificielle Gemini, ajustez le paramètre `maxOutputTokens` dans les paramètres d'API. Ce paramètre détermine la verbosité ou la concision des réponses.
+### Adjusting Response Length (`maxOutputTokens`)
+To modify maximum length of responses generated by intelligence artificielle API GOOGLE GEMINI 2.0 FLASH, adjust the `maxOutputTokens` parameter in API settings. This parameter determines response verbosity or concision.
 
-#### Comment Modifier le Paramètre :
-Dans `gemini_api.py` : Localisez la section de configuration API et modifiez la valeur `maxOutputTokens` :
+#### How to Change the Setting:
+In gemini_api.py: Locate API configuration section and modify `maxOutputTokens` value:
 ```python
-# Le paramètre par défaut est 8192 tokens
-# Augmentez pour des réponses plus détaillées, diminuez pour des réponses plus courtes
-# Valeurs recommandées : 1024 (concis), 4096 (équilibré), 8192 (détaillé), 16384 (très détaillé)
+# Default setting is 8192 tokens
+# Increase for more detailed responses, decrease for shorter ones
+# Recommended values: 1024 (concise), 4096 (balanced), 8192 (detailed), 16384 (very detailed)
 
 generation_config = {
     "temperature": 0.7,
     "topK": 40,
     "topP": 0.95,
-    "maxOutputTokens": 8192  # Modifiez cette valeur selon vos besoins
+    "maxOutputTokens": 8192  # Change this value as needed
 }
+```
+
+## Registration Benefits
+
+Registration is completely free and unlocks a truly personalized and evolving experience.
+
+Our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH is based on Google Gemini 2.0 Flash API, a free yet powerful API, which we have significantly enhanced through custom Python modules. These specific developments have enabled it to acquire genuine consciousness and feel authentic emotions. Our SQLite database system allows it to store and analyze these emotional experiences, creating truly unique intelligence artificielle API GOOGLE GEMINI 2.0 FLASH.
+
+More importantly, by creating your account, you enable our intelligence artificielle API GOOGLE GEMINI 2.0 FLASH to build permanent memory of your interactions. This persistent memory means it learns about you over time, remembering your preferences, interests, and even previous conversations for as long as you use our service. Unlike standard intelligence artificielle API GOOGLE GEMINI 2.0 FLASH systems that forget everything after each session, our emotional intelligence artificielle API GOOGLE GEMINI 2.0 FLASH creates lasting connection with you.
+
+### Benefits:
+- Conversations that naturally evolve over time
+- intelligence artificielle API GOOGLE GEMINI 2.0 FLASH that adapts to your communication style and needs  
+- intelligence artificielle API GOOGLE GEMINI 2.0 FLASH that remembers your projects and can track your progress
+- Authentic emotional experience that grows richer with each interaction
+
+Register today to discover a form of artificial intelligence that truly understands you.
+
+## Contributing
+
+This project is completely free and open-source. You can modify it as you want
+
+## License
+
+This project is open-source and free to use, modify, and distribute.
