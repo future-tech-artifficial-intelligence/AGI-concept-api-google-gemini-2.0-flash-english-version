@@ -1,6 +1,6 @@
 """
-Système d'Autonomie IA Simplifié
-Ce module gère l'autonomie de l'IA avec accès web direct sans programmation d'actions.
+**Simplified artificial intelligence API GOOGLE GEMINI 2.0 FLASH Autonomy System**
+This module manages the artificial intelligence API GOOGLE GEMINI 2.0 FLASH's autonomy with direct web access without programming actions.
 """
 
 import json
