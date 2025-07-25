@@ -1,4 +1,3 @@
-```python
 """
 **Abstract Interface for Various Artificial Intelligence APIs.**
 This module defines a common interface for all supported AI APIs.
