@@ -14,87 +14,87 @@ from typing import Dict, List, Any, Optional, Union
 from ai_api_interface import AIApiInterface
 from modules.text_memory_manager import TextMemoryManager
 
-# Import du module de conscience temporelle autonome
+# Import the autonomous time awareness module
 try:
     from autonomous_time_awareness import get_ai_temporal_context
 except ImportError:
     def get_ai_temporal_context():
-        return "[Conscience temporelle] Système en cours d'initialisation."
-    logging.getLogger(__name__).warning("Module autonomous_time_awareness non trouvé, utilisation de la fonction de secours")
+        return "[Time Awareness] System initializing."
+    logging.getLogger(__name__).warning("autonomous_time_awareness module not found, using fallback function")
 
-# Import du système de scraping web autonome
+# Import the autonomous web scraping system
 try:
     from autonomous_web_scraper import autonomous_web_scraper, search_real_links_from_any_site
     from web_learning_integration import force_web_learning_session, get_web_learning_integration_status
     WEB_SCRAPING_AVAILABLE = True
 except ImportError:
     WEB_SCRAPING_AVAILABLE = False
-    logging.getLogger(__name__).warning("Modules de scraping web non trouvés")
+    logging.getLogger(__name__).warning("Web scraping modules not found")
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Import de notre module de formatage de texte
+# Import our text formatting module
 try:
     from response_formatter import format_response
 except ImportError:
-    # Fonction de secours si le module n'est pas disponible
+    # Fallback function if the module is not available
     def format_response(text):
         return text
-    logger.warning("Module response_formatter non trouvé, utilisation de la fonction de secours")
+    logger.warning("response_formatter module not found, using fallback function")
 
 class CustomLLMAPI(AIApiInterface):
-    """Implémentation de l'interface AIApiInterface pour un LLM personnalisé défini par l'utilisateur"""
+    """Implementation of the AIApiInterface for a user-defined custom LLM"""
 
     def __init__(self, api_key: Optional[str] = None, api_url: Optional[str] = None):
         """
-        Initialise un LLM personnalisé avec une clé API et une URL d'API.
+        Initializes a custom LLM with an API key and an API URL.
 
         Args:
-            api_key: Clé API pour le LLM personnalisé
-            api_url: URL de l'API du LLM personnalisé (obligatoire)
+            api_key: API key for the custom LLM
+            api_url: API URL for the custom LLM (required)
         """
         self.api_key = api_key
         self.api_url = api_url
 
         if not self.api_url:
-            logger.warning("Aucune URL d'API personnalisée fournie, l'API ne fonctionnera pas correctement")
+            logger.warning("No custom API URL provided, the API will not function correctly")
         else:
-            logger.info("API LLM personnalisée initialisée avec l'URL: %s", self.api_url)
+            logger.info("Custom LLM API initialized with URL: %s", self.api_url)
 
     def process_memory_request(self, prompt: str, user_id: int, session_id: str) -> Optional[str]:
         """
-        Traite spécifiquement les demandes liées à la mémoire ou aux conversations passées.
+        Specifically processes requests related to memory or past conversations.
 
         Args:
-            prompt: La question ou instruction de l'utilisateur
-            user_id: ID de l'utilisateur
-            session_id: ID de la session actuelle
+            prompt: The user's question or instruction
+            user_id: User ID
+            session_id: Current session ID
 
         Returns:
-            Un contexte enrichi si la demande est liée à la mémoire, sinon None
+            An enriched context if the request is memory-related, otherwise None
         """
-        # Mots clés qui indiquent une demande de mémoire
+        # Keywords that indicate a memory request
         memory_keywords = [
-            "souviens", "rappelles", "mémoire", "précédemment", "auparavant",
-            "conversation précédente", "parlé de", "sujet précédent", "discuté de",
-            "déjà dit", "dernière fois", "avant"
+            "remember", "recall", "memory", "previously", "before",
+            "previous conversation", "talked about", "previous topic", "discussed",
+            "already said", "last time", "earlier"
         ]
 
-        # Vérifier si la demande concerne la mémoire
+        # Check if the request concerns memory
         is_memory_request = any(keyword in prompt.lower() for keyword in memory_keywords)
 
         if not is_memory_request:
             return None
 
         try:
-            # Utiliser le TextMemoryManager pour rechercher du contenu pertinent
+            # Use TextMemoryManager to search for relevant content
             text_memory = TextMemoryManager()
             memory_results = text_memory.search_memory(user_id, prompt, session_id=session_id)
 
             if memory_results and len(memory_results) > 0:
-                memory_context = "Voici ce dont nous avons discuté précédemment qui pourrait être pertinent:\n\n"
+                memory_context = "Here's what we discussed previously that might be relevant:\n\n"
 
                 for memory in memory_results:
                     message_content = memory.get('content', '').strip()
@@ -103,7 +103,7 @@ class CustomLLMAPI(AIApiInterface):
 
                 return memory_context
         except Exception as e:
-            logger.error(f"Erreur lors du traitement de la demande de mémoire: {str(e)}")
+            logger.error(f"Error processing memory request: {str(e)}")
 
         return None
 
@@ -115,81 +115,81 @@ class CustomLLMAPI(AIApiInterface):
                     user_id: int = 1,
                     session_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Obtient une réponse du LLM personnalisé.
+        Gets a response from the custom LLM.
 
         Args:
-            prompt: Le texte de la requête
-            image_data: Données d'image encodées en base64 (optionnel)
-            context: Contexte de conversation précédent (optionnel)
-            emotional_state: État émotionnel actuel de l'IA (optionnel)
-            user_id: ID de l'utilisateur
-            session_id: ID de la session (optionnel)
+            prompt: The request text
+            image_data: Base64 encoded image data (optional)
+            context: Previous conversation context (optional)
+            emotional_state: Current emotional state of the AI (optional)
+            user_id: User ID
+            session_id: Session ID (optional)
 
         Returns:
-            Dictionnaire contenant la réponse et les métadonnées
+            Dictionary containing the response and metadata
         """
         if not self.api_url:
             return {
                 "success": False,
-                "response": "Erreur: URL API du LLM personnalisé non configurée. Veuillez configurer l'URL dans les paramètres d'API.",
-                "error": "URL API non configurée"
+                "response": "Error: Custom LLM API URL not configured. Please configure the URL in the API settings.",
+                "error": "API URL not configured"
             }
 
         try:
-            # Préparation du contexte temporel automatique
+            # Automatic temporal context preparation
             time_context = get_ai_temporal_context()
 
-            # Ajout du contexte émotionnel s'il est fourni
+            # Add emotional context if provided
             emotional_context = ""
             if emotional_state and "base_state" in emotional_state:
-                emotional_context = f"[État émotionnel: {emotional_state['base_state']}] "
+                emotional_context = f"[Emotional State: {emotional_state['base_state']}] "
 
-            # Assemblage du prompt avec les contextes
+            # Assemble the prompt with contexts
             enhanced_prompt = prompt
             if context:
                 enhanced_prompt = context + "\n\n" + prompt
 
-            # Ajout du contexte temporel et émotionnel
+            # Add temporal and emotional context
             if time_context or emotional_context:
                 enhanced_prompt = f"{emotional_context}{time_context}\n\n{enhanced_prompt}"
 
-            # Préparation des données pour l'appel API
+            # Prepare data for the API call
             headers = {
                 "Content-Type": "application/json"
             }
 
-            # Ajouter la clé API aux en-têtes si disponible
+            # Add API key to headers if available
             if self.api_key:
                 headers["Authorization"] = f"Bearer {self.api_key}"
 
-            # Construction du payload selon le format général
+            # Build the payload according to the general format
             payload = {
                 "prompt": enhanced_prompt,
                 "user_id": user_id
             }
 
-            # Ajouter l'image si présente
+            # Add image if present
             if image_data:
                 payload["image"] = image_data
 
-            # Appel API
+            # API call
             response = requests.post(
                 self.api_url,
                 headers=headers,
                 json=payload,
-                timeout=120  # 2 minutes de timeout
+                timeout=120  # 2 minutes timeout
             )
 
-            response.raise_for_status()  # Lever une exception si réponse non 2xx
+            response.raise_for_status()  # Raise an exception for non-2xx responses
 
-            # Traiter la réponse
+            # Process the response
             response_data = response.json()
 
-            # Obtenir le texte de la réponse
+            # Get the response text
             if "response" in response_data:
                 response_text = response_data["response"]
             else:
-                # Essayer d'autres structures de réponse possibles
+                # Try other possible response structures
                 if "choices" in response_data and len(response_data["choices"]) > 0:
                     response_text = response_data["choices"][0].get("text", "")
                 elif "text" in response_data:
@@ -199,29 +199,29 @@ class CustomLLMAPI(AIApiInterface):
                 else:
                     response_text = json.dumps(response_data)
 
-            # Formater la réponse pour la rendre plus lisible
+            # Format the response to make it more readable
             formatted_response = format_response(response_text)
 
-            # Retourner une réponse formatée
+            # Return a formatted response
             return {
                 "success": True,
                 "response": formatted_response,
-                "emotional_state": emotional_state  # Retransmettre l'état émotionnel
+                "emotional_state": emotional_state  # Retransmit emotional state
             }
 
         except requests.exceptions.RequestException as e:
-            error_message = f"Erreur lors de la communication avec l'API LLM personnalisée: {str(e)}"
+            error_message = f"Error communicating with the custom LLM API: {str(e)}"
             logger.error(error_message)
             return {
                 "success": False,
-                "response": f"Désolé, une erreur est survenue lors de la communication avec le LLM personnalisé. Veuillez vérifier vos paramètres d'API ou réessayer plus tard.\n\nErreur technique: {str(e)}",
+                "response": f"Sorry, an error occurred while communicating with the custom LLM. Please check your API settings or try again later.\n\nTechnical error: {str(e)}",
                 "error": error_message
             }
         except Exception as e:
-            error_message = f"Erreur inattendue lors du traitement de la demande: {str(e)}"
+            error_message = f"Unexpected error processing the request: {str(e)}"
             logger.error(error_message)
             return {
                 "success": False,
-                "response": "Désolé, une erreur inattendue s'est produite. Veuillez réessayer ou contacter le support.",
+                "response": "Sorry, an unexpected error occurred. Please try again or contact support.",
                 "error": error_message
             }
