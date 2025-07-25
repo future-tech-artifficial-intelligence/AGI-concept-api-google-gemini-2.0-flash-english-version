@@ -8,19 +8,19 @@ import json
 import time
 from datetime import datetime
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 def demo_header(title):
-    """Affiche un header de démonstration"""
+    """Displays a demonstration header"""
     print("\n" + "=" * 60)
     print(f"🚀 {title}")
     print("=" * 60)
 
 def demo_content_extraction():
-    """Démonstraton d'extraction de contenu"""
-    demo_header("EXTRACTION DE CONTENU WEB")
+    """Content extraction demonstration"""
+    demo_header("WEB CONTENT EXTRACTION")
     
     try:
         from advanced_web_navigator import extract_website_content
@@ -32,62 +32,62 @@ def demo_content_extraction():
         ]
         
         for url in test_urls:
-            print(f"\n🔍 Extraction depuis: {url}")
+            print(f"\n🔍 Extracting from: {url}")
             
             start_time = time.time()
             content = extract_website_content(url)
             extraction_time = time.time() - start_time
             
             if content.success:
-                print(f"✅ Extraction réussie en {extraction_time:.2f}s")
-                print(f"  📄 Titre: {content.title}")
-                print(f"  📊 Contenu: {len(content.cleaned_text)} caractères")
-                print(f"  🏆 Score qualité: {content.content_quality_score}/10")
-                print(f"  🌐 Langue: {content.language}")
-                print(f"  🔗 Liens trouvés: {len(content.links)}")
+                print(f"✅ Extraction successful in {extraction_time:.2f}s")
+                print(f"  📄 Title: {content.title}")
+                print(f"  📊 Content: {len(content.cleaned_text)} characters")
+                print(f"  🏆 Quality score: {content.content_quality_score}/10")
+                print(f"  🌐 Language: {content.language}")
+                print(f"  🔗 Links found: {len(content.links)}")
                 print(f"  🖼️ Images: {len(content.images)}")
-                print(f"  🔑 Mots-clés: {', '.join(content.keywords[:5])}")
+                print(f"  🔑 Keywords: {', '.join(content.keywords[:5])}")
                 
                 if content.summary:
-                    print(f"  📝 Résumé: {content.summary[:150]}...")
+                    print(f"  📝 Summary: {content.summary[:150]}...")
             else:
-                print(f"❌ Extraction échouée: {content.error_message}")
+                print(f"❌ Extraction failed: {content.error_message}")
             
-            time.sleep(1)  # Délai entre les requêtes
+            time.sleep(1)  # Delay between requests
             
     except Exception as e:
-        logger.error(f"Erreur lors de la démo d'extraction: {str(e)}")
+        logger.error(f"Error during extraction demo: {str(e)}")
 
 def demo_navigation_detection():
-    """Démonstraton de détection de navigation"""
-    demo_header("DÉTECTION DE NAVIGATION AUTOMATIQUE")
+    """Navigation detection demonstration"""
+    demo_header("AUTOMATIC NAVIGATION DETECTION")
     
     try:
         from gemini_navigation_adapter import detect_navigation_need, initialize_gemini_navigation_adapter
         
-        # Initialiser l'adaptateur
+        # Initialize the adapter
         initialize_gemini_navigation_adapter()
         
         test_prompts = [
-            "Recherche et navigue sur l'intelligence artificielle",
-            "Extrait le contenu de https://example.com/article",
-            "Explore le site https://wikipedia.org en profondeur avec 3 niveaux",
-            "Simule un parcours d'achat sur https://shop.example.com",
-            "Qu'est-ce que l'apprentissage automatique ?",
-            "Peux-tu m'aider avec Python ?",
-            "Navigue dans le site de documentation Python",
-            "Comment faire une recherche Google ?",
-            "Analyse cette page web complètement",
-            "Trouve des informations sur les voitures électriques"
+            "Search and navigate artificial intelligence",
+            "Extract content from https://example.com/article",
+            "Deeply explore https://wikipedia.org with 3 levels",
+            "Simulate a purchase journey on https://shop.example.com",
+            "What is machine learning?",
+            "Can you help me with Python?",
+            "Navigate the Python documentation site",
+            "How to do a Google search?",
+            "Analyze this webpage completely",
+            "Find information about electric cars"
         ]
         
-        print("🧪 Test de détection de navigation sur différents prompts:\n")
+        print("🧪 Testing navigation detection on different prompts:\n")
         
         for i, prompt in enumerate(test_prompts, 1):
             detection = detect_navigation_need(prompt)
             
             requires_nav = detection.get('requires_navigation', False)
-            nav_type = detection.get('navigation_type', 'aucun')
+            nav_type = detection.get('navigation_type', 'none')
             confidence = detection.get('confidence', 0)
             params = detection.get('extracted_params', {})
             
@@ -95,126 +95,126 @@ def demo_navigation_detection():
             confidence_bar = "█" * int(confidence * 10) + "░" * (10 - int(confidence * 10))
             
             print(f"{i:2}. {status_icon} '{prompt}'")
-            print(f"     Type: {nav_type} | Confiance: {confidence:.1f} [{confidence_bar}]")
+            print(f"     Type: {nav_type} | Confidence: {confidence:.1f} [{confidence_bar}]")
             
             if params:
-                print(f"     Paramètres: {params}")
+                print(f"     Parameters: {params}")
             print()
             
     except Exception as e:
-        logger.error(f"Erreur lors de la démo de détection: {str(e)}")
+        logger.error(f"Error during detection demo: {str(e)}")
 
 def demo_deep_navigation():
-    """Démonstraton de navigation profonde"""
-    demo_header("NAVIGATION PROFONDE DE SITE WEB")
+    """Deep navigation demonstration"""
+    demo_header("DEEP WEBSITE NAVIGATION")
     
     try:
         from advanced_web_navigator import navigate_website_deep
         
-        # Test avec un site simple
+        # Test with a simple site
         test_url = "https://httpbin.org"
         
-        print(f"🚀 Navigation profonde depuis: {test_url}")
-        print("   Paramètres: max_depth=2, max_pages=5")
+        print(f"🚀 Deep navigation from: {test_url}")
+        print("   Parameters: max_depth=2, max_pages=5")
         
         start_time = time.time()
         nav_path = navigate_website_deep(test_url, max_depth=2, max_pages=5)
         navigation_time = time.time() - start_time
         
-        print(f"\n✅ Navigation terminée en {navigation_time:.2f}s")
-        print(f"📊 Statistiques de navigation:")
-        print(f"  - Pages visitées: {len(nav_path.visited_pages)}")
-        print(f"  - Profondeur atteinte: {nav_path.navigation_depth}")
-        print(f"  - Contenu total extrait: {nav_path.total_content_extracted} caractères")
-        print(f"  - Stratégie: {nav_path.navigation_strategy}")
+        print(f"\n✅ Navigation finished in {navigation_time:.2f}s")
+        print(f"📊 Navigation statistics:")
+        print(f"  - Pages visited: {len(nav_path.visited_pages)}")
+        print(f"  - Depth reached: {nav_path.navigation_depth}")
+        print(f"  - Total content extracted: {nav_path.total_content_extracted} characters")
+        print(f"  - Strategy: {nav_path.navigation_strategy}")
         print(f"  - Session ID: {nav_path.session_id}")
         
         if nav_path.visited_pages:
-            print(f"\n📄 Pages explorées:")
+            print(f"\n📄 Explored pages:")
             for i, page in enumerate(nav_path.visited_pages, 1):
                 print(f"  {i}. {page.title} (Score: {page.content_quality_score:.1f})")
                 print(f"     URL: {page.url}")
-                print(f"     Contenu: {len(page.cleaned_text)} caractères")
+                print(f"     Content: {len(page.cleaned_text)} characters")
                 if page.keywords:
-                    print(f"     Mots-clés: {', '.join(page.keywords[:3])}")
+                    print(f"     Keywords: {', '.join(page.keywords[:3])}")
                 print()
                 
     except Exception as e:
-        logger.error(f"Erreur lors de la démo de navigation: {str(e)}")
+        logger.error(f"Error during navigation demo: {str(e)}")
 
 def demo_gemini_integration():
-    """Démonstraton d'intégration Gemini"""
-    demo_header("INTÉGRATION GEMINI COMPLÈTE")
+    """Gemini integration demonstration"""
+    demo_header("FULL GEMINI INTEGRATION")
     
     try:
         from gemini_web_integration import search_web_for_gemini, initialize_gemini_web_integration
         
-        # Initialiser l'intégration
+        # Initialize integration
         initialize_gemini_web_integration()
         
-        # Test de recherche simple
-        query = "intelligence artificielle 2024"
-        user_context = "développeur cherchant les dernières tendances"
+        # Simple search test
+        query = "artificial intelligence 2024"
+        user_context = "developer looking for the latest trends"
         
-        print(f"🔍 Recherche et navigation pour Gemini:")
-        print(f"   Requête: '{query}'")
-        print(f"   Contexte: {user_context}")
+        print(f"🔍 Searching and navigating for artificial intelligence API GOOGLE GEMINI 2.0 FLASH:")
+        print(f"   Query: '{query}'")
+        print(f"   Context: {user_context}")
         
         start_time = time.time()
         result = search_web_for_gemini(query, user_context)
         processing_time = time.time() - start_time
         
-        print(f"\n⏱️ Traitement terminé en {processing_time:.2f}s")
+        print(f"\n⏱️ Processing finished in {processing_time:.2f}s")
         
         if result.get('success', False):
-            print("✅ Recherche et navigation réussies!")
+            print("✅ Search and navigation successful!")
             
             search_summary = result.get('search_summary', {})
-            print(f"\n📊 Résumé de la recherche:")
-            print(f"  - Sites recherchés: {search_summary.get('sites_searched', 0)}")
-            print(f"  - Sites navigués: {search_summary.get('sites_navigated', 0)}")
-            print(f"  - Pages visitées: {search_summary.get('total_pages_visited', 0)}")
-            print(f"  - Pages de haute qualité: {search_summary.get('high_quality_pages', 0)}")
+            print(f"\n📊 Search summary:")
+            print(f"  - Sites searched: {search_summary.get('sites_searched', 0)}")
+            print(f"  - Sites navigated: {search_summary.get('sites_navigated', 0)}")
+            print(f"  - Total pages visited: {search_summary.get('total_pages_visited', 0)}")
+            print(f"  - High quality pages: {search_summary.get('high_quality_pages', 0)}")
             
             if 'content_synthesis' in result:
-                print(f"\n📝 Synthèse du contenu:")
+                print(f"\n📝 Content synthesis:")
                 synthesis = result['content_synthesis']
                 print(f"   {synthesis[:300]}{'...' if len(synthesis) > 300 else ''}")
             
             if 'aggregated_keywords' in result and result['aggregated_keywords']:
                 keywords = ', '.join(result['aggregated_keywords'][:10])
-                print(f"\n🔑 Mots-clés identifiés: {keywords}")
+                print(f"\n🔑 Identified keywords: {keywords}")
             
             if 'navigation_insights' in result:
-                print(f"\n💡 Insights de navigation:")
+                print(f"\n💡 Navigation insights:")
                 for insight in result['navigation_insights'][:3]:
                     print(f"   • {insight}")
             
             if 'recommended_actions' in result:
-                print(f"\n💭 Recommandations:")
+                print(f"\n💭 Recommendations:")
                 for action in result['recommended_actions'][:3]:
                     print(f"   • {action}")
                     
         else:
-            print(f"❌ Recherche échouée: {result.get('reason', 'Erreur inconnue')}")
+            print(f"❌ Search failed: {result.get('reason', 'Unknown error')}")
             
     except Exception as e:
-        logger.error(f"Erreur lors de la démo d'intégration Gemini: {str(e)}")
+        logger.error(f"Error during Gemini integration demo: {str(e)}")
 
 def demo_api_endpoints():
-    """Démonstraton des endpoints API"""
-    demo_header("API REST - ENDPOINTS")
+    """API endpoints demonstration"""
+    demo_header("REST API - ENDPOINTS")
     
     try:
         from web_navigation_api import register_web_navigation_api, initialize_web_navigation_api
         from flask import Flask
         
-        # Créer une app Flask de test
+        # Create a test Flask app
         app = Flask(__name__)
         register_web_navigation_api(app)
         initialize_web_navigation_api()
         
-        print("🌐 Test des endpoints API REST:\n")
+        print("🌐 Testing REST API endpoints:\n")
         
         with app.test_client() as client:
             # Test 1: Health check
@@ -231,24 +231,24 @@ def demo_api_endpoints():
                         icon = "✅" if comp_status == 'healthy' else "⚠️"
                         print(f"   {icon} {component}: {comp_status}")
             else:
-                print(f"   ❌ Erreur: {response.status_code}")
+                print(f"   ❌ Error: {response.status_code}")
             
             # Test 2: Documentation
-            print("\n2. 📚 Documentation API")
+            print("\n2. 📚 API Documentation")
             response = client.get('/api/web-navigation/docs')
             if response.status_code == 200:
                 docs = response.get_json()
-                print(f"   ✅ Documentation disponible")
+                print(f"   ✅ Documentation available")
                 print(f"   API: {docs.get('api_name', 'N/A')}")
                 print(f"   Version: {docs.get('version', 'N/A')}")
                 
                 endpoints = docs.get('endpoints', {})
-                print(f"   Endpoints disponibles: {len(endpoints)}")
+                print(f"   Available endpoints: {len(endpoints)}")
             else:
-                print(f"   ❌ Erreur: {response.status_code}")
+                print(f"   ❌ Error: {response.status_code}")
             
-            # Test 3: Statistiques
-            print("\n3. 📊 Statistiques")
+            # Test 3: Statistics
+            print("\n3. 📊 Statistics")
             response = client.get('/api/web-navigation/stats')
             if response.status_code == 200:
                 stats_data = response.get_json()
@@ -256,18 +256,18 @@ def demo_api_endpoints():
                     stats = stats_data.get('stats', {})
                     api_stats = stats.get('api_stats', {})
                     
-                    print(f"   ✅ Statistiques récupérées")
-                    print(f"   Sessions actives: {stats.get('active_sessions', 0)}")
-                    print(f"   Taille du cache: {stats.get('cache_size', 0)}")
-                    print(f"   Taux de cache hit: {stats.get('cache_hit_rate', 0):.1f}%")
-                    print(f"   Recherches totales: {api_stats.get('total_searches', 0)}")
+                    print(f"   ✅ Statistics retrieved")
+                    print(f"   Active sessions: {stats.get('active_sessions', 0)}")
+                    print(f"   Cache size: {stats.get('cache_size', 0)}")
+                    print(f"   Cache hit rate: {stats.get('cache_hit_rate', 0):.1f}%")
+                    print(f"   Total searches: {api_stats.get('total_searches', 0)}")
                 else:
-                    print(f"   ❌ Erreur dans les données")
+                    print(f"   ❌ Error in data")
             else:
-                print(f"   ❌ Erreur: {response.status_code}")
+                print(f"   ❌ Error: {response.status_code}")
             
-            # Test 4: Création de session
-            print("\n4. 🔐 Création de Session")
+            # Test 4: Session creation
+            print("\n4. 🔐 Session Creation")
             session_data = {
                 "user_id": "demo_user",
                 "config": {
@@ -281,35 +281,35 @@ def demo_api_endpoints():
                 result = response.get_json()
                 if result.get('success', False):
                     session_id = result.get('session_id')
-                    print(f"   ✅ Session créée: {session_id}")
+                    print(f"   ✅ Session created: {session_id}")
                     print(f"   Configuration: {result.get('config', {})}")
                     
-                    # Test 5: Info de session
-                    print("\n5. ℹ️ Informations de Session")
+                    # Test 5: Session info
+                    print("\n5. ℹ️ Session Information")
                     response = client.get(f'/api/web-navigation/session/{session_id}')
                     if response.status_code == 200:
                         session_info = response.get_json()
                         if session_info.get('success', False):
-                            print(f"   ✅ Session trouvée")
-                            print(f"   Utilisateur: {session_info.get('user_id')}")
-                            print(f"   Créée le: {session_info.get('created_at', 'N/A')[:19]}")
-                            print(f"   Requêtes: {session_info.get('requests_count', 0)}")
+                            print(f"   ✅ Session found")
+                            print(f"   User: {session_info.get('user_id')}")
+                            print(f"   Created at: {session_info.get('created_at', 'N/A')[:19]}")
+                            print(f"   Requests: {session_info.get('requests_count', 0)}")
                             print(f"   Active: {session_info.get('is_active', False)}")
                         else:
-                            print(f"   ❌ Session non trouvée")
+                            print(f"   ❌ Session not found")
                     else:
-                        print(f"   ❌ Erreur: {response.status_code}")
+                        print(f"   ❌ Error: {response.status_code}")
                 else:
-                    print(f"   ❌ Erreur: {result.get('error', 'Inconnue')}")
+                    print(f"   ❌ Error: {result.get('error', 'Unknown')}")
             else:
-                print(f"   ❌ Erreur: {response.status_code}")
+                print(f"   ❌ Error: {response.status_code}")
                 
     except Exception as e:
-        logger.error(f"Erreur lors de la démo API: {str(e)}")
+        logger.error(f"Error during API demo: {str(e)}")
 
 def demo_performance_test():
-    """Test de performance simple"""
-    demo_header("TEST DE PERFORMANCE")
+    """Simple performance test"""
+    demo_header("PERFORMANCE TEST")
     
     try:
         from advanced_web_navigator import extract_website_content
@@ -320,7 +320,7 @@ def demo_performance_test():
             "https://httpbin.org/robots.txt"
         ]
         
-        print("⚡ Test de performance sur plusieurs URLs:\n")
+        print("⚡ Performance test on multiple URLs:\n")
         
         total_start = time.time()
         results = []
@@ -342,82 +342,82 @@ def demo_performance_test():
             })
             
             status = "✅" if content.success else "❌"
-            print(f"   {status} Temps: {processing_time:.2f}s | "
-                  f"Contenu: {len(content.cleaned_text)} chars | "
-                  f"Qualité: {content.content_quality_score:.1f}")
+            print(f"   {status} Time: {processing_time:.2f}s | "
+                  f"Content: {len(content.cleaned_text)} chars | "
+                  f"Quality: {content.content_quality_score:.1f}")
             
-            time.sleep(0.5)  # Petit délai entre les requêtes
+            time.sleep(0.5)  # Small delay between requests
         
         total_time = time.time() - total_start
         
-        print(f"\n📊 Résumé de performance:")
-        print(f"   Temps total: {total_time:.2f}s")
-        print(f"   Temps moyen par URL: {total_time/len(test_urls):.2f}s")
+        print(f"\n📊 Performance summary:")
+        print(f"   Total time: {total_time:.2f}s")
+        print(f"   Average time per URL: {total_time/len(test_urls):.2f}s")
         
         successful_results = [r for r in results if r['success']]
         if successful_results:
             avg_content = sum(r['content_length'] for r in successful_results) / len(successful_results)
             avg_quality = sum(r['quality_score'] for r in successful_results) / len(successful_results)
-            print(f"   Contenu moyen: {avg_content:.0f} caractères")
-            print(f"   Qualité moyenne: {avg_quality:.1f}/10")
+            print(f"   Average content: {avg_content:.0f} characters")
+            print(f"   Average quality: {avg_quality:.1f}/10")
         
         success_rate = (len(successful_results) / len(results)) * 100
-        print(f"   Taux de succès: {success_rate:.1f}%")
+        print(f"   Success rate: {success_rate:.1f}%")
         
     except Exception as e:
-        logger.error(f"Erreur lors du test de performance: {str(e)}")
+        logger.error(f"Error during performance test: {str(e)}")
 
 def main():
-    """Fonction principale de démonstration"""
-    print("🌟 DÉMONSTRATION DU SYSTÈME DE NAVIGATION WEB AVANCÉ")
+    """Main demonstration function"""
+    print("🌟 ADVANCED WEB NAVIGATION SYSTEM DEMONSTRATION")
     print("=" * 70)
-    print(f"⏰ Démarré le: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"⏰ Started on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 70)
     
     demos = [
-        ("Extraction de Contenu", demo_content_extraction),
-        ("Détection de Navigation", demo_navigation_detection),
-        ("Navigation Profonde", demo_deep_navigation),
-        ("Intégration Gemini", demo_gemini_integration),
-        ("Endpoints API", demo_api_endpoints),
-        ("Test de Performance", demo_performance_test)
+        ("Content Extraction", demo_content_extraction),
+        ("Navigation Detection", demo_navigation_detection),
+        ("Deep Navigation", demo_deep_navigation),
+        ("Gemini Integration", demo_gemini_integration),
+        ("API Endpoints", demo_api_endpoints),
+        ("Performance Test", demo_performance_test)
     ]
     
-    print("\n🎯 Démonstrations disponibles:")
+    print("\n🎯 Available Demonstrations:")
     for i, (name, _) in enumerate(demos, 1):
         print(f"  {i}. {name}")
     
     print("\n" + "=" * 70)
     
     try:
-        choice = input("\n🔢 Choisissez une démo (1-6) ou 'all' pour toutes: ").strip().lower()
+        choice = input("\n🔢 Choose a demo (1-6) or 'all' for all: ").strip().lower()
         
         if choice == 'all':
             for name, demo_func in demos:
-                print(f"\n🚀 Démarrage: {name}")
+                print(f"\n🚀 Starting: {name}")
                 demo_func()
-                print(f"✅ Terminé: {name}")
+                print(f"✅ Finished: {name}")
         elif choice.isdigit() and 1 <= int(choice) <= len(demos):
             demo_index = int(choice) - 1
             name, demo_func = demos[demo_index]
-            print(f"\n🚀 Démarrage: {name}")
+            print(f"\n🚀 Starting: {name}")
             demo_func()
-            print(f"✅ Terminé: {name}")
+            print(f"✅ Finished: {name}")
         else:
-            print("❌ Choix invalide. Exécution de toutes les démos...")
+            print("❌ Invalid choice. Running all demos...")
             for name, demo_func in demos:
                 demo_func()
     
     except KeyboardInterrupt:
-        print("\n\n⏹️ Démonstration interrompue par l'utilisateur")
+        print("\n\n⏹️ Demonstration interrupted by user")
     
     except Exception as e:
-        logger.error(f"Erreur lors de la démonstration: {str(e)}")
+        logger.error(f"Error during demonstration: {str(e)}")
     
     finally:
         print("\n" + "=" * 70)
-        print("🎉 DÉMONSTRATION TERMINÉE")
-        print("📚 Consultez ADVANCED_WEB_NAVIGATION_DOCUMENTATION.md pour plus d'infos")
+        print("🎉 DEMONSTRATION COMPLETE")
+        print("📚 Consult ADVANCED_WEB_NAVIGATION_DOCUMENTATION.md for more info")
         print("=" * 70)
 
 if __name__ == "__main__":
