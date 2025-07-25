@@ -1,60 +1,60 @@
-# 🔍 Système de Recherche Searx pour l'IA
+# 🔍 Searx Search System for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## Vue d'ensemble
+## Overview
 
-Le système de recherche Searx intégré permet à l'API Gemini d'effectuer des recherches autonomes en temps réel en utilisant le parsing HTML au lieu du web scraping traditionnel. Cette approche offre des performances supérieures et une meilleure fiabilité.
+The integrated Searx search system allows the artificial intelligence API GOOGLE GEMINI 2.0 FLASH to perform autonomous real-time searches using HTML parsing instead of traditional web scraping. This approach offers superior performance and better reliability.
 
-## 🎯 Fonctionnalités
+## 🎯 Features
 
-### ✅ Recherche autonome
-- Détection automatique des requêtes nécessitant une recherche
-- Recherche multi-moteurs (Google, Bing, DuckDuckGo, Wikipedia, etc.)
-- Parsing HTML intelligent des résultats
-- Intégration transparente avec l'API Gemini
+### ✅ Autonomous search
+- Automatic detection of queries requiring a search
+- Multi-engine search (Google, Bing, DuckDuckGo, Wikipedia, etc.)
+- Intelligent HTML parsing of results
+- Seamless integration with the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-### ✅ Catégorisation intelligente
-- **general**: Recherches générales
-- **it**: Technologie, programmation, GitHub
-- **videos**: YouTube et autres plateformes vidéo
-- **actualites**: Actualités et informations récentes
+### ✅ Intelligent categorization
+- **general**: General searches
+- **it**: Technology, programming, GitHub
+- **videos**: YouTube and other video platforms
+- **actualites**: News and recent information
 
-### ✅ Architecture conteneurisée
-- Déploiement avec Docker Compose
-- Configuration isolée et sécurisée
-- Démarrage automatique avec l'application
+### ✅ Containerized architecture
+- Deployment with Docker Compose
+- Isolated and secure configuration
+- Automatic startup with the application
 
-## 🚀 Installation et démarrage
+## 🚀 Installation and startup
 
-### Prérequis
-- Docker Desktop installé et démarré
-- Python 3.8+ avec pip
-- Port 8080 disponible pour Searx
+### Prerequisites
+- Docker Desktop installed and running
+- Python 3.8+ with pip
+- Port 8080 available for Searx
 
-### Démarrage rapide
+### Quick start
 ```bash
-# Méthode 1: Script automatique (recommandé)
+# Method 1: Automatic script (recommended)
 start_with_searx.bat
 
-# Méthode 2: Démarrage manuel
+# Method 2: Manual startup
 python install_searx_deps.py
 docker-compose -f docker-compose.searx.yml up -d
 python app.py
 ```
 
-### Vérification du fonctionnement
+### Operation verification
 ```bash
-# Test complet du système
+# Full system test
 python test_searx_system.py
 
-# Vérification manuelle
+# Manual verification
 curl http://localhost:8080/search?q=test&format=json
 ```
 
 ## 🔧 Configuration
 
-### Configuration Searx (`searx-config/settings.yml`)
+### Searx Configuration (`searx-config/settings.yml`)
 ```yaml
-# Moteurs de recherche activés
+# Enabled search engines
 engines:
   - name: google
     engine: google
@@ -67,7 +67,7 @@ engines:
     disabled: false
 ```
 
-### Configuration Docker (`docker-compose.searx.yml`)
+### Docker Configuration (`docker-compose.searx.yml`)
 ```yaml
 services:
   searx:
@@ -78,102 +78,102 @@ services:
       - SEARXNG_BASE_URL=http://localhost:8080
 ```
 
-## 📡 API et intégration
+## 📡 API and integration
 
-### Utilisation depuis l'IA
-L'IA détecte automatiquement les requêtes nécessitant une recherche :
+### Usage from artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+The artificial intelligence API GOOGLE GEMINI 2.0 FLASH automatically detects queries requiring a search:
 
-**Déclencheurs automatiques :**
-- "recherche sur internet..."
-- "trouve des informations..."
-- "informations récentes..."
-- "actualités..."
+**Automatic triggers:**
+- "search the internet..."
+- "find information..."
+- "recent information..."
+- "news..."
 
-**Exemple d'utilisation :**
+**Usage example:**
 ```
-Utilisateur: "Recherche des informations récentes sur l'intelligence artificielle"
-IA: [Déclenche automatiquement une recherche Searx et utilise les résultats]
+User: "Search for recent information about artificial intelligence"
+artificial intelligence API GOOGLE GEMINI 2.0 FLASH: [Automatically triggers a Searx search and uses the results]
 ```
 
-### Interface programmatique
+### Programmatic interface
 ```python
 from searx_interface import get_searx_interface
 
 searx = get_searx_interface()
 
-# Recherche simple
-results = searx.search("intelligence artificielle", max_results=5)
+# Simple search
+results = searx.search("artificial intelligence", max_results=5)
 
-# Recherche avec catégorie
-results = searx.search("tutoriel python", category="it", max_results=10)
+# Search with category
+results = searx.search("python tutorial", category="it", max_results=10)
 
-# Recherche avancée
+# Advanced search
 results = searx.search_with_filters(
-    query="actualités IA",
+    query="AI news",
     engines=["google", "bing"],
     safe_search=0
 )
 ```
 
-## 🛠️ Architecture technique
+## 🛠️ Technical architecture
 
-### Composants principaux
+### Main components
 
-1. **SearxInterface** (`searx_interface.py`)
-   - Interface Python pour Searx
-   - Parsing HTML des résultats
-   - Gestion des erreurs et retry
+1.  **SearxInterface** (`searx_interface.py`)
+    - Python interface for Searx
+    - HTML parsing of results
+    - Error handling and retry
 
-2. **SearxManager** (`searx_manager.py`)
-   - Gestion du cycle de vie Docker
-   - Surveillance de la santé du service
-   - Auto-démarrage et récupération
+2.  **SearxManager** (`searx_manager.py`)
+    - Docker lifecycle management
+    - Service health monitoring
+    - Auto-startup and recovery
 
-3. **Intégration Gemini** (`gemini_api_adapter.py`)
-   - Détection automatique des requêtes
-   - Formatage des résultats pour l'IA
-   - Fallback vers l'ancien système
+3.  **artificial intelligence API GOOGLE GEMINI 2.0 FLASH Integration** (`gemini_api_adapter.py`)
+    - Automatic query detection
+    - Formatting results for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+    - Fallback to the old system
 
-### Flux de traitement
+### Processing flow
 
 ```
-Requête utilisateur
+User query
        ↓
-Détection automatique (Gemini)
+Automatic detection (Gemini)
        ↓
-Extraction de la requête de recherche
+Search query extraction
        ↓
-Recherche Searx (HTML)
+Searx search (HTML)
        ↓
-Parsing des résultats
+Results parsing
        ↓
-Formatage pour l'IA
+Formatting for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
        ↓
-Réponse enrichie
+Enriched response
 ```
 
-## 🔍 Détection automatique
+## 🔍 Automatic detection
 
-### Mots-clés déclencheurs
-- Recherche: "recherche", "cherche", "trouve"
-- Internet: "sur internet", "sur le web"
-- Actualités: "informations récentes", "actualités", "dernières nouvelles"
-- Spécifique: "que se passe-t-il", "quoi de neuf", "tendances actuelles"
+### Trigger keywords
+- Search: "search", "look for", "find"
+- Internet: "on the internet", "on the web"
+- News: "recent information", "news", "latest news"
+- Specific: "what's happening", "what's new", "current trends"
 
-### Catégories détectées
-- **Technologie**: "python", "programmation", "github", "api"
-- **Actualités**: "actualité", "news", "journal"
-- **Vidéos**: "vidéo", "youtube", "tutoriel"
-- **Général**: toutes les autres requêtes
+### Detected categories
+- **Technology**: "python", "programming", "github", "api"
+- **News**: "news", "journal"
+- **Videos**: "video", "youtube", "tutorial"
+- **General**: all other queries
 
-## 📊 Surveillance et logs
+## 📊 Monitoring and logs
 
-### Logs principaux
-- `INFO:SearxInterface`: Opérations de recherche
-- `INFO:SearxManager`: Gestion Docker
-- `INFO:GeminiAPI`: Intégration avec l'IA
+### Main logs
+- `INFO:SearxInterface`: Search operations
+- `INFO:SearxManager`: Docker management
+- `INFO:GeminiAPI`: Integration with the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-### Monitoring de santé
+### Health monitoring
 ```python
 from searx_manager import get_searx_manager
 
@@ -183,15 +183,15 @@ print(f"Docker: {status['docker_status']}")
 print(f"HTTP: {status['http_status']}")
 ```
 
-## 🔒 Sécurité
+## 🔒 Security
 
-### Mesures de sécurité
-- Clé secrète unique pour Searx
-- Isolation Docker complète
-- Limitation du rate limiting
-- Parsing sécurisé des résultats HTML
+### Security measures
+- Unique secret key for Searx
+- Full Docker isolation
+- Rate limiting
+- Secure parsing of HTML results
 
-### Configuration de sécurité
+### Security configuration
 ```yaml
 search:
   safe_search: 0
@@ -202,97 +202,97 @@ server:
   secret_key: "ai_search_secret_key_2025"
 ```
 
-## 🚨 Dépannage
+## 🚨 Troubleshooting
 
-### Problèmes courants
+### Common problems
 
-**1. Docker non démarré**
+**1. Docker not started**
 ```
-❌ Erreur: Cannot connect to the Docker daemon
-Solution: Démarrer Docker Desktop
+❌ Error: Cannot connect to the Docker daemon
+Solution: Start Docker Desktop
 ```
 
-**2. Port 8080 occupé**
+**2. Port 8080 occupied**
 ```
-❌ Erreur: Port 8080 already in use
+❌ Error: Port 8080 already in use
 Solution: docker-compose down; netstat -ano | findstr :8080
 ```
 
-**3. Pas de résultats de recherche**
+**3. No search results**
 ```
-⚠️ Aucun résultat trouvé
-Solution: Vérifier la connectivité internet et les moteurs configurés
+⚠️ No results found
+Solution: Check internet connectivity and configured engines
 ```
 
-### Commands de diagnostic
+### Diagnostic commands
 ```bash
-# Status des conteneurs
+# Container status
 docker ps | grep searx
 
-# Logs Searx
+# Searx logs
 docker logs ai_searx
 
-# Test de connectivité
+# Connectivity test
 curl http://localhost:8080/stats
 
-# Redémarrage complet
+# Full restart
 docker-compose -f docker-compose.searx.yml restart
 ```
 
 ## 📈 Performance
 
-### Optimisations
-- Cache des résultats de recherche
-- Parsing HTML optimisé avec BeautifulSoup
-- Requêtes parallèles aux moteurs
-- Timeout adaptatif
+### Optimizations
+- Caching search results
+- Optimized HTML parsing with BeautifulSoup
+- Parallel requests to engines
+- Adaptive timeout
 
-### Métriques typiques
-- Temps de réponse: 2-5 secondes
-- Résultats par recherche: 5-20
-- Moteurs simultanés: 3-6
-- Disponibilité: >99%
+### Typical metrics
+- Response time: 2-5 seconds
+- Results per search: 5-20
+- Simultaneous engines: 3-6
+- Availability: >99%
 
 ## 🔄 Maintenance
 
-### Mise à jour Searx
+### Searx update
 ```bash
 docker-compose -f docker-compose.searx.yml pull
 docker-compose -f docker-compose.searx.yml up -d
 ```
 
-### Nettoyage
+### Cleanup
 ```bash
-# Arrêt et suppression des conteneurs
+# Stop and remove containers
 docker-compose -f docker-compose.searx.yml down --volumes
 
-# Nettoyage des images
+# Image cleanup
 docker image prune -f
 ```
 
-### Sauvegarde de la configuration
+### Configuration backup
 ```bash
-# Sauvegarder la configuration
+# Backup configuration
 tar -czf searx-config-backup.tar.gz searx-config/
 
-# Restaurer la configuration
+# Restore configuration
 tar -xzf searx-config-backup.tar.gz
 ```
 
 ## 🆘 Support
 
-### Ressources
-- [Documentation Searx officielle](https://docs.searxng.org/)
+### Resources
+- [Official Searx documentation](https://docs.searxng.org/)
 - [Docker Compose documentation](https://docs.docker.com/compose/)
-- Logs applicatifs dans la console Python
+- Application logs in the Python console
 
 ### Contacts
-- Issues techniques: Vérifier les logs Python
-- Problèmes Docker: Vérifier Docker Desktop
-- Performance: Utiliser `test_searx_system.py`
+- Technical issues: Check Python logs
+- Docker problems: Check Docker Desktop
+- Performance: Use `test_searx_system.py`
 
 ---
 
-**Version**: 1.0  
-**Date**: Juillet 2025  
-**Compatibilité**: Windows 10+, Docker Desktop 4.0+
+**Version**: 1.0
+**Date**: July 2025
+**Compatibility**: Windows 10+, Docker Desktop 4.0+
