@@ -1,6 +1,6 @@
 """
-API REST pour le Système de Navigation Web Avancé
-Cette API expose toutes les fonctionnalités de navigation web pour l'API Gemini
+REST API for the Advanced Web Navigation System
+This API exposes all web navigation functionalities for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 """
 
 from flask import Flask, request, jsonify, Blueprint
@@ -26,22 +26,22 @@ from advanced_web_navigator import (
     advanced_navigator
 )
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('WebNavigationAPI')
 
-# Blueprint pour l'API
+# Blueprint for the API
 web_nav_bp = Blueprint('web_navigation', __name__, url_prefix='/api/web-navigation')
 
 class WebNavigationAPIManager:
-    """Gestionnaire de l'API de navigation web"""
+    """Web navigation API manager"""
     
     def __init__(self):
         self.active_sessions = {}
-        self.session_timeout = 3600  # 1 heure
+        self.session_timeout = 3600  # 1 hour
         self.max_concurrent_sessions = 10
         
-        # Statistiques
+        # Statistics
         self.stats = {
             'total_searches': 0,
             'total_pages_extracted': 0,
@@ -52,17 +52,17 @@ class WebNavigationAPIManager:
             'cache_misses': 0
         }
         
-        # Cache des résultats récents
+        # Recent results cache
         self.result_cache = {}
         self.cache_max_size = 100
         
-        logger.info("✅ API Manager de Navigation Web initialisé")
+        logger.info("✅ Web Navigation API Manager initialized")
     
     def create_session(self, user_id: str, session_config: Dict[str, Any] = None) -> str:
-        """Crée une nouvelle session de navigation"""
+        """Creates a new navigation session"""
         session_id = f"nav_session_{user_id}_{int(time.time())}"
         
-        # Configuration par défaut
+        # Default configuration
         default_config = {
             'max_depth': 3,
             'max_pages': 10,
@@ -82,24 +82,24 @@ class WebNavigationAPIManager:
             'last_activity': datetime.now()
         }
         
-        # Nettoyer les anciennes sessions
+        # Clean up old sessions
         self._cleanup_old_sessions()
         
-        logger.info(f"🆕 Session créée: {session_id} pour utilisateur {user_id}")
+        logger.info(f"🆕 Session created: {session_id} for user {user_id}")
         return session_id
     
     def get_session_info(self, session_id: str) -> Optional[Dict[str, Any]]:
-        """Récupère les informations d'une session"""
+        """Retrieves session information"""
         return self.active_sessions.get(session_id)
     
     def update_session_activity(self, session_id: str):
-        """Met à jour l'activité d'une session"""
+        """Updates session activity"""
         if session_id in self.active_sessions:
             self.active_sessions[session_id]['last_activity'] = datetime.now()
             self.active_sessions[session_id]['requests_count'] += 1
     
     def _cleanup_old_sessions(self):
-        """Nettoie les sessions expirées"""
+        """Cleans up expired sessions"""
         current_time = datetime.now()
         expired_sessions = []
         
@@ -109,10 +109,10 @@ class WebNavigationAPIManager:
         
         for session_id in expired_sessions:
             del self.active_sessions[session_id]
-            logger.info(f"🗑️ Session expirée supprimée: {session_id}")
+            logger.info(f"🗑️ Expired session deleted: {session_id}")
     
     def get_cache_key(self, query: str, params: Dict[str, Any]) -> str:
-        """Génère une clé de cache"""
+        """Generates a cache key"""
         cache_data = {
             'query': query,
             'params': sorted(params.items())
@@ -120,10 +120,10 @@ class WebNavigationAPIManager:
         return str(hash(json.dumps(cache_data, sort_keys=True)))
     
     def get_from_cache(self, cache_key: str) -> Optional[Dict[str, Any]]:
-        """Récupère un résultat du cache"""
+        """Retrieves a result from cache"""
         if cache_key in self.result_cache:
             result, timestamp = self.result_cache[cache_key]
-            # Cache valide pendant 30 minutes
+            # Cache valid for 30 minutes
             if (datetime.now() - timestamp).seconds < 1800:
                 self.stats['cache_hits'] += 1
                 return result
@@ -134,9 +134,9 @@ class WebNavigationAPIManager:
         return None
     
     def save_to_cache(self, cache_key: str, result: Dict[str, Any]):
-        """Sauvegarde un résultat en cache"""
+        """Saves a result to cache"""
         if len(self.result_cache) >= self.cache_max_size:
-            # Supprimer le plus ancien
+            # Remove the oldest
             oldest_key = min(self.result_cache.keys(), 
                            key=lambda k: self.result_cache[k][1])
             del self.result_cache[oldest_key]
@@ -144,7 +144,7 @@ class WebNavigationAPIManager:
         self.result_cache[cache_key] = (result, datetime.now())
     
     def update_stats(self, operation: str, **kwargs):
-        """Met à jour les statistiques"""
+        """Updates statistics"""
         if operation == 'search':
             self.stats['total_searches'] += 1
             if kwargs.get('success', False):
@@ -154,12 +154,12 @@ class WebNavigationAPIManager:
             else:
                 self.stats['failed_navigations'] += 1
 
-# Instance globale du manager
+# Global manager instance
 api_manager = WebNavigationAPIManager()
 
 @web_nav_bp.route('/create-session', methods=['POST'])
 def create_navigation_session():
-    """Crée une nouvelle session de navigation"""
+    """Creates a new navigation session"""
     try:
         data = request.get_json() or {}
         user_id = data.get('user_id', 'anonymous')
@@ -171,11 +171,11 @@ def create_navigation_session():
             'success': True,
             'session_id': session_id,
             'config': api_manager.get_session_info(session_id)['config'],
-            'message': 'Session de navigation créée avec succès'
+            'message': 'Navigation session created successfully'
         })
         
     except Exception as e:
-        logger.error(f"❌ Erreur création session: {str(e)}")
+        logger.error(f"❌ Session creation error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)
@@ -183,28 +183,28 @@ def create_navigation_session():
 
 @web_nav_bp.route('/search-and-navigate', methods=['POST'])
 def search_and_navigate():
-    """Recherche et navigue dans les sites web"""
+    """Searches and navigates websites"""
     try:
         data = request.get_json()
         if not data:
-            return jsonify({'success': False, 'error': 'Données JSON requises'}), 400
+            return jsonify({'success': False, 'error': 'JSON data required'}), 400
         
         query = data.get('query')
         if not query:
-            return jsonify({'success': False, 'error': 'Paramètre "query" requis'}), 400
+            return jsonify({'success': False, 'error': '"query" parameter required'}), 400
         
         session_id = data.get('session_id')
         user_context = data.get('user_context', '')
         use_cache = data.get('use_cache', True)
         
-        # Vérifier la session si fournie
+        # Check session if provided
         if session_id:
             session_info = api_manager.get_session_info(session_id)
             if not session_info:
-                return jsonify({'success': False, 'error': 'Session invalide'}), 400
+                return jsonify({'success': False, 'error': 'Invalid session'}), 400
             api_manager.update_session_activity(session_id)
         
-        # Vérifier le cache
+        # Check cache
         cache_key = api_manager.get_cache_key(query, {
             'user_context': user_context,
             'operation': 'search_and_navigate'
@@ -213,22 +213,22 @@ def search_and_navigate():
         if use_cache:
             cached_result = api_manager.get_from_cache(cache_key)
             if cached_result:
-                logger.info(f"📋 Résultat récupéré du cache pour: {query}")
+                logger.info(f"📋 Result retrieved from cache for: {query}")
                 return jsonify(cached_result)
         
-        # Initialiser l'intégration si nécessaire
+        # Initialize integration if necessary
         if not gemini_web_integration:
             initialize_gemini_web_integration()
         
-        # Effectuer la recherche et navigation
-        logger.info(f"🔍 Début recherche et navigation: {query}")
+        # Perform search and navigation
+        logger.info(f"🔍 Starting search and navigation: {query}")
         start_time = time.time()
         
         result = search_web_for_gemini(query, user_context)
         
         processing_time = time.time() - start_time
         
-        # Enrichir le résultat avec des métadonnées API
+        # Enrich the result with API metadata
         api_result = {
             'api_version': '1.0',
             'processing_time': round(processing_time, 2),
@@ -238,7 +238,7 @@ def search_and_navigate():
             **result
         }
         
-        # Mettre à jour les statistiques
+        # Update statistics
         api_manager.update_stats(
             'search',
             success=result.get('success', False),
@@ -246,15 +246,15 @@ def search_and_navigate():
             content_characters=len(str(result.get('content_synthesis', '')))
         )
         
-        # Sauvegarder en cache
+        # Save to cache
         if use_cache and result.get('success', False):
             api_manager.save_to_cache(cache_key, api_result)
         
-        logger.info(f"✅ Recherche terminée en {processing_time:.2f}s")
+        logger.info(f"✅ Search completed in {processing_time:.2f}s")
         return jsonify(api_result)
         
     except Exception as e:
-        logger.error(f"❌ Erreur recherche et navigation: {str(e)}")
+        logger.error(f"❌ Search and navigation error: {str(e)}")
         api_manager.update_stats('search', success=False)
         return jsonify({
             'success': False,
@@ -264,28 +264,28 @@ def search_and_navigate():
 
 @web_nav_bp.route('/extract-content', methods=['POST'])
 def extract_specific_content():
-    """Extrait le contenu spécifique d'une URL"""
+    """Extracts specific content from a URL"""
     try:
         data = request.get_json()
         if not data:
-            return jsonify({'success': False, 'error': 'Données JSON requises'}), 400
+            return jsonify({'success': False, 'error': 'JSON data required'}), 400
         
         url = data.get('url')
         if not url:
-            return jsonify({'success': False, 'error': 'Paramètre "url" requis'}), 400
+            return jsonify({'success': False, 'error': '"url" parameter required'}), 400
         
         requirements = data.get('requirements', ['summary', 'details', 'links'])
         session_id = data.get('session_id')
         use_cache = data.get('use_cache', True)
         
-        # Vérifier la session
+        # Check session
         if session_id:
             session_info = api_manager.get_session_info(session_id)
             if not session_info:
-                return jsonify({'success': False, 'error': 'Session invalide'}), 400
+                return jsonify({'success': False, 'error': 'Invalid session'}), 400
             api_manager.update_session_activity(session_id)
         
-        # Vérifier le cache
+        # Check cache
         cache_key = api_manager.get_cache_key(url, {
             'requirements': requirements,
             'operation': 'extract_content'
@@ -294,18 +294,18 @@ def extract_specific_content():
         if use_cache:
             cached_result = api_manager.get_from_cache(cache_key)
             if cached_result:
-                logger.info(f"📋 Extraction récupérée du cache pour: {url}")
+                logger.info(f"📋 Extraction retrieved from cache for: {url}")
                 return jsonify(cached_result)
         
-        # Extraire le contenu
-        logger.info(f"🎯 Extraction de contenu: {url}")
+        # Extract content
+        logger.info(f"🎯 Content extraction: {url}")
         start_time = time.time()
         
         result = extract_content_for_gemini(url, requirements)
         
         processing_time = time.time() - start_time
         
-        # Enrichir le résultat
+        # Enrich the result
         api_result = {
             'api_version': '1.0',
             'processing_time': round(processing_time, 2),
@@ -316,15 +316,15 @@ def extract_specific_content():
             **result
         }
         
-        # Sauvegarder en cache
+        # Save to cache
         if use_cache and result.get('success', False):
             api_manager.save_to_cache(cache_key, api_result)
         
-        logger.info(f"✅ Extraction terminée en {processing_time:.2f}s")
+        logger.info(f"✅ Extraction completed in {processing_time:.2f}s")
         return jsonify(api_result)
         
     except Exception as e:
-        logger.error(f"❌ Erreur extraction contenu: {str(e)}")
+        logger.error(f"❌ Content extraction error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e),
@@ -333,42 +333,42 @@ def extract_specific_content():
 
 @web_nav_bp.route('/navigate-deep', methods=['POST'])
 def navigate_website_deep_api():
-    """Navigation en profondeur dans un site web"""
+    """Deep navigation into a website"""
     try:
         data = request.get_json()
         if not data:
-            return jsonify({'success': False, 'error': 'Données JSON requises'}), 400
+            return jsonify({'success': False, 'error': 'JSON data required'}), 400
         
         start_url = data.get('start_url')
         if not start_url:
-            return jsonify({'success': False, 'error': 'Paramètre "start_url" requis'}), 400
+            return jsonify({'success': False, 'error': '"start_url" parameter required'}), 400
         
         max_depth = data.get('max_depth', 3)
         max_pages = data.get('max_pages', 10)
         session_id = data.get('session_id')
         
-        # Valider les paramètres
+        # Validate parameters
         if max_depth > 5:
-            return jsonify({'success': False, 'error': 'max_depth ne peut pas dépasser 5'}), 400
+            return jsonify({'success': False, 'error': 'max_depth cannot exceed 5'}), 400
         if max_pages > 50:
-            return jsonify({'success': False, 'error': 'max_pages ne peut pas dépasser 50'}), 400
+            return jsonify({'success': False, 'error': 'max_pages cannot exceed 50'}), 400
         
-        # Vérifier la session
+        # Check session
         if session_id:
             session_info = api_manager.get_session_info(session_id)
             if not session_info:
-                return jsonify({'success': False, 'error': 'Session invalide'}), 400
+                return jsonify({'success': False, 'error': 'Invalid session'}), 400
             api_manager.update_session_activity(session_id)
         
-        # Navigation en profondeur
-        logger.info(f"🚀 Navigation profonde: {start_url} (profondeur: {max_depth}, pages: {max_pages})")
+        # Deep navigation
+        logger.info(f"🚀 Deep navigation: {start_url} (depth: {max_depth}, pages: {max_pages})")
         start_time = time.time()
         
         nav_path = navigate_website_deep(start_url, max_depth, max_pages)
         
         processing_time = time.time() - start_time
         
-        # Préparer la réponse
+        # Prepare the response
         result = {
             'success': True,
             'api_version': '1.0',
@@ -388,7 +388,7 @@ def navigate_website_deep_api():
                     'title': page.title,
                     'summary': page.summary,
                     'content_quality_score': page.content_quality_score,
-                    'keywords': page.keywords[:10],  # Top 10 mots-clés
+                    'keywords': page.keywords[:10],  # Top 10 keywords
                     'language': page.language,
                     'links_count': len(page.links),
                     'images_count': len(page.images)
@@ -398,11 +398,11 @@ def navigate_website_deep_api():
             'timestamp': datetime.now().isoformat()
         }
         
-        logger.info(f"✅ Navigation profonde terminée en {processing_time:.2f}s - {len(nav_path.visited_pages)} pages")
+        logger.info(f"✅ Deep navigation completed in {processing_time:.2f}s - {len(nav_path.visited_pages)} pages")
         return jsonify(result)
         
     except Exception as e:
-        logger.error(f"❌ Erreur navigation profonde: {str(e)}")
+        logger.error(f"❌ Deep navigation error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e),
@@ -411,43 +411,43 @@ def navigate_website_deep_api():
 
 @web_nav_bp.route('/user-journey', methods=['POST'])
 def simulate_user_journey_api():
-    """Simule un parcours utilisateur sur un site"""
+    """Simulates a user journey on a website"""
     try:
         data = request.get_json()
         if not data:
-            return jsonify({'success': False, 'error': 'Données JSON requises'}), 400
+            return jsonify({'success': False, 'error': 'JSON data required'}), 400
         
         start_url = data.get('start_url')
         user_intent = data.get('user_intent', 'explore')
         session_id = data.get('session_id')
         
         if not start_url:
-            return jsonify({'success': False, 'error': 'Paramètre "start_url" requis'}), 400
+            return jsonify({'success': False, 'error': '"start_url" parameter required'}), 400
         
-        # Valider l'intention
+        # Validate intent
         valid_intents = ['buy', 'learn', 'contact', 'explore']
         if user_intent not in valid_intents:
             return jsonify({
                 'success': False, 
-                'error': f'user_intent doit être un de: {valid_intents}'
+                'error': f'user_intent must be one of: {valid_intents}'
             }), 400
         
-        # Vérifier la session
+        # Check session
         if session_id:
             session_info = api_manager.get_session_info(session_id)
             if not session_info:
-                return jsonify({'success': False, 'error': 'Session invalide'}), 400
+                return jsonify({'success': False, 'error': 'Invalid session'}), 400
             api_manager.update_session_activity(session_id)
         
-        # Simuler le parcours utilisateur
-        logger.info(f"👤 Simulation parcours utilisateur: {user_intent} depuis {start_url}")
+        # Simulate user journey
+        logger.info(f"👤 User journey simulation: {user_intent} from {start_url}")
         start_time = time.time()
         
         result = simulate_user_journey(start_url, user_intent)
         
         processing_time = time.time() - start_time
         
-        # Enrichir le résultat
+        # Enrich the result
         api_result = {
             'api_version': '1.0',
             'processing_time': round(processing_time, 2),
@@ -456,11 +456,11 @@ def simulate_user_journey_api():
             **result
         }
         
-        logger.info(f"✅ Parcours utilisateur terminé en {processing_time:.2f}s")
+        logger.info(f"✅ User journey completed in {processing_time:.2f}s")
         return jsonify(api_result)
         
     except Exception as e:
-        logger.error(f"❌ Erreur parcours utilisateur: {str(e)}")
+        logger.error(f"❌ User journey error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e),
@@ -469,14 +469,14 @@ def simulate_user_journey_api():
 
 @web_nav_bp.route('/session/<session_id>', methods=['GET'])
 def get_session_info_api(session_id: str):
-    """Récupère les informations d'une session"""
+    """Retrieves session information"""
     try:
         session_info = api_manager.get_session_info(session_id)
         
         if not session_info:
-            return jsonify({'success': False, 'error': 'Session non trouvée'}), 404
+            return jsonify({'success': False, 'error': 'Session not found'}), 404
         
-        # Préparer les informations de session
+        # Prepare session information
         response_data = {
             'success': True,
             'session_id': session_id,
@@ -491,7 +491,7 @@ def get_session_info_api(session_id: str):
         return jsonify(response_data)
         
     except Exception as e:
-        logger.error(f"❌ Erreur récupération session: {str(e)}")
+        logger.error(f"❌ Session retrieval error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)
@@ -499,20 +499,20 @@ def get_session_info_api(session_id: str):
 
 @web_nav_bp.route('/session/<session_id>', methods=['DELETE'])
 def delete_session_api(session_id: str):
-    """Supprime une session"""
+    """Deletes a session"""
     try:
         if session_id in api_manager.active_sessions:
             del api_manager.active_sessions[session_id]
-            logger.info(f"🗑️ Session supprimée: {session_id}")
+            logger.info(f"🗑️ Session deleted: {session_id}")
             return jsonify({
                 'success': True,
-                'message': f'Session {session_id} supprimée avec succès'
+                'message': f'Session {session_id} deleted successfully'
             })
         else:
-            return jsonify({'success': False, 'error': 'Session non trouvée'}), 404
+            return jsonify({'success': False, 'error': 'Session not found'}), 404
             
     except Exception as e:
-        logger.error(f"❌ Erreur suppression session: {str(e)}")
+        logger.error(f"❌ Session deletion error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)
@@ -520,7 +520,7 @@ def delete_session_api(session_id: str):
 
 @web_nav_bp.route('/stats', methods=['GET'])
 def get_api_stats():
-    """Récupère les statistiques de l'API"""
+    """Retrieves API statistics"""
     try:
         stats = {
             'api_stats': api_manager.stats.copy(),
@@ -537,7 +537,7 @@ def get_api_stats():
         })
         
     except Exception as e:
-        logger.error(f"❌ Erreur récupération statistiques: {str(e)}")
+        logger.error(f"❌ Statistics retrieval error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)
@@ -545,9 +545,9 @@ def get_api_stats():
 
 @web_nav_bp.route('/health', methods=['GET'])
 def health_check():
-    """Vérification de l'état de l'API"""
+    """API health check"""
     try:
-        # Vérifier l'état des composants
+        # Check component status
         health_status = {
             'api': 'healthy',
             'navigator': 'healthy' if advanced_navigator else 'unavailable',
@@ -556,7 +556,7 @@ def health_check():
             'timestamp': datetime.now().isoformat()
         }
         
-        # Test simple de navigation
+        # Simple navigation test
         try:
             test_content = extract_website_content('https://httpbin.org/json')
             if test_content.success:
@@ -578,7 +578,7 @@ def health_check():
         })
         
     except Exception as e:
-        logger.error(f"❌ Erreur vérification santé: {str(e)}")
+        logger.error(f"❌ Health check error: {str(e)}")
         return jsonify({
             'success': False,
             'overall_status': 'unhealthy',
@@ -587,97 +587,97 @@ def health_check():
 
 @web_nav_bp.route('/clear-cache', methods=['POST'])
 def clear_cache():
-    """Vide le cache de l'API"""
+    """Clears the API cache"""
     try:
         cache_size_before = len(api_manager.result_cache)
         api_manager.result_cache.clear()
         
-        logger.info(f"🧹 Cache vidé: {cache_size_before} entrées supprimées")
+        logger.info(f"🧹 Cache cleared: {cache_size_before} entries removed")
         
         return jsonify({
             'success': True,
-            'message': f'Cache vidé avec succès ({cache_size_before} entrées supprimées)',
+            'message': f'Cache cleared successfully ({cache_size_before} entries removed)',
             'timestamp': datetime.now().isoformat()
         })
         
     except Exception as e:
-        logger.error(f"❌ Erreur vidage cache: {str(e)}")
+        logger.error(f"❌ Cache clearing error: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)
         }), 500
 
-# Route de documentation API
+# API Documentation Route
 @web_nav_bp.route('/docs', methods=['GET'])
 def api_documentation():
-    """Documentation de l'API"""
+    """API Documentation"""
     docs = {
-        'api_name': 'API de Navigation Web Avancée pour Gemini',
+        'api_name': 'Advanced Web Navigation API for artificial intelligence API GOOGLE GEMINI 2.0 FLASH',
         'version': '1.0',
-        'description': 'API permettant à Gemini de naviguer dans les sites web et d\'extraire du contenu structuré',
+        'description': 'API allowing artificial intelligence API GOOGLE GEMINI 2.0 FLASH to navigate websites and extract structured content',
         'endpoints': {
             'POST /api/web-navigation/create-session': {
-                'description': 'Crée une nouvelle session de navigation',
+                'description': 'Creates a new navigation session',
                 'parameters': {
-                    'user_id': 'string (optionnel)',
-                    'config': 'object (optionnel) - Configuration de la session'
+                    'user_id': 'string (optional)',
+                    'config': 'object (optional) - Session configuration'
                 }
             },
             'POST /api/web-navigation/search-and-navigate': {
-                'description': 'Recherche et navigue dans les sites web',
+                'description': 'Searches and navigates websites',
                 'parameters': {
-                    'query': 'string (requis) - Requête de recherche',
-                    'session_id': 'string (optionnel)',
-                    'user_context': 'string (optionnel)',
-                    'use_cache': 'boolean (optionnel, défaut: true)'
+                    'query': 'string (required) - Search query',
+                    'session_id': 'string (optional)',
+                    'user_context': 'string (optional)',
+                    'use_cache': 'boolean (optional, default: true)'
                 }
             },
             'POST /api/web-navigation/extract-content': {
-                'description': 'Extrait le contenu spécifique d\'une URL',
+                'description': 'Extracts specific content from a URL',
                 'parameters': {
-                    'url': 'string (requis)',
-                    'requirements': 'array (optionnel) - Types de contenu à extraire',
-                    'session_id': 'string (optionnel)',
-                    'use_cache': 'boolean (optionnel, défaut: true)'
+                    'url': 'string (required)',
+                    'requirements': 'array (optional) - Types of content to extract',
+                    'session_id': 'string (optional)',
+                    'use_cache': 'boolean (optional, default: true)'
                 }
             },
             'POST /api/web-navigation/navigate-deep': {
-                'description': 'Navigation en profondeur dans un site',
+                'description': 'Deep navigation into a site',
                 'parameters': {
-                    'start_url': 'string (requis)',
-                    'max_depth': 'integer (optionnel, défaut: 3, max: 5)',
-                    'max_pages': 'integer (optionnel, défaut: 10, max: 50)',
-                    'session_id': 'string (optionnel)'
+                    'start_url': 'string (required)',
+                    'max_depth': 'integer (optional, default: 3, max: 5)',
+                    'max_pages': 'integer (optional, default: 10, max: 50)',
+                    'session_id': 'string (optional)'
                 }
             },
             'POST /api/web-navigation/user-journey': {
-                'description': 'Simule un parcours utilisateur',
+                'description': 'Simulates a user journey',
                 'parameters': {
-                    'start_url': 'string (requis)',
-                    'user_intent': 'string (requis) - buy, learn, contact, explore',
-                    'session_id': 'string (optionnel)'
+                    'start_url': 'string (required)',
+                    'user_intent': 'string (required) - buy, learn, contact, explore',
+                    'session_id': 'string (optional)'
                 }
             },
             'GET /api/web-navigation/session/<session_id>': {
-                'description': 'Récupère les informations d\'une session'
+                'description': 'Retrieves session information'
             },
             'DELETE /api/web-navigation/session/<session_id>': {
-                'description': 'Supprime une session'
+                'description': 'Deletes a session'
             },
             'GET /api/web-navigation/stats': {
-                'description': 'Récupère les statistiques de l\'API'
+                'description': 'Retrieves API statistics'
             },
             'GET /api/web-navigation/health': {
-                'description': 'Vérification de l\'état de l\'API'
+                'description': 'API health check'
             },
             'POST /api/web-navigation/clear-cache': {
-                'description': 'Vide le cache de l\'API'
+                'description': 'Clears the API cache'
             }
         },
         'examples': {
             'search_request': {
-                'query': 'intelligence artificielle apprentissage automatique',
-                'user_context': 'utilisateur développeur intéressé par l\'IA',
+                'query': 'artificial intelligence machine learning',
+                'user_context': 'developer user interested in AI',
                 'use_cache': True
             },
             'extract_request': {
@@ -695,33 +695,33 @@ def api_documentation():
     return jsonify(docs)
 
 def register_web_navigation_api(app: Flask):
-    """Enregistre l'API de navigation web dans l'application Flask"""
+    """Registers the web navigation API in the Flask application"""
     app.register_blueprint(web_nav_bp)
-    logger.info("🔌 API de Navigation Web enregistrée")
+    logger.info("🔌 Web Navigation API registered")
 
-# Fonction d'initialisation pour l'intégration avec l'app principale
+# Initialization function for integration with the main app
 def initialize_web_navigation_api(searx_interface=None):
-    """Initialise l'API de navigation web"""
+    """Initializes the web navigation API"""
     try:
-        # Initialiser l'intégration Gemini-Web
+        # Initialize Gemini-Web integration
         initialize_gemini_web_integration(searx_interface)
         
-        logger.info("🚀 API de Navigation Web initialisée avec succès")
+        logger.info("🚀 Web Navigation API initialized successfully")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Erreur initialisation API: {str(e)}")
+        logger.error(f"❌ API initialization error: {str(e)}")
         return False
 
 if __name__ == "__main__":
-    print("=== Test de l'API de Navigation Web ===")
+    print("=== Web Navigation API Test ===")
     
-    # Créer une app Flask de test
+    # Create a test Flask app
     app = Flask(__name__)
     register_web_navigation_api(app)
     
-    print("✅ API enregistrée avec succès")
-    print("📡 Endpoints disponibles:")
+    print("✅ API registered successfully")
+    print("📡 Available Endpoints:")
     print("  - POST /api/web-navigation/search-and-navigate")
     print("  - POST /api/web-navigation/extract-content")
     print("  - POST /api/web-navigation/navigate-deep")
@@ -729,10 +729,10 @@ if __name__ == "__main__":
     print("  - GET  /api/web-navigation/docs")
     print("  - GET  /api/web-navigation/health")
     
-    # Test de santé
+    # Health test
     with app.test_client() as client:
         response = client.get('/api/web-navigation/health')
         if response.status_code == 200:
-            print("✅ Test de santé réussi")
+            print("✅ Health test successful")
         else:
-            print("❌ Test de santé échoué")
+            print("❌ Health test failed")
