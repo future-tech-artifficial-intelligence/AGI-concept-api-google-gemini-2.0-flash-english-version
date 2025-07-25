@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Système d'installation automatique des dépendances manquantes
-Analyse les modules requis et les installe automatiquement
-Supporte maintenant Termux/Android
+**Automatic Missing Dependency Installation System**
+Analyzes required modules and installs them automatically
+
 """
 
 import subprocess
