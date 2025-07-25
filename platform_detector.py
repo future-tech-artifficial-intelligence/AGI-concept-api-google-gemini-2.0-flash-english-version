@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Détecteur de plateforme pour compatibilité multi-environnement
-Supporte Windows, Linux, Android/Termux, et autres systèmes
+Platform Detector for Multi-environment Compatibility
+Supports Windows, Linux, Android/Termux, and other systems
 """
 
 import os
@@ -14,15 +14,15 @@ from typing import Dict, Any, Optional
 logger = logging.getLogger('PlatformDetector')
 
 class PlatformDetector:
-    """Détecte et configure l'environnement d'exécution"""
+    """Detects and configures the execution environment"""
     
     def __init__(self):
         self.platform_info = self._detect_platform()
         self.config = self._get_platform_config()
     
     def _detect_platform(self) -> Dict[str, Any]:
-        """Détecte la plateforme d'exécution"""
-        # Collecter d'abord les informations de base
+        """Detects the execution platform"""
+        # First, collect basic information
         is_termux = self._is_termux()
         is_android = self._is_android()
         is_windows = platform.system() == 'Windows'
@@ -40,7 +40,7 @@ class PlatformDetector:
             'architecture': platform.architecture()[0]
         }
         
-        # Déterminer le type de plateforme principal
+        # Determine the main platform type
         if info['is_termux']:
             info['platform_type'] = 'termux'
         elif info['is_android']:
@@ -55,8 +55,8 @@ class PlatformDetector:
         return info
     
     def _is_termux(self) -> bool:
-        """Vérifie si on est dans Termux"""
-        # Vérifications multiples pour détecter Termux
+        """Checks if running in Termux"""
+        # Multiple checks to detect Termux
         termux_indicators = [
             'TERMUX_VERSION' in os.environ,
             'PREFIX' in os.environ and '/data/data/com.termux' in os.environ.get('PREFIX', ''),
@@ -67,7 +67,7 @@ class PlatformDetector:
         return any(termux_indicators)
     
     def _is_android(self) -> bool:
-        """Vérifie si on est sur Android (mais pas forcément Termux)"""
+        """Checks if running on Android (but not necessarily Termux)"""
         android_indicators = [
             'ANDROID_ROOT' in os.environ,
             'ANDROID_DATA' in os.environ,
@@ -78,9 +78,9 @@ class PlatformDetector:
         return any(android_indicators)
     
     def _has_gui_support(self, is_termux: bool, is_windows: bool, is_linux: bool) -> bool:
-        """Vérifie si l'environnement supporte les interfaces graphiques"""
+        """Checks if the environment supports graphical interfaces"""
         if is_termux:
-            # Termux peut avoir X11 avec VNC
+            # Termux can have X11 with VNC
             return 'DISPLAY' in os.environ
         elif is_windows:
             return True
@@ -90,7 +90,7 @@ class PlatformDetector:
         return False
     
     def _get_platform_config(self) -> Dict[str, Any]:
-        """Retourne la configuration spécifique à la plateforme"""
+        """Returns platform-specific configuration"""
         platform_type = self.platform_info['platform_type']
         
         configs = {
@@ -102,9 +102,9 @@ class PlatformDetector:
                 'python_executable': 'python',
                 'supported_features': {
                     'web_scraping': True,
-                    'image_processing': True,  # Avec des limitations
-                    'audio_processing': False,  # Limité sur Android
-                    'gui': False,  # Sauf si X11 configuré
+                    'image_processing': True,  # With limitations
+                    'audio_processing': False,  # Limited on Android
+                    'gui': False,  # Unless X11 is configured
                     'file_system_access': True,
                     'network_access': True
                 },
@@ -163,58 +163,58 @@ class PlatformDetector:
         return configs.get(platform_type, configs['linux'])
     
     def get_data_path(self) -> str:
-        """Retourne le chemin de données approprié pour la plateforme"""
+        """Returns the appropriate data path for the platform"""
         path = self.config['data_path']
         os.makedirs(path, exist_ok=True)
         return path
     
     def get_temp_path(self) -> str:
-        """Retourne le chemin temporaire approprié"""
+        """Returns the appropriate temporary path"""
         return self.config['temp_path']
     
     def is_feature_supported(self, feature: str) -> bool:
-        """Vérifie si une fonctionnalité est supportée sur cette plateforme"""
+        """Checks if a feature is supported on this platform"""
         return self.config['supported_features'].get(feature, False)
     
     def get_package_manager(self) -> Optional[str]:
-        """Retourne le gestionnaire de packages approprié"""
+        """Returns the appropriate package manager"""
         return self.config.get('package_manager')
     
     def install_system_packages(self, packages: list) -> bool:
-        """Installe les packages système requis"""
+        """Installs required system packages"""
         if not self.platform_info['is_termux']:
-            logger.info("Installation de packages système non nécessaire sur cette plateforme")
+            logger.info("System package installation not necessary on this platform")
             return True
         
         try:
             for package in packages:
-                logger.info(f"Installation du package système: {package}")
+                logger.info(f"Installing system package: {package}")
                 result = subprocess.run(['pkg', 'install', '-y', package], 
                                       capture_output=True, text=True)
                 if result.returncode != 0:
-                    logger.warning(f"Échec de l'installation de {package}: {result.stderr}")
+                    logger.warning(f"Failed to install {package}: {result.stderr}")
                     return False
             return True
         except Exception as e:
-            logger.error(f"Erreur lors de l'installation des packages: {e}")
+            logger.error(f"Error installing packages: {e}")
             return False
     
     def get_platform_summary(self) -> str:
-        """Retourne un résumé de la plateforme détectée"""
+        """Returns a summary of the detected platform"""
         info = self.platform_info
         config = self.config
         
         summary = f"""
-🖥️  DÉTECTION DE PLATEFORME
+🖥️  PLATFORM DETECTION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📱 Type de plateforme: {info['platform_type'].upper()}
-🔧 Système: {info['system']} ({info['architecture']})
+📱 Platform Type: {info['platform_type'].upper()}
+🔧 System: {info['system']} ({info['architecture']})
 🐍 Python: {info['python_version']}
-📁 Chemin de données: {config['data_path']}
-💾 Mémoire recommandée: {config['max_memory_usage']}
+📁 Data Path: {config['data_path']}
+💾 Recommended Memory: {config['max_memory_usage']}
 
-🔋 FONCTIONNALITÉS SUPPORTÉES:
+🔋 SUPPORTED FEATURES:
 """
         
         for feature, supported in config['supported_features'].items():
@@ -223,18 +223,18 @@ class PlatformDetector:
         
         if info['is_termux']:
             summary += f"""
-🤖 SPÉCIFIQUE TERMUX:
-   📦 Gestionnaire: {config['package_manager']}
-   📋 Packages recommandés: {', '.join(config['recommended_packages'])}
+🤖 TERMUX SPECIFIC:
+   📦 Manager: {config['package_manager']}
+   📋 Recommended Packages: {', '.join(config['recommended_packages'])}
 """
         
         return summary
 
-# Instance globale pour utilisation dans l'application
+# Global instance for application use
 platform_detector = PlatformDetector()
 
 def get_platform_detector() -> PlatformDetector:
-    """Retourne l'instance du détecteur de plateforme"""
+    """Returns the platform detector instance"""
     return platform_detector
 
 if __name__ == "__main__":
