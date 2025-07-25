@@ -1,13 +1,13 @@
 """
-Configuration d'authentification ngrok pour GeminiChat
-Ce fichier contient le token d'authentification ngrok pour éviter d'avoir à le saisir manuellement.
+ngrok Authentication Configuration for GeminiChat website 
+This file contains the ngrok authentication token to avoid manual entry.
 """
 
-# Token d'authentification ngrok
-NGROK_AUTH_TOKEN = "30EFEPCG8MXrlKyq8zHVJ3u1sPV_cv1vBoVKaaqNSEurn6Lf"
+# ngrok Authentication Token
+NGROK_AUTH_TOKEN = "enter your ngrok token here"
 
 def get_auth_token():
     """
-    Retourne le token d'authentification ngrok
+    Returns the ngrok authentication token
     """
     return NGROK_AUTH_TOKEN
