@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test de l'adaptateur Gemini avec Searx
+Test of the artificial intelligence API GOOGLE GEMINI 2.0 FLASH adapter with Searx
 """
 
 import sys
@@ -10,34 +10,34 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from gemini_api_adapter import GeminiAPI
 
 def test_adapter():
-    """Test de l'adaptateur avec Searx"""
+    """Tests the adapter with Searx"""
     
-    print("🔧 Test de l'adaptateur Gemini avec Searx")
+    print("🔧 Testing the artificial intelligence API GOOGLE GEMINI 2.0 FLASH adapter with Searx")
     print("=" * 60)
     
-    # Créer une instance de l'adaptateur
+    # Create an adapter instance
     gemini_adapter = GeminiAPI()
     
-    # Test avec une question qui devrait déclencher Searx
-    print("\n1. Test avec question nécessitant Searx:")
-    test_question = "Quelles sont les dernières actualités en intelligence artificielle ?"
+    # Test with a question that should trigger Searx
+    print("\n1. Test with question requiring Searx:")
+    test_question = "What are the latest news in artificial intelligence?"
     
     print(f"   Question: {test_question}")
-    print("   Traitement en cours...")
+    print("   Processing...")
     
     response = gemini_adapter.get_response(test_question, user_id=1, session_id="test_session")
     
-    print(f"   Statut: {response['status']}")
-    print(f"   Longueur réponse: {len(response['response'])} caractères")
-    print(f"   Début de la réponse: {response['response'][:300]}...")
+    print(f"   Status: {response['status']}")
+    print(f"   Response length: {len(response['response'])} characters")
+    print(f"   Start of response: {response['response'][:300]}...")
     
-    # Vérifier si des URLs réelles sont présentes
+    # Check if actual URLs are present
     if "https://" in response['response'] or "http://" in response['response']:
-        print("\n   ✅ URLs détectées dans la réponse")
+        print("\n   ✅ URLs detected in the response")
     else:
-        print("\n   ⚠️ Aucune URL détectée dans la réponse")
+        print("\n   ⚠️ No URLs detected in the response")
     
-    print("\n✅ Test de l'adaptateur terminé!")
+    print("\n✅ Adapter test finished!")
 
 if __name__ == "__main__":
     test_adapter()
