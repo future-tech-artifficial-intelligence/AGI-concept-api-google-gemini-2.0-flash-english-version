@@ -1,11 +1,10 @@
-
 """
-Système de raisonnement causal pour améliorer la compréhension des relations cause-effet
+Causal Reasoning System to enhance artificial intelligence Reasoning GOOGLE GEMINI 2.0 FLASH API understanding of cause-effect relationships
 """
 
 MODULE_METADATA = {
     'name': 'causal_reasoning_system',
-    'description': 'Système de raisonnement causal pour analyser les relations cause-effet',
+    'description': 'Causal reasoning system for analyzing cause-effect relationships',
     'version': '0.1.0',
     'priority': 80,
     'hooks': ['process_request', 'process_response'],
@@ -15,14 +14,14 @@ MODULE_METADATA = {
 
 def process(data, hook):
     """
-    Fonction principale de traitement pour le raisonnement causal
+    Main processing function for causal reasoning
     
     Args:
-        data (dict): Données à traiter
-        hook (str): Type de hook
+        data (dict): Data to be processed
+        hook (str): Type of hook
     
     Returns:
-        dict: Données modifiées
+        dict: Modified data
     """
     if not isinstance(data, dict):
         return data
@@ -35,28 +34,28 @@ def process(data, hook):
     return data
 
 def analyze_causal_request(data):
-    """Analyse les relations causales dans une requête"""
+    """Analyzes causal relationships in a request"""
     text = data.get('text', '')
     
-    # Détecter les questions causales
+    # Detect causal questions
     causal_patterns = [
-        'pourquoi', 'à cause de', 'en raison de', 'grâce à',
-        'provoque', 'cause', 'entraîne', 'résulte en'
+        'why', 'because of', 'due to', 'thanks to',
+        'causes', 'leads to', 'results in', 'brings about'
     ]
     
     if any(pattern in text.lower() for pattern in causal_patterns):
         causal_instruction = """
         
-Analysez cette question en identifiant :
-- Les causes potentielles
-- Les effets observés
-- Les mécanismes causaux
-- Les facteurs intermédiaires
+Analyze this question by identifying:
+- Potential causes
+- Observed effects
+- Causal mechanisms
+- Intermediate factors
         """
         data['text'] = text + causal_instruction
     
     return data
 
 def enhance_causal_response(data):
-    """Améliore les explications causales dans les réponses"""
+    """Enhances causal explanations in responses"""
     return data
