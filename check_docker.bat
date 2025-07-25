@@ -1,53 +1,53 @@
 @echo off
-echo 🐳 VÉRIFICATION ET DÉMARRAGE DE DOCKER DESKTOP
+echo 🐳 DOCKER DESKTOP VERIFICATION AND STARTUP
 echo ================================================
 echo.
 
-echo 📋 Vérification du statut de Docker...
+echo 📋 Checking Docker status...
 docker --version >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo ❌ Docker n'est pas accessible
+    echo ❌ Docker is not accessible
     echo.
-    echo 🔧 Tentative de démarrage de Docker Desktop...
+    echo 🔧 Attempting to start Docker Desktop...
     
-    REM Essayer de démarrer Docker Desktop
+    REM Try to start Docker Desktop
     if exist "C:\Program Files\Docker\Docker\Docker Desktop.exe" (
-        echo Démarrage de Docker Desktop...
+        echo Starting Docker Desktop...
         start "" "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-        echo ⏳ Attente du démarrage de Docker (60 secondes)...
+        echo ⏳ Waiting for Docker to start (60 seconds)...
         timeout /t 60 /nobreak >nul
     ) else (
-        echo ❌ Docker Desktop n'est pas installé dans le répertoire par défaut
+        echo ❌ Docker Desktop is not installed in the default directory
         echo.
-        echo 📥 Veuillez installer Docker Desktop depuis :
+        echo 📥 Please install Docker Desktop from:
         echo https://www.docker.com/products/docker-desktop/
         echo.
         pause
         exit /b 1
     )
     
-    REM Vérifier à nouveau après le démarrage
+    REM Check again after startup
     docker --version >nul 2>&1
     if %ERRORLEVEL% NEQ 0 (
-        echo ❌ Docker Desktop n'a pas pu démarrer correctement
+        echo ❌ Docker Desktop could not start correctly
         echo.
-        echo 🔧 Solutions possibles :
-        echo 1. Démarrer manuellement Docker Desktop
-        echo 2. Redémarrer l'ordinateur
-        echo 3. Réinstaller Docker Desktop
+        echo 🔧 Possible solutions:
+        echo 1. Manually start Docker Desktop
+        echo 2. Restart the computer
+        echo 3. Reinstall Docker Desktop
         echo.
         pause
         exit /b 1
     )
 )
 
-echo ✅ Docker est disponible
+echo ✅ Docker is available
 docker --version
 
 echo.
-echo 🔍 Vérification du statut des conteneurs Searx...
+echo 🔍 Checking Searx container status...
 docker ps -a --filter "name=ai_searx" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 echo.
-echo 🚀 Docker Desktop est prêt pour Searx !
+echo 🚀 Docker Desktop is ready for Searx!
 pause
