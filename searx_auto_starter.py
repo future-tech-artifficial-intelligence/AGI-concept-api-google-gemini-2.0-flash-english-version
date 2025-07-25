@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Vérificateur et démarreur automatique pour le système Searx
-S'assure que tout est prêt avant le démarrage de l'application principale
+Automatic Checker and Starter for the Searx system
+Ensures everything is ready before starting the main application
 """
 
 import subprocess
@@ -11,7 +11,7 @@ import logging
 import os
 from pathlib import Path
 
-# Configuration du logging
+# Logging Configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
@@ -19,55 +19,55 @@ logging.basicConfig(
 logger = logging.getLogger('SearxAutoStart')
 
 class SearxAutoStarter:
-    """Démarreur automatique du système Searx"""
+    """Automatic starter for the Searx system"""
     
     def __init__(self):
         self.docker_ready = False
         self.searx_ready = False
         
     def check_docker(self):
-        """Vérifie et démarre Docker si nécessaire"""
-        logger.info("🐳 Vérification de Docker...")
+        """Checks and starts Docker if necessary"""
+        logger.info("🐳 Checking Docker...")
         
         try:
-            # Vérifier si Docker est installé
+            # Check if Docker is installed
             result = subprocess.run(['docker', '--version'], 
                                   capture_output=True, text=True, timeout=5)
             
             if result.returncode != 0:
-                logger.error("❌ Docker n'est pas installé")
+                logger.error("❌ Docker is not installed")
                 return False
             
-            logger.info(f"✅ Docker installé: {result.stdout.strip()}")
+            logger.info(f"✅ Docker installed: {result.stdout.strip()}")
             
-            # Vérifier si Docker daemon est actif
+            # Check if Docker daemon is active
             result = subprocess.run(['docker', 'ps'], 
                                   capture_output=True, text=True, timeout=10)
             
             if result.returncode == 0:
-                logger.info("✅ Docker daemon actif")
+                logger.info("✅ Docker daemon active")
                 self.docker_ready = True
                 return True
             else:
-                logger.warning("⚠️ Docker daemon non actif - tentative de démarrage...")
+                logger.warning("⚠️ Docker daemon not active - attempting to start...")
                 return self._start_docker()
                 
         except subprocess.TimeoutExpired:
-            logger.error("❌ Docker ne répond pas")
+            logger.error("❌ Docker is not responding")
             return False
         except FileNotFoundError:
-            logger.error("❌ Docker non trouvé dans le PATH")
+            logger.error("❌ Docker not found in PATH")
             return False
         except Exception as e:
-            logger.error(f"❌ Erreur Docker: {e}")
+            logger.error(f"❌ Docker error: {e}")
             return False
     
     def _start_docker(self):
-        """Démarre Docker Desktop"""
+        """Starts Docker Desktop"""
         try:
-            logger.info("🚀 Démarrage de Docker Desktop...")
+            logger.info("🚀 Starting Docker Desktop...")
             
-            # Chemins possibles pour Docker Desktop
+            # Possible paths for Docker Desktop
             docker_paths = [
                 "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe",
                 "C:\\Program Files (x86)\\Docker\\Docker\\Docker Desktop.exe"
@@ -80,14 +80,14 @@ class SearxAutoStarter:
                     break
             
             if not docker_exe:
-                logger.error("❌ Docker Desktop non trouvé")
+                logger.error("❌ Docker Desktop not found")
                 return False
             
-            # Démarrer Docker Desktop
+            # Start Docker Desktop
             subprocess.Popen([docker_exe], shell=True)
-            logger.info("⏳ Docker Desktop en cours de démarrage...")
+            logger.info("⏳ Docker Desktop is starting...")
             
-            # Attendre que Docker soit prêt (max 60 secondes)
+            # Wait for Docker to be ready (max 60 seconds)
             max_wait = 60
             wait_time = 0
             
@@ -100,76 +100,76 @@ class SearxAutoStarter:
                                           capture_output=True, text=True, timeout=5)
                     
                     if result.returncode == 0:
-                        logger.info("✅ Docker Desktop démarré avec succès!")
+                        logger.info("✅ Docker Desktop started successfully!")
                         self.docker_ready = True
                         return True
                     else:
-                        logger.info(f"⏳ Attente Docker... ({wait_time}/{max_wait}s)")
+                        logger.info(f"⏳ Waiting for Docker... ({wait_time}/{max_wait}s)")
                 
                 except:
-                    logger.info(f"⏳ Attente Docker... ({wait_time}/{max_wait}s)")
+                    logger.info(f"⏳ Waiting for Docker... ({wait_time}/{max_wait}s)")
             
-            logger.warning("⚠️ Docker prend plus de temps que prévu")
+            logger.warning("⚠️ Docker is taking longer than expected")
             return False
             
         except Exception as e:
-            logger.error(f"❌ Erreur démarrage Docker: {e}")
+            logger.error(f"❌ Docker startup error: {e}")
             return False
     
     def ensure_searx_ready(self):
-        """S'assure que Searx est prêt"""
-        logger.info("🔍 Préparation du système Searx...")
+        """Ensures Searx is ready"""
+        logger.info("🔍 Preparing the Searx system...")
         
         try:
-            # Importer les modules Searx
+            # Import Searx modules
             from port_manager import PortManager
             from searx_interface import SearxInterface
             
-            # Initialiser le gestionnaire de ports
+            # Initialize the port manager
             port_manager = PortManager()
             
-            # Vérifier s'il y a déjà une instance
+            # Check if there's already an instance
             current_url = port_manager.get_current_searx_url()
             
             if current_url:
-                logger.info(f"✅ Searx existant détecté: {current_url}")
+                logger.info(f"✅ Existing Searx detected: {current_url}")
                 
-                # Vérifier s'il fonctionne
+                # Check if it's working
                 searx = SearxInterface(current_url)
                 if searx.check_health():
-                    logger.info("✅ Searx existant opérationnel")
+                    logger.info("✅ Existing Searx operational")
                     self.searx_ready = True
                     return True
                 else:
-                    logger.info("🔄 Searx existant non fonctionnel - nettoyage...")
+                    logger.info("🔄 Existing Searx not functional - cleaning up...")
                     port_manager.stop_all_searx_containers()
             
-            # Démarrer Searx si Docker est prêt
+            # Start Searx if Docker is ready
             if self.docker_ready:
-                logger.info("🚀 Démarrage de Searx...")
+                logger.info("🚀 Starting Searx...")
                 success, url = port_manager.start_searx_smart()
                 
                 if success:
-                    logger.info(f"✅ Searx démarré: {url}")
+                    logger.info(f"✅ Searx started: {url}")
                     
-                    # Attendre que Searx soit complètement prêt
+                    # Wait for Searx to be fully ready
                     self._wait_for_searx_health(url)
                     self.searx_ready = True
                     return True
                 else:
-                    logger.warning("⚠️ Échec démarrage Searx")
+                    logger.warning("⚠️ Searx startup failed")
                     return False
             else:
-                logger.warning("⚠️ Docker non disponible - Searx sera en mode dégradé")
+                logger.warning("⚠️ Docker not available - Searx will run in degraded mode")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ Erreur préparation Searx: {e}")
+            logger.error(f"❌ Searx preparation error: {e}")
             return False
     
     def _wait_for_searx_health(self, url):
-        """Attend que Searx soit en bonne santé"""
-        logger.info("⏳ Attente de l'initialisation complète de Searx...")
+        """Waits for Searx to be healthy"""
+        logger.info("⏳ Waiting for full Searx initialization...")
         
         try:
             from searx_interface import SearxInterface
@@ -180,48 +180,48 @@ class SearxAutoStarter:
             
             while wait_time < max_wait:
                 if searx.check_health():
-                    logger.info("✅ Searx complètement opérationnel!")
+                    logger.info("✅ Searx fully operational!")
                     return True
                 
                 time.sleep(2)
                 wait_time += 2
-                logger.info(f"⏳ Vérification santé Searx... ({wait_time}/{max_wait}s)")
+                logger.info(f"⏳ Checking Searx health... ({wait_time}/{max_wait}s)")
             
-            logger.warning("⚠️ Searx prend plus de temps que prévu à être prêt")
+            logger.warning("⚠️ Searx is taking longer than expected to be ready")
             return False
             
         except Exception as e:
-            logger.warning(f"⚠️ Erreur vérification santé Searx: {e}")
+            logger.warning(f"⚠️ Searx health check error: {e}")
             return False
     
     def start_complete_system(self):
-        """Démarre le système complet"""
-        logger.info("🎯 DÉMARRAGE DU SYSTÈME SEARX AI COMPLET")
+        """Starts the complete system"""
+        logger.info("🎯 STARTING THE COMPLETE ARTIFICIAL INTELLIGENCE API GOOGLE GEMINI 2.0 FLASH SYSTEM")
         logger.info("=" * 60)
         
-        # Étape 1: Vérifier Docker
+        # Step 1: Check Docker
         docker_ok = self.check_docker()
         
-        # Étape 2: Préparer Searx
+        # Step 2: Prepare Searx
         searx_ok = self.ensure_searx_ready()
         
-        # Étape 3: Résumé de l'état
-        logger.info("📊 ÉTAT DU SYSTÈME:")
-        logger.info(f"   🐳 Docker: {'✅ Opérationnel' if docker_ok else '❌ Non disponible'}")
-        logger.info(f"   🔍 Searx: {'✅ Opérationnel' if searx_ok else '⚠️ Mode dégradé'}")
+        # Step 3: System Status Summary
+        logger.info("📊 SYSTEM STATUS:")
+        logger.info(f"   🐳 Docker: {'✅ Operational' if docker_ok else '❌ Not Available'}")
+        logger.info(f"   🔍 Searx: {'✅ Operational' if searx_ok else '⚠️ Degraded Mode'}")
         
         if docker_ok and searx_ok:
-            logger.info("🎉 SYSTÈME COMPLÈTEMENT OPÉRATIONNEL!")
+            logger.info("🎉 SYSTEM FULLY OPERATIONAL!")
             return True
         elif docker_ok:
-            logger.info("⚠️ SYSTÈME PARTIELLEMENT OPÉRATIONNEL")
+            logger.info("⚠️ SYSTEM PARTIALLY OPERATIONAL")
             return True
         else:
-            logger.info("❌ SYSTÈME EN MODE DÉGRADÉ")
+            logger.info("❌ SYSTEM IN DEGRADED MODE")
             return False
 
 def main():
-    """Fonction principale"""
+    """Main function"""
     auto_starter = SearxAutoStarter()
     return auto_starter.start_complete_system()
 
@@ -231,15 +231,15 @@ if __name__ == "__main__":
         logger.info("=" * 60)
         
         if success:
-            logger.info("✅ PRÊT POUR LE DÉMARRAGE DE L'APPLICATION")
+            logger.info("✅ READY FOR APPLICATION STARTUP")
         else:
-            logger.info("⚠️ DÉMARRAGE EN MODE DÉGRADÉ")
+            logger.info("⚠️ STARTUP IN DEGRADED MODE")
         
         sys.exit(0 if success else 1)
         
     except KeyboardInterrupt:
-        logger.info("❌ Démarrage interrompu par l'utilisateur")
+        logger.info("❌ Startup interrupted by user")
         sys.exit(1)
     except Exception as e:
-        logger.error(f"💥 Erreur fatale: {e}")
+        logger.error(f"💥 Fatal error: {e}")
         sys.exit(1)
