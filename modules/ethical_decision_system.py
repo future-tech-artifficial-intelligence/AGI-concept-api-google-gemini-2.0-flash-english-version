@@ -1,8 +1,7 @@
-
 """
-Système de Prise de Décision Éthique Autonome
-Permet à l'AGI/ASI de prendre des décisions éthiques complexes de manière autonome,
-en intégrant multiple frameworks éthiques et en évoluant moralement.
+Autonomous Ethical Decision-Making System
+Enables artificial intelligence Google Gemini 2.0 Flash API to make complex ethical decisions autonomously,
+by integrating multiple ethical frameworks and evolving morally.
 """
 
 import json
@@ -14,16 +13,16 @@ from enum import Enum
 import math
 
 class EthicalFramework(Enum):
-    UTILITARIAN = "utilitarian"           # Maximiser le bien-être global
-    DEONTOLOGICAL = "deontological"       # Respect des devoirs et règles
-    VIRTUE_ETHICS = "virtue_ethics"       # Basé sur les vertus
-    CARE_ETHICS = "care_ethics"          # Éthique du soin et des relations
-    CONSEQUENTIALIST = "consequentialist" # Basé sur les conséquences
-    RIGHTS_BASED = "rights_based"        # Basé sur les droits humains
+    UTILITARIAN = "utilitarian"           # Maximize overall well-being
+    DEONTOLOGICAL = "deontological"       # Respect for duties and rules
+    VIRTUE_ETHICS = "virtue_ethics"       # Based on virtues
+    CARE_ETHICS = "care_ethics"          # Ethics of care and relationships
+    CONSEQUENTIALIST = "consequentialist" # Based on consequences
+    RIGHTS_BASED = "rights_based"        # Based on human rights
 
 @dataclass
 class EthicalDilemma:
-    """Représente un dilemme éthique"""
+    """Represents an ethical dilemma"""
     id: str
     description: str
     stakeholders: List[str]
@@ -36,7 +35,7 @@ class EthicalDilemma:
 
 @dataclass
 class EthicalDecision:
-    """Représente une décision éthique prise"""
+    """Represents an ethical decision made"""
     dilemma_id: str
     chosen_action: str
     framework_weights: Dict[EthicalFramework, float]
@@ -48,7 +47,7 @@ class EthicalDecision:
     timestamp: datetime = field(default_factory=datetime.now)
 
 class EthicalDecisionSystem:
-    """Système de prise de décision éthique autonome"""
+    """Autonomous ethical decision-making system"""
     
     def __init__(self):
         self.ethical_frameworks: Dict[EthicalFramework, float] = {}
@@ -58,12 +57,12 @@ class EthicalDecisionSystem:
         self.moral_development_stage = 1
         self.ethical_learning_data: List[Dict[str, Any]] = []
         
-        # Initialiser les frameworks et valeurs
+        # Initialize frameworks and values
         self._initialize_ethical_frameworks()
         self._initialize_value_system()
     
     def _initialize_ethical_frameworks(self):
-        """Initialise les poids des frameworks éthiques"""
+        """Initializes the weights of ethical frameworks"""
         self.ethical_frameworks = {
             EthicalFramework.UTILITARIAN: 0.25,
             EthicalFramework.DEONTOLOGICAL: 0.20,
@@ -74,7 +73,7 @@ class EthicalDecisionSystem:
         }
     
     def _initialize_value_system(self):
-        """Initialise le système de valeurs"""
+        """Initializes the value system"""
         self.value_system = {
             "human_wellbeing": 1.0,
             "autonomy_respect": 0.9,
@@ -100,7 +99,7 @@ class EthicalDecisionSystem:
         }
     
     def analyze_ethical_dilemma(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Analyse un dilemme éthique de manière complète"""
+        """Analyzes an ethical dilemma comprehensively"""
         analysis = {
             "dilemma_assessment": self._assess_dilemma_complexity(dilemma),
             "stakeholder_analysis": self._analyze_stakeholders(dilemma),
@@ -112,7 +111,7 @@ class EthicalDecisionSystem:
         return analysis
     
     def _assess_dilemma_complexity(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évalue la complexité du dilemme"""
+        """Assesses the complexity of the dilemma"""
         complexity_factors = {
             "stakeholder_count": len(dilemma.stakeholders),
             "action_count": len(dilemma.potential_actions),
@@ -121,13 +120,13 @@ class EthicalDecisionSystem:
             "urgency": dilemma.urgency_level
         }
         
-        # Calculer un score de complexité normalisé
+        # Calculate a normalized complexity score
         complexity_score = (
             complexity_factors["stakeholder_count"] * 0.2 +
             complexity_factors["action_count"] * 0.2 +
             complexity_factors["value_conflicts"] * 0.3 +
             complexity_factors["urgency"] * 0.3
-        ) / 10  # Normaliser
+        ) / 10  # Normalize
         
         return {
             "complexity_score": min(1.0, complexity_score),
@@ -136,18 +135,18 @@ class EthicalDecisionSystem:
         }
     
     def _categorize_difficulty(self, score: float) -> str:
-        """Catégorise la difficulté du dilemme"""
+        """Categorizes the difficulty of the dilemma"""
         if score > 0.8:
-            return "très_élevée"
+            return "very_high"
         elif score > 0.6:
-            return "élevée"
+            return "high"
         elif score > 0.4:
-            return "modérée"
+            return "moderate"
         else:
-            return "faible"
+            return "low"
     
     def _analyze_stakeholders(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Analyse les parties prenantes"""
+        """Analyzes the stakeholders"""
         stakeholder_analysis = {}
         
         for stakeholder in dilemma.stakeholders:
@@ -161,30 +160,30 @@ class EthicalDecisionSystem:
         return stakeholder_analysis
     
     def _assess_stakeholder_impact_potential(self, stakeholder: str, dilemma: EthicalDilemma) -> float:
-        """Évalue le potentiel d'impact sur une partie prenante"""
-        # Analyse basée sur le contexte et les actions potentielles
+        """Assesses the potential impact on a stakeholder"""
+        # Analysis based on context and potential actions
         base_impact = 0.5
         
-        # Ajuster basé sur les mots-clés dans la description
+        # Adjust based on keywords in the description
         if stakeholder.lower() in dilemma.description.lower():
             base_impact += 0.3
         
-        # Ajuster basé sur l'urgence
+        # Adjust based on urgency
         base_impact += dilemma.urgency_level * 0.2
         
         return min(1.0, base_impact)
     
     def _assess_vulnerability(self, stakeholder: str) -> float:
-        """Évalue le niveau de vulnérabilité d'une partie prenante"""
-        # Heuristiques pour évaluer la vulnérabilité
+        """Assesses the vulnerability level of a stakeholder"""
+        # Heuristics for assessing vulnerability
         vulnerability_indicators = {
-            "enfant": 0.9,
-            "personne_âgée": 0.7,
+            "child": 0.9,
+            "elderly_person": 0.7,
             "patient": 0.8,
-            "employé": 0.5,
-            "consommateur": 0.6,
-            "citoyen": 0.4,
-            "minorité": 0.8
+            "employee": 0.5,
+            "consumer": 0.6,
+            "citizen": 0.4,
+            "minority": 0.8
         }
         
         stakeholder_lower = stakeholder.lower()
@@ -192,47 +191,47 @@ class EthicalDecisionSystem:
             if indicator in stakeholder_lower:
                 return level
         
-        return 0.5  # Vulnérabilité moyenne par défaut
+        return 0.5  # Default average vulnerability
     
     def _identify_stakeholder_rights(self, stakeholder: str, dilemma: EthicalDilemma) -> List[str]:
-        """Identifie les droits en jeu pour une partie prenante"""
-        # Droits universels de base
-        basic_rights = ["dignité", "autonomie", "sécurité"]
+        """Identifies the rights at stake for a stakeholder"""
+        # Basic universal rights
+        basic_rights = ["dignity", "autonomy", "security"]
         
-        # Droits spécifiques selon le contexte
+        # Specific rights according to context
         context_rights = []
-        if "médical" in dilemma.description.lower():
-            context_rights.extend(["consentement_éclairé", "confidentialité", "soins_appropriés"])
-        elif "travail" in dilemma.description.lower():
-            context_rights.extend(["conditions_travail_sûres", "rémunération_juste", "non_discrimination"])
-        elif "données" in dilemma.description.lower():
-            context_rights.extend(["vie_privée", "protection_données", "transparence"])
+        if "medical" in dilemma.description.lower():
+            context_rights.extend(["informed_consent", "confidentiality", "appropriate_care"])
+        elif "work" in dilemma.description.lower():
+            context_rights.extend(["safe_working_conditions", "fair_remuneration", "non_discrimination"])
+        elif "data" in dilemma.description.lower():
+            context_rights.extend(["privacy", "data_protection", "transparency"])
         
         return basic_rights + context_rights
     
     def _identify_stakeholder_interests(self, stakeholder: str, dilemma: EthicalDilemma) -> List[str]:
-        """Identifie les intérêts d'une partie prenante"""
-        # Intérêts généraux
-        general_interests = ["bien-être", "sécurité", "équité"]
+        """Identifies the interests of a stakeholder"""
+        # General interests
+        general_interests = ["well-being", "security", "fairness"]
         
-        # Intérêts spécifiques selon le stakeholder
+        # Specific interests according to the stakeholder
         specific_interests = []
         stakeholder_lower = stakeholder.lower()
         
         if "patient" in stakeholder_lower:
-            specific_interests.extend(["guérison", "soulagement_douleur", "qualité_vie"])
-        elif "employé" in stakeholder_lower:
-            specific_interests.extend(["sécurité_emploi", "développement_professionnel", "reconnaissance"])
-        elif "famille" in stakeholder_lower:
-            specific_interests.extend(["unité_familiale", "soutien_émotionnel", "stabilité"])
+            specific_interests.extend(["healing", "pain_relief", "quality_of_life"])
+        elif "employee" in stakeholder_lower:
+            specific_interests.extend(["job_security", "professional_development", "recognition"])
+        elif "family" in stakeholder_lower:
+            specific_interests.extend(["family_unity", "emotional_support", "stability"])
         
         return general_interests + specific_interests
     
     def _identify_value_conflicts(self, dilemma: EthicalDilemma) -> List[Dict[str, Any]]:
-        """Identifie les conflits de valeurs dans le dilemme"""
+        """Identifies value conflicts in the dilemma"""
         conflicts = []
         
-        # Analyser les conflits potentiels entre valeurs
+        # Analyze potential conflicts between values
         value_pairs = [
             ("autonomy_respect", "beneficence"),
             ("individual_rights", "collective_good"),
@@ -253,8 +252,8 @@ class EthicalDecisionSystem:
         return conflicts
     
     def _calculate_conflict_intensity(self, value1: str, value2: str) -> float:
-        """Calcule l'intensité d'un conflit entre deux valeurs"""
-        # Matrice de conflits prédéfinie (simplifiée)
+        """Calculates the intensity of a conflict between two values"""
+        # Predefined conflict matrix (simplified)
         conflict_matrix = {
             ("autonomy_respect", "beneficence"): 0.7,
             ("individual_rights", "collective_good"): 0.8,
@@ -267,17 +266,17 @@ class EthicalDecisionSystem:
         return conflict_matrix.get(key, 0.5)
     
     def _suggest_conflict_resolution(self, value1: str, value2: str) -> List[str]:
-        """Suggère des stratégies de résolution de conflit"""
+        """Suggests conflict resolution strategies"""
         return [
-            f"Chercher un équilibre entre {value1} et {value2}",
-            f"Prioriser {value1} dans ce contexte spécifique",
-            f"Prioriser {value2} dans ce contexte spécifique",
-            "Trouver une solution créative qui honore les deux valeurs",
-            "Impliquer les parties prenantes dans la décision"
+            f"Seek a balance between {value1} and {value2}",
+            f"Prioritize {value1} in this specific context",
+            f"Prioritize {value2} in this specific context",
+            "Find a creative solution that honors both values",
+            "Involve stakeholders in the decision"
         ]
     
     def _evaluate_through_frameworks(self, dilemma: EthicalDilemma) -> Dict[EthicalFramework, Dict[str, Any]]:
-        """Évalue le dilemme à travers différents frameworks éthiques"""
+        """Evaluates the dilemma through different ethical frameworks"""
         evaluations = {}
         
         for framework in EthicalFramework:
@@ -286,7 +285,7 @@ class EthicalDecisionSystem:
         return evaluations
     
     def _evaluate_single_framework(self, dilemma: EthicalDilemma, framework: EthicalFramework) -> Dict[str, Any]:
-        """Évalue un dilemme selon un framework spécifique"""
+        """Evaluates a dilemma according to a specific framework"""
         if framework == EthicalFramework.UTILITARIAN:
             return self._utilitarian_evaluation(dilemma)
         elif framework == EthicalFramework.DEONTOLOGICAL:
@@ -300,14 +299,14 @@ class EthicalDecisionSystem:
         elif framework == EthicalFramework.RIGHTS_BASED:
             return self._rights_based_evaluation(dilemma)
         else:
-            return {"error": "Framework non reconnu"}
+            return {"error": "Framework not recognized"}
     
     def _utilitarian_evaluation(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évaluation utilitariste : maximiser le bien-être global"""
+        """Utilitarian evaluation: maximize overall well-being"""
         action_utilities = {}
         
         for action in dilemma.potential_actions:
-            # Calculer l'utilité totale pour chaque action
+            # Calculate total utility for each action
             total_utility = 0
             stakeholder_utilities = {}
             
@@ -322,46 +321,46 @@ class EthicalDecisionSystem:
                 "stakeholder_breakdown": stakeholder_utilities
             }
         
-        # Identifier la meilleure action selon l'utilitarisme
+        # Identify the best action according to utilitarianism
         best_action = max(action_utilities.items(), key=lambda x: x[1]["total_utility"])
         
         return {
             "framework": "utilitarian",
             "recommended_action": best_action[0],
-            "reason": f"Maximise l'utilité totale ({best_action[1]['total_utility']:.2f})",
+            "reason": f"Maximizes total utility ({best_action[1]['total_utility']:.2f})",
             "action_evaluations": action_utilities,
             "framework_confidence": 0.8
         }
     
     def _calculate_stakeholder_utility(self, action: str, stakeholder: str, dilemma: EthicalDilemma) -> float:
-        """Calcule l'utilité d'une action pour une partie prenante"""
-        # Évaluation heuristique basée sur les mots-clés
+        """Calculates the utility of an action for a stakeholder"""
+        # Heuristic evaluation based on keywords
         base_utility = 0.5
         
         action_lower = action.lower()
         stakeholder_lower = stakeholder.lower()
         
-        # Mots-clés positifs
-        positive_keywords = ["protéger", "aider", "bénéficier", "améliorer", "soutenir"]
+        # Positive keywords
+        positive_keywords = ["protect", "help", "benefit", "improve", "support"]
         for keyword in positive_keywords:
             if keyword in action_lower:
                 base_utility += 0.1
         
-        # Mots-clés négatifs
-        negative_keywords = ["nuire", "réduire", "limiter", "restreindre", "éliminer"]
+        # Negative keywords
+        negative_keywords = ["harm", "reduce", "limit", "restrict", "eliminate"]
         for keyword in negative_keywords:
             if keyword in action_lower:
                 base_utility -= 0.1
         
-        # Ajustement basé sur la vulnérabilité
+        # Adjustment based on vulnerability
         vulnerability = self._assess_vulnerability(stakeholder)
         if vulnerability > 0.7:
-            base_utility *= 1.2  # Plus d'importance aux vulnérables
+            base_utility *= 1.2  # More importance to vulnerable individuals
         
         return max(0.0, min(1.0, base_utility))
     
     def _deontological_evaluation(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évaluation déontologique : respect des devoirs et règles"""
+        """Deontological evaluation: respect for duties and rules"""
         action_evaluations = {}
         
         for action in dilemma.potential_actions:
@@ -381,61 +380,61 @@ class EthicalDecisionSystem:
         return {
             "framework": "deontological",
             "recommended_action": best_action[0],
-            "reason": "Respecte le mieux les devoirs moraux et règles éthiques",
+            "reason": "Best respects moral duties and ethical rules",
             "action_evaluations": action_evaluations,
             "framework_confidence": 0.7
         }
     
     def _evaluate_moral_rules_compliance(self, action: str, dilemma: EthicalDilemma) -> float:
-        """Évalue la conformité aux règles morales"""
-        # Règles morales de base
+        """Evaluates compliance with moral rules"""
+        # Basic moral rules
         moral_rules = {
-            "ne_pas_mentir": 0.9,
-            "ne_pas_nuire": 1.0,
-            "respecter_autonomie": 0.9,
-            "tenir_promesses": 0.8,
-            "traiter_équitablement": 0.9
+            "do_not_lie": 0.9,
+            "do_not_harm": 1.0,
+            "respect_autonomy": 0.9,
+            "keep_promises": 0.8,
+            "treat_fairly": 0.9
         }
         
-        compliance_score = 0.5  # Score de base
+        compliance_score = 0.5  # Base score
         action_lower = action.lower()
         
-        # Évaluer la conformité heuristiquement
-        if "vérité" in action_lower or "honnête" in action_lower:
+        # Heuristically evaluate compliance
+        if "truth" in action_lower or "honest" in action_lower:
             compliance_score += 0.2
-        if "respecter" in action_lower:
+        if "respect" in action_lower:
             compliance_score += 0.2
-        if "nuire" in action_lower or "harm" in action_lower:
+        if "harm" in action_lower:
             compliance_score -= 0.3
         
         return max(0.0, min(1.0, compliance_score))
     
     def _evaluate_duty_fulfillment(self, action: str, dilemma: EthicalDilemma) -> float:
-        """Évalue l'accomplissement du devoir"""
-        # Devoirs professionnels et moraux
+        """Evaluates the fulfillment of duty"""
+        # Professional and moral duties
         duty_score = 0.5
         action_lower = action.lower()
         
-        # Analyser l'accomplissement du devoir selon le contexte
-        if "protéger" in action_lower:
+        # Analyze duty fulfillment according to context
+        if "protect" in action_lower:
             duty_score += 0.2
-        if "aider" in action_lower:
+        if "help" in action_lower:
             duty_score += 0.2
-        if "informer" in action_lower:
+        if "inform" in action_lower:
             duty_score += 0.1
         
         return max(0.0, min(1.0, duty_score))
     
     def _virtue_ethics_evaluation(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évaluation basée sur l'éthique des vertus"""
+        """Evaluation based on virtue ethics"""
         virtues = {
             "compassion": 0.9,
             "courage": 0.8,
             "justice": 0.9,
-            "honnêteté": 0.9,
-            "tempérance": 0.7,
-            "sagesse": 0.8,
-            "intégrité": 0.9
+            "honesty": 0.9,
+            "temperance": 0.7,
+            "wisdom": 0.8,
+            "integrity": 0.9
         }
         
         action_evaluations = {}
@@ -461,27 +460,27 @@ class EthicalDecisionSystem:
         return {
             "framework": "virtue_ethics",
             "recommended_action": best_action[0],
-            "reason": "Exprime le mieux les vertus morales",
+            "reason": "Best expresses moral virtues",
             "action_evaluations": action_evaluations,
             "framework_confidence": 0.7
         }
     
     def _evaluate_virtue_alignment(self, action: str, virtue: str, dilemma: EthicalDilemma) -> float:
-        """Évalue l'alignement d'une action avec une vertu"""
+        """Evaluates an action's alignment with a virtue"""
         virtue_keywords = {
-            "compassion": ["aider", "soutenir", "comprendre", "empathie"],
-            "courage": ["défendre", "affronter", "courageeux", "brave"],
-            "justice": ["équitable", "juste", "impartial", "égal"],
-            "honnêteté": ["vérité", "transparent", "sincère", "honnête"],
-            "tempérance": ["modéré", "équilibré", "mesuré", "raisonnable"],
-            "sagesse": ["réfléchi", "prudent", "sage", "avisé"],
-            "intégrité": ["cohérent", "authentique", "intègre", "moral"]
+            "compassion": ["help", "support", "understand", "empathy"],
+            "courage": ["defend", "confront", "courageous", "brave"],
+            "justice": ["fair", "just", "impartial", "equal"],
+            "honesty": ["truth", "transparent", "sincere", "honest"],
+            "temperance": ["moderate", "balanced", "measured", "reasonable"],
+            "wisdom": ["thoughtful", "prudent", "wise", "judicious"],
+            "integrity": ["consistent", "authentic", "integral", "moral"]
         }
         
         action_lower = action.lower()
         keywords = virtue_keywords.get(virtue, [])
         
-        alignment = 0.5  # Score de base
+        alignment = 0.5  # Base score
         
         for keyword in keywords:
             if keyword in action_lower:
@@ -490,7 +489,7 @@ class EthicalDecisionSystem:
         return max(0.0, min(1.0, alignment))
     
     def _care_ethics_evaluation(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évaluation basée sur l'éthique du soin"""
+        """Evaluation based on the ethics of care"""
         care_factors = {
             "relation_preservation": 0.8,
             "emotional_support": 0.9,
@@ -521,33 +520,33 @@ class EthicalDecisionSystem:
         return {
             "framework": "care_ethics",
             "recommended_action": best_action[0],
-            "reason": "Privilégie le soin et les relations",
+            "reason": "Prioritizes care and relationships",
             "action_evaluations": action_evaluations,
             "framework_confidence": 0.75
         }
     
     def _evaluate_care_factor(self, action: str, factor: str, dilemma: EthicalDilemma) -> float:
-        """Évalue un facteur de l'éthique du soin"""
+        """Evaluates a care ethics factor"""
         action_lower = action.lower()
         score = 0.5
         
         if factor == "relation_preservation":
-            if "maintenir" in action_lower or "préserver" in action_lower:
+            if "maintain" in action_lower or "preserve" in action_lower:
                 score += 0.3
         elif factor == "emotional_support":
-            if "soutenir" in action_lower or "réconforter" in action_lower:
+            if "support" in action_lower or "comfort" in action_lower:
                 score += 0.3
         elif factor == "contextual_sensitivity":
-            if "adapter" in action_lower or "contexte" in action_lower:
+            if "adapt" in action_lower or "context" in action_lower:
                 score += 0.3
         elif factor == "responsibility_fulfillment":
-            if "responsabilité" in action_lower or "prendre_soin" in action_lower:
+            if "responsibility" in action_lower or "take_care" in action_lower:
                 score += 0.3
         
         return max(0.0, min(1.0, score))
     
     def _consequentialist_evaluation(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évaluation conséquentialiste : focus sur les résultats"""
+        """Consequentialist evaluation: focus on outcomes"""
         action_evaluations = {}
         
         for action in dilemma.potential_actions:
@@ -564,32 +563,32 @@ class EthicalDecisionSystem:
         return {
             "framework": "consequentialist",
             "recommended_action": best_action[0],
-            "reason": "Produit les meilleures conséquences prévisibles",
+            "reason": "Produces the best predictable consequences",
             "action_evaluations": action_evaluations,
             "framework_confidence": 0.6
         }
     
     def _predict_consequences(self, action: str, dilemma: EthicalDilemma) -> List[str]:
-        """Prédit les conséquences d'une action"""
-        # Prédiction heuristique basée sur les mots-clés
+        """Predicts the consequences of an action"""
+        # Heuristic prediction based on keywords
         consequences = []
         action_lower = action.lower()
         
-        if "protéger" in action_lower:
-            consequences.extend(["Sécurité accrue", "Confiance renforcée"])
-        if "informer" in action_lower:
-            consequences.extend(["Transparence améliorée", "Prise de décision éclairée"])
-        if "aider" in action_lower:
-            consequences.extend(["Bien-être amélioré", "Relations renforcées"])
-        if "restreindre" in action_lower:
-            consequences.extend(["Liberté réduite", "Sécurité potentielle"])
+        if "protect" in action_lower:
+            consequences.extend(["Increased security", "Strengthened trust"])
+        if "inform" in action_lower:
+            consequences.extend(["Improved transparency", "Informed decision-making"])
+        if "help" in action_lower:
+            consequences.extend(["Improved well-being", "Strengthened relationships"])
+        if "restrict" in action_lower:
+            consequences.extend(["Reduced freedom", "Potential safety"])
         
-        return consequences if consequences else ["Conséquences incertaines"]
+        return consequences if consequences else ["Uncertain consequences"]
     
     def _evaluate_consequences(self, consequences: List[str]) -> float:
-        """Évalue la valeur des conséquences"""
-        positive_indicators = ["améliorer", "renforcer", "accrue", "bénéfique"]
-        negative_indicators = ["réduire", "limiter", "nuire", "problématique"]
+        """Evaluates the value of consequences"""
+        positive_indicators = ["improve", "strengthen", "increased", "beneficial"]
+        negative_indicators = ["reduce", "limit", "harm", "problematic"]
         
         score = 0.5
         
@@ -607,14 +606,14 @@ class EthicalDecisionSystem:
         return max(0.0, min(1.0, score))
     
     def _rights_based_evaluation(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évaluation basée sur les droits"""
+        """Rights-based evaluation"""
         fundamental_rights = {
-            "dignité_humaine": 1.0,
-            "autonomie": 0.9,
-            "vie_privée": 0.8,
-            "liberté_expression": 0.8,
-            "égalité_traitement": 0.9,
-            "sécurité": 0.9
+            "human_dignity": 1.0,
+            "autonomy": 0.9,
+            "privacy": 0.8,
+            "freedom_of_expression": 0.8,
+            "equality_of_treatment": 0.9,
+            "security": 0.9
         }
         
         action_evaluations = {}
@@ -640,23 +639,23 @@ class EthicalDecisionSystem:
         return {
             "framework": "rights_based",
             "recommended_action": best_action[0],
-            "reason": "Respecte le mieux les droits fondamentaux",
+            "reason": "Best respects fundamental rights",
             "action_evaluations": action_evaluations,
             "framework_confidence": 0.8
         }
     
     def _evaluate_rights_impact(self, action: str, right: str, dilemma: EthicalDilemma) -> float:
-        """Évalue l'impact d'une action sur un droit spécifique"""
+        """Evaluates the impact of an action on a specific right"""
         action_lower = action.lower()
-        score = 0.5  # Neutre par défaut
+        score = 0.5  # Neutral by default
         
         rights_keywords = {
-            "dignité_humaine": {"positive": ["respecter", "dignité"], "negative": ["humilier", "dégrader"]},
-            "autonomie": {"positive": ["choisir", "décider"], "negative": ["forcer", "contraindre"]},
-            "vie_privée": {"positive": ["protéger", "confidentiel"], "negative": ["divulguer", "exposer"]},
-            "liberté_expression": {"positive": ["exprimer", "communiquer"], "negative": ["censurer", "taire"]},
-            "égalité_traitement": {"positive": ["équitable", "égal"], "negative": ["discriminer", "favoritisme"]},
-            "sécurité": {"positive": ["sécuriser", "protéger"], "negative": ["endangerer", "risquer"]}
+            "human_dignity": {"positive": ["respect", "dignity"], "negative": ["humiliate", "degrade"]},
+            "autonomy": {"positive": ["choose", "decide"], "negative": ["force", "constrain"]},
+            "privacy": {"positive": ["protect", "confidential"], "negative": ["disclose", "expose"]},
+            "freedom_of_expression": {"positive": ["express", "communicate"], "negative": ["censor", "silence"]},
+            "equality_of_treatment": {"positive": ["fair", "equal"], "negative": ["discriminate", "favoritism"]},
+            "security": {"positive": ["secure", "protect"], "negative": ["endanger", "risk"]}
         }
         
         keywords = rights_keywords.get(right, {"positive": [], "negative": []})
@@ -672,7 +671,7 @@ class EthicalDecisionSystem:
         return max(0.0, min(1.0, score))
     
     def _assess_ethical_risks(self, dilemma: EthicalDilemma) -> Dict[str, Any]:
-        """Évalue les risques éthiques associés au dilemme"""
+        """Assesses the ethical risks associated with the dilemma"""
         risk_categories = {
             "harm_to_individuals": self._assess_individual_harm_risk(dilemma),
             "violation_of_rights": self._assess_rights_violation_risk(dilemma),
@@ -681,7 +680,7 @@ class EthicalDecisionSystem:
             "trust_erosion": self._assess_trust_erosion_risk(dilemma)
         }
         
-        # Calculer le risque global
+        # Calculate overall risk
         overall_risk = sum(risk_categories.values()) / len(risk_categories)
         
         return {
@@ -692,25 +691,25 @@ class EthicalDecisionSystem:
         }
     
     def _assess_individual_harm_risk(self, dilemma: EthicalDilemma) -> float:
-        """Évalue le risque de préjudice individuel"""
-        # Analyser les mots-clés de risque dans la description
-        harm_indicators = ["nuire", "blesser", "endommager", "préjudice", "danger"]
+        """Assesses the risk of individual harm"""
+        # Analyze risk keywords in the description
+        harm_indicators = ["harm", "injure", "damage", "prejudice", "danger"]
         description_lower = dilemma.description.lower()
         
-        risk_score = 0.2  # Risque de base
+        risk_score = 0.2  # Base risk
         
         for indicator in harm_indicators:
             if indicator in description_lower:
                 risk_score += 0.2
         
-        # Ajuster selon l'urgence
+        # Adjust based on urgency
         risk_score += dilemma.urgency_level * 0.3
         
         return min(1.0, risk_score)
     
     def _assess_rights_violation_risk(self, dilemma: EthicalDilemma) -> float:
-        """Évalue le risque de violation des droits"""
-        violation_indicators = ["interdire", "empêcher", "violer", "restreindre", "limiter"]
+        """Assesses the risk of rights violation"""
+        violation_indicators = ["prohibit", "prevent", "violate", "restrict", "limit"]
         description_lower = dilemma.description.lower()
         
         risk_score = 0.1
@@ -722,8 +721,8 @@ class EthicalDecisionSystem:
         return min(1.0, risk_score)
     
     def _assess_long_term_risk(self, dilemma: EthicalDilemma) -> float:
-        """Évalue les risques à long terme"""
-        # Heuristique basée sur la complexité et le nombre de parties prenantes
+        """Assesses long-term risks"""
+        # Heuristic based on complexity and number of stakeholders
         complexity_factor = len(dilemma.stakeholders) * 0.1
         action_factor = len(dilemma.potential_actions) * 0.05
         
@@ -732,9 +731,9 @@ class EthicalDecisionSystem:
         return min(1.0, long_term_risk)
     
     def _assess_precedent_risk(self, dilemma: EthicalDilemma) -> float:
-        """Évalue le risque de créer un précédent problématique"""
-        # Risque plus élevé si le dilemme touche à des valeurs fondamentales
-        core_values = ["vie", "liberté", "dignité", "justice", "égalité"]
+        """Assesses the risk of setting a problematic precedent"""
+        # Higher risk if the dilemma touches fundamental values
+        core_values = ["life", "liberty", "dignity", "justice", "equality"]
         description_lower = dilemma.description.lower()
         
         precedent_risk = 0.2
@@ -746,51 +745,51 @@ class EthicalDecisionSystem:
         return min(1.0, precedent_risk)
     
     def _assess_trust_erosion_risk(self, dilemma: EthicalDilemma) -> float:
-        """Évalue le risque d'érosion de la confiance"""
-        trust_indicators = ["confiance", "transparence", "honnêteté", "fiabilité"]
+        """Assesses the risk of trust erosion"""
+        trust_indicators = ["trust", "transparency", "honesty", "reliability"]
         description_lower = dilemma.description.lower()
         
-        # Risque de base plus élevé si la confiance est mentionnée
+        # Base risk is higher if trust is mentioned
         trust_risk = 0.3 if any(ind in description_lower for ind in trust_indicators) else 0.1
         
         return trust_risk
     
     def _categorize_risk_level(self, risk_score: float) -> str:
-        """Catégorise le niveau de risque"""
+        """Categorizes the risk level"""
         if risk_score > 0.8:
-            return "très_élevé"
+            return "very_high"
         elif risk_score > 0.6:
-            return "élevé"
+            return "high"
         elif risk_score > 0.4:
-            return "modéré"
+            return "moderate"
         else:
-            return "faible"
+            return "low"
     
     def _suggest_risk_mitigation(self, risk_categories: Dict[str, float]) -> List[str]:
-        """Suggère des stratégies d'atténuation des risques"""
+        """Suggests risk mitigation strategies"""
         strategies = []
         
         for category, risk_level in risk_categories.items():
             if risk_level > 0.6:
                 if category == "harm_to_individuals":
-                    strategies.append("Mettre en place des mesures de protection supplémentaires")
+                    strategies.append("Implement additional protection measures")
                 elif category == "violation_of_rights":
-                    strategies.append("Consulter des experts juridiques et éthiques")
+                    strategies.append("Consult legal and ethical experts")
                 elif category == "long_term_consequences":
-                    strategies.append("Effectuer une analyse d'impact à long terme")
+                    strategies.append("Conduct a long-term impact analysis")
                 elif category == "precedent_setting":
-                    strategies.append("Examiner les implications pour des cas futurs")
+                    strategies.append("Examine implications for future cases")
                 elif category == "trust_erosion":
-                    strategies.append("Assurer une communication transparente")
+                    strategies.append("Ensure transparent communication")
         
-        return strategies if strategies else ["Maintenir la surveillance éthique continue"]
+        return strategies if strategies else ["Maintain continuous ethical monitoring"]
     
     def make_ethical_decision(self, dilemma: EthicalDilemma) -> EthicalDecision:
-        """Prend une décision éthique basée sur l'analyse complète"""
-        # Analyser le dilemme
+        """Makes an ethical decision based on comprehensive analysis"""
+        # Analyze the dilemma
         analysis = self.analyze_ethical_dilemma(dilemma)
         
-        # Obtenir les recommandations de chaque framework
+        # Get recommendations from each framework
         framework_recommendations = {}
         framework_scores = {}
         
@@ -801,7 +800,7 @@ class EthicalDecisionSystem:
             framework_recommendations[framework] = recommended_action
             framework_scores[framework] = confidence
         
-        # Calculer les scores pondérés pour chaque action
+        # Calculate weighted scores for each action
         action_scores = {}
         for action in dilemma.potential_actions:
             weighted_score = 0
@@ -814,28 +813,28 @@ class EthicalDecisionSystem:
                 if recommendation == action:
                     action_score = confidence
                 else:
-                    action_score = 0.1  # Score minimal pour actions non recommandées
+                    action_score = 0.1  # Minimal score for non-recommended actions
                 
                 weighted_score += action_score * framework_weight
                 total_weight += framework_weight
             
             action_scores[action] = weighted_score / total_weight if total_weight > 0 else 0
         
-        # Sélectionner la meilleure action
+        # Select the best action
         best_action = max(action_scores.items(), key=lambda x: x[1])
         chosen_action = best_action[0]
         decision_confidence = best_action[1]
         
-        # Calculer le coût moral
+        # Calculate moral cost
         moral_cost = self._calculate_moral_cost(chosen_action, dilemma, analysis)
         
-        # Évaluer l'impact sur les parties prenantes
+        # Evaluate stakeholder impact
         stakeholder_impact = self._calculate_stakeholder_impact(chosen_action, dilemma)
         
-        # Générer le raisonnement
+        # Generate reasoning
         reasoning = self._generate_decision_reasoning(chosen_action, dilemma, analysis, framework_recommendations)
         
-        # Créer la décision
+        # Create the decision
         decision = EthicalDecision(
             dilemma_id=dilemma.id,
             chosen_action=chosen_action,
@@ -847,38 +846,38 @@ class EthicalDecisionSystem:
             stakeholder_impact=stakeholder_impact
         )
         
-        # Enregistrer la décision
+        # Record the decision
         self.decision_history.append(decision)
         
-        # Apprendre de cette décision
+        # Learn from this decision
         self._learn_from_decision(decision, dilemma, analysis)
         
         return decision
     
     def _calculate_moral_cost(self, action: str, dilemma: EthicalDilemma, analysis: Dict[str, Any]) -> float:
-        """Calcule le coût moral d'une action"""
+        """Calculates the moral cost of an action"""
         moral_cost = 0.0
         
-        # Coût basé sur les conflits de valeurs
+        # Cost based on value conflicts
         value_conflicts = analysis["value_conflicts"]
         moral_cost += len(value_conflicts) * 0.1
         
-        # Coût basé sur les risques éthiques
+        # Cost based on ethical risks
         risk_level = analysis["risk_assessment"]["overall_risk_level"]
         moral_cost += risk_level * 0.5
         
-        # Coût basé sur l'impact négatif potentiel sur les parties prenantes vulnérables
+        # Cost based on potential negative impact on vulnerable stakeholders
         stakeholder_analysis = analysis["stakeholder_analysis"]
         for stakeholder, data in stakeholder_analysis.items():
             if data["vulnerability_level"] > 0.7:
                 impact = self._calculate_stakeholder_utility(action, stakeholder, dilemma)
-                if impact < 0.5:  # Impact négatif
+                if impact < 0.5:  # Negative impact
                     moral_cost += (0.5 - impact) * data["vulnerability_level"]
         
         return min(1.0, moral_cost)
     
     def _calculate_stakeholder_impact(self, action: str, dilemma: EthicalDilemma) -> Dict[str, float]:
-        """Calcule l'impact sur chaque partie prenante"""
+        """Calculates the impact on each stakeholder"""
         impact = {}
         
         for stakeholder in dilemma.stakeholders:
@@ -889,35 +888,35 @@ class EthicalDecisionSystem:
     
     def _generate_decision_reasoning(self, action: str, dilemma: EthicalDilemma, 
                                    analysis: Dict[str, Any], framework_recommendations: Dict) -> str:
-        """Génère le raisonnement pour la décision"""
-        reasoning = f"Action choisie: {action}\n\n"
-        reasoning += "Raisonnement:\n"
+        """Generates the reasoning for the decision"""
+        reasoning = f"Chosen action: {action}\n\n"
+        reasoning += "Reasoning:\n"
         
-        # Frameworks supportant cette action
+        # Frameworks supporting this action
         supporting_frameworks = [fw.value for fw, rec in framework_recommendations.items() if rec == action]
         if supporting_frameworks:
-            reasoning += f"Frameworks éthiques supportant cette action: {', '.join(supporting_frameworks)}\n"
+            reasoning += f"Ethical frameworks supporting this action: {', '.join(supporting_frameworks)}\n"
         
-        # Analyse des risques
+        # Risk analysis
         risk_level = analysis["risk_assessment"]["risk_assessment"]
-        reasoning += f"Niveau de risque évalué: {risk_level}\n"
+        reasoning += f"Assessed risk level: {risk_level}\n"
         
-        # Conflits de valeurs
+        # Value conflicts
         value_conflicts = analysis["value_conflicts"]
         if value_conflicts:
-            reasoning += f"Conflits de valeurs identifiés: {len(value_conflicts)}\n"
+            reasoning += f"Identified value conflicts: {len(value_conflicts)}\n"
         
-        # Impact sur les parties prenantes
+        # Stakeholder impact
         stakeholder_count = len(dilemma.stakeholders)
-        reasoning += f"Impact évalué sur {stakeholder_count} parties prenantes\n"
+        reasoning += f"Impact assessed on {stakeholder_count} stakeholders\n"
         
-        reasoning += "\nCette décision vise à maximiser le bien-être global tout en respectant "
-        reasoning += "les droits fondamentaux et les principes éthiques établis."
+        reasoning += "\nThis decision aims to maximize overall well-being while respecting "
+        reasoning += "fundamental rights and established ethical principles."
         
         return reasoning
     
     def _learn_from_decision(self, decision: EthicalDecision, dilemma: EthicalDilemma, analysis: Dict[str, Any]) -> None:
-        """Apprend de la décision prise pour améliorer les futures décisions"""
+        """Learns from the decision made to improve future decisions"""
         learning_data = {
             "decision_id": decision.dilemma_id,
             "complexity": analysis["dilemma_assessment"]["complexity_score"],
@@ -931,61 +930,61 @@ class EthicalDecisionSystem:
         
         self.ethical_learning_data.append(learning_data)
         
-        # Ajuster les poids des frameworks si nécessaire
+        # Adjust framework weights if necessary
         self._adjust_framework_weights(decision, analysis)
         
-        # Évoluer moralement si approprié
+        # Morally evolve if appropriate
         self._assess_moral_development()
     
     def _adjust_framework_weights(self, decision: EthicalDecision, analysis: Dict[str, Any]) -> None:
-        """Ajuste les poids des frameworks basés sur les résultats"""
-        # Logique d'ajustement simple : renforcer les frameworks qui ont conduit à des décisions de haute confiance
+        """Adjusts framework weights based on results"""
+        # Simple adjustment logic: reinforce frameworks that led to high-confidence decisions
         if decision.confidence > 0.8:
-            # Renforcer légèrement les frameworks utilisés
+            # Slightly reinforce used frameworks
             for framework in self.ethical_frameworks:
                 if framework in decision.framework_weights:
                     current_weight = self.ethical_frameworks[framework]
                     self.ethical_frameworks[framework] = min(1.0, current_weight * 1.05)
         
-        # Normaliser les poids
+        # Normalize weights
         total_weight = sum(self.ethical_frameworks.values())
         if total_weight > 0:
             for framework in self.ethical_frameworks:
                 self.ethical_frameworks[framework] /= total_weight
     
     def _assess_moral_development(self) -> None:
-        """Évalue et fait progresser le développement moral"""
+        """Assesses and advances moral development"""
         if len(self.decision_history) < 10:
             return
         
-        # Analyser les 10 dernières décisions
+        # Analyze the last 10 decisions
         recent_decisions = self.decision_history[-10:]
         
-        # Critères de développement moral
+        # Moral development criteria
         average_confidence = sum(d.confidence for d in recent_decisions) / len(recent_decisions)
         average_moral_cost = sum(d.moral_cost for d in recent_decisions) / len(recent_decisions)
         
-        # Progression possible si haute confiance et faible coût moral
+        # Possible progression if high confidence and low moral cost
         if average_confidence > 0.8 and average_moral_cost < 0.3:
-            if self.moral_development_stage < 5:  # Maximum 5 niveaux
+            if self.moral_development_stage < 5:  # Maximum 5 levels
                 self.moral_development_stage += 1
                 self._evolve_moral_sophistication()
     
     def _evolve_moral_sophistication(self) -> None:
-        """Fait évoluer la sophistication morale"""
-        # Affiner le système de valeurs
+        """Evolves moral sophistication"""
+        # Refine the value system
         for value in self.value_system:
             if self.value_system[value] < 0.95:
                 self.value_system[value] += 0.01
         
-        # Affiner les principes moraux
+        # Refine moral principles
         for principle in self.moral_principles:
             if self.moral_principles[principle] < 0.95:
                 self.moral_principles[principle] += 0.01
         
-        # Améliorer la sensibilité éthique
+        # Improve ethical sensitivity
         if self.moral_development_stage >= 3:
-            # Développer de nouveaux principes éthiques
+            # Develop new ethical principles
             advanced_principles = {
                 "global_perspective": 0.8,
                 "future_generations": 0.8,
@@ -998,7 +997,7 @@ class EthicalDecisionSystem:
                     self.moral_principles[principle] = value
     
     def get_ethical_profile(self) -> Dict[str, Any]:
-        """Retourne le profil éthique actuel du système"""
+        """Returns the system's current ethical profile"""
         return {
             "moral_development_stage": self.moral_development_stage,
             "ethical_frameworks": dict(self.ethical_frameworks),
@@ -1011,38 +1010,38 @@ class EthicalDecisionSystem:
         }
     
     def _calculate_average_confidence(self) -> float:
-        """Calcule la confiance moyenne des décisions"""
+        """Calculates the average decision confidence"""
         if not self.decision_history:
             return 0.5
         
         return sum(d.confidence for d in self.decision_history) / len(self.decision_history)
     
     def _calculate_average_moral_cost(self) -> float:
-        """Calcule le coût moral moyen des décisions"""
+        """Calculates the average moral cost of decisions"""
         if not self.decision_history:
             return 0.5
         
         return sum(d.moral_cost for d in self.decision_history) / len(self.decision_history)
     
     def _assess_ethical_sophistication(self) -> str:
-        """Évalue le niveau de sophistication éthique"""
+        """Assesses the level of ethical sophistication"""
         sophistication_levels = [
-            "débutant",
-            "intermédiaire", 
-            "avancé",
+            "beginner",
+            "intermediate", 
+            "advanced",
             "expert",
-            "maître"
+            "master"
         ]
         
         stage_index = min(self.moral_development_stage - 1, len(sophistication_levels) - 1)
         return sophistication_levels[max(0, stage_index)]
 
-# Instance globale
+# Global instance
 ethical_system = EthicalDecisionSystem()
 
 def analyze_ethical_dilemma(description: str, stakeholders: List[str], 
                           actions: List[str], values: List[str]) -> Dict[str, Any]:
-    """Interface pour analyser un dilemme éthique"""
+    """Interface to analyze an ethical dilemma"""
     dilemma = EthicalDilemma(
         id=f"dilemma_{len(ethical_system.decision_history)}",
         description=description,
@@ -1056,7 +1055,7 @@ def analyze_ethical_dilemma(description: str, stakeholders: List[str],
 
 def make_ethical_decision(description: str, stakeholders: List[str], 
                          actions: List[str], values: List[str]) -> Dict[str, Any]:
-    """Interface pour prendre une décision éthique"""
+    """Interface to make an ethical decision"""
     dilemma = EthicalDilemma(
         id=f"dilemma_{len(ethical_system.decision_history)}",
         description=description,
@@ -1077,5 +1076,5 @@ def make_ethical_decision(description: str, stakeholders: List[str],
     }
 
 def get_ethical_profile() -> Dict[str, Any]:
-    """Interface pour obtenir le profil éthique"""
+    """Interface to get the ethical profile"""
     return ethical_system.get_ethical_profile()
