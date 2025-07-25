@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script ultra-simplifié pour ngrok avec téléchargement automatique
+Ultra-simplified script for ngrok with automatic download
 """
 
 import subprocess
@@ -12,7 +12,7 @@ import zipfile
 import urllib.request
 
 def download_ngrok():
-    """Télécharger et installer ngrok pour Windows"""
+    """Download and install ngrok for Windows"""
     import os
     import zipfile
     import urllib.request
@@ -21,80 +21,80 @@ def download_ngrok():
     ngrok_exe = os.path.join(ngrok_dir, "ngrok.exe")
     
     if os.path.exists(ngrok_exe):
-        print("✅ ngrok déjà installé")
+        print("✅ ngrok already installed")
         return ngrok_exe
     
-    print("� Téléchargement de ngrok...")
+    print("📦 Downloading ngrok...")
     os.makedirs(ngrok_dir, exist_ok=True)
     
-    # URL pour Windows 64-bit
+    # URL for Windows 64-bit
     url = "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip"
     zip_path = os.path.join(ngrok_dir, "ngrok.zip")
     
     try:
         urllib.request.urlretrieve(url, zip_path)
-        print("✅ Téléchargement terminé")
+        print("✅ Download complete")
         
-        print("📦 Extraction...")
+        print("📦 Extracting...")
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(ngrok_dir)
         
         os.remove(zip_path)
-        print("✅ Installation terminée")
+        print("✅ Installation complete")
         return ngrok_exe
         
     except Exception as e:
-        print(f"❌ Erreur de téléchargement: {e}")
+        print(f"❌ Download error: {e}")
         return None
 
 def main():
-    print("�🚀 Installation et démarrage de ngrok...")
+    print("🚀 Installing and starting ngrok...")
     
-    # Télécharger ngrok si nécessaire
+    # Download ngrok if necessary
     ngrok_path = download_ngrok()
     if not ngrok_path:
-        print("❌ Impossible d'installer ngrok")
+        print("❌ Could not install ngrok")
         return
     
-    # Installer pyngrok
+    # Install pyngrok
     try:
         import pyngrok
-        print("✅ pyngrok déjà installé")
+        print("✅ pyngrok already installed")
     except ImportError:
-        print("📦 Installation de pyngrok...")
+        print("📦 Installing pyngrok...")
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyngrok'])
         import pyngrok
     
     from pyngrok import ngrok, conf
     
-    # Configurer le chemin vers ngrok
+    # Configure the path to ngrok
     conf.get_default().ngrok_path = ngrok_path
     
-    # Configuration du token
+    # Token configuration
     token = "30EFEPCG8MXrlKyq8zHVJ3u1sPV_cv1vBoVKaaqNSEurn6Lf"
     conf.get_default().auth_token = token
-    print("✅ Token configuré")
+    print("✅ Token configured")
     
     try:
-        # Démarrer le tunnel
-        print("🚀 Démarrage du tunnel ngrok sur le port 5000...")
+        # Start the tunnel
+        print("🚀 Starting ngrok tunnel on port 5000...")
         tunnel = ngrok.connect(5000, "http")
         url = tunnel.public_url
         
-        print(f"\n🌍 VOTRE SITE EST ACCESSIBLE SUR : {url}")
-        print(f"📊 Interface ngrok : http://localhost:4040")
-        print("💡 Appuyez sur Ctrl+C pour arrêter\n")
+        print(f"\n🌍 YOUR SITE IS ACCESSIBLE AT: {url}")
+        print(f"📊 ngrok interface: http://localhost:4040")
+        print("💡 Press Ctrl+C to stop\n")
         
-        # Ouvrir le navigateur
+        # Open the browser
         webbrowser.open(url)
         
-        # Maintenir le tunnel
-        input("Appuyez sur Entrée pour arrêter le tunnel...")
+        # Maintain the tunnel
+        input("Press Enter to stop the tunnel...")
         
     except Exception as e:
-        print(f"❌ Erreur : {e}")
+        print(f"❌ Error: {e}")
     finally:
-        print("👋 Arrêt du tunnel...")
+        print("👋 Stopping the tunnel...")
         ngrok.kill()
 
 if __name__ == "__main__":
