@@ -1,7 +1,6 @@
 Multi-Level Strategic Planning System for Artificial Intelligence API GOOGLE GEMINI 2.0 FLASH
 Enables long-term planning, complex goal decomposition,
 and dynamic strategy adaptation.
-"""
 
 import json
 import logging
@@ -13,11 +12,11 @@ import networkx as nx
 import numpy as np
 
 class PlanningHorizon(Enum):
-    IMMEDIATE = "immediate"      # Seconds to minute
-    SHORT_TERM = "short_term"    # Minutes to hour  
-    MEDIUM_TERM = "medium_term"  # Hours to day
-    LONG_TERM = "long_term"      # Days to week
-    STRATEGIC = "strategic"      # Weeks to months+
+    IMMEDIATE = "immediate"      # Second to minute
+    SHORT_TERM = "short_term"    # Minute to hour  
+    MEDIUM_TERM = "medium_term"  # Hour to day
+    LONG_TERM = "long_term"      # Day to week
+    STRATEGIC = "strategic"      # Week to month+
 
 @dataclass
 class Goal:
@@ -112,7 +111,7 @@ class StrategicPlanningSystem:
     
     def _generate_sub_objectives(self, goal: Goal) -> List[str]:
         """Generates intelligent sub-goals"""
-        # Analyze goal text to identify components
+        # Analyze the goal text to identify components
         description = goal.description.lower()
         
         sub_objectives = []
@@ -140,7 +139,7 @@ class StrategicPlanningSystem:
                 "Identify possible solutions",
                 "Evaluate alternatives",
                 "Implement the chosen solution",
-                "Verify the solution's effectiveness"
+                "Verify solution effectiveness"
             ])
         else:
             # Generic decomposition
@@ -188,7 +187,7 @@ class StrategicPlanningSystem:
         """Generates concrete actions for a leaf goal"""
         actions = []
         
-        # Analyze goal type to generate appropriate actions
+        # Analyze the goal type to generate appropriate actions
         description = goal.description.lower()
         
         if "analyze" in description:
@@ -246,11 +245,11 @@ class StrategicPlanningSystem:
             "updated_priorities": {}
         }
         
-        # Analyze performance deviations
+        # Analyze performance gaps
         if "performance_gap" in execution_feedback:
             gap = execution_feedback["performance_gap"]
             
-            if gap > 0.3:  # Significant deviation
+            if gap > 0.3:  # Significant gap
                 results["replanning_triggered"] = True
                 
                 # Identify affected goals
@@ -280,9 +279,9 @@ class StrategicPlanningSystem:
         goal = self.goals[goal_id]
         recovery_actions = []
         
-        # Recovery actions based on problem magnitude
+        # Recovery actions based on the magnitude of the problem
         if performance_gap > 0.7:
-            # Major problem - review approach
+            # Major problem - review the approach
             recovery_actions.append(Action(
                 id=f"recovery_{len(self.actions)}",
                 description=f"Completely revise the approach for {goal.description}",
@@ -291,7 +290,7 @@ class StrategicPlanningSystem:
                 required_capabilities=["strategic_thinking", "problem_solving"]
             ))
         elif performance_gap > 0.5:
-            # Moderate problem - adjust method
+            # Moderate problem - adjust the method
             recovery_actions.append(Action(
                 id=f"recovery_{len(self.actions)}",
                 description=f"Adjust the execution method for {goal.description}",
