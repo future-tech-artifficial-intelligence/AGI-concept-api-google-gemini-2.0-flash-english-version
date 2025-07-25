@@ -10,6 +10,6 @@ __all__ = [
     'conversation_memory_enhancer',
     'logic_improvement',
     'enhanced_reasoning',
-    'text_formatter',  # Nouveau module de formatage de texte
-    'time_awareness_module'  # Nouveau module de conscience temporelle
+    'text_formatter',  # New text formatting module
+    'time_awareness_module'  # New time awareness module
 ]
