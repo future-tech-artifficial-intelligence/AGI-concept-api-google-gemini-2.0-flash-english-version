@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test de robustesse de l'interface Searx
+Searx Interface Robustness Test
 """
 
 import sys
@@ -11,63 +11,63 @@ from searx_interface import SearxInterface
 import time
 
 def test_searx_robustness():
-    """Test de la robustesse de Searx"""
+    """Tests Searx robustness"""
     
-    print("🔧 Test de robustesse de l'interface Searx")
+    print("🔧 Searx Interface Robustness Test")
     print("=" * 60)
     
-    # Créer une instance de SearxInterface
+    # Create a SearxInterface instance
     searx = SearxInterface()
     
-    # 1. Test de statut de base
-    print("\n1. Test de statut Searx:")
+    # 1. Basic status test
+    print("\n1. Searx status test:")
     status = searx.check_health()
-    print(f"   Searx opérationnel: {'✅ Oui' if status else '❌ Non'}")
+    print(f"   Searx operational: {'✅ Yes' if status else '❌ No'}")
     
     if not status:
-        print("   Tentative de démarrage de Searx...")
+        print("   Attempting to start Searx...")
         start_result = searx.start_searx()
-        print(f"   Démarrage réussi: {'✅ Oui' if start_result else '❌ Non'}")
+        print(f"   Startup successful: {'✅ Yes' if start_result else '❌ No'}")
         
         if start_result:
-            print("   Attente de 10 secondes pour que Searx soit prêt...")
+            print("   Waiting 10 seconds for Searx to be ready...")
             time.sleep(10)
             status = searx.check_health()
-            print(f"   Searx opérationnel après démarrage: {'✅ Oui' if status else '❌ Non'}")
+            print(f"   Searx operational after startup: {'✅ Yes' if status else '❌ No'}")
     
-    # 2. Test de recherche simple
-    print("\n2. Test de recherche simple:")
-    query = "test simple"
-    print(f"   Recherche: '{query}'")
+    # 2. Simple search test
+    print("\n2. Simple search test:")
+    query = "simple test"
+    print(f"   Search: '{query}'")
     
     results = searx.search(query, max_results=3)
-    print(f"   Résultats obtenus: {len(results)}")
+    print(f"   Results obtained: {len(results)}")
     
     for i, result in enumerate(results[:2], 1):
-        print(f"   Résultat {i}: {result.title[:50]}...")
+        print(f"   Result {i}: {result.title[:50]}...")
         print(f"   URL: {result.url}")
     
-    # 3. Test de recherche avec retry
-    print("\n3. Test de recherche avec retry:")
-    query2 = "intelligence artificielle actualités"
-    print(f"   Recherche: '{query2}'")
+    # 3. Search with retry test
+    print("\n3. Search with retry test:")
+    query2 = "artificial intelligence news"
+    print(f"   Search: '{query2}'")
     
     start_time = time.time()
     results2 = searx.search(query2, category="general", max_results=5, retry_count=3)
     end_time = time.time()
     
-    print(f"   Résultats obtenus: {len(results2)}")
-    print(f"   Temps de recherche: {end_time - start_time:.2f} secondes")
+    print(f"   Results obtained: {len(results2)}")
+    print(f"   Search time: {end_time - start_time:.2f} seconds")
     
     if results2:
-        print("   ✅ Recherche avec retry réussie")
+        print("   ✅ Search with retry successful")
         for i, result in enumerate(results2[:2], 1):
-            print(f"   Résultat {i}: {result.title[:50]}...")
+            print(f"   Result {i}: {result.title[:50]}...")
             print(f"   URL: {result.url[:80]}...")
     else:
-        print("   ❌ Aucun résultat obtenu même avec retry")
+        print("   ❌ No results obtained even with retry")
     
-    print("\n✅ Test de robustesse terminé!")
+    print("\n✅ Robustness test completed!")
 
 if __name__ == "__main__":
     test_searx_robustness()
