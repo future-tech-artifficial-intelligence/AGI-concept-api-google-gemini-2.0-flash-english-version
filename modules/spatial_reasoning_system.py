@@ -1,6 +1,6 @@
 """
-SYSTÈME DE RAISONNEMENT SPATIAL ET GÉOMÉTRIQUE
-Implémentation complète avec toutes les classes, méthodes et logiques
+SYSTEM FOR improving SPATIAL AND GEOMETRIC REASONING of artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+Complete implementation with all classes, methods, and logic
 """
 
 import numpy as np
@@ -10,11 +10,11 @@ from dataclasses import dataclass
 from enum import Enum
 import json
 
-# ==================== STRUCTURES DE BASE ====================
+# ==================== BASIC STRUCTURES ====================
 
 @dataclass
 class Point3D:
-    """Point dans l'espace 3D"""
+    """Point in 3D space"""
     x: float
     y: float
     z: float
@@ -30,7 +30,7 @@ class Point3D:
 
 @dataclass
 class Vector3D:
-    """Vecteur dans l'espace 3D"""
+    """Vector in 3D space"""
     x: float
     y: float
     z: float
@@ -55,7 +55,7 @@ class Vector3D:
         )
 
 class TopologyType(Enum):
-    """Types de topologie spatiale"""
+    """Types of spatial topology"""
     INSIDE = "inside"
     OUTSIDE = "outside"
     TOUCHING = "touching"
@@ -64,10 +64,10 @@ class TopologyType(Enum):
     CONNECTED = "connected"
     DISJOINT = "disjoint"
 
-# ==================== REPRÉSENTATION ET MANIPULATION D'OBJETS 3D ====================
+# ==================== 3D OBJECT REPRESENTATION AND MANIPULATION ====================
 
 class MentalObject3D:
-    """Représentation d'un objet 3D dans l'espace mental"""
+    """Representation of a 3D object in mental space"""
     
     def __init__(self, name: str, vertices: List[Point3D], faces: List[List[int]]):
         self.name = name
@@ -80,13 +80,13 @@ class MentalObject3D:
         self.spatial_relations = {}
     
     def translate(self, offset: Point3D) -> None:
-        """Déplacer l'objet dans l'espace mental"""
+        """Move the object in mental space"""
         self.position = self.position + offset
         for i, vertex in enumerate(self.vertices):
             self.vertices[i] = vertex + offset
     
     def rotate_x(self, angle: float) -> None:
-        """Rotation autour de l'axe X"""
+        """Rotation around X-axis"""
         cos_a, sin_a = math.cos(angle), math.sin(angle)
         for i, vertex in enumerate(self.vertices):
             y = vertex.y * cos_a - vertex.z * sin_a
@@ -95,7 +95,7 @@ class MentalObject3D:
         self.rotation.x += angle
     
     def rotate_y(self, angle: float) -> None:
-        """Rotation autour de l'axe Y"""
+        """Rotation around Y-axis"""
         cos_a, sin_a = math.cos(angle), math.sin(angle)
         for i, vertex in enumerate(self.vertices):
             x = vertex.x * cos_a + vertex.z * sin_a
@@ -104,7 +104,7 @@ class MentalObject3D:
         self.rotation.y += angle
     
     def rotate_z(self, angle: float) -> None:
-        """Rotation autour de l'axe Z"""
+        """Rotation around Z-axis"""
         cos_a, sin_a = math.cos(angle), math.sin(angle)
         for i, vertex in enumerate(self.vertices):
             x = vertex.x * cos_a - vertex.y * sin_a
@@ -113,7 +113,7 @@ class MentalObject3D:
         self.rotation.z += angle
     
     def scale_object(self, scale_factor: Vector3D) -> None:
-        """Redimensionner l'objet"""
+        """Scale the object"""
         for i, vertex in enumerate(self.vertices):
             self.vertices[i] = Point3D(
                 vertex.x * scale_factor.x,
@@ -125,7 +125,7 @@ class MentalObject3D:
         self.scale.z *= scale_factor.z
     
     def get_bounding_box(self) -> Tuple[Point3D, Point3D]:
-        """Obtenir la boîte englobante"""
+        """Get the bounding box"""
         if not self.vertices:
             return Point3D(0, 0, 0), Point3D(0, 0, 0)
         
@@ -139,22 +139,22 @@ class MentalObject3D:
         return Point3D(min_x, min_y, min_z), Point3D(max_x, max_y, max_z)
     
     def calculate_volume(self) -> float:
-        """Calculer le volume approximatif"""
+        """Calculate approximate volume"""
         min_bound, max_bound = self.get_bounding_box()
         return ((max_bound.x - min_bound.x) * 
                 (max_bound.y - min_bound.y) * 
                 (max_bound.z - min_bound.z))
     
     def add_mental_property(self, property_name: str, value: Any) -> None:
-        """Ajouter une propriété mentale à l'objet"""
+        """Add a mental property to the object"""
         self.mental_properties[property_name] = value
     
     def get_mental_property(self, property_name: str) -> Any:
-        """Récupérer une propriété mentale"""
+        """Retrieve a mental property"""
         return self.mental_properties.get(property_name)
 
 class MentalSpace3D:
-    """Espace mental pour manipuler des objets 3D"""
+    """Mental space for manipulating 3D objects"""
     
     def __init__(self, name: str, dimensions: Tuple[float, float, float]):
         self.name = name
@@ -165,22 +165,22 @@ class MentalSpace3D:
         self.reference_frame = Point3D(0, 0, 0)
     
     def add_object(self, obj: MentalObject3D) -> None:
-        """Ajouter un objet à l'espace mental"""
+        """Add an object to the mental space"""
         self.objects[obj.name] = obj
     
     def remove_object(self, name: str) -> bool:
-        """Supprimer un objet de l'espace mental"""
+        """Remove an object from the mental space"""
         if name in self.objects:
             del self.objects[name]
             return True
         return False
     
     def get_object(self, name: str) -> Optional[MentalObject3D]:
-        """Récupérer un objet par son nom"""
+        """Retrieve an object by its name"""
         return self.objects.get(name)
     
     def calculate_spatial_relationships(self) -> Dict[str, Dict[str, Any]]:
-        """Calculer les relations spatiales entre tous les objets"""
+        """Calculate spatial relationships between all objects"""
         relationships = {}
         object_names = list(self.objects.keys())
         
@@ -204,38 +204,38 @@ class MentalSpace3D:
         return relationships
     
     def _determine_topology(self, obj1: MentalObject3D, obj2: MentalObject3D) -> TopologyType:
-        """Déterminer la relation topologique entre deux objets"""
-        # Simplification basée sur les boîtes englobantes
+        """Determine the topological relationship between two objects"""
+        # Simplification based on bounding boxes
         bb1_min, bb1_max = obj1.get_bounding_box()
         bb2_min, bb2_max = obj2.get_bounding_box()
         
-        # Vérifier si les objets se chevauchent
+        # Check if objects overlap
         if (bb1_max.x >= bb2_min.x and bb1_min.x <= bb2_max.x and
             bb1_max.y >= bb2_min.y and bb1_min.y <= bb2_max.y and
             bb1_max.z >= bb2_min.z and bb1_min.z <= bb2_max.z):
             return TopologyType.OVERLAPPING
         else:
-            # Vérifier la proximité pour l'adjacence
+            # Check proximity for adjacency
             distance = obj1.position.distance_to(obj2.position)
-            if distance < 1.0:  # Seuil d'adjacence
+            if distance < 1.0:  # Adjacency threshold
                 return TopologyType.ADJACENT
             else:
                 return TopologyType.DISJOINT
     
     def transform_coordinate_system(self, new_system: str, new_origin: Point3D) -> None:
-        """Transformer le système de coordonnées"""
+        """Transform the coordinate system"""
         if new_system != self.coordinate_system:
-            # Transformation de coordonnées (simplifiée)
+            # Coordinate transformation (simplified)
             offset = new_origin - self.reference_frame
             for obj in self.objects.values():
                 obj.translate(offset)
             self.coordinate_system = new_system
             self.reference_frame = new_origin
 
-# ==================== RAISONNEMENT TOPOLOGIQUE ET GÉOMÉTRIQUE ====================
+# ==================== TOPOLOGICAL AND GEOMETRIC REASONING ====================
 
 class TopologicalReasoner:
-    """Moteur de raisonnement topologique et géométrique intuitif"""
+    """Intuitive topological and geometric reasoning engine"""
     
     def __init__(self):
         self.topology_rules = {}
@@ -245,7 +245,7 @@ class TopologicalReasoner:
         self._initialize_geometric_patterns()
     
     def _initialize_topology_rules(self) -> None:
-        """Initialiser les règles topologiques de base"""
+        """Initialize basic topological rules"""
         self.topology_rules = {
             'containment': {
                 'if_inside_then_connected': True,
@@ -264,7 +264,7 @@ class TopologicalReasoner:
         }
     
     def _initialize_geometric_patterns(self) -> None:
-        """Initialiser les patterns géométriques intuitifs"""
+        """Initialize intuitive geometric patterns"""
         self.geometric_patterns = {
             'symmetry': {
                 'bilateral': self._detect_bilateral_symmetry,
@@ -283,7 +283,7 @@ class TopologicalReasoner:
         }
     
     def analyze_topology(self, space: MentalSpace3D) -> Dict[str, Any]:
-        """Analyser la topologie d'un espace mental"""
+        """Analyze the topology of a mental space"""
         analysis = {
             'connectivity_graph': {},
             'clusters': [],
@@ -291,7 +291,7 @@ class TopologicalReasoner:
             'topology_violations': []
         }
         
-        # Construire le graphe de connectivité
+        # Build the connectivity graph
         for obj_name, obj_relations in space.spatial_relationships.items():
             connections = []
             for other_name, relation in obj_relations.items():
@@ -299,10 +299,10 @@ class TopologicalReasoner:
                     connections.append(other_name)
             analysis['connectivity_graph'][obj_name] = connections
         
-        # Détecter les clusters
+        # Detect clusters
         analysis['clusters'] = self._find_clusters(analysis['connectivity_graph'])
         
-        # Identifier les objets isolés
+        # Identify isolated objects
         analysis['isolated_objects'] = [
             obj for obj, connections in analysis['connectivity_graph'].items()
             if not connections
@@ -311,7 +311,7 @@ class TopologicalReasoner:
         return analysis
     
     def _find_clusters(self, connectivity_graph: Dict[str, List[str]]) -> List[List[str]]:
-        """Trouver les clusters d'objets connectés"""
+        """Find clusters of connected objects"""
         visited = set()
         clusters = []
         
@@ -333,7 +333,7 @@ class TopologicalReasoner:
         return clusters
     
     def reason_about_spatial_relationships(self, obj1: str, obj2: str, space: MentalSpace3D) -> Dict[str, Any]:
-        """Raisonner sur les relations spatiales entre deux objets"""
+        """Reason about spatial relationships between two objects"""
         if obj1 not in space.objects or obj2 not in space.objects:
             return {'error': 'Object not found'}
         
@@ -346,7 +346,7 @@ class TopologicalReasoner:
             'spatial_constraints': []
         }
         
-        # Inférer des propriétés basées sur la distance et la topologie
+        # Infer properties based on distance and topology
         if 'distance' in relations:
             distance = relations['distance']
             if distance < 1.0:
@@ -362,8 +362,8 @@ class TopologicalReasoner:
         return reasoning
     
     def _detect_bilateral_symmetry(self, obj: MentalObject3D) -> bool:
-        """Détecter la symétrie bilatérale"""
-        # Implémentation simplifiée
+        """Detect bilateral symmetry"""
+        # Simplified implementation
         center = self._calculate_centroid(obj)
         tolerance = 0.1
         
@@ -374,8 +374,8 @@ class TopologicalReasoner:
         return True
     
     def _detect_radial_symmetry(self, obj: MentalObject3D) -> bool:
-        """Détecter la symétrie radiale"""
-        # Implémentation simplifiée pour symétrie radiale
+        """Detect radial symmetry"""
+        # Simplified implementation for radial symmetry
         center = self._calculate_centroid(obj)
         angles = [0, math.pi/2, math.pi, 3*math.pi/2]
         
@@ -386,19 +386,19 @@ class TopologicalReasoner:
         return True
     
     def _detect_rotational_symmetry(self, obj: MentalObject3D) -> int:
-        """Détecter l'ordre de symétrie rotationnelle"""
+        """Detect rotational symmetry order"""
         center = self._calculate_centroid(obj)
-        max_order = 8  # Tester jusqu'à l'ordre 8
+        max_order = 8  # Test up to order 8
         
         for order in range(2, max_order + 1):
             angle = 2 * math.pi / order
             rotated_vertices = self._rotate_vertices_around_center(obj.vertices, center, angle)
             if self._vertices_match(obj.vertices, rotated_vertices, 0.1):
                 return order
-        return 1  # Pas de symétrie rotationnelle
+        return 1  # No rotational symmetry
     
     def _detect_golden_ratio(self, obj: MentalObject3D) -> bool:
-        """Détecter les proportions du nombre d'or"""
+        """Detect golden ratio proportions"""
         min_bound, max_bound = obj.get_bounding_box()
         dimensions = [
             max_bound.x - min_bound.x,
@@ -418,7 +418,7 @@ class TopologicalReasoner:
         return False
     
     def _detect_fibonacci_proportions(self, obj: MentalObject3D) -> bool:
-        """Détecter les proportions de Fibonacci"""
+        """Detect Fibonacci proportions"""
         fibonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
         min_bound, max_bound = obj.get_bounding_box()
         dimensions = [
@@ -427,7 +427,7 @@ class TopologicalReasoner:
             max_bound.z - min_bound.z
         ]
         
-        # Normaliser les dimensions
+        # Normalize dimensions
         max_dim = max(dimensions)
         if max_dim == 0:
             return False
@@ -436,18 +436,18 @@ class TopologicalReasoner:
         
         for dim in normalized_dims:
             for fib in fibonacci:
-                if abs(dim - fib) < 5:  # Tolerance de 5%
+                if abs(dim - fib) < 5:  # 5% Tolerance
                     return True
         return False
     
     def _detect_linear_alignment(self, objects: List[MentalObject3D]) -> bool:
-        """Détecter l'alignement linéaire des objets"""
+        """Detect linear alignment of objects"""
         if len(objects) < 3:
-            return True  # 2 points sont toujours alignés
+            return True  # 2 points are always aligned
         
         centers = [self._calculate_centroid(obj) for obj in objects]
         
-        # Calculer la droite passant par les deux premiers points
+        # Calculate the line passing through the first two points
         if len(centers) >= 2:
             direction = Vector3D(
                 centers[1].x - centers[0].x,
@@ -455,7 +455,7 @@ class TopologicalReasoner:
                 centers[1].z - centers[0].z
             ).normalize()
             
-            # Vérifier si tous les autres points sont sur cette droite
+            # Check if all other points are on this line
             tolerance = 0.5
             for i in range(2, len(centers)):
                 point_vector = Vector3D(
@@ -470,19 +470,19 @@ class TopologicalReasoner:
         return True
     
     def _detect_grid_alignment(self, objects: List[MentalObject3D]) -> bool:
-        """Détecter l'alignement en grille"""
+        """Detect grid alignment"""
         if len(objects) < 4:
             return False
         
         centers = [self._calculate_centroid(obj) for obj in objects]
         tolerance = 0.5
         
-        # Vérifier l'alignement en grille en trouvant des patterns réguliers
+        # Check grid alignment by finding regular patterns
         x_coords = sorted(list(set(round(c.x, 1) for c in centers)))
         y_coords = sorted(list(set(round(c.y, 1) for c in centers)))
         z_coords = sorted(list(set(round(c.z, 1) for c in centers)))
         
-        # Vérifier si les espacements sont réguliers
+        # Check if spacings are regular
         def is_regular_spacing(coords):
             if len(coords) < 2:
                 return True
@@ -497,23 +497,23 @@ class TopologicalReasoner:
                 is_regular_spacing(z_coords))
     
     def _detect_circular_alignment(self, objects: List[MentalObject3D]) -> bool:
-        """Détecter l'alignement circulaire"""
+        """Detect circular alignment"""
         if len(objects) < 3:
             return False
         
         centers = [self._calculate_centroid(obj) for obj in objects]
         
-        # Calculer le centre du cercle passant par les trois premiers points
+        # Calculate the center of the circle passing through the first three points
         if len(centers) >= 3:
             p1, p2, p3 = centers[0], centers[1], centers[2]
             
-            # Calculer le centre et le rayon du cercle
+            # Calculate circle center and radius
             circle_center, radius = self._calculate_circle_center_and_radius(p1, p2, p3)
             
             if radius is None:
                 return False
             
-            # Vérifier si tous les autres points sont sur ce cercle
+            # Check if all other points are on this circle
             tolerance = 0.5
             for i in range(3, len(centers)):
                 distance = circle_center.distance_to(centers[i])
@@ -525,7 +525,7 @@ class TopologicalReasoner:
         return False
     
     def _calculate_centroid(self, obj: MentalObject3D) -> Point3D:
-        """Calculer le centroïde d'un objet"""
+        """Calculate the centroid of an object"""
         if not obj.vertices:
             return Point3D(0, 0, 0)
         
@@ -537,33 +537,33 @@ class TopologicalReasoner:
         return Point3D(sum_x / count, sum_y / count, sum_z / count)
     
     def _point_exists_in_object(self, point: Point3D, obj: MentalObject3D, tolerance: float) -> bool:
-        """Vérifier si un point existe dans l'objet"""
+        """Check if a point exists in the object"""
         for vertex in obj.vertices:
             if vertex.distance_to(point) <= tolerance:
                 return True
         return False
     
     def _rotate_vertices_around_center(self, vertices: List[Point3D], center: Point3D, angle: float) -> List[Point3D]:
-        """Faire tourner les vertices autour d'un centre"""
+        """Rotate vertices around a center"""
         rotated = []
         cos_a, sin_a = math.cos(angle), math.sin(angle)
         
         for vertex in vertices:
-            # Translater vers l'origine
+            # Translate to origin
             x = vertex.x - center.x
             y = vertex.y - center.y
             
-            # Rotation 2D (autour de l'axe Z)
+            # 2D Rotation (around Z-axis)
             new_x = x * cos_a - y * sin_a
             new_y = x * sin_a + y * cos_a
             
-            # Translater de retour
+            # Translate back
             rotated.append(Point3D(new_x + center.x, new_y + center.y, vertex.z))
         
         return rotated
     
     def _vertices_match(self, vertices1: List[Point3D], vertices2: List[Point3D], tolerance: float) -> bool:
-        """Vérifier si deux ensembles de vertices correspondent"""
+        """Check if two sets of vertices match"""
         if len(vertices1) != len(vertices2):
             return False
         
@@ -579,54 +579,54 @@ class TopologicalReasoner:
         return True
     
     def _calculate_circle_center_and_radius(self, p1: Point3D, p2: Point3D, p3: Point3D) -> Tuple[Optional[Point3D], Optional[float]]:
-        """Calculer le centre et le rayon d'un cercle passant par trois points"""
-        # Calcul simplifié en 2D (projection sur le plan XY)
+        """Calculate the center and radius of a circle passing through three points"""
+        # Simplified 2D calculation (projection onto XY plane)
         x1, y1 = p1.x, p1.y
         x2, y2 = p2.x, p2.y
         x3, y3 = p3.x, p3.y
         
-        # Calculer les déterminants
+        # Calculate determinants
         d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
         
-        if abs(d) < 1e-10:  # Points colinéaires
+        if abs(d) < 1e-10:  # Collinear points
             return None, None
         
         ux = ((x1*x1 + y1*y1) * (y2 - y3) + (x2*x2 + y2*y2) * (y3 - y1) + (x3*x3 + y3*y3) * (y1 - y2)) / d
         uy = ((x1*x1 + y1*y1) * (x3 - x2) + (x2*x2 + y2*y2) * (x1 - x3) + (x3*x3 + y3*y3) * (x2 - x1)) / d
         
-        center = Point3D(ux, uy, (p1.z + p2.z + p3.z) / 3)  # Moyenne des Z
+        center = Point3D(ux, uy, (p1.z + p2.z + p3.z) / 3)  # Average of Z coordinates
         radius = center.distance_to(p1)
         
         return center, radius
 
-# ==================== NAVIGATION CONCEPTUELLE ====================
+# ==================== CONCEPTUAL NAVIGATION ====================
 
 class ConceptualDimension:
-    """Dimension conceptuelle dans un espace abstrait"""
+    """Conceptual dimension in an abstract space"""
     
     def __init__(self, name: str, dimension_type: str, range_min: float = 0, range_max: float = 1):
         self.name = name
         self.dimension_type = dimension_type  # 'continuous', 'discrete', 'categorical'
         self.range_min = range_min
         self.range_max = range_max
-        self.semantic_anchors = {}  # Points de référence sémantiques
+        self.semantic_anchors = {}  # Semantic reference points
         self.transformation_rules = {}
     
     def add_semantic_anchor(self, name: str, position: float, description: str) -> None:
-        """Ajouter un ancrage sémantique dans cette dimension"""
+        """Add a semantic anchor in this dimension"""
         self.semantic_anchors[name] = {
             'position': position,
             'description': description
         }
     
     def map_concept_to_position(self, concept: str) -> float:
-        """Mapper un concept vers une position dans cette dimension"""
-        # Mapping basé sur la similarité sémantique aux ancres
+        """Map a concept to a position in this dimension"""
+        # Mapping based on semantic similarity to anchors
         if concept in self.semantic_anchors:
             return self.semantic_anchors[concept]['position']
         
-        # Calcul de position basé sur la similarité (simplifié)
-        best_position = (self.range_min + self.range_max) / 2  # Position par défaut
+        # Position calculation based on similarity (simplified)
+        best_position = (self.range_min + self.range_max) / 2  # Default position
         max_similarity = 0
         
         for anchor_name, anchor_data in self.semantic_anchors.items():
@@ -638,8 +638,8 @@ class ConceptualDimension:
         return best_position
     
     def _calculate_semantic_similarity(self, concept1: str, concept2: str) -> float:
-        """Calculer la similarité sémantique (implémentation simplifiée)"""
-        # Implémentation basique basée sur la longueur commune
+        """Calculate semantic similarity (simplified implementation)"""
+        # Basic implementation based on common character length
         common_chars = set(concept1.lower()) & set(concept2.lower())
         total_chars = set(concept1.lower()) | set(concept2.lower())
         
@@ -649,7 +649,7 @@ class ConceptualDimension:
         return len(common_chars) / len(total_chars)
 
 class AbstractSpace:
-    """Espace abstrait multi-dimensionnel pour la navigation conceptuelle"""
+    """Multi-dimensional abstract space for conceptual navigation"""
     
     def __init__(self, name: str):
         self.name = name
@@ -660,11 +660,11 @@ class AbstractSpace:
         self.transformation_matrix = None
     
     def add_dimension(self, dimension: ConceptualDimension) -> None:
-        """Ajouter une dimension conceptuelle"""
+        """Add a conceptual dimension"""
         self.dimensions[dimension.name] = dimension
     
     def add_concept(self, concept_name: str, properties: Dict[str, Any]) -> None:
-        """Ajouter un concept à l'espace"""
+        """Add a concept to the space"""
         position = {}
         for dim_name, dimension in self.dimensions.items():
             if dim_name in properties:
@@ -679,7 +679,7 @@ class AbstractSpace:
         }
     
     def calculate_conceptual_distance(self, concept1: str, concept2: str) -> float:
-        """Calculer la distance conceptuelle entre deux concepts"""
+        """Calculate conceptual distance between two concepts"""
         if concept1 not in self.concepts or concept2 not in self.concepts:
             return float('inf')
         
@@ -695,11 +695,11 @@ class AbstractSpace:
         return math.sqrt(distance)
     
     def find_navigation_path(self, start_concept: str, target_concept: str, max_steps: int = 10) -> List[str]:
-        """Trouver un chemin de navigation conceptuelle"""
+        """Find a conceptual navigation path"""
         if start_concept not in self.concepts or target_concept not in self.concepts:
             return []
         
-        # Utilisation d'un algorithme A* simplifié
+        # Using a simplified A* algorithm
         open_set = [(0, start_concept, [start_concept])]
         closed_set = set()
         
@@ -714,7 +714,7 @@ class AbstractSpace:
             
             closed_set.add(current_concept)
             
-            # Trouver les concepts voisins
+            # Find neighboring concepts
             neighbors = self._find_conceptual_neighbors(current_concept, 3)
             
             for neighbor in neighbors:
@@ -724,13 +724,13 @@ class AbstractSpace:
                     total_cost = len(new_path) + distance_to_target
                     open_set.append((total_cost, neighbor, new_path))
             
-            # Trier par coût
+            # Sort by cost
             open_set.sort(key=lambda x: x[0])
         
-        return []  # Aucun chemin trouvé
+        return []  # No path found
     
     def _find_conceptual_neighbors(self, concept: str, max_neighbors: int = 5) -> List[str]:
-        """Trouver les concepts voisins les plus proches"""
+        """Find the closest conceptual neighbors"""
         if concept not in self.concepts:
             return []
         
@@ -744,21 +744,21 @@ class AbstractSpace:
         return [concept for _, concept in distances[:max_neighbors]]
     
     def create_conceptual_clusters(self, num_clusters: int = 5) -> Dict[str, List[str]]:
-        """Créer des clusters conceptuels"""
-        # Implémentation simplifiée du clustering k-means
+        """Create conceptual clusters"""
+        # Simplified k-means clustering implementation
         concept_names = list(self.concepts.keys())
         if len(concept_names) <= num_clusters:
-            # Chaque concept forme son propre cluster
+            # Each concept forms its own cluster
             clusters = {f"cluster_{i}": [concept] for i, concept in enumerate(concept_names)}
             self.conceptual_clusters = clusters
             return clusters
         
-        # Initialisation des centres de clusters
+        # Initialize cluster centers
         import random
         cluster_centers = random.sample(concept_names, num_clusters)
         clusters = {f"cluster_{i}": [] for i in range(num_clusters)}
         
-        # Attribution des concepts aux clusters
+        # Assign concepts to clusters
         for concept in concept_names:
             best_cluster = 0
             min_distance = float('inf')
@@ -775,7 +775,7 @@ class AbstractSpace:
         return clusters
     
     def navigate_conceptual_gradient(self, start_concept: str, direction_vector: Dict[str, float], steps: int = 5) -> List[str]:
-        """Naviguer selon un gradient conceptuel"""
+        """Navigate along a conceptual gradient"""
         if start_concept not in self.concepts:
             return []
         
@@ -783,7 +783,7 @@ class AbstractSpace:
         path = [start_concept]
         
         for step in range(steps):
-            # Appliquer le vecteur de direction
+            # Apply the direction vector
             new_position = {}
             for dim_name, value in current_position.items():
                 if dim_name in direction_vector:
@@ -791,7 +791,7 @@ class AbstractSpace:
                 else:
                     new_position[dim_name] = value
             
-            # Trouver le concept le plus proche de cette nouvelle position
+            # Find the closest concept to this new position
             closest_concept = self._find_closest_concept_to_position(new_position)
             if closest_concept and closest_concept not in path:
                 path.append(closest_concept)
@@ -802,7 +802,7 @@ class AbstractSpace:
         return path
     
     def _find_closest_concept_to_position(self, target_position: Dict[str, float]) -> Optional[str]:
-        """Trouver le concept le plus proche d'une position donnée"""
+        """Find the concept closest to a given position"""
         min_distance = float('inf')
         closest_concept = None
         
@@ -821,7 +821,7 @@ class AbstractSpace:
         return closest_concept
     
     def analyze_conceptual_topology(self) -> Dict[str, Any]:
-        """Analyser la topologie de l'espace conceptuel"""
+        """Analyze the topology of the conceptual space"""
         analysis = {
             'density_map': {},
             'conceptual_boundaries': [],
@@ -829,24 +829,24 @@ class AbstractSpace:
             'navigation_efficiency': {}
         }
         
-        # Calculer la densité conceptuelle
+        # Calculate conceptual density
         for concept in self.concepts:
             neighbors = self._find_conceptual_neighbors(concept, 10)
             analysis['density_map'][concept] = len(neighbors)
         
-        # Identifier les frontières conceptuelles
+        # Identify conceptual boundaries
         for concept in self.concepts:
             neighbors = self._find_conceptual_neighbors(concept, 3)
             avg_distance = sum(self.calculate_conceptual_distance(concept, neighbor) 
                              for neighbor in neighbors) / len(neighbors) if neighbors else 0
             
-            if avg_distance > 0.5:  # Seuil pour frontière
+            if avg_distance > 0.5:  # Boundary threshold
                 analysis['conceptual_boundaries'].append(concept)
         
         return analysis
 
 class ConceptualNavigator:
-    """Navigateur pour les espaces conceptuels abstraits"""
+    """Navigator for abstract conceptual spaces"""
     
     def __init__(self):
         self.spaces = {}
@@ -857,7 +857,7 @@ class ConceptualNavigator:
         self._initialize_navigation_strategies()
     
     def _initialize_navigation_strategies(self) -> None:
-        """Initialiser les stratégies de navigation"""
+        """Initialize navigation strategies"""
         self.navigation_strategies = {
             'direct': self._navigate_direct,
             'gradient_ascent': self._navigate_gradient_ascent,
@@ -867,18 +867,18 @@ class ConceptualNavigator:
         }
     
     def add_space(self, space: AbstractSpace) -> None:
-        """Ajouter un espace conceptuel"""
+        """Add a conceptual space"""
         self.spaces[space.name] = space
     
     def set_current_space(self, space_name: str) -> bool:
-        """Définir l'espace conceptuel actuel"""
+        """Set the current conceptual space"""
         if space_name in self.spaces:
             self.current_space = self.spaces[space_name]
             return True
         return False
     
     def navigate_to_concept(self, concept_name: str, strategy: str = 'direct') -> List[str]:
-        """Naviguer vers un concept spécifique"""
+        """Navigate to a specific concept"""
         if not self.current_space or concept_name not in self.current_space.concepts:
             return []
         
@@ -891,18 +891,18 @@ class ConceptualNavigator:
         return []
     
     def _navigate_direct(self, target_concept: str) -> List[str]:
-        """Navigation directe vers le concept cible"""
+        """Direct navigation to the target concept"""
         if not self.current_position:
             return [target_concept]
         
         return self.current_space.find_navigation_path(self.current_position, target_concept)
     
     def _navigate_gradient_ascent(self, target_concept: str) -> List[str]:
-        """Navigation par montée de gradient"""
+        """Gradient ascent navigation"""
         if not self.current_position:
             return [target_concept]
         
-        # Calculer le vecteur de direction vers la cible
+        # Calculate the direction vector towards the target
         current_pos = self.current_space.concepts[self.current_position]['position']
         target_pos = self.current_space.concepts[target_concept]['position']
         
@@ -914,27 +914,27 @@ class ConceptualNavigator:
         return self.current_space.navigate_conceptual_gradient(self.current_position, direction_vector)
     
     def _navigate_exploration(self, target_concept: str) -> List[str]:
-        """Navigation exploratoire avec détours"""
+        """Exploratory navigation with detours"""
         if not self.current_position:
             return [target_concept]
         
-        # Navigation avec exploration de concepts intermédiaires intéressants
+        # Navigation with exploration of interesting intermediate concepts
         path = []
         current = self.current_position
         
-        for _ in range(10):  # Maximum 10 étapes
+        for _ in range(10):  # Maximum 10 steps
             if current == target_concept:
                 break
             
             neighbors = self.current_space._find_conceptual_neighbors(current, 5)
             
-            # Choisir le voisin le plus intéressant (pas forcément le plus proche de la cible)
+            # Choose the most interesting neighbor (not necessarily the closest to the target)
             best_neighbor = None
             best_score = -1
             
             for neighbor in neighbors:
                 if neighbor not in path:
-                    # Score basé sur la distance à la cible et la "nouveauté"
+                    # Score based on distance to target and "novelty"
                     distance_to_target = self.current_space.calculate_conceptual_distance(neighbor, target_concept)
                     novelty = len(self.current_space._find_conceptual_neighbors(neighbor, 10))
                     score = 1 / (1 + distance_to_target) + novelty * 0.1
@@ -952,7 +952,7 @@ class ConceptualNavigator:
         return path
     
     def _navigate_similarity(self, target_concept: str) -> List[str]:
-        """Navigation basée sur la similarité conceptuelle"""
+        """Navigation based on conceptual similarity"""
         if not self.current_position:
             return [target_concept]
         
@@ -962,7 +962,7 @@ class ConceptualNavigator:
         while current != target_concept and len(path) < 15:
             neighbors = self.current_space._find_conceptual_neighbors(current, 10)
             
-            # Trouver le voisin le plus similaire à la cible
+            # Find the neighbor most similar to the target
             best_neighbor = None
             min_distance = float('inf')
             
@@ -979,18 +979,18 @@ class ConceptualNavigator:
             else:
                 break
         
-        return path[1:]  # Exclure la position de départ
+        return path[1:]  # Exclude starting position
     
     def _navigate_cluster_hopping(self, target_concept: str) -> List[str]:
-        """Navigation par saut entre clusters"""
+        """Cluster hopping navigation"""
         if not self.current_position:
             return [target_concept]
         
-        # Créer des clusters si ils n'existent pas
+        # Create clusters if they don't exist
         if not self.current_space.conceptual_clusters:
             self.current_space.create_conceptual_clusters()
         
-        # Trouver les clusters de départ et d'arrivée
+        # Find start and target clusters
         start_cluster = None
         target_cluster = None
         
@@ -1001,13 +1001,13 @@ class ConceptualNavigator:
                 target_cluster = cluster_name
         
         if start_cluster == target_cluster:
-            # Navigation directe dans le même cluster
+            # Direct navigation within the same cluster
             return self.current_space.find_navigation_path(self.current_position, target_concept, 5)
         
-        # Navigation inter-clusters
+        # Inter-cluster navigation
         path = []
         
-        # Trouver le concept le plus proche dans le cluster cible
+        # Find the closest concept in the target cluster
         min_distance = float('inf')
         bridge_concept = None
         
@@ -1018,19 +1018,19 @@ class ConceptualNavigator:
                 bridge_concept = concept
         
         if bridge_concept:
-            # Navigation vers le concept-pont
+            # Navigate to the bridge concept
             bridge_path = self.current_space.find_navigation_path(self.current_position, bridge_concept)
-            path.extend(bridge_path[1:])  # Exclure la position de départ
+            path.extend(bridge_path[1:])  # Exclude starting position
             
-            # Navigation du pont vers la cible
+            # Navigate from bridge to target
             if bridge_concept != target_concept:
                 final_path = self.current_space.find_navigation_path(bridge_concept, target_concept, 5)
-                path.extend(final_path[1:])  # Exclure le concept-pont
+                path.extend(final_path[1:])  # Exclude bridge concept
         
         return path
     
     def analyze_navigation_efficiency(self) -> Dict[str, Any]:
-        """Analyser l'efficacité de la navigation"""
+        """Analyze navigation efficiency"""
         if not self.navigation_history:
             return {'error': 'No navigation history'}
         
@@ -1042,11 +1042,11 @@ class ConceptualNavigator:
             'exploration_breadth': 0
         }
         
-        # Calculer le taux de revisite
+        # Calculate revisit rate
         if analysis['total_steps'] > 0:
             analysis['revisit_rate'] = 1 - (analysis['unique_concepts_visited'] / analysis['total_steps'])
         
-        # Calculer la distance moyenne entre étapes
+        # Calculate average step distance
         if len(self.navigation_history) > 1 and self.current_space:
             total_distance = 0
             for i in range(1, len(self.navigation_history)):
@@ -1057,7 +1057,7 @@ class ConceptualNavigator:
                 total_distance += distance
             analysis['average_step_distance'] = total_distance / (len(self.navigation_history) - 1)
         
-        # Calculer la largeur d'exploration
+        # Calculate exploration breadth
         if self.current_space:
             all_neighbors = set()
             for concept in set(self.navigation_history):
@@ -1069,10 +1069,10 @@ class ConceptualNavigator:
         
         return analysis
 
-# ==================== VISUALISATION MENTALE ET ROTATION ====================
+# ==================== MENTAL VISUALIZATION AND ROTATION ====================
 
 class MentalVisualization:
-    """Système de visualisation mentale et rotation d'objets complexes"""
+    """System for mental visualization and rotation of complex objects"""
     
     def __init__(self):
         self.visual_memory = {}
@@ -1082,7 +1082,7 @@ class MentalVisualization:
         self.current_mode = 'solid'
     
     def create_mental_image(self, obj: MentalObject3D, resolution: int = 100) -> Dict[str, Any]:
-        """Créer une image mentale d'un objet 3D"""
+        """Create a mental image of a 3D object"""
         image_id = f"{obj.name}_{hash(str(obj.vertices))}"
         
         mental_image = {
@@ -1097,7 +1097,7 @@ class MentalVisualization:
             'visual_features': self._extract_visual_features(obj)
         }
         
-        # Générer des vues depuis différents angles
+        # Generate views from different angles
         standard_viewpoints = [
             ('front', Vector3D(0, 0, 1)),
             ('back', Vector3D(0, 0, -1)),
@@ -1115,14 +1115,14 @@ class MentalVisualization:
         return mental_image
     
     def rotate_mental_image(self, image_id: str, rotation: Vector3D, steps: int = 10) -> List[Dict[str, Any]]:
-        """Effectuer une rotation mentale avec interpolation"""
+        """Perform a mental rotation with interpolation"""
         if image_id not in self.visual_memory:
             return []
         
         base_image = self.visual_memory[image_id]
         rotation_sequence = []
         
-        # Interpolation de la rotation
+        # Interpolate rotation
         step_rotation = Vector3D(
             rotation.x / steps,
             rotation.y / steps,
@@ -1132,7 +1132,7 @@ class MentalVisualization:
         current_rotation = Vector3D(0, 0, 0)
         
         for step in range(steps + 1):
-            # Créer une vue intermédiaire
+            # Create an intermediate view
             intermediate_view = self._apply_rotation_to_image(base_image, current_rotation)
             rotation_sequence.append({
                 'step': step,
@@ -1141,12 +1141,12 @@ class MentalVisualization:
                 'transformation_cost': self._calculate_transformation_cost(step_rotation)
             })
             
-            # Incrémenter la rotation
+            # Increment rotation
             current_rotation.x += step_rotation.x
             current_rotation.y += step_rotation.y
             current_rotation.z += step_rotation.z
         
-        # Sauvegarder dans l'historique
+        # Save to history
         self.transformation_history.append({
             'type': 'rotation',
             'image_id': image_id,
@@ -1158,15 +1158,15 @@ class MentalVisualization:
         return rotation_sequence
     
     def mental_cross_section(self, image_id: str, plane_normal: Vector3D, plane_point: Point3D) -> Dict[str, Any]:
-        """Créer une coupe transversale mentale"""
+        """Create a mental cross-section"""
         if image_id not in self.visual_memory:
             return {}
         
         image_data = self.visual_memory[image_id]
         obj_name = image_data['object_name']
         
-        # Reconstruire l'objet depuis les données de l'image
-        # (simplification - dans un cas réel, on utiliserait les données volumétriques)
+        # Reconstruct the object from image data
+        # (simplification - in a real case, volumetric data would be used)
         
         cross_section = {
             'plane_normal': plane_normal,
@@ -1177,19 +1177,19 @@ class MentalVisualization:
             'interior_structure': []
         }
         
-        # Calculer les intersections avec le plan de coupe
+        # Calculate intersections with the cutting plane
         wireframe = image_data['wireframe_data']
         for edge in wireframe['edges']:
             intersection = self._line_plane_intersection(edge, plane_normal, plane_point)
             if intersection:
                 cross_section['intersection_points'].append(intersection)
         
-        # Calculer l'aire et le périmètre
+        # Calculate area and perimeter
         if cross_section['intersection_points']:
             cross_section['cross_section_area'] = self._calculate_polygon_area(cross_section['intersection_points'])
             cross_section['perimeter'] = self._calculate_polygon_perimeter(cross_section['intersection_points'])
         
-        # Analyser la structure interne
+        # Analyze internal structure
         cross_section['interior_structure'] = self._analyze_internal_structure(
             cross_section['intersection_points'], 
             image_data['volume_data']
@@ -1198,7 +1198,7 @@ class MentalVisualization:
         return cross_section
     
     def mental_assembly_visualization(self, objects: List[MentalObject3D], assembly_steps: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Visualiser mentalement l'assemblage d'objets complexes"""
+        """Mentally visualize the assembly of complex objects"""
         assembly_viz = {
             'total_steps': len(assembly_steps),
             'step_visualizations': [],
@@ -1219,24 +1219,24 @@ class MentalVisualization:
                 'conflicts': []
             }
             
-            # Simuler l'étape d'assemblage
+            # Simulate assembly step
             if step['action'] == 'add_object':
                 obj_name = step['objects'][0] if step['objects'] else None
                 if obj_name:
-                    # Ajouter l'objet à la configuration actuelle
+                    # Add object to current configuration
                     obj = next((o for o in objects if o.name == obj_name), None)
                     if obj:
                         current_configuration.append(obj)
                         step_viz['intermediate_state'] = self._visualize_configuration(current_configuration)
             
             elif step['action'] == 'connect':
-                # Visualiser la connexion entre objets
+                # Visualize connection between objects
                 step_viz['intermediate_state'] = self._visualize_connection(
                     step['objects'], 
                     current_configuration
                 )
             
-            # Analyser les collisions
+            # Analyze collisions
             conflicts = self._detect_assembly_conflicts(current_configuration)
             step_viz['conflicts'] = conflicts
             assembly_viz['collision_analysis'].append(conflicts)
@@ -1248,7 +1248,7 @@ class MentalVisualization:
         return assembly_viz
     
     def mental_deformation_visualization(self, image_id: str, deformation_field: Dict[str, Vector3D]) -> Dict[str, Any]:
-        """Visualiser la déformation mentale d'un objet"""
+        """Visualize mental deformation of an object"""
         if image_id not in self.visual_memory:
             return {}
         
@@ -1262,12 +1262,12 @@ class MentalVisualization:
             'deformation_energy': 0
         }
         
-        # Calculer les étapes de déformation
+        # Calculate deformation steps
         num_steps = 20
         for step in range(num_steps + 1):
             progress = step / num_steps
             
-            # Interpoler le champ de déformation
+            # Interpolate the deformation field
             current_deformation = {}
             for point_id, displacement in deformation_field.items():
                 current_deformation[point_id] = Vector3D(
@@ -1276,10 +1276,10 @@ class MentalVisualization:
                     displacement.z * progress
                 )
             
-            # Appliquer la déformation
+            # Apply deformation
             deformed_state = self._apply_deformation(base_image, current_deformation)
             
-            # Calculer l'énergie de déformation
+            # Calculate deformation energy
             energy = self._calculate_deformation_energy(current_deformation)
             
             deformation_viz['deformation_steps'].append({
@@ -1292,20 +1292,20 @@ class MentalVisualization:
         deformation_viz['deformed_state'] = deformation_viz['deformation_steps'][-1]['state']
         deformation_viz['deformation_energy'] = deformation_viz['deformation_steps'][-1]['energy']
         
-        # Analyser les contraintes
+        # Analyze stresses
         deformation_viz['stress_analysis'] = self._analyze_deformation_stress(deformation_field)
         
         return deformation_viz
     
     def _generate_wireframe(self, obj: MentalObject3D) -> Dict[str, Any]:
-        """Générer la représentation fil de fer"""
+        """Generate wireframe representation"""
         wireframe = {
             'vertices': obj.vertices,
             'edges': [],
             'vertex_connections': {}
         }
         
-        # Générer les arêtes à partir des faces
+        # Generate edges from faces
         for face in obj.faces:
             for i in range(len(face)):
                 v1_idx = face[i]
@@ -1315,7 +1315,7 @@ class MentalVisualization:
                 if edge not in wireframe['edges']:
                     wireframe['edges'].append(edge)
                 
-                # Mettre à jour les connexions de vertices
+                # Update vertex connections
                 if v1_idx not in wireframe['vertex_connections']:
                     wireframe['vertex_connections'][v1_idx] = []
                 if v2_idx not in wireframe['vertex_connections']:
@@ -1327,10 +1327,10 @@ class MentalVisualization:
         return wireframe
     
     def _generate_volume_representation(self, obj: MentalObject3D, resolution: int) -> Dict[str, Any]:
-        """Générer une représentation volumétrique"""
+        """Generate volumetric representation"""
         min_bound, max_bound = obj.get_bounding_box()
         
-        # Créer une grille 3D
+        # Create a 3D grid
         step_x = (max_bound.x - min_bound.x) / resolution
         step_y = (max_bound.y - min_bound.y) / resolution
         step_z = (max_bound.z - min_bound.z) / resolution
@@ -1343,7 +1343,7 @@ class MentalVisualization:
             'gradient_field': {}
         }
         
-        # Remplir la grille (algorithme de voxélisation simplifié)
+        # Fill the grid (simplified voxelization algorithm)
         for i in range(resolution):
             for j in range(resolution):
                 for k in range(resolution):
@@ -1363,28 +1363,28 @@ class MentalVisualization:
         return volume_data
     
     def _calculate_surface_normals(self, obj: MentalObject3D) -> Dict[int, Vector3D]:
-        """Calculer les normales de surface"""
+        """Calculate surface normals"""
         normals = {}
         
         for face_idx, face in enumerate(obj.faces):
             if len(face) >= 3:
-                # Prendre les trois premiers vertices pour calculer la normale
+                # Take the first three vertices to calculate the normal
                 v1 = obj.vertices[face[0]]
                 v2 = obj.vertices[face[1]]
                 v3 = obj.vertices[face[2]]
                 
-                # Calculer les vecteurs des arêtes
+                # Calculate edge vectors
                 edge1 = Vector3D(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z)
                 edge2 = Vector3D(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z)
                 
-                # Produit vectoriel pour obtenir la normale
+                # Cross product to get the normal
                 normal = edge1.cross(edge2).normalize()
                 normals[face_idx] = normal
         
         return normals
     
     def _extract_visual_features(self, obj: MentalObject3D) -> Dict[str, Any]:
-        """Extraire les caractéristiques visuelles"""
+        """Extract visual features"""
         features = {
             'symmetries': [],
             'distinctive_features': [],
@@ -1392,7 +1392,7 @@ class MentalVisualization:
             'recognizable_patterns': []
         }
         
-        # Analyser les symétries
+        # Analyze symmetries
         reasoner = TopologicalReasoner()
         if reasoner._detect_bilateral_symmetry(obj):
             features['symmetries'].append('bilateral')
@@ -1401,7 +1401,7 @@ class MentalVisualization:
         if rotational_order > 1:
             features['symmetries'].append(f'rotational_order_{rotational_order}')
         
-        # Calculer les métriques de complexité
+        # Calculate complexity metrics
         features['complexity_metrics'] = {
             'vertex_count': len(obj.vertices),
             'face_count': len(obj.faces),
@@ -1410,7 +1410,7 @@ class MentalVisualization:
             'surface_area_estimate': self._estimate_surface_area(obj)
         }
         
-                # Détecter les patterns reconnaissables
+        # Detect recognizable patterns
         if self._is_approximately_spherical(obj):
             features['recognizable_patterns'].append('spherical')
         
@@ -1426,8 +1426,8 @@ class MentalVisualization:
         return features
     
     def _project_to_2d(self, obj: MentalObject3D, view_direction: Vector3D) -> Dict[str, Any]:
-        """Projeter un objet 3D vers une vue 2D"""
-        # Calculer la base orthonormale pour la projection
+        """Project a 3D object to a 2D view"""
+        # Calculate orthonormal basis for projection
         up_vector = Vector3D(0, 1, 0)
         if abs(view_direction.dot(up_vector)) > 0.9:
             up_vector = Vector3D(1, 0, 0)
@@ -1443,9 +1443,9 @@ class MentalVisualization:
             'depth_buffer': {}
         }
         
-        # Projeter les vertices
+        # Project vertices
         for i, vertex in enumerate(obj.vertices):
-            # Convertir en coordonnées de vue
+            # Convert to view coordinates
             local_x = vertex.x * right_vector.x + vertex.y * right_vector.y + vertex.z * right_vector.z
             local_y = vertex.x * up_vector.x + vertex.y * up_vector.y + vertex.z * up_vector.z
             depth = vertex.x * view_direction.x + vertex.y * view_direction.y + vertex.z * view_direction.z
@@ -1458,43 +1458,43 @@ class MentalVisualization:
             })
             projection['depth_buffer'][i] = depth
         
-        # Déterminer les faces visibles
+        # Determine visible faces
         surface_normals = self._calculate_surface_normals(obj)
         for face_idx, face in enumerate(obj.faces):
             if face_idx in surface_normals:
                 normal = surface_normals[face_idx]
                 dot_product = normal.dot(view_direction)
-                if dot_product < 0:  # Face orientée vers la caméra
+                if dot_product < 0:  # Face oriented towards the camera
                     projection['visible_faces'].append(face_idx)
         
-        # Calculer la silhouette
+        # Calculate silhouette
         projection['silhouette'] = self._calculate_silhouette(obj, view_direction)
         
         return projection
     
     def _apply_rotation_to_image(self, base_image: Dict[str, Any], rotation: Vector3D) -> Dict[str, Any]:
-        """Appliquer une rotation à une image mentale"""
+        """Apply a rotation to a mental image"""
         rotated_image = base_image.copy()
         
-        # Créer les matrices de rotation
+        # Create rotation matrices
         cos_x, sin_x = math.cos(rotation.x), math.sin(rotation.x)
         cos_y, sin_y = math.cos(rotation.y), math.sin(rotation.y)
         cos_z, sin_z = math.cos(rotation.z), math.sin(rotation.z)
         
-        # Appliquer la rotation aux données fil de fer
+        # Apply rotation to wireframe data
         wireframe = base_image['wireframe_data']
         rotated_vertices = []
         
         for vertex in wireframe['vertices']:
-            # Rotation autour de X
+            # Rotation around X
             y1 = vertex.y * cos_x - vertex.z * sin_x
             z1 = vertex.y * sin_x + vertex.z * cos_x
             
-            # Rotation autour de Y
+            # Rotation around Y
             x2 = vertex.x * cos_y + z1 * sin_y
             z2 = -vertex.x * sin_y + z1 * cos_y
             
-            # Rotation autour de Z
+            # Rotation around Z
             x3 = x2 * cos_z - y1 * sin_z
             y3 = x2 * sin_z + y1 * cos_z
             
@@ -1506,7 +1506,7 @@ class MentalVisualization:
             'vertex_connections': wireframe['vertex_connections']
         }
         
-        # Mettre à jour les vues
+        # Update views
         standard_directions = [
             Vector3D(0, 0, 1), Vector3D(0, 0, -1),
             Vector3D(-1, 0, 0), Vector3D(1, 0, 0),
@@ -1517,21 +1517,21 @@ class MentalVisualization:
         view_names = ['front', 'back', 'left', 'right', 'top', 'bottom']
         
         for i, direction in enumerate(standard_directions):
-            # Créer un objet temporaire avec les vertices tournés
+            # Create a temporary object with rotated vertices
             temp_obj = MentalObject3D("temp", rotated_vertices, base_image.get('faces', []))
             rotated_image['viewpoints'][view_names[i]] = self._project_to_2d(temp_obj, direction)
         
         return rotated_image
     
     def _calculate_transformation_cost(self, rotation_step: Vector3D) -> float:
-        """Calculer le coût cognitif d'une transformation"""
-        # Le coût augmente avec l'ampleur de la rotation
+        """Calculate the cognitive cost of a transformation"""
+        # Cost increases with rotation magnitude
         magnitude = rotation_step.magnitude()
         
-        # Coût de base basé sur l'ampleur
+        # Base cost based on magnitude
         base_cost = magnitude * 10
         
-        # Pénalité pour les rotations complexes (multi-axes)
+        # Penalty for complex (multi-axis) rotations
         axis_count = sum(1 for component in [rotation_step.x, rotation_step.y, rotation_step.z] 
                         if abs(component) > 0.01)
         complexity_penalty = (axis_count - 1) * 5
@@ -1539,22 +1539,22 @@ class MentalVisualization:
         return base_cost + complexity_penalty
     
     def _get_timestamp(self) -> float:
-        """Obtenir un timestamp pour l'historique"""
+        """Get a timestamp for history"""
         import time
         return time.time()
     
     def _line_plane_intersection(self, edge: Tuple[int, int], plane_normal: Vector3D, plane_point: Point3D) -> Optional[Point3D]:
-        """Calculer l'intersection entre une ligne et un plan"""
-        # Cette méthode nécessiterait l'accès aux vertices de l'objet
-        # Implémentation simplifiée
+        """Calculate intersection between a line and a plane"""
+        # This method would require access to the object's vertices
+        # Simplified implementation
         return None
     
     def _calculate_polygon_area(self, points: List[Point3D]) -> float:
-        """Calculer l'aire d'un polygone"""
+        """Calculate the area of a polygon"""
         if len(points) < 3:
             return 0.0
         
-        # Algorithme de Shoelace pour un polygone 2D (projection)
+        # Shoelace algorithm for a 2D polygon (projection)
         area = 0.0
         for i in range(len(points)):
             j = (i + 1) % len(points)
@@ -1564,7 +1564,7 @@ class MentalVisualization:
         return abs(area) / 2.0
     
     def _calculate_polygon_perimeter(self, points: List[Point3D]) -> float:
-        """Calculer le périmètre d'un polygone"""
+        """Calculate the perimeter of a polygon"""
         if len(points) < 2:
             return 0.0
         
@@ -1576,14 +1576,14 @@ class MentalVisualization:
         return perimeter
     
     def _analyze_internal_structure(self, intersection_points: List[Point3D], volume_data: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Analyser la structure interne révélée par la coupe"""
+        """Analyze the internal structure revealed by the cut"""
         internal_structure = []
         
-        # Analyser la densité le long de la coupe
+        # Analyze density along the cut
         if intersection_points:
             density_profile = []
             for point in intersection_points:
-                # Convertir le point en coordonnées de voxel
+                # Convert point to voxel coordinates
                 bounds = volume_data.get('bounds', (Point3D(0,0,0), Point3D(1,1,1)))
                 min_bound, max_bound = bounds
                 dimensions = volume_data.get('dimensions', (10, 10, 10))
@@ -1593,7 +1593,7 @@ class MentalVisualization:
                     voxel_y = int((point.y - min_bound.y) / (max_bound.y - min_bound.y) * dimensions[1])
                     voxel_z = int((point.z - min_bound.z) / (max_bound.z - min_bound.z) * dimensions[2])
                     
-                    # Clamp aux limites
+                    # Clamp to limits
                     voxel_x = max(0, min(dimensions[0] - 1, voxel_x))
                     voxel_y = max(0, min(dimensions[1] - 1, voxel_y))
                     voxel_z = max(0, min(dimensions[2] - 1, voxel_z))
@@ -1610,7 +1610,7 @@ class MentalVisualization:
         return internal_structure
     
     def _visualize_configuration(self, objects: List[MentalObject3D]) -> Dict[str, Any]:
-        """Visualiser une configuration d'objets"""
+        """Visualize an object configuration"""
         config_viz = {
             'objects': [obj.name for obj in objects],
             'bounding_box': None,
@@ -1620,7 +1620,7 @@ class MentalVisualization:
         }
         
         if objects:
-            # Calculer la boîte englobante globale
+            # Calculate global bounding box
             all_vertices = []
             for obj in objects:
                 all_vertices.extend(obj.vertices)
@@ -1638,10 +1638,10 @@ class MentalVisualization:
                     'max': Point3D(max_x, max_y, max_z)
                 }
             
-            # Calculer le volume total
+            # Calculate total volume
             config_viz['total_volume'] = sum(obj.calculate_volume() for obj in objects)
             
-            # Analyser les relations spatiales
+            # Analyze spatial relationships
             for i, obj1 in enumerate(objects):
                 for j, obj2 in enumerate(objects):
                     if i < j:
@@ -1654,7 +1654,7 @@ class MentalVisualization:
         return config_viz
     
     def _visualize_connection(self, object_names: List[str], configuration: List[MentalObject3D]) -> Dict[str, Any]:
-        """Visualiser la connexion entre objets"""
+        """Visualize the connection between objects"""
         connection_viz = {
             'objects': object_names,
             'connection_type': 'unknown',
@@ -1667,7 +1667,7 @@ class MentalVisualization:
             obj2 = next((o for o in configuration if o.name == object_names[1]), None)
             
             if obj1 and obj2:
-                # Trouver les points de connexion potentiels
+                # Find potential connection points
                 min_distance = float('inf')
                 closest_points = (None, None)
                 
@@ -1692,7 +1692,7 @@ class MentalVisualization:
         return connection_viz
     
     def _detect_assembly_conflicts(self, configuration: List[MentalObject3D]) -> List[Dict[str, Any]]:
-        """Détecter les conflits dans l'assemblage"""
+        """Detect conflicts in assembly"""
         conflicts = []
         
         for i, obj1 in enumerate(configuration):
@@ -1705,7 +1705,7 @@ class MentalVisualization:
                             'severity': self._calculate_overlap_severity(obj1, obj2)
                         })
                     
-                    # Vérifier la stabilité
+                    # Check stability
                     if self._is_unstable_configuration(obj1, obj2):
                         conflicts.append({
                             'type': 'instability',
@@ -1716,10 +1716,10 @@ class MentalVisualization:
         return conflicts
     
     def _apply_deformation(self, base_image: Dict[str, Any], deformation_field: Dict[str, Vector3D]) -> Dict[str, Any]:
-        """Appliquer un champ de déformation"""
+        """Apply a deformation field"""
         deformed_image = base_image.copy()
         
-        # Appliquer la déformation aux vertices
+        # Apply deformation to vertices
         wireframe = base_image['wireframe_data']
         deformed_vertices = []
         
@@ -1745,18 +1745,18 @@ class MentalVisualization:
         return deformed_image
     
     def _calculate_deformation_energy(self, deformation_field: Dict[str, Vector3D]) -> float:
-        """Calculer l'énergie de déformation"""
+        """Calculate deformation energy"""
         total_energy = 0.0
         
         for displacement in deformation_field.values():
-            # Énergie proportionnelle au carré du déplacement
+            # Energy proportional to the square of displacement
             energy = displacement.magnitude() ** 2
             total_energy += energy
         
         return total_energy
     
     def _analyze_deformation_stress(self, deformation_field: Dict[str, Vector3D]) -> Dict[str, Any]:
-        """Analyser les contraintes de déformation"""
+        """Analyze deformation stress"""
         stress_analysis = {
             'max_stress_point': None,
             'max_stress_value': 0.0,
@@ -1772,7 +1772,7 @@ class MentalVisualization:
                 stress_analysis['max_stress_value'] = stress_value
                 stress_analysis['max_stress_point'] = point_id
             
-            if stress_value > 2.0:  # Seuil critique
+            if stress_value > 2.0:  # Critical threshold
                 stress_analysis['critical_regions'].append({
                     'point_id': point_id,
                     'stress_value': stress_value,
@@ -1782,7 +1782,7 @@ class MentalVisualization:
         return stress_analysis
     
     def _point_inside_object(self, point: Point3D, obj: MentalObject3D) -> bool:
-        """Vérifier si un point est à l'intérieur d'un objet (méthode simplifiée)"""
+        """Check if a point is inside an object (simplified method)"""
         min_bound, max_bound = obj.get_bounding_box()
         
         return (min_bound.x <= point.x <= max_bound.x and
@@ -1790,21 +1790,21 @@ class MentalVisualization:
                 min_bound.z <= point.z <= max_bound.z)
     
     def _estimate_surface_area(self, obj: MentalObject3D) -> float:
-        """Estimer l'aire de surface"""
+        """Estimate surface area"""
         total_area = 0.0
         
         for face in obj.faces:
             if len(face) >= 3:
-                # Calculer l'aire du triangle (ou approximation pour polygones)
+                # Calculate triangle area (or approximation for polygons)
                 vertices = [obj.vertices[i] for i in face[:3]]
                 if len(vertices) == 3:
                     v1, v2, v3 = vertices
                     
-                    # Vecteurs des côtés
+                    # Side vectors
                     side1 = Vector3D(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z)
                     side2 = Vector3D(v3.x - v1.x, v3.y - v1.y, v3.z - v1.z)
                     
-                    # Aire = 0.5 * |side1 × side2|
+                    # Area = 0.5 * |side1 × side2|
                     cross_product = side1.cross(side2)
                     area = 0.5 * cross_product.magnitude()
                     total_area += area
@@ -1812,10 +1812,10 @@ class MentalVisualization:
         return total_area
     
     def _is_approximately_spherical(self, obj: MentalObject3D) -> bool:
-        """Vérifier si l'objet est approximativement sphérique"""
+        """Check if the object is approximately spherical"""
         center = self._calculate_object_center(obj)
         
-        # Calculer les distances du centre à tous les vertices
+        # Calculate distances from center to all vertices
         distances = [center.distance_to(vertex) for vertex in obj.vertices]
         
         if not distances:
@@ -1823,14 +1823,14 @@ class MentalVisualization:
         
         avg_distance = sum(distances) / len(distances)
         
-        # Vérifier la variance des distances
+        # Check variance of distances
         variance = sum((d - avg_distance) ** 2 for d in distances) / len(distances)
         coefficient_of_variation = (variance ** 0.5) / avg_distance if avg_distance > 0 else 0
         
-        return coefficient_of_variation < 0.2  # Seuil pour approximativement sphérique
+        return coefficient_of_variation < 0.2  # Threshold for approximately spherical
     
     def _is_approximately_cubic(self, obj: MentalObject3D) -> bool:
-        """Vérifier si l'objet est approximativement cubique"""
+        """Check if the object is approximately cubic"""
         min_bound, max_bound = obj.get_bounding_box()
         
         width = max_bound.x - min_bound.x
@@ -1840,21 +1840,21 @@ class MentalVisualization:
         if width == 0 or height == 0 or depth == 0:
             return False
         
-        # Vérifier si les dimensions sont approximativement égales
+        # Check if dimensions are approximately equal
         ratios = [width/height, width/depth, height/depth]
         
         for ratio in ratios:
-            if ratio < 0.8 or ratio > 1.2:  # Tolérance de 20%
+            if ratio < 0.8 or ratio > 1.2:  # 20% Tolerance
                 return False
         
         return True
     
     def _is_approximately_cylindrical(self, obj: MentalObject3D) -> bool:
-        """Vérifier si l'objet est approximativement cylindrique"""
-        # Analyser la distribution des vertices pour détecter la cylindricité
+        """Check if the object is approximately cylindrical"""
+        # Analyze vertex distribution to detect cylindricity
         center = self._calculate_object_center(obj)
         
-        # Calculer les distances radiales dans le plan XY
+        # Calculate radial distances in XY plane
         xy_distances = []
         z_coords = []
         
@@ -1866,18 +1866,18 @@ class MentalVisualization:
         if not xy_distances:
             return False
         
-        # Vérifier si les distances radiales sont approximativement constantes
+        # Check if radial distances are approximately constant
         avg_radius = sum(xy_distances) / len(xy_distances)
         radius_variance = sum((d - avg_radius)**2 for d in xy_distances) / len(xy_distances)
         radius_cv = (radius_variance ** 0.5) / avg_radius if avg_radius > 0 else 0
         
-        # Vérifier si l'objet s'étend significativement en Z
+        # Check if the object extends significantly in Z
         z_range = max(z_coords) - min(z_coords) if z_coords else 0
         
-        return radius_cv < 0.3 and z_range > avg_radius  # Critères pour cylindricité
+        return radius_cv < 0.3 and z_range > avg_radius  # Criteria for cylindricity
     
     def _calculate_object_center(self, obj: MentalObject3D) -> Point3D:
-        """Calculer le centre géométrique d'un objet"""
+        """Calculate the geometric center of an object"""
         if not obj.vertices:
             return Point3D(0, 0, 0)
         
@@ -1889,13 +1889,13 @@ class MentalVisualization:
         return Point3D(sum_x / count, sum_y / count, sum_z / count)
     
     def _calculate_silhouette(self, obj: MentalObject3D, view_direction: Vector3D) -> List[int]:
-        """Calculer la silhouette de l'objet depuis une direction de vue"""
+        """Calculate the object's silhouette from a view direction"""
         silhouette_edges = []
         
-        # Pour chaque arête, vérifier si elle fait partie de la silhouette
+        # For each edge, check if it's part of the silhouette
         edge_face_count = {}
         
-        # Compter combien de faces partagent chaque arête
+        # Count how many faces share each edge
         for face_idx, face in enumerate(obj.faces):
             for i in range(len(face)):
                 v1_idx = face[i]
@@ -1906,7 +1906,7 @@ class MentalVisualization:
                     edge_face_count[edge] = []
                 edge_face_count[edge].append(face_idx)
         
-        # Une arête fait partie de la silhouette si elle sépare une face visible d'une face cachée
+        # An edge is part of the silhouette if it separates a visible face from a hidden face
         surface_normals = self._calculate_surface_normals(obj)
         
         for edge, face_indices in edge_face_count.items():
@@ -1917,31 +1917,31 @@ class MentalVisualization:
                     normal1 = surface_normals[face1_idx]
                     normal2 = surface_normals[face2_idx]
                     
-                    # Vérifier la visibilité des faces
+                    # Check face visibility
                     visible1 = normal1.dot(view_direction) < 0
                     visible2 = normal2.dot(view_direction) < 0
                     
-                    if visible1 != visible2:  # Une face visible, une cachée
+                    if visible1 != visible2:  # One visible face, one hidden
                         silhouette_edges.extend(edge)
         
-        return list(set(silhouette_edges))  # Supprimer les doublons
+        return list(set(silhouette_edges))  # Remove duplicates
     
     def _check_overlap(self, obj1: MentalObject3D, obj2: MentalObject3D) -> bool:
-        """Vérifier si deux objets se chevauchent"""
+        """Check if two objects overlap"""
         bb1_min, bb1_max = obj1.get_bounding_box()
         bb2_min, bb2_max = obj2.get_bounding_box()
         
-        # Vérification des boîtes englobantes
+        # Bounding box check
         return (bb1_max.x >= bb2_min.x and bb1_min.x <= bb2_max.x and
                 bb1_max.y >= bb2_min.y and bb1_min.y <= bb2_max.y and
                 bb1_max.z >= bb2_min.z and bb1_min.z <= bb2_max.z)
     
     def _calculate_overlap_severity(self, obj1: MentalObject3D, obj2: MentalObject3D) -> str:
-        """Calculer la sévérité du chevauchement"""
+        """Calculate the severity of overlap"""
         bb1_min, bb1_max = obj1.get_bounding_box()
         bb2_min, bb2_max = obj2.get_bounding_box()
         
-        # Calculer le volume d'intersection
+        # Calculate intersection volume
         overlap_min_x = max(bb1_min.x, bb2_min.x)
         overlap_max_x = min(bb1_max.x, bb2_max.x)
         overlap_min_y = max(bb1_min.y, bb2_min.y)
@@ -1974,14 +1974,14 @@ class MentalVisualization:
         return 'none'
     
     def _is_unstable_configuration(self, obj1: MentalObject3D, obj2: MentalObject3D) -> bool:
-        """Vérifier si la configuration est instable"""
-        # Analyse simplifiée basée sur les centres de gravité
+        """Check if the configuration is unstable"""
+        # Simplified analysis based on centers of gravity
         center1 = self._calculate_object_center(obj1)
         center2 = self._calculate_object_center(obj2)
         
-        # Vérifier si un objet est au-dessus de l'autre sans support
-        if center1.z > center2.z + 1.0:  # obj1 au-dessus de obj2
-            # Vérifier si obj1 a un support horizontal de obj2
+        # Check if one object is above the other without support
+        if center1.z > center2.z + 1.0:  # obj1 above obj2
+            # Check if obj1 has horizontal support from obj2
             horizontal_distance = math.sqrt((center1.x - center2.x)**2 + (center1.y - center2.y)**2)
             bb2_min, bb2_max = obj2.get_bounding_box()
             max_support_radius = max(bb2_max.x - bb2_min.x, bb2_max.y - bb2_min.y) / 2
@@ -1990,10 +1990,10 @@ class MentalVisualization:
         
         return False
 
-# ==================== ANALOGIES SPATIALES POUR CONCEPTS ABSTRAITS ====================
+# ==================== SPATIAL ANALOGIES FOR ABSTRACT CONCEPTS ====================
 
 class SpatialAnalogy:
-    """Représentation d'une analogie spatiale"""
+    """Representation of a spatial analogy"""
     
     def __init__(self, source_concept: str, target_concept: str, spatial_mapping: Dict[str, Any]):
         self.source_concept = source_concept
@@ -2004,9 +2004,9 @@ class SpatialAnalogy:
         self.metaphorical_relations = {}
     
     def calculate_strength(self) -> float:
-        """Calculer la force de l'analogie"""
-        # Facteurs contribuant à la force
-        mapping_completeness = len(self.spatial_mapping) / 10.0  # Normalisation arbitraire
+        """Calculate the strength of the analogy"""
+        # Factors contributing to strength
+        mapping_completeness = len(self.spatial_mapping) / 10.0  # Arbitrary normalization
         structural_similarity = self._calculate_structural_similarity()
         semantic_coherence = self._calculate_semantic_coherence()
         
@@ -2014,8 +2014,8 @@ class SpatialAnalogy:
         return self.strength
     
     def _calculate_structural_similarity(self) -> float:
-        """Calculer la similarité structurelle"""
-        # Analyser les relations spatiales préservées
+        """Calculate structural similarity"""
+        # Analyze preserved spatial relations
         preserved_relations = 0
         total_relations = 0
         
@@ -2028,25 +2028,25 @@ class SpatialAnalogy:
         
         if total_relations > 0:
             return preserved_relations / total_relations
-        return 0.5  # Valeur par défaut
+        return 0.5  # Default value
     
     def _calculate_semantic_coherence(self) -> float:
-        """Calculer la cohérence sémantique"""
-        # Évaluation simplifiée de la cohérence sémantique
+        """Calculate semantic coherence"""
+        # Simplified evaluation of semantic coherence
         coherence_factors = []
         
-        # Vérifier la cohérence des domaines
+        # Check domain coherence
         if 'domain_similarity' in self.spatial_mapping:
             coherence_factors.append(self.spatial_mapping['domain_similarity'])
         
-        # Vérifier la cohérence des relations
+        # Check relation consistency
         if 'relation_consistency' in self.spatial_mapping:
             coherence_factors.append(self.spatial_mapping['relation_consistency'])
         
         return sum(coherence_factors) / len(coherence_factors) if coherence_factors else 0.5
 
 class SpatialAnalogyEngine:
-    """Moteur pour créer et manipuler des analogies spatiales"""
+    """Engine for creating and manipulating spatial analogies"""
     
     def __init__(self):
         self.analogies = {}
@@ -2056,7 +2056,7 @@ class SpatialAnalogyEngine:
         self._initialize_spatial_metaphors()
     
     def _initialize_spatial_metaphors(self) -> None:
-        """Initialiser les métaphores spatiales de base"""
+        """Initialize basic spatial metaphors"""
         self.metaphor_database = {
             'hierarchical_concepts': {
                 'spatial_pattern': 'vertical_arrangement',
@@ -2112,8 +2112,8 @@ class SpatialAnalogyEngine:
         }
     
     def create_spatial_representation(self, concept: str, concept_properties: Dict[str, Any]) -> Dict[str, Any]:
-        """Créer une représentation spatiale pour un concept abstrait"""
-        # Déterminer le type de métaphore le plus approprié
+        """Create a spatial representation for an abstract concept"""
+        # Determine the most appropriate metaphor type
         best_metaphor = self._select_best_metaphor(concept, concept_properties)
         
         spatial_rep = {
@@ -2151,27 +2151,27 @@ class SpatialAnalogyEngine:
     
     def create_analogy(self, source_concept: str, target_concept: str, 
                       focus_aspects: List[str] = None) -> SpatialAnalogy:
-        """Créer une analogie spatiale entre deux concepts"""
-        # Obtenir les représentations spatiales
+        """Create a spatial analogy between two concepts"""
+        # Get spatial representations
         source_rep = self.concept_spatial_representations.get(source_concept)
         target_rep = self.concept_spatial_representations.get(target_concept)
         
         if not source_rep or not target_rep:
             return None
         
-        # Construire le mapping spatial
+        # Build spatial mapping
         spatial_mapping = self._build_spatial_mapping(source_rep, target_rep, focus_aspects)
         
-        # Créer l'analogie
+        # Create the analogy
         analogy = SpatialAnalogy(source_concept, target_concept, spatial_mapping)
         analogy.calculate_strength()
         
-        # Identifier les relations métaphoriques
+        # Identify metaphorical relations
         analogy.metaphorical_relations = self._identify_metaphorical_relations(
             source_rep, target_rep, spatial_mapping
         )
         
-        # Stocker l'analogie
+        # Store the analogy
         analogy_key = f"{source_concept}->{target_concept}"
         self.analogies[analogy_key] = analogy
         
@@ -2180,19 +2180,19 @@ class SpatialAnalogyEngine:
     def navigate_conceptual_space_via_analogy(self, start_concept: str, 
                                            target_domain: str, 
                                            navigation_strategy: str = 'similarity') -> List[str]:
-        """Naviguer dans l'espace conceptuel en utilisant des analogies"""
+        """Navigate conceptual space using analogies"""
         navigation_path = [start_concept]
         current_concept = start_concept
         max_steps = 10
         
         for step in range(max_steps):
-            # Trouver des analogies potentielles
+            # Find potential analogies
             candidate_analogies = self._find_analogies_to_domain(current_concept, target_domain)
             
             if not candidate_analogies:
                 break
             
-            # Sélectionner la meilleure analogie selon la stratégie
+            # Select the best analogy based on strategy
             best_analogy = self._select_analogy_by_strategy(candidate_analogies, navigation_strategy)
             
             if best_analogy:
@@ -2201,18 +2201,18 @@ class SpatialAnalogyEngine:
                     navigation_path.append(next_concept)
                     current_concept = next_concept
                     
-                    # Vérifier si on a atteint le domaine cible
+                    # Check if target domain has been reached
                     if self._concept_in_domain(next_concept, target_domain):
                         break
                 else:
-                    break  # Éviter les cycles
+                    break  # Avoid cycles
             else:
                 break
         
         return navigation_path
     
     def analyze_analogy_network(self) -> Dict[str, Any]:
-        """Analyser le réseau d'analogies"""
+        """Analyze the analogy network"""
         analysis = {
             'total_analogies': len(self.analogies),
             'average_strength': 0.0,
@@ -2224,11 +2224,11 @@ class SpatialAnalogyEngine:
         }
         
         if self.analogies:
-            # Calculer la force moyenne
+            # Calculate average strength
             total_strength = sum(analogy.strength for analogy in self.analogies.values())
             analysis['average_strength'] = total_strength / len(self.analogies)
             
-            # Analyser la connectivité des concepts
+            # Analyze concept connectivity
             concept_connections = {}
             for analogy in self.analogies.values():
                 source = analogy.source_concept
@@ -2247,14 +2247,14 @@ class SpatialAnalogyEngine:
                 for concept, connections in concept_connections.items()
             }
             
-            # Distribution des métaphores
+            # Metaphor distribution
             metaphor_counts = {}
             for rep in self.concept_spatial_representations.values():
                 metaphor_type = rep.get('metaphor_type', 'unknown')
                 metaphor_counts[metaphor_type] = metaphor_counts.get(metaphor_type, 0) + 1
             analysis['metaphor_distribution'] = metaphor_counts
             
-            # Identifier les analogies fortes et faibles
+            # Identify strong and weak analogies
             strength_threshold = analysis['average_strength']
             for analogy in self.analogies.values():
                 if analogy.strength > strength_threshold * 1.2:
@@ -2273,7 +2273,7 @@ class SpatialAnalogyEngine:
         return analysis
     
     def generate_novel_analogies(self, concept: str, num_analogies: int = 5) -> List[SpatialAnalogy]:
-        """Générer de nouvelles analogies pour un concept"""
+        """Generate new analogies for a concept"""
         novel_analogies = []
         
         if concept not in self.concept_spatial_representations:
@@ -2281,17 +2281,17 @@ class SpatialAnalogyEngine:
         
         source_rep = self.concept_spatial_representations[concept]
         
-        # Chercher des concepts avec des structures spatiales similaires
+        # Look for concepts with similar spatial structures
         candidates = []
         for other_concept, other_rep in self.concept_spatial_representations.items():
             if other_concept != concept:
                 similarity = self._calculate_structural_similarity_between_reps(source_rep, other_rep)
                 candidates.append((other_concept, similarity))
         
-        # Trier par similarité
+        # Sort by similarity
         candidates.sort(key=lambda x: x[1], reverse=True)
         
-        # Créer des analogies avec les meilleurs candidats
+        # Create analogies with the best candidates
         for candidate_concept, similarity in candidates[:num_analogies]:
             analogy = self.create_analogy(concept, candidate_concept)
             if analogy:
@@ -2300,20 +2300,20 @@ class SpatialAnalogyEngine:
         return novel_analogies
     
     def _select_best_metaphor(self, concept: str, properties: Dict[str, Any]) -> str:
-        """Sélectionner la meilleure métaphore spatiale pour un concept"""
-        best_metaphor = 'similarity_concepts'  # Métaphore par défaut
+        """Select the best spatial metaphor for a concept"""
+        best_metaphor = 'similarity_concepts'  # Default metaphor
         best_score = 0.0
         
         for metaphor_type, metaphor_data in self.metaphor_database.items():
             score = 0.0
             
-            # Analyser la correspondance avec les mapping_rules
+            # Analyze match with mapping_rules
             mapping_rules = metaphor_data.get('mapping_rules', {})
             for property_name, property_value in properties.items():
                 if property_name in mapping_rules:
                     score += 1.0
                 
-                # Bonus pour les mots-clés dans les exemples
+                # Bonus for keywords in examples
                 examples = metaphor_data.get('examples', [])
                 for example in examples:
                     if property_name in example or example in str(property_value):
@@ -2326,19 +2326,19 @@ class SpatialAnalogyEngine:
         return best_metaphor
     
     def _generate_spatial_structure(self, properties: Dict[str, Any], metaphor_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Générer la structure spatiale basée sur les propriétés du concept"""
+        """Generate the spatial structure based on concept properties"""
         spatial_pattern = metaphor_data.get('spatial_pattern', 'default')
         
         structure = {
             'pattern_type': spatial_pattern,
             'elements': [],
             'connections': [],
-            'dimensions': 3,  # Par défaut
+            'dimensions': 3,  # Default
             'coordinate_system': 'cartesian'
         }
         
         if spatial_pattern == 'vertical_arrangement':
-            # Créer une hiérarchie verticale
+            # Create a vertical hierarchy
             levels = properties.get('hierarchy_levels', ['top', 'middle', 'bottom'])
             for i, level in enumerate(levels):
                 structure['elements'].append({
@@ -2347,7 +2347,7 @@ class SpatialAnalogyEngine:
                     'properties': properties.get(f'{level}_properties', {})
                 })
             
-            # Connexions hiérarchiques
+            # Hierarchical connections
             for i in range(len(levels) - 1):
                 structure['connections'].append({
                     'from': levels[i],
@@ -2356,7 +2356,7 @@ class SpatialAnalogyEngine:
                 })
         
         elif spatial_pattern == 'linear_progression':
-            # Créer une progression linéaire
+            # Create a linear progression
             sequence = properties.get('sequence', ['start', 'middle', 'end'])
             for i, item in enumerate(sequence):
                 structure['elements'].append({
@@ -2365,7 +2365,7 @@ class SpatialAnalogyEngine:
                     'properties': properties.get(f'{item}_properties', {})
                 })
             
-            # Connexions séquentielles
+            # Sequential connections
             for i in range(len(sequence) - 1):
                 structure['connections'].append({
                     'from': sequence[i],
@@ -2374,17 +2374,17 @@ class SpatialAnalogyEngine:
                 })
         
         elif spatial_pattern == 'proximity_clustering':
-            # Créer des clusters de similarité
+            # Create similarity clusters
             clusters = properties.get('clusters', {})
             cluster_positions = {}
             
-            # Positionner les clusters
+            # Position clusters
             for i, (cluster_name, cluster_items) in enumerate(clusters.items()):
                 angle = 2 * math.pi * i / len(clusters)
                 cluster_center = Point3D(math.cos(angle) * 5, math.sin(angle) * 5, 0)
                 cluster_positions[cluster_name] = cluster_center
                 
-                # Positionner les éléments dans le cluster
+                # Position elements within the cluster
                 for j, item in enumerate(cluster_items):
                     item_angle = 2 * math.pi * j / len(cluster_items)
                     item_position = Point3D(
@@ -2403,7 +2403,7 @@ class SpatialAnalogyEngine:
         return structure
     
     def _create_dimensional_mapping(self, properties: Dict[str, Any], mapping_rules: Dict[str, str]) -> Dict[str, str]:
-        """Créer le mapping dimensionnel basé sur les règles"""
+        """Create dimensional mapping based on rules"""
         dimensional_mapping = {}
         
         for concept_aspect, spatial_aspect in mapping_rules.items():
@@ -2413,7 +2413,7 @@ class SpatialAnalogyEngine:
         return dimensional_mapping
     
     def _derive_geometric_properties(self, properties: Dict[str, Any], spatial_pattern: str) -> Dict[str, Any]:
-        """Dériver les propriétés géométriques"""
+        """Derive geometric properties"""
         geometric_props = {
             'shape_type': 'complex',
             'symmetries': [],
@@ -2440,7 +2440,7 @@ class SpatialAnalogyEngine:
         return geometric_props
     
     def _identify_topological_features(self, properties: Dict[str, Any]) -> Dict[str, Any]:
-        """Identifier les caractéristiques topologiques"""
+        """Identify topological features"""
         topological_features = {
             'holes': 0,
             'connected_components': 1,
@@ -2449,7 +2449,7 @@ class SpatialAnalogyEngine:
             'orientation': 'orientable'
         }
         
-        # Analyser les propriétés pour inférer la topologie
+        # Analyze properties to infer topology
         if 'cycles' in properties:
             topological_features['holes'] = len(properties['cycles'])
         
@@ -2463,7 +2463,7 @@ class SpatialAnalogyEngine:
     
     def _build_spatial_mapping(self, source_rep: Dict[str, Any], target_rep: Dict[str, Any], 
                               focus_aspects: List[str] = None) -> Dict[str, Any]:
-        """Construire le mapping spatial entre deux représentations"""
+        """Build spatial mapping between two representations"""
         mapping = {
             'structural_correspondence': {},
             'dimensional_alignment': {},
@@ -2472,17 +2472,17 @@ class SpatialAnalogyEngine:
             'focus_aspects': focus_aspects or []
         }
         
-        # Correspondance structurelle
+        # Structural correspondence
         source_elements = source_rep.get('spatial_structure', {}).get('elements', [])
         target_elements = target_rep.get('spatial_structure', {}).get('elements', [])
         
         if source_elements and target_elements:
-            # Mapping simple basé sur la position dans la séquence
+            # Simple mapping based on position in sequence
             for i, source_elem in enumerate(source_elements):
                 if i < len(target_elements):
                     mapping['structural_correspondence'][source_elem['name']] = target_elements[i]['name']
         
-        # Alignement dimensionnel
+        # Dimensional alignment
         source_mapping = source_rep.get('dimensional_mapping', {})
         target_mapping = target_rep.get('dimensional_mapping', {})
         
@@ -2494,7 +2494,7 @@ class SpatialAnalogyEngine:
                     'preserved': spatial_aspect == target_mapping[aspect]
                 }
         
-        # Similarité géométrique
+        # Geometric similarity
         source_geom = source_rep.get('geometric_properties', {})
         target_geom = target_rep.get('geometric_properties', {})
         
@@ -2505,7 +2505,7 @@ class SpatialAnalogyEngine:
             'dimensionality_match': source_geom.get('dimensionality') == target_geom.get('dimensionality')
         }
         
-        # Préservation topologique
+        # Topological preservation
         source_topo = source_rep.get('topological_features', {})
         target_topo = target_rep.get('topological_features', {})
         
@@ -2520,7 +2520,7 @@ class SpatialAnalogyEngine:
     
     def _identify_metaphorical_relations(self, source_rep: Dict[str, Any], target_rep: Dict[str, Any], 
                                        spatial_mapping: Dict[str, Any]) -> Dict[str, Any]:
-        """Identifier les relations métaphoriques"""
+        """Identify metaphorical relations"""
         relations = {
             'direct_mappings': [],
             'structural_analogies': [],
@@ -2528,7 +2528,7 @@ class SpatialAnalogyEngine:
             'relational_patterns': []
         }
         
-        # Mappings directs
+        # Direct mappings
         struct_corr = spatial_mapping.get('structural_correspondence', {})
         for source_elem, target_elem in struct_corr.items():
             relations['direct_mappings'].append({
@@ -2537,7 +2537,7 @@ class SpatialAnalogyEngine:
                 'type': 'element_correspondence'
             })
         
-        # Analogies structurelles
+        # Structural analogies
         dim_alignment = spatial_mapping.get('dimensional_alignment', {})
         for aspect, alignment in dim_alignment.items():
             if alignment.get('preserved', False):
@@ -2550,7 +2550,7 @@ class SpatialAnalogyEngine:
         return relations
     
     def _find_analogies_to_domain(self, concept: str, target_domain: str) -> List[SpatialAnalogy]:
-        """Trouver des analogies vers un domaine cible"""
+        """Find analogies to a target domain"""
         candidate_analogies = []
         
         for analogy_key, analogy in self.analogies.items():
@@ -2561,7 +2561,7 @@ class SpatialAnalogyEngine:
         return candidate_analogies
     
     def _select_analogy_by_strategy(self, analogies: List[SpatialAnalogy], strategy: str) -> Optional[SpatialAnalogy]:
-        """Sélectionner une analogie selon une stratégie"""
+        """Select an analogy based on strategy"""
         if not analogies:
             return None
         
@@ -2572,24 +2572,24 @@ class SpatialAnalogyEngine:
         elif strategy == 'most_complete':
             return max(analogies, key=lambda a: len(a.spatial_mapping))
         else:  # strategy == 'similarity' or default
-            return analogies[0]  # Première analogie trouvée
+            return analogies[0]  # First analogy found
     
     def _concept_in_domain(self, concept: str, domain: str) -> bool:
-        """Vérifier si un concept appartient à un domaine"""
-        # Implémentation simplifiée - pourrait être étendue avec une ontologie
+        """Check if a concept belongs to a domain"""
+        # Simplified implementation - could be extended with an ontology
         return domain.lower() in concept.lower() or concept.lower() in domain.lower()
     
     def _calculate_structural_similarity_between_reps(self, rep1: Dict[str, Any], rep2: Dict[str, Any]) -> float:
-        """Calculer la similarité structurelle entre deux représentations"""
+        """Calculate structural similarity between two representations"""
         similarity_factors = []
         
-        # Similarité des patterns spatiaux
+        # Spatial pattern similarity
         pattern1 = rep1.get('spatial_structure', {}).get('pattern_type', '')
         pattern2 = rep2.get('spatial_structure', {}).get('pattern_type', '')
         pattern_similarity = 1.0 if pattern1 == pattern2 else 0.0
         similarity_factors.append(pattern_similarity)
         
-        # Similarité géométrique
+        # Geometric similarity
         geom1 = rep1.get('geometric_properties', {})
         geom2 = rep2.get('geometric_properties', {})
         
@@ -2599,7 +2599,7 @@ class SpatialAnalogyEngine:
         dim_similarity = 1.0 if geom1.get('dimensionality') == geom2.get('dimensionality') else 0.0
         similarity_factors.append(dim_similarity)
         
-        # Similarité topologique
+        # Topological similarity
         topo1 = rep1.get('topological_features', {})
         topo2 = rep2.get('topological_features', {})
         
@@ -2609,10 +2609,10 @@ class SpatialAnalogyEngine:
         
         return sum(similarity_factors) / len(similarity_factors) if similarity_factors else 0.0
 
-# ==================== SYSTÈME PRINCIPAL ====================
+# ==================== MAIN SYSTEM ====================
 
 class SpatialGeometricReasoningSystem:
-    """Système principal de raisonnement spatial et géométrique"""
+    """Main spatial and geometric reasoning system"""
     
     def __init__(self):
         self.mental_spaces = {}
@@ -2625,15 +2625,15 @@ class SpatialGeometricReasoningSystem:
         self.performance_metrics = {}
         
     def initialize_system(self) -> None:
-        """Initialiser le système complet"""
-        # Créer un espace mental par défaut
+        """Initialize the complete system"""
+        # Create a default mental space
         default_space = MentalSpace3D("default_space", (100, 100, 100))
         self.mental_spaces["default"] = default_space
         
-        # Créer un espace conceptuel par défaut
+        # Create a default conceptual space
         default_abstract_space = AbstractSpace("default_abstract_space")
         
-        # Ajouter quelques dimensions conceptuelles de base
+        # Add some basic conceptual dimensions
         time_dimension = ConceptualDimension("time", "continuous", 0, 10)
         time_dimension.add_semantic_anchor("past", 0, "Events that have occurred")
         time_dimension.add_semantic_anchor("present", 5, "Current moment")
@@ -2651,14 +2651,14 @@ class SpatialGeometricReasoningSystem:
         self.conceptual_navigator.add_space(default_abstract_space)
         self.conceptual_navigator.set_current_space("default_abstract_space")
         
-        print("Système de raisonnement spatial et géométrique initialisé avec succès.")
+        print("Spatial and Geometric Reasoning System successfully initialized.")
     
     def add_3d_object_to_mental_space(self, space_name: str, obj: MentalObject3D) -> bool:
-        """Ajouter un objet 3D à un espace mental"""
+        """Add a 3D object to a mental space"""
         if space_name in self.mental_spaces:
             self.mental_spaces[space_name].add_object(obj)
             
-            # Enregistrer dans l'historique
+            # Log to history
             self.reasoning_history.append({
                 'action': 'add_3d_object',
                 'space': space_name,
@@ -2670,13 +2670,13 @@ class SpatialGeometricReasoningSystem:
         return False
     
     def analyze_spatial_relationships(self, space_name: str) -> Dict[str, Any]:
-        """Analyser les relations spatiales dans un espace"""
+        """Analyze spatial relationships in a space"""
         if space_name in self.mental_spaces:
             space = self.mental_spaces[space_name]
             relationships = space.calculate_spatial_relationships()
             topology_analysis = self.topological_reasoner.analyze_topology(space)
             
-            # Enregistrer dans l'historique
+            # Log to history
             self.reasoning_history.append({
                 'action': 'analyze_spatial_relationships',
                 'space': space_name,
@@ -2691,27 +2691,27 @@ class SpatialGeometricReasoningSystem:
         return {}
     
     def perform_mental_rotation(self, space_name: str, object_name: str, rotation: Vector3D) -> Dict[str, Any]:
-        """Effectuer une rotation mentale d'un objet"""
+        """Perform a mental rotation of an object"""
         if space_name in self.mental_spaces:
             space = self.mental_spaces[space_name]
             obj = space.get_object(object_name)
             
             if obj:
-                # Créer une image mentale
+                # Create a mental image
                 mental_image = self.mental_visualizer.create_mental_image(obj)
                 
-                # Effectuer la rotation
+                # Perform the rotation
                 rotation_sequence = self.mental_visualizer.rotate_mental_image(
                     mental_image['id'], 
                     rotation
                 )
                 
-                # Appliquer la rotation à l'objet réel
+                # Apply the rotation to the actual object
                 obj.rotate_x(rotation.x)
                 obj.rotate_y(rotation.y)
                 obj.rotate_z(rotation.z)
                 
-                # Enregistrer dans l'historique
+                # Log to history
                 self.reasoning_history.append({
                     'action': 'mental_rotation',
                     'space': space_name,
@@ -2732,10 +2732,10 @@ class SpatialGeometricReasoningSystem:
     
     def navigate_conceptual_space(self, start_concept: str, target_concept: str, 
                                 strategy: str = 'direct') -> List[str]:
-        """Naviguer dans l'espace conceptuel"""
+        """Navigate conceptual space"""
         path = self.conceptual_navigator.navigate_to_concept(target_concept, strategy)
         
-        # Enregistrer dans l'historique
+        # Log to history
         self.reasoning_history.append({
             'action': 'conceptual_navigation',
             'start': start_concept,
@@ -2750,15 +2750,15 @@ class SpatialGeometricReasoningSystem:
     def create_spatial_analogy(self, source_concept: str, target_concept: str,
                              source_properties: Dict[str, Any], 
                              target_properties: Dict[str, Any]) -> SpatialAnalogy:
-        """Créer une analogie spatiale entre concepts"""
-        # Créer les représentations spatiales
+        """Create a spatial analogy between concepts"""
+        # Create spatial representations
         self.analogy_engine.create_spatial_representation(source_concept, source_properties)
         self.analogy_engine.create_spatial_representation(target_concept, target_properties)
         
-        # Créer l'analogie
+        # Create the analogy
         analogy = self.analogy_engine.create_analogy(source_concept, target_concept)
         
-        # Enregistrer dans l'historique
+        # Log to history
         self.reasoning_history.append({
             'action': 'create_spatial_analogy',
             'source': source_concept,
@@ -2771,21 +2771,21 @@ class SpatialGeometricReasoningSystem:
     
     def perform_cross_section_analysis(self, space_name: str, object_name: str,
                                      plane_normal: Vector3D, plane_point: Point3D) -> Dict[str, Any]:
-        """Effectuer une analyse de coupe transversale"""
+        """Perform a cross-section analysis"""
         if space_name in self.mental_spaces:
             space = self.mental_spaces[space_name]
             obj = space.get_object(object_name)
             
             if obj:
-                # Créer une image mentale
+                # Create a mental image
                 mental_image = self.mental_visualizer.create_mental_image(obj)
                 
-                # Effectuer la coupe transversale
+                # Perform the cross-section
                 cross_section = self.mental_visualizer.mental_cross_section(
                     mental_image['id'], plane_normal, plane_point
                 )
                 
-                # Enregistrer dans l'historique
+                # Log to history
                 self.reasoning_history.append({
                     'action': 'cross_section_analysis',
                     'space': space_name,
@@ -2800,7 +2800,7 @@ class SpatialGeometricReasoningSystem:
     
     def analyze_object_assembly(self, space_name: str, object_names: List[str],
                               assembly_instructions: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Analyser l'assemblage d'objets"""
+        """Analyze object assembly"""
         if space_name in self.mental_spaces:
             space = self.mental_spaces[space_name]
             objects = [space.get_object(name) for name in object_names if space.get_object(name)]
@@ -2810,7 +2810,7 @@ class SpatialGeometricReasoningSystem:
                     objects, assembly_instructions
                 )
                 
-                # Enregistrer dans l'historique
+                # Log to history
                 self.reasoning_history.append({
                     'action': 'assembly_analysis',
                     'space': space_name,
@@ -2826,21 +2826,21 @@ class SpatialGeometricReasoningSystem:
     
     def simulate_object_deformation(self, space_name: str, object_name: str,
                                   deformation_field: Dict[str, Vector3D]) -> Dict[str, Any]:
-        """Simuler la déformation d'un objet"""
+        """Simulate object deformation"""
         if space_name in self.mental_spaces:
             space = self.mental_spaces[space_name]
             obj = space.get_object(object_name)
             
             if obj:
-                # Créer une image mentale
+                # Create a mental image
                 mental_image = self.mental_visualizer.create_mental_image(obj)
                 
-                # Simuler la déformation
+                # Simulate deformation
                 deformation_viz = self.mental_visualizer.mental_deformation_visualization(
                     mental_image['id'], deformation_field
                 )
                 
-                # Enregistrer dans l'historique
+                # Log to history
                 self.reasoning_history.append({
                     'action': 'deformation_simulation',
                     'space': space_name,
@@ -2854,7 +2854,7 @@ class SpatialGeometricReasoningSystem:
         return {}
     
     def find_geometric_patterns(self, space_name: str) -> Dict[str, Any]:
-        """Trouver des patterns géométriques dans un espace"""
+        """Find geometric patterns in a space"""
         patterns = {
             'symmetrical_objects': [],
             'aligned_objects': [],
@@ -2867,7 +2867,7 @@ class SpatialGeometricReasoningSystem:
             space = self.mental_spaces[space_name]
             
             for obj_name, obj in space.objects.items():
-                # Analyser les symétries
+                # Analyze symmetries
                 if self.topological_reasoner._detect_bilateral_symmetry(obj):
                     patterns['symmetrical_objects'].append({
                         'object': obj_name,
@@ -2881,11 +2881,11 @@ class SpatialGeometricReasoningSystem:
                         'symmetry_type': f'rotational_order_{rotational_order}'
                     })
                 
-                # Détecter le nombre d'or
+                # Detect golden ratio
                 if self.topological_reasoner._detect_golden_ratio(obj):
                     patterns['golden_ratio_objects'].append(obj_name)
             
-            # Analyser les alignements entre objets
+            # Analyze alignments between objects
             objects_list = list(space.objects.values())
             if len(objects_list) >= 3:
                 if self.topological_reasoner._detect_linear_alignment(objects_list):
@@ -2894,7 +2894,7 @@ class SpatialGeometricReasoningSystem:
                 if self.topological_reasoner._detect_grid_alignment(objects_list):
                     patterns['clustered_objects'] = [obj.name for obj in objects_list]
             
-            # Enregistrer dans l'historique
+            # Log to history
             self.reasoning_history.append({
                 'action': 'pattern_detection',
                 'space': space_name,
@@ -2905,7 +2905,7 @@ class SpatialGeometricReasoningSystem:
         return patterns
     
     def perform_topological_reasoning(self, space_name: str, query: str) -> Dict[str, Any]:
-        """Effectuer un raisonnement topologique sur une requête"""
+        """Perform topological reasoning on a query"""
         reasoning_result = {
             'query': query,
             'result': None,
@@ -2917,7 +2917,7 @@ class SpatialGeometricReasoningSystem:
         if space_name in self.mental_spaces:
             space = self.mental_spaces[space_name]
             
-            # Analyser la requête et déterminer le type de raisonnement
+            # Analyze the query and determine reasoning type
             if 'inside' in query.lower():
                 reasoning_result = self._reason_about_containment(space, query)
             elif 'connected' in query.lower():
@@ -2930,7 +2930,7 @@ class SpatialGeometricReasoningSystem:
                 reasoning_result['result'] = "Unable to interpret topological query"
                 reasoning_result['confidence'] = 0.0
             
-            # Enregistrer dans l'historique
+            # Log to history
             self.reasoning_history.append({
                 'action': 'topological_reasoning',
                 'space': space_name,
@@ -2942,7 +2942,7 @@ class SpatialGeometricReasoningSystem:
         return reasoning_result
     
     def generate_conceptual_analogies(self, concept: str, num_analogies: int = 5) -> List[Dict[str, Any]]:
-        """Générer des analogies conceptuelles pour un concept"""
+        """Generate conceptual analogies for a concept"""
         analogies = self.analogy_engine.generate_novel_analogies(concept, num_analogies)
         
         analogy_results = []
@@ -2955,7 +2955,7 @@ class SpatialGeometricReasoningSystem:
                 'spatial_mapping': analogy.spatial_mapping
             })
         
-        # Enregistrer dans l'historique
+        # Log to history
         self.reasoning_history.append({
             'action': 'generate_analogies',
             'concept': concept,
@@ -2966,7 +2966,7 @@ class SpatialGeometricReasoningSystem:
         return analogy_results
     
     def analyze_system_performance(self) -> Dict[str, Any]:
-        """Analyser les performances du système"""
+        """Analyze system performance"""
         performance = {
             'total_operations': len(self.reasoning_history),
             'operation_breakdown': {},
@@ -2976,7 +2976,7 @@ class SpatialGeometricReasoningSystem:
             'efficiency_scores': {}
         }
         
-        # Analyser la répartition des opérations
+        # Analyze operation breakdown
         operation_counts = {}
         for operation in self.reasoning_history:
             action = operation.get('action', 'unknown')
@@ -2984,7 +2984,7 @@ class SpatialGeometricReasoningSystem:
         
         performance['operation_breakdown'] = operation_counts
         
-        # Calculer les métriques de mémoire
+        # Calculate memory metrics
         performance['memory_usage'] = {
             'mental_spaces': len(self.mental_spaces),
             'abstract_spaces': len(self.abstract_spaces),
@@ -2993,7 +2993,7 @@ class SpatialGeometricReasoningSystem:
             'navigation_history_length': len(self.conceptual_navigator.navigation_history)
         }
         
-        # Calculer les scores d'efficacité
+        # Calculate efficiency scores
         performance['efficiency_scores'] = {
             'spatial_reasoning': self._calculate_spatial_reasoning_efficiency(),
             'conceptual_navigation': self._calculate_navigation_efficiency(),
@@ -3004,31 +3004,31 @@ class SpatialGeometricReasoningSystem:
         return performance
     
     def optimize_system_performance(self) -> Dict[str, Any]:
-        """Optimiser les performances du système"""
+        """Optimize system performance"""
         optimization_results = {
             'optimizations_applied': [],
             'performance_improvements': {},
             'recommendations': []
         }
         
-        # Optimiser la mémoire visuelle
+        # Optimize visual memory
         if len(self.mental_visualizer.visual_memory) > 100:
-            # Supprimer les anciennes images mentales
+            # Remove old mental images
             old_images = list(self.mental_visualizer.visual_memory.keys())[:50]
             for image_id in old_images:
                 del self.mental_visualizer.visual_memory[image_id]
             
             optimization_results['optimizations_applied'].append('visual_memory_cleanup')
         
-        # Optimiser l'historique de navigation
+        # Optimize navigation history
         if len(self.conceptual_navigator.navigation_history) > 1000:
-            # Garder seulement les 500 dernières entrées
+            # Keep only the last 500 entries
             self.conceptual_navigator.navigation_history = \
                 self.conceptual_navigator.navigation_history[-500:]
             
             optimization_results['optimizations_applied'].append('navigation_history_trimming')
         
-        # Optimiser les analogies faibles
+        # Optimize weak analogies
         weak_analogies = []
         for key, analogy in self.analogy_engine.analogies.items():
             if analogy.strength < 0.3:
@@ -3040,7 +3040,7 @@ class SpatialGeometricReasoningSystem:
         if weak_analogies:
             optimization_results['optimizations_applied'].append('weak_analogies_removal')
         
-        # Recommandations
+        # Recommendations
         if len(self.mental_spaces) > 10:
             optimization_results['recommendations'].append(
                 'Consider consolidating mental spaces to improve performance'
@@ -3054,13 +3054,13 @@ class SpatialGeometricReasoningSystem:
         return optimization_results
     
     def export_system_state(self) -> Dict[str, Any]:
-        """Exporter l'état complet du système"""
+        """Export the complete system state"""
         system_state = {
             'mental_spaces': {},
             'abstract_spaces': {},
             'analogies': {},
             'visual_memory': {},
-            'reasoning_history': self.reasoning_history[-100:],  # Dernières 100 entrées
+            'reasoning_history': self.reasoning_history[-100:],  # Last 100 entries
             'configuration': {
                 'num_mental_spaces': len(self.mental_spaces),
                 'num_abstract_spaces': len(self.abstract_spaces),
@@ -3069,7 +3069,7 @@ class SpatialGeometricReasoningSystem:
             }
         }
         
-        # Exporter les espaces mentaux (structure seulement)
+        # Export mental spaces (structure only)
         for space_name, space in self.mental_spaces.items():
             system_state['mental_spaces'][space_name] = {
                 'name': space.name,
@@ -3078,7 +3078,7 @@ class SpatialGeometricReasoningSystem:
                 'object_names': list(space.objects.keys())
             }
         
-        # Exporter les espaces abstraits
+        # Export abstract spaces
         for space_name, space in self.abstract_spaces.items():
             system_state['abstract_spaces'][space_name] = {
                 'name': space.name,
@@ -3087,7 +3087,7 @@ class SpatialGeometricReasoningSystem:
                 'concept_names': list(space.concepts.keys())
             }
         
-        # Exporter les analogies
+        # Export analogies
         for analogy_key, analogy in self.analogy_engine.analogies.items():
             system_state['analogies'][analogy_key] = {
                 'source': analogy.source_concept,
@@ -3099,12 +3099,12 @@ class SpatialGeometricReasoningSystem:
         return system_state
     
     def _get_current_timestamp(self) -> float:
-        """Obtenir le timestamp actuel"""
+        """Get the current timestamp"""
         import time
         return time.time()
     
     def _reason_about_containment(self, space: MentalSpace3D, query: str) -> Dict[str, Any]:
-        """Raisonner sur les relations de contenance"""
+        """Reason about containment relationships"""
         reasoning_result = {
             'query': query,
             'result': None,
@@ -3113,7 +3113,7 @@ class SpatialGeometricReasoningSystem:
             'supporting_evidence': []
         }
         
-        # Extraire les objets mentionnés dans la requête
+        # Extract objects mentioned in the query
         object_names = [name for name in space.objects.keys() if name.lower() in query.lower()]
         
         if len(object_names) >= 2:
@@ -3121,11 +3121,11 @@ class SpatialGeometricReasoningSystem:
             obj1 = space.objects[obj1_name]
             obj2 = space.objects[obj2_name]
             
-            # Analyser la contenance basée sur les boîtes englobantes
+            # Analyze containment based on bounding boxes
             bb1_min, bb1_max = obj1.get_bounding_box()
             bb2_min, bb2_max = obj2.get_bounding_box()
             
-            # Vérifier si obj1 est à l'intérieur de obj2
+            # Check if obj1 is inside obj2
             inside_test = (bb1_min.x >= bb2_min.x and bb1_max.x <= bb2_max.x and
                           bb1_min.y >= bb2_min.y and bb1_max.y <= bb2_max.y and
                           bb1_min.z >= bb2_min.z and bb1_max.z <= bb2_max.z)
@@ -3147,7 +3147,7 @@ class SpatialGeometricReasoningSystem:
         return reasoning_result
     
     def _reason_about_connectivity(self, space: MentalSpace3D, query: str) -> Dict[str, Any]:
-        """Raisonner sur la connectivité"""
+        """Reason about connectivity"""
         reasoning_result = {
             'query': query,
             'result': None,
@@ -3156,7 +3156,7 @@ class SpatialGeometricReasoningSystem:
             'supporting_evidence': []
         }
         
-        # Analyser la topologie de l'espace
+        # Analyze space topology
         topology_analysis = self.topological_reasoner.analyze_topology(space)
         connectivity_graph = topology_analysis.get('connectivity_graph', {})
         
@@ -3165,7 +3165,7 @@ class SpatialGeometricReasoningSystem:
         if len(object_names) >= 2:
             obj1_name, obj2_name = object_names[0], object_names[1]
             
-            # Vérifier la connectivité directe
+            # Check direct connectivity
             connected = (obj1_name in connectivity_graph and 
                         obj2_name in connectivity_graph[obj1_name])
             
@@ -3176,7 +3176,7 @@ class SpatialGeometricReasoningSystem:
                 reasoning_result['result'] = f"{obj1_name} is connected to {obj2_name}"
                 reasoning_result['confidence'] = 0.9
             else:
-                # Vérifier la connectivité indirecte
+                # Check indirect connectivity
                 path = self._find_connectivity_path(obj1_name, obj2_name, connectivity_graph)
                 if path:
                     reasoning_result['result'] = f"{obj1_name} is indirectly connected to {obj2_name} via {' -> '.join(path)}"
@@ -3191,7 +3191,7 @@ class SpatialGeometricReasoningSystem:
         return reasoning_result
     
     def _reason_about_adjacency(self, space: MentalSpace3D, query: str) -> Dict[str, Any]:
-        """Raisonner sur l'adjacence"""
+        """Reason about adjacency"""
         reasoning_result = {
             'query': query,
             'result': None,
@@ -3207,10 +3207,10 @@ class SpatialGeometricReasoningSystem:
             obj1 = space.objects[obj1_name]
             obj2 = space.objects[obj2_name]
             
-            # Calculer la distance entre les objets
+            # Calculate distance between objects
             distance = obj1.position.distance_to(obj2.position)
             
-            # Déterminer la taille caractéristique des objets
+            # Determine characteristic size of objects
             obj1_size = self._calculate_object_characteristic_size(obj1)
             obj2_size = self._calculate_object_characteristic_size(obj2)
             avg_size = (obj1_size + obj2_size) / 2
@@ -3219,7 +3219,7 @@ class SpatialGeometricReasoningSystem:
             reasoning_result['supporting_evidence'].append(f"Distance: {distance}")
             reasoning_result['supporting_evidence'].append(f"Average object size: {avg_size}")
             
-            # Seuil d'adjacence basé sur la taille des objets
+            # Adjacency threshold based on object size
             adjacency_threshold = avg_size * 1.2
             
             if distance <= adjacency_threshold:
@@ -3235,7 +3235,7 @@ class SpatialGeometricReasoningSystem:
         return reasoning_result
     
     def _reason_about_distance(self, space: MentalSpace3D, query: str) -> Dict[str, Any]:
-        """Raisonner sur les distances"""
+        """Reason about distances"""
         reasoning_result = {
             'query': query,
             'result': None,
@@ -3251,10 +3251,10 @@ class SpatialGeometricReasoningSystem:
             obj1 = space.objects[obj1_name]
             obj2 = space.objects[obj2_name]
             
-            # Calculer différents types de distances
+            # Calculate different types of distances
             center_distance = obj1.position.distance_to(obj2.position)
             
-            # Distance minimale entre surfaces (approximation)
+            # Minimum distance between surfaces (approximation)
             obj1_size = self._calculate_object_characteristic_size(obj1)
             obj2_size = self._calculate_object_characteristic_size(obj2)
             surface_distance = max(0, center_distance - (obj1_size + obj2_size) / 2)
@@ -3263,7 +3263,7 @@ class SpatialGeometricReasoningSystem:
             reasoning_result['supporting_evidence'].append(f"Center-to-center distance: {center_distance}")
             reasoning_result['supporting_evidence'].append(f"Approximate surface distance: {surface_distance}")
             
-            # Catégoriser la distance
+            # Categorize distance
             if surface_distance < 0.5:
                 distance_category = "very close"
             elif surface_distance < 2.0:
@@ -3282,7 +3282,7 @@ class SpatialGeometricReasoningSystem:
         return reasoning_result
     
     def _find_connectivity_path(self, start: str, end: str, connectivity_graph: Dict[str, List[str]]) -> List[str]:
-        """Trouver un chemin de connectivité entre deux objets"""
+        """Find a connectivity path between two objects"""
         visited = set()
         queue = [(start, [start])]
         
@@ -3301,21 +3301,21 @@ class SpatialGeometricReasoningSystem:
                 if neighbor not in visited:
                     queue.append((neighbor, path + [neighbor]))
         
-        return []  # Aucun chemin trouvé
+        return []  # No path found
     
     def _calculate_object_characteristic_size(self, obj: MentalObject3D) -> float:
-        """Calculer la taille caractéristique d'un objet"""
+        """Calculate the characteristic size of an object"""
         min_bound, max_bound = obj.get_bounding_box()
         
         width = max_bound.x - min_bound.x
         height = max_bound.y - min_bound.y
         depth = max_bound.z - min_bound.z
         
-        # Retourner la dimension moyenne
+        # Return the average dimension
         return (width + height + depth) / 3.0
     
     def _calculate_spatial_reasoning_efficiency(self) -> float:
-        """Calculer l'efficacité du raisonnement spatial"""
+        """Calculate spatial reasoning efficiency"""
         spatial_operations = [op for op in self.reasoning_history 
                             if op.get('action') in ['analyze_spatial_relationships', 
                                                   'mental_rotation', 
@@ -3324,29 +3324,29 @@ class SpatialGeometricReasoningSystem:
         if not spatial_operations:
             return 0.0
         
-        # Mesurer l'efficacité basée sur le nombre d'opérations réussies
-        successful_operations = len(spatial_operations)  # Simplifié - toutes considérées comme réussies
+        # Measure efficiency based on number of successful operations
+        successful_operations = len(spatial_operations)  # Simplified - all considered successful
         
-        return min(1.0, successful_operations / 100.0)  # Normaliser à 1.0
+        return min(1.0, successful_operations / 100.0)  # Normalize to 1.0
     
     def _calculate_navigation_efficiency(self) -> float:
-        """Calculer l'efficacité de navigation"""
+        """Calculate navigation efficiency"""
         navigation_analysis = self.conceptual_navigator.analyze_navigation_efficiency()
         
         if 'exploration_breadth' in navigation_analysis:
             return navigation_analysis['exploration_breadth']
         
-        return 0.5  # Valeur par défaut
+        return 0.5  # Default value
     
     def _calculate_analogy_efficiency(self) -> float:
-        """Calculer l'efficacité de génération d'analogies"""
+        """Calculate analogy generation efficiency"""
         analogy_operations = [op for op in self.reasoning_history 
                             if op.get('action') in ['create_spatial_analogy', 'generate_analogies']]
         
         if not analogy_operations:
             return 0.0
         
-        # Calculer le ratio d'analogies fortes
+        # Calculate ratio of strong analogies
         total_analogies = len(self.analogy_engine.analogies)
         strong_analogies = sum(1 for a in self.analogy_engine.analogies.values() if a.strength > 0.7)
         
@@ -3356,7 +3356,7 @@ class SpatialGeometricReasoningSystem:
         return 0.0
     
     def _calculate_visualization_efficiency(self) -> float:
-        """Calculer l'efficacité de visualisation"""
+        """Calculate visualization efficiency"""
         viz_operations = [op for op in self.reasoning_history 
                          if op.get('action') in ['mental_rotation', 'cross_section_analysis', 
                                                'assembly_analysis', 'deformation_simulation']]
@@ -3364,13 +3364,13 @@ class SpatialGeometricReasoningSystem:
         if not viz_operations:
             return 0.0
         
-        # Mesurer l'efficacité basée sur le cache de visualisation
+        # Measure efficiency based on visualization cache
         cache_utilization = len(self.mental_visualizer.visual_memory) / max(1, len(viz_operations))
         
         return min(1.0, cache_utilization)
     
     def execute_reasoning_pipeline(self, pipeline_config: Dict[str, Any]) -> Dict[str, Any]:
-        """Exécuter un pipeline de raisonnement complet"""
+        """Execute a complete reasoning pipeline"""
         pipeline_results = {
             'pipeline_id': pipeline_config.get('id', 'default'),
             'steps_executed': [],
@@ -3438,7 +3438,7 @@ class SpatialGeometricReasoningSystem:
                     'success': step_result is not None
                 })
             
-            # Le résultat final est le résultat de la dernière étape
+            # The final result is the result of the last step
             if pipeline_results['steps_executed']:
                 pipeline_results['final_result'] = pipeline_results['steps_executed'][-1]['result']
         
@@ -3448,7 +3448,7 @@ class SpatialGeometricReasoningSystem:
         finally:
             pipeline_results['execution_time'] = self._get_current_timestamp() - start_time
         
-        # Enregistrer dans l'historique
+        # Log to history
         self.reasoning_history.append({
             'action': 'execute_pipeline',
             'pipeline_id': pipeline_results['pipeline_id'],
@@ -3461,7 +3461,7 @@ class SpatialGeometricReasoningSystem:
         return pipeline_results
     
     def save_system_state(self, filename: str) -> bool:
-        """Sauvegarder l'état du système dans un fichier"""
+        """Save the system state to a file"""
         try:
             system_state = self.export_system_state()
             
@@ -3471,27 +3471,27 @@ class SpatialGeometricReasoningSystem:
             
             return True
         except Exception as e:
-            print(f"Erreur lors de la sauvegarde: {e}")
+            print(f"Error saving: {e}")
             return False
     
     def load_system_state(self, filename: str) -> bool:
-        """Charger l'état du système depuis un fichier"""
+        """Load the system state from a file"""
         try:
             import json
             with open(filename, 'r') as f:
                 system_state = json.load(f)
             
-            # Restaurer l'historique de raisonnement
+            # Restore reasoning history
             self.reasoning_history = system_state.get('reasoning_history', [])
             
-            print(f"État du système chargé depuis {filename}")
+            print(f"System state loaded from {filename}")
             return True
         except Exception as e:
-            print(f"Erreur lors du chargement: {e}")
+            print(f"Error loading: {e}")
             return False
     
     def run_system_diagnostics(self) -> Dict[str, Any]:
-        """Exécuter des diagnostics complets du système"""
+        """Run comprehensive system diagnostics"""
         diagnostics = {
             'system_health': 'healthy',
             'component_status': {},
@@ -3501,7 +3501,7 @@ class SpatialGeometricReasoningSystem:
             'errors': []
         }
         
-        # Vérifier l'état des composants
+        # Check component status
         diagnostics['component_status'] = {
             'mental_spaces': 'operational' if self.mental_spaces else 'inactive',
             'topological_reasoner': 'operational',
@@ -3511,10 +3511,10 @@ class SpatialGeometricReasoningSystem:
             'analogy_engine': 'operational'
         }
         
-        # Analyser les performances
+        # Analyze performance
         diagnostics['performance_metrics'] = self.analyze_system_performance()
         
-        # Générer des recommandations
+        # Generate recommendations
         if len(self.reasoning_history) == 0:
             diagnostics['recommendations'].append("System has not been used yet - consider running test operations")
         
@@ -3524,12 +3524,12 @@ class SpatialGeometricReasoningSystem:
         if len(self.abstract_spaces) == 0:
             diagnostics['warnings'].append("No abstract spaces defined - conceptual navigation limited")
         
-        # Vérifier l'intégrité des données
+        # Check data integrity
         for space_name, space in self.mental_spaces.items():
             if len(space.objects) == 0:
                 diagnostics['warnings'].append(f"Mental space '{space_name}' contains no objects")
         
-        # Déterminer l'état général du système
+        # Determine overall system health
         if diagnostics['errors']:
             diagnostics['system_health'] = 'critical'
         elif diagnostics['warnings']:
@@ -3540,7 +3540,7 @@ class SpatialGeometricReasoningSystem:
         return diagnostics
     
     def end_method(self) -> str:
-        """Méthode de fin du système de raisonnement spatial et géométrique"""
-        return "Système de raisonnement spatial et géométrique terminé avec succès. Toutes les fonctionnalités sont opérationnelles."
+        """End method for the Spatial and Geometric Reasoning System"""
+        return "Spatial and Geometric Reasoning System successfully terminated. All functionalities are operational."
 
 end_method = SpatialGeometricReasoningSystem().end_method()
