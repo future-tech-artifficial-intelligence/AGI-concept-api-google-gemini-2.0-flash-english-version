@@ -164,7 +164,7 @@ Session 3: Conversation + Complete history → Developed personality
 
 #### 🤖 **Embedded Systems/IoT**:
 - intelligence artificielle API GOOGLE GEMINI 2.0 FLASH on Raspberry Pi, advanced Arduino
-- SQLite perfect for limited resources
+- SQLite does not have a storage limitation; it depends on the capacity of your hard drive. Ideally, a terabyte hard drive would make the database unlimited. The SQLite database can be used everywhere on embedded robotic systems in Python or other languages.
 - Persistent memory even on microcontrollers
 
 #### ☁️ **Cloud and Containers**:
