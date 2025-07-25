@@ -1,7 +1,7 @@
 """
-Module d'amélioration de la mémoire des conversations pour Gemini.
-Ce module améliore la capacité de l'IA à se souvenir des conversations précédentes
-en utilisant un système de mémoire temporel avancé.
+Conversation Memory Enhancement Module for Artificial Intelligence API GOOGLE GEMINI 2.0 FLASH.
+This module enhances the ability of Artificial Intelligence API GOOGLE GEMINI 2.0 FLASH to remember previous conversations
+by using an advanced temporal memory system.
 """
 
 import logging
@@ -12,28 +12,28 @@ from typing import Dict, Any, List, Optional
 from time_engine import should_remember_conversation, timestamp_to_readable_time_diff
 from memory_engine import MemoryEngine
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("conversation_memory_enhancer")
 
-# Métadonnées du module
+# Module metadata
 MODULE_METADATA = {
     "enabled": True,
-    "priority": 60,  # Priorité élevée pour être exécuté parmi les premiers
-    "description": "Améliore la mémoire des conversations de l'IA",
+    "priority": 60,  # High priority to be executed among the first
+    "description": "Enhances AI conversation memory",
     "version": "1.0.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
 }
 
-# Instance globale du moteur de mémoire
+# Global instance of the memory engine
 memory_engine = MemoryEngine()
 
 def get_user_id_from_data(data: Dict[str, Any]) -> Optional[int]:
     """
-    Extrait l'ID utilisateur des données.
+    Extracts the user ID from the data.
     """
-    # Essayer différentes clés possibles
+    # Try different possible keys
     for key in ['user_id', 'userId', 'user']:
         if key in data and data[key]:
             try:
@@ -41,7 +41,7 @@ def get_user_id_from_data(data: Dict[str, Any]) -> Optional[int]:
             except (ValueError, TypeError):
                 pass
     
-    # Chercher dans la session si disponible
+    # Look in the session if available
     if 'session' in data and isinstance(data['session'], dict):
         for key in ['user_id', 'userId', 'user']:
             if key in data['session'] and data['session'][key]:
@@ -50,32 +50,32 @@ def get_user_id_from_data(data: Dict[str, Any]) -> Optional[int]:
                 except (ValueError, TypeError):
                     pass
     
-    logger.warning("Impossible de déterminer l'ID utilisateur dans les données")
+    logger.warning("Unable to determine user ID in data")
     return None
 
 def get_session_id_from_data(data: Dict[str, Any]) -> Optional[str]:
     """
-    Extrait l'ID de session des données.
+    Extracts the session ID from the data.
     """
-    # Essayer différentes clés possibles
+    # Try different possible keys
     for key in ['session_id', 'sessionId', 'session']:
         if key in data and isinstance(data[key], (str, int)):
             return str(data[key])
     
-    # Chercher dans la session si disponible
+    # Look in the session if available
     if 'session' in data and isinstance(data['session'], dict):
         for key in ['id', 'session_id', 'sessionId']:
             if key in data['session'] and data['session'][key]:
                 return str(data['session'][key])
     
-    logger.warning("Impossible de déterminer l'ID de session dans les données")
+    logger.warning("Unable to determine session ID in data")
     return None
 
 def extract_message_content(data: Dict[str, Any]) -> Optional[str]:
     """
-    Extrait le contenu du message des données.
+    Extracts the message content from the data.
     """
-    # Pour une requête utilisateur
+    # For a user request
     if 'text' in data:
         return data['text']
     if 'message' in data:
@@ -84,27 +84,27 @@ def extract_message_content(data: Dict[str, Any]) -> Optional[str]:
         elif isinstance(data['message'], dict) and 'content' in data['message']:
             return data['message']['content']
     
-    # Pour une réponse Gemini
+    # For a Gemini response
     if 'response' in data:
         return data['response']
     if 'content' in data:
         return data['content']
     
-    logger.warning("Impossible d'extraire le contenu du message des données")
+    logger.warning("Unable to extract message content from data")
     return None
 
 def add_conversation_context(data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Ajoute le contexte des conversations précédentes aux données de la requête.
+    Adds context from previous conversations to the request data.
     """
     user_id = get_user_id_from_data(data)
     session_id = get_session_id_from_data(data)
     
     if not user_id:
-        logger.warning("Impossible d'ajouter le contexte de conversation sans ID utilisateur")
+        logger.warning("Cannot add conversation context without user ID")
         return data
     
-    # Vérifier s'il y a des messages récents dans cette session
+    # Check if there are recent messages in this session
     recent_conversations = memory_engine.get_recent_conversations(
         user_id=user_id,
         session_id=session_id,
@@ -112,10 +112,10 @@ def add_conversation_context(data: Dict[str, Any]) -> Dict[str, Any]:
         include_time_context=True
     )
     
-    # Déterminer si c'est une conversation en cours ou nouvelle
+    # Determine if it's an ongoing or new conversation
     is_ongoing_conversation = len(recent_conversations) > 0
     
-    # Générer le contexte mémoire
+    # Generate memory context
     memory_context = memory_engine.get_memory_context(
         user_id=user_id,
         session_id=session_id,
@@ -124,7 +124,7 @@ def add_conversation_context(data: Dict[str, Any]) -> Dict[str, Any]:
         format_as_text=True
     )
     
-    # Ajouter le contexte à la requête
+    # Add context to the request
     if 'context' not in data:
         data['context'] = {}
     
@@ -132,22 +132,22 @@ def add_conversation_context(data: Dict[str, Any]) -> Dict[str, Any]:
         data['context']['conversation_memory'] = memory_context
         data['context']['is_ongoing_conversation'] = is_ongoing_conversation
         
-        # Si c'est une conversation en cours, ajouter un indicateur explicite
-        # pour éviter que l'IA ne recommence avec des salutations
+        # If it's an ongoing conversation, add an explicit instruction
+        # to prevent the AI from starting with greetings again
         if is_ongoing_conversation:
-            last_conversation_time = recent_conversations[0].get('time_ago', 'récemment')
+            last_conversation_time = recent_conversations[0].get('time_ago', 'recently')
             
             if 'instructions' not in data['context']:
                 data['context']['instructions'] = []
             
             if isinstance(data['context']['instructions'], list):
                 data['context']['instructions'].append(
-                    f"Cette conversation est en cours. Vous avez déjà échangé avec cet utilisateur {last_conversation_time}. "
-                    f"Évitez de vous présenter à nouveau ou de répéter des salutations comme 'Je suis ravi de vous rencontrer'. "
-                    f"Continuez simplement la conversation naturellement."
+                    f"This conversation is ongoing. You have already interacted with this user {last_conversation_time}. "
+                    f"Avoid introducing yourself again or repeating greetings like 'I'm glad to meet you'. "
+                    f"Simply continue the conversation naturally."
                 )
     else:
-        # Si context est une chaîne ou un autre type, la convertir en dictionnaire
+        # If context is a string or other type, convert it to a dictionary
         current_context = data['context']
         data['context'] = {
             'previous': current_context,
@@ -155,50 +155,50 @@ def add_conversation_context(data: Dict[str, Any]) -> Dict[str, Any]:
             'is_ongoing_conversation': is_ongoing_conversation
         }
     
-    logger.info(f"Contexte de conversation ajouté pour l'utilisateur {user_id}")
+    logger.info(f"Conversation context added for user {user_id}")
     return data
 
 def store_conversation_entry(data: Dict[str, Any], is_response: bool = False) -> Dict[str, Any]:
     """
-    Stocke l'entrée de conversation dans la mémoire.
+    Stores the conversation entry in memory.
     """
     user_id = get_user_id_from_data(data)
     session_id = get_session_id_from_data(data)
     content = extract_message_content(data)
     
     if not user_id or not session_id or not content:
-        logger.warning("Données insuffisantes pour stocker l'entrée de conversation")
+        logger.warning("Insufficient data to store conversation entry")
         return data
     
-    # Récupérer le fuseau horaire de l'utilisateur s'il est disponible
+    # Retrieve user's timezone if available
     user_timezone = None
     if 'user_timezone' in data:
         user_timezone = data['user_timezone']
     elif 'context' in data and isinstance(data['context'], dict) and 'user_timezone' in data['context']:
         user_timezone = data['context']['user_timezone']
     
-    # Préparer les métadonnées
+    # Prepare metadata
     metadata = {
         'is_response': is_response,
         'timestamp': datetime.datetime.now().isoformat()
     }
     
-    # Ajouter des métadonnées supplémentaires si disponibles
+    # Add additional metadata if available
     if 'emotional_state' in data:
         metadata['emotional_state'] = data['emotional_state']
     
-    # Déterminer le niveau de mémoire (court, moyen ou long terme)
-    memory_level = "MEDIUM_TERM"  # Par défaut, mémoriser pour environ 1 heure
+    # Determine memory level (short, medium, or long term)
+    memory_level = "MEDIUM_TERM"  # By default, remember for approximately 1 hour
     
-    # Si c'est marqué comme important ou une réponse émotionnelle, stocker plus longtemps
+    # If marked as important or an emotional response, store for longer
     if is_response and 'emotional_state' in data:
         emotional_state = data['emotional_state']
         if isinstance(emotional_state, dict) and 'intensity' in emotional_state:
             intensity = emotional_state.get('intensity', 0)
-            if intensity > 7:  # Haute intensité émotionnelle
+            if intensity > 7:  # High emotional intensity
                 memory_level = "LONG_TERM"
     
-    # Stocker dans la mémoire avec le fuseau horaire utilisateur
+    # Store in memory with user timezone
     memory_id = memory_engine.store_conversation(
         session_id=session_id,
         user_id=user_id,
@@ -208,9 +208,9 @@ def store_conversation_entry(data: Dict[str, Any], is_response: bool = False) ->
         user_timezone=user_timezone
     )
     
-    logger.info(f"Conversation stockée avec ID {memory_id}, niveau {memory_level}")
+    logger.info(f"Conversation stored with ID {memory_id}, level {memory_level}")
     
-    # Ajouter l'ID mémoire aux données pour référence
+    # Add memory ID to data for reference
     if 'memory' not in data:
         data['memory'] = {}
     
@@ -221,31 +221,31 @@ def store_conversation_entry(data: Dict[str, Any], is_response: bool = False) ->
 
 def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
     """
-    Fonction principale de traitement pour le gestionnaire de modules.
+    Main processing function for the module handler.
     
     Args:
-        data: Les données à traiter
-        hook: Le hook appelé (process_request ou process_response)
+        data: The data to process
+        hook: The hook called (process_request or process_response)
         
     Returns:
-        Les données modifiées
+        The modified data
     """
     if not isinstance(data, dict):
-        logger.warning(f"Les données ne sont pas un dictionnaire: {type(data)}")
+        logger.warning(f"Data is not a dictionary: {type(data)}")
         return data
     
     try:
         if hook == "process_request":
-            # 1. Stocker la requête utilisateur dans la mémoire
+            # 1. Store the user request in memory
             data = store_conversation_entry(data, is_response=False)
             
-            # 2. Ajouter le contexte des conversations précédentes
+            # 2. Add context from previous conversations
             data = add_conversation_context(data)
             
             return data
             
         elif hook == "process_response":
-            # Stocker la réponse de Gemini dans la mémoire
+            # Store Gemini's response in memory
             data = store_conversation_entry(data, is_response=True)
             
             return data
@@ -253,5 +253,5 @@ def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
         return data
     
     except Exception as e:
-        logger.error(f"Erreur dans le module conversation_memory_enhancer: {str(e)}", exc_info=True)
+        logger.error(f"Error in conversation_memory_enhancer module: {str(e)}", exc_info=True)
         return data
