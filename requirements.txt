@@ -1,34 +1,34 @@
-# Dépendances principales pour le système Searx intelligent
-# Gestion des API et requêtes web
+# Core dependencies for the intelligent Searx system
+# API and web request management
 requests>=2.31.0
 urllib3>=2.0.0
 
-# Parsing HTML et XML
+# HTML and XML parsing
 beautifulsoup4>=4.12.0
 lxml>=4.9.0
 
-# Gestion des processus et système
+# Process and system management
 psutil>=5.9.0
 
-# Automation web et capture d'écran
+# Web automation and screenshot capture
 selenium>=4.15.0
 pillow>=10.0.0
 
-# Framework Flask (si nécessaire)
+# Flask Framework (if necessary)
 flask>=2.3.0
 werkzeug>=2.3.0
 
-# Logging et configuration
+# Logging and configuration
 pyyaml>=6.0
 
-# Utilitaires système
+# System utilities
 pathlib2>=2.3.0
 
-# Pour le support Docker
+# For Docker support
 docker>=6.1.0
 
-# Pour la gestion JSON avancée
+# For advanced JSON management
 jsonschema>=4.19.0
 
-# Dépendances spécifiques Searx
-# (Ces packages sont pour l'intégration avec Searx/SearxNG)
+# Searx specific dependencies
+# (These packages are for integration with Searx/SearxNG)
