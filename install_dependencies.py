@@ -11,7 +11,7 @@ from auto_installer import run_auto_installer
 
 def main():
     """Main entry point for installation"""
-    print("🚀 DEPENDENCY INSTALLATION - AGI/ASI AI Project")
+    print("🚀 DEPENDENCY INSTALLATION - AGI Concept API - Google Gemini 2.0 Flash Project open-source ")
     print("="*60)
     print("This script will automatically install all necessary dependencies")
     print("to run the project.")
