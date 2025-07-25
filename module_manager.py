@@ -10,19 +10,19 @@ from typing import Dict, List, Any, Callable, Optional, Union
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent
 
-# Configuration des chemins
+# Path Configuration
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 MODULES_DIR = os.path.join(PROJECT_ROOT, 'modules')
 MODULE_REGISTRY_PATH = os.path.join(PROJECT_ROOT, 'module_registry.json')
 
-# Création du dossier modules s'il n'existe pas
+# Create modules directory if it doesn't exist
 if not os.path.exists(MODULES_DIR):
     os.makedirs(MODULES_DIR)
-    # Créer un fichier __init__.py pour que Python reconnaisse le dossier comme un package
+    # Create an __init__.py file so Python recognizes the folder as a package
     with open(os.path.join(MODULES_DIR, '__init__.py'), 'w') as f:
         f.write('# Module package initialization\n')
 
-# Configuration du logger
+# Logger Configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -34,7 +34,7 @@ logging.basicConfig(
 logger = logging.getLogger('ModuleManager')
 
 class ModuleInfo:
-    """Classe pour stocker les informations sur un module d'amélioration."""
+    """Class to store information about an enhancement module."""
     
     def __init__(
         self, 
@@ -56,7 +56,7 @@ class ModuleInfo:
         self.path = path
         self.module_obj = module_obj
         self.enabled = enabled
-        self.priority = priority  # Plus bas = plus prioritaire
+        self.priority = priority  # Lower = higher priority
         self.description = description
         self.version = version
         self.dependencies = dependencies or []
@@ -66,10 +66,10 @@ class ModuleInfo:
         self.last_modified = last_modified or time.time()
         self.error = None
         self.module_type = module_type  # 'standard', 'class_based', 'function_based', 'auto_generated'
-        self.available_functions = {}  # Dictionnaire des fonctions disponibles dans ce module
+        self.available_functions = {}  # Dictionary of available functions in this module
     
     def to_dict(self) -> Dict:
-        """Convertit l'objet en dictionnaire pour la sérialisation."""
+        """Converts the object to a dictionary for serialization."""
         return {
             "name": self.name,
             "path": self.path,
@@ -86,7 +86,7 @@ class ModuleInfo:
     
     @classmethod
     def from_dict(cls, data: Dict) -> 'ModuleInfo':
-        """Crée une instance à partir d'un dictionnaire."""
+        """Creates an instance from a dictionary."""
         return cls(
             name=data.get("name", ""),
             path=data.get("path", ""),
@@ -102,7 +102,7 @@ class ModuleInfo:
         )
 
 class ModuleRegistry:
-    """Gère le registre des modules d'amélioration."""
+    """Manages the registry of enhancement modules."""
     
     def __init__(self, registry_path: str = MODULE_REGISTRY_PATH):
         self.registry_path = registry_path
@@ -110,7 +110,7 @@ class ModuleRegistry:
         self.load_registry()
     
     def load_registry(self) -> None:
-        """Charge le registre des modules depuis un fichier JSON."""
+        """Loads the module registry from a JSON file."""
         if os.path.exists(self.registry_path):
             try:
                 with open(self.registry_path, 'r') as f:
@@ -124,7 +124,7 @@ class ModuleRegistry:
             logger.info("No module registry found, starting with empty registry")
     
     def save_registry(self) -> None:
-        """Sauvegarde le registre des modules dans un fichier JSON."""
+        """Saves the module registry to a JSON file."""
         try:
             serialized = {name: module.to_dict() for name, module in self.modules.items()}
             with open(self.registry_path, 'w') as f:
@@ -134,7 +134,7 @@ class ModuleRegistry:
             logger.error(f"Error saving module registry: {e}")
     
     def register_module(self, module_info: ModuleInfo) -> bool:
-        """Ajoute un module au registre."""
+        """Adds a module to the registry."""
         try:
             self.modules[module_info.name] = module_info
             self.save_registry()
@@ -145,7 +145,7 @@ class ModuleRegistry:
             return False
     
     def unregister_module(self, module_name: str) -> bool:
-        """Supprime un module du registre."""
+        """Removes a module from the registry."""
         if module_name in self.modules:
             del self.modules[module_name]
             self.save_registry()
@@ -156,20 +156,20 @@ class ModuleRegistry:
             return False
     
     def get_module(self, module_name: str) -> Optional[ModuleInfo]:
-        """Récupère un module par son nom."""
+        """Retrieves a module by its name."""
         return self.modules.get(module_name)
     
     def get_modules_by_hook(self, hook_name: str) -> List[ModuleInfo]:
-        """Récupère tous les modules qui implémentent un hook spécifique."""
+        """Retrieves all modules that implement a specific hook."""
         modules = [
             m for m in self.modules.values() 
             if hook_name in (m.hooks or []) and m.enabled and m.processor is not None
         ]
-        # Trier par priorité (plus petit nombre = plus grande priorité)
+        # Sort by priority (smaller number = higher priority)
         return sorted(modules, key=lambda m: m.priority)
     
     def get_all_enabled_modules(self) -> List[ModuleInfo]:
-        """Récupère tous les modules activés."""
+        """Retrieves all enabled modules."""
         return sorted(
             [m for m in self.modules.values() if m.enabled],
             key=lambda m: m.priority
@@ -177,64 +177,64 @@ class ModuleRegistry:
 
 class ModuleAdapter:
     """
-    Adapte différents types de modules pour qu'ils s'intègrent dans le système.
-    Génère des processeurs pour les modules qui n'en ont pas.
+    Adapts different types of modules to integrate into the system.
+    Generates processors for modules that do not have one.
     """
     
     @staticmethod
     def create_generic_processor(module_obj):
         """
-        Crée un processeur générique pour un module qui n'a pas de fonction process().
+        Creates a generic processor for a module that does not have a process() function.
         
         Args:
-            module_obj: L'objet module Python
+            module_obj: The Python module object
             
         Returns:
-            Une fonction process() générée automatiquement
+            An automatically generated process() function
         """
-        # Trouver les fonctions utiles dans le module
+        # Find useful functions in the module
         functions = {}
         classes = {}
         
         for name, obj in inspect.getmembers(module_obj):
-            # Ignorer les attributs privés/spéciaux et les imports
+            # Ignore private/special attributes and imports
             if name.startswith('_') or name == 'process':
                 continue
             
-            # Collecter les fonctions utiles
+            # Collect useful functions
             if inspect.isfunction(obj):
                 functions[name] = obj
-            # Collecter les classes utiles
+            # Collect useful classes
             elif inspect.isclass(obj) and obj.__module__ == module_obj.__name__:
                 classes[name] = obj
         
-        # Fonction qui tente d'utiliser les fonctionnalités du module
+        # Function that attempts to use module functionalities
         def generic_process(data, hook):
             """
-            Processeur générique qui essaie d'utiliser les fonctionnalités du module
-            en fonction des données d'entrée et du hook.
+            Generic processor that tries to use module functionalities
+            based on input data and the hook.
             """
             result = data.copy()
             
-            # Journaliser les informations sur le hook et les données
+            # Log hook and data information
             logger.debug(f"Generic processor for {module_obj.__name__}: hook={hook}, data_keys={list(data.keys()) if isinstance(data, dict) else 'non-dict'}")
             
-            # Essayer d'invoquer des fonctions utiles selon le hook et les données
+            # Try to invoke useful functions based on hook and data
             try:
-                # Si le module a une fonction spécifique au hook
+                # If the module has a hook-specific function
                 hook_fn_name = f"handle_{hook}"
                 if hook_fn_name in functions:
                     logger.debug(f"Using specific hook handler {hook_fn_name}")
                     functions[hook_fn_name](result)
                     return result
                 
-                # Si le module a une classe avec le même nom que le module
+                # If the module has a class with the same name as the module
                 module_name = module_obj.__name__.split('.')[-1]
                 if module_name in classes:
                     cls = classes[module_name]
                     instance = cls()
                     
-                    # Chercher des méthodes pertinentes
+                    # Look for relevant methods
                     if hasattr(instance, hook_fn_name):
                         logger.debug(f"Using class method {hook_fn_name}")
                         getattr(instance, hook_fn_name)(result)
@@ -247,10 +247,10 @@ class ModuleAdapter:
             except Exception as e:
                 logger.warning(f"Error in generic processor for {module_obj.__name__}: {e}")
             
-            # Tout simplement renvoyer les données inchangées s'il n'y a pas de méthode appropriée
+            # Simply return unchanged data if no appropriate method is found
             return result
         
-        # Attacher des métadonnées à notre fonction
+        # Attach metadata to our function
         generic_process.__module__ = module_obj.__name__
         generic_process.__name__ = "generic_process"
         generic_process.__doc__ = f"Auto-generated processor for module {module_obj.__name__}"
@@ -260,19 +260,19 @@ class ModuleAdapter:
     @staticmethod
     def detect_module_type(module_obj) -> str:
         """
-        Détecte le type de module en fonction de sa structure.
+        Detects the module type based on its structure.
         
         Args:
-            module_obj: L'objet module Python
+            module_obj: The Python module object
             
         Returns:
-            Le type de module ('standard', 'class_based', 'function_based')
+            The module type ('standard', 'class_based', 'function_based')
         """
-        # Chercher une fonction process standard
+        # Look for a standard process function
         if hasattr(module_obj, 'process') and callable(getattr(module_obj, 'process')):
             return "standard"
         
-        # Chercher une classe avec une méthode process
+        # Look for a class with a process method
         classes = {name: obj for name, obj in inspect.getmembers(module_obj, inspect.isclass)
                   if obj.__module__ == module_obj.__name__}
         
@@ -280,7 +280,7 @@ class ModuleAdapter:
             if hasattr(cls, 'process') and callable(getattr(cls, 'process')):
                 return "class_based"
         
-        # Chercher des fonctions utiles
+        # Look for useful functions
         functions = {name: obj for name, obj in inspect.getmembers(module_obj, inspect.isfunction)
                     if not name.startswith('_')}
         
@@ -292,24 +292,24 @@ class ModuleAdapter:
     @staticmethod
     def get_module_hooks(module_obj) -> List[str]:
         """
-        Détecte automatiquement les hooks supportés par un module.
+        Automatically detects hooks supported by a module.
         
         Args:
-            module_obj: L'objet module Python
+            module_obj: The Python module object
             
         Returns:
-            Liste des hooks supportés
+            List of supported hooks
         """
         hooks = set()
         default_hooks = ["process_request", "process_response"]
         
-        # Chercher des fonctions de type handle_X
+        # Look for handle_X type functions
         for name, obj in inspect.getmembers(module_obj):
             if callable(obj) and name.startswith('handle_'):
-                hook = name[7:]  # Retirer le préfixe 'handle_'
+                hook = name[7:]  # Remove 'handle_' prefix
                 hooks.add(hook)
         
-        # Chercher dans les classes
+        # Look within classes
         classes = {name: obj for name, obj in inspect.getmembers(module_obj, inspect.isclass)
                   if obj.__module__ == module_obj.__name__}
         
@@ -319,19 +319,19 @@ class ModuleAdapter:
                     hook = name[7:]
                     hooks.add(hook)
         
-        # Si MODULE_METADATA existe et contient des hooks
+        # If MODULE_METADATA exists and contains hooks
         if hasattr(module_obj, 'MODULE_METADATA') and isinstance(module_obj.MODULE_METADATA, dict):
             if 'hooks' in module_obj.MODULE_METADATA and isinstance(module_obj.MODULE_METADATA['hooks'], list):
                 hooks.update(module_obj.MODULE_METADATA['hooks'])
         
-        # Ajouter les hooks par défaut si aucun hook n'a été trouvé
+        # Add default hooks if no hooks were found
         if not hooks:
             hooks.update(default_hooks)
         
         return list(hooks)
 
 class ModuleLoader:
-    """Charge dynamiquement les modules Python."""
+    """Dynamically loads Python modules."""
     
     def __init__(self, modules_dir: str = MODULES_DIR, registry: ModuleRegistry = None):
         self.modules_dir = modules_dir
@@ -339,7 +339,7 @@ class ModuleLoader:
     
     def load_module(self, module_path: str) -> Optional[ModuleInfo]:
         """
-        Charge un module Python à partir de son chemin et extrait ses métadonnées.
+        Loads a Python module from its path and extracts its metadata.
         """
         try:
             if not module_path.endswith('.py') or os.path.basename(module_path).startswith('__'):
@@ -348,16 +348,16 @@ class ModuleLoader:
             module_name = os.path.basename(module_path).replace('.py', '')
             module_rel_path = os.path.relpath(module_path, PROJECT_ROOT)
             
-            # Vérifier si le module est déjà chargé et à jour
+            # Check if the module is already loaded and up-to-date
             existing_module = self.registry.get_module(module_name)
             if existing_module and existing_module.path == module_rel_path:
                 last_modified = os.path.getmtime(module_path)
                 if existing_module.last_modified >= last_modified:
-                    # Le module est déjà à jour
+                    # The module is already up-to-date
                     logger.debug(f"Module {module_name} is already up to date")
                     return existing_module
             
-            # Charger le module
+            # Load the module
             spec = importlib.util.spec_from_file_location(module_name, module_path)
             if not spec or not spec.loader:
                 logger.error(f"Failed to create spec for {module_path}")
@@ -366,30 +366,30 @@ class ModuleLoader:
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             
-            # Extraire les métadonnées du module
+            # Extract module metadata
             metadata = getattr(module, 'MODULE_METADATA', {})
             
-            # Déterminer le type de module et procéder en conséquence
+            # Determine module type and proceed accordingly
             module_type = ModuleAdapter.detect_module_type(module)
             
-            # Obtenir la fonction de traitement appropriée
+            # Get the appropriate processing function
             process_fn = None
             
             if module_type == "standard":
                 process_fn = getattr(module, 'process', None)
             elif module_type == "class_based":
-                # Chercher une classe avec une méthode process
+                # Look for a class with a process method
                 classes = {name: obj for name, obj in inspect.getmembers(module, inspect.isclass)
                           if obj.__module__ == module.__name__}
                 
                 for cls_name, cls in classes.items():
-                    # Préférer une classe portant le même nom que le module
+                    # Prefer a class with the same name as the module
                     if cls_name.lower() == module_name.lower() and hasattr(cls, 'process'):
                         instance = cls()
                         process_fn = instance.process
                         break
                 
-                # Si aucune classe privilégiée n'est trouvée, prendre la première avec une méthode process
+                # If no preferred class is found, take the first one with a process method
                 if not process_fn:
                     for cls_name, cls in classes.items():
                         if hasattr(cls, 'process'):
@@ -397,16 +397,16 @@ class ModuleLoader:
                             process_fn = instance.process
                             break
             
-            # Si aucune fonction process n'est trouvée, générer une fonction générique
+            # If no process function is found, generate a generic one
             if not process_fn or not callable(process_fn):
                 process_fn = ModuleAdapter.create_generic_processor(module)
                 module_type = "auto_generated"
                 logger.info(f"Created generic processor for module {module_name}")
             
-            # Déterminer les hooks supportés
+            # Determine supported hooks
             hooks = metadata.get('hooks', ModuleAdapter.get_module_hooks(module))
             
-            # Créer l'objet ModuleInfo
+            # Create ModuleInfo object
             module_info = ModuleInfo(
                 name=module_name,
                 path=module_rel_path,
@@ -423,13 +423,13 @@ class ModuleLoader:
                 module_type=module_type
             )
             
-            # Collecter les fonctions disponibles
+            # Collect available functions
             module_info.available_functions = {
                 name: obj for name, obj in inspect.getmembers(module, callable)
                 if not name.startswith('_') and obj.__module__ == module.__name__
             }
             
-            # Enregistrer dans le registre
+            # Register in the registry
             self.registry.register_module(module_info)
             
             logger.info(f"Successfully loaded module {module_name} (v{module_info.version}) as {module_type} module")
@@ -438,7 +438,7 @@ class ModuleLoader:
         except Exception as e:
             logger.error(f"Error loading module {module_path}: {str(e)}")
             
-            # Créer un module avec erreur si possible
+            # Create error module if possible
             try:
                 module_name = os.path.basename(module_path).replace('.py', '')
                 module_rel_path = os.path.relpath(module_path, PROJECT_ROOT)
@@ -458,7 +458,7 @@ class ModuleLoader:
     
     def load_all_modules(self) -> Dict[str, ModuleInfo]:
         """
-        Charge tous les modules Python présents dans le dossier des modules.
+        Loads all Python modules present in the modules directory.
         """
         loaded_modules = {}
         for root, _, files in os.walk(self.modules_dir):
@@ -469,7 +469,7 @@ class ModuleLoader:
                     if module_info:
                         loaded_modules[module_info.name] = module_info
                         
-                        # Journaliser des informations sur le type de module
+                        # Log module type information
                         if module_info.module_type == "auto_generated":
                             logger.debug(f"Auto-generated processor used for module {module_info.name}")
         
@@ -478,7 +478,7 @@ class ModuleLoader:
     
     def reload_module(self, module_name: str) -> Optional[ModuleInfo]:
         """
-        Recharge un module spécifique par son nom.
+        Reloads a specific module by its name.
         """
         module_info = self.registry.get_module(module_name)
         if not module_info:
@@ -487,14 +487,14 @@ class ModuleLoader:
         
         module_path = os.path.join(PROJECT_ROOT, module_info.path)
         
-        # Réinitialiser le cache du module
+        # Clear module cache
         if module_info.name in sys.modules:
             del sys.modules[module_info.name]
         
         return self.load_module(module_path)
 
 class ModuleFileWatcher(FileSystemEventHandler):
-    """Surveille les changements dans le dossier des modules."""
+    """Monitors changes in the modules directory."""
     
     def __init__(self, loader: ModuleLoader):
         super().__init__()
@@ -518,7 +518,7 @@ class ModuleFileWatcher(FileSystemEventHandler):
 
 class ModuleManager:
     """
-    Gère le chargement, la surveillance et l'exécution des modules d'amélioration.
+    Manages loading, watching, and executing enhancement modules.
     """
     
     def __init__(self):
@@ -529,14 +529,14 @@ class ModuleManager:
         self.started = False
     
     def start(self):
-        """Démarre le gestionnaire de modules."""
+        """Starts the module manager."""
         if self.started:
             return
         
-        # Charger initialement tous les modules
+        # Initially load all modules
         self.loader.load_all_modules()
         
-        # Démarrer la surveillance des fichiers
+        # Start file monitoring
         self.observer.schedule(self.file_watcher, MODULES_DIR, recursive=True)
         self.observer.start()
         
@@ -544,7 +544,7 @@ class ModuleManager:
         logger.info("Module manager started")
     
     def stop(self):
-        """Arrête le gestionnaire de modules."""
+        """Stops the module manager."""
         if not self.started:
             return
         
@@ -558,98 +558,98 @@ class ModuleManager:
                            request_data: Dict[str, Any], 
                            hook: str = 'process_request') -> Dict[str, Any]:
         """
-        Traite une requête en utilisant tous les modules enregistrés pour un hook spécifique.
-        Garantit toujours le retour d'un dictionnaire valide.
+        Processes a request using all registered modules for a specific hook.
+        Always guarantees a valid dictionary return.
         """
         try:
-            # Journaliser le type d'entrée pour le débogage
+            # Log input type for debugging
             logger.debug(f"process_with_modules input type for {hook}: {type(request_data)}")
             
             modules = self.registry.get_modules_by_hook(hook)
             
-            # PROTECTION DE TYPE: S'assurer que les données d'entrée sont bien un dictionnaire
+            # TYPE PROTECTION: Ensure input data is a dictionary
             if not isinstance(request_data, dict):
                 logger.error(f"Invalid request_data type: {type(request_data)}, expected dict")
                 
-                # Convertir en dictionnaire selon le type
+                # Convert to dictionary based on type
                 if isinstance(request_data, str):
                     result = {"text": request_data}
                 elif request_data is None:
-                    result = {"text": ""}  # Valeur par défaut pour None
+                    result = {"text": ""}  # Default value for None
                 else:
-                    # Essayer de convertir en dictionnaire si possible
+                    # Try to convert to dictionary if possible
                     try:
-                        result = dict(request_data)  # Tente de convertir en dict si c'est itérable
+                        result = dict(request_data)  # Tries to convert to dict if it's iterable
                     except (TypeError, ValueError):
-                        result = {"data": str(request_data)}  # Fallback sécurisé
+                        result = {"data": str(request_data)}  # Safe fallback
             else:
-                # Créer une copie profonde pour éviter les effets de bord
+                # Create a deep copy to avoid side effects
                 import copy
                 
-                # Utiliser deepcopy pour une véritable copie profonde
+                # Use deepcopy for a true deep copy
                 try:
                     result = copy.deepcopy(request_data)
                 except Exception as e:
-                    # En cas d'échec de deepcopy, faire une copie manuelle
+                    # If deepcopy fails, do a manual copy
                     logger.warning(f"Deepcopy failed: {str(e)}, falling back to manual copy")
                     result = {}
-                    # Copie manuelle pour les clés primaires
+                    # Manual copy for primary keys
                     for key, value in request_data.items():
                         if isinstance(value, str):
                             result[key] = value
                         elif isinstance(value, dict):
-                            # Copie récursive et sécurisée des dictionnaires
+                            # Secure recursive copy of dictionaries
                             try:
                                 result[key] = copy.deepcopy(value)
                             except:
-                                # Si deepcopy échoue, faire une copie simple
+                                # If deepcopy fails, do a simple copy
                                 result[key] = value.copy() if hasattr(value, 'copy') else value
                         elif isinstance(value, (list, tuple, set)):
-                            # Copie récursive pour les collections
+                            # Recursive copy for collections
                             try:
                                 result[key] = copy.deepcopy(value)
                             except:
-                                # Si deepcopy échoue, faire une copie simple
+                                # If deepcopy fails, do a simple copy
                                 result[key] = value.copy() if hasattr(value, 'copy') else list(value)
                         else:
-                            # Pour les types immutables ou non copiables, les assigner directement
+                            # For immutable or non-copyable types, assign directly
                             result[key] = value
             
-            # Traitement par chaque module
+            # Process by each module
             for module_info in modules:
                 try:
                     if not module_info.processor:
                         logger.debug(f"Module {module_info.name} has no processor, skipping")
                         continue
                     
-                    # Vérification que result est bien un dictionnaire avant de l'envoyer au module
+                    # Check that result is indeed a dictionary before sending to the module
                     if not isinstance(result, dict):
                         logger.warning(f"Result became non-dict before module {module_info.name}: {type(result)}")
                         result = {"text": str(result) if result is not None else ""}
                     
-                    # Appliquer le traitement du module avec protection des entrées
+                    # Apply module processing with input protection
                     try:
                         processed_result = module_info.processor(result.copy() if hasattr(result, 'copy') else result, hook)
                     except Exception as e:
                         logger.error(f"Module {module_info.name} processor raised exception: {str(e)}")
-                        # Continuer avec le résultat actuel sans modifier
+                        # Continue with the current result without modifying
                         continue
                     
-                    # VALIDATION DU RÉSULTAT: S'assurer que le résultat est toujours un dictionnaire
+                    # RESULT VALIDATION: Ensure the result is still a dictionary
                     if processed_result is not None:
                         if isinstance(processed_result, dict):
                             result = processed_result
                         else:
                             logger.warning(f"Module {module_info.name} returned non-dict result: {type(processed_result)}")
-                            # Si le module retourne une chaîne, la mettre dans le champ 'text'
+                            # If the module returns a string, put it in the 'text' field
                             if isinstance(processed_result, str):
-                                # Conserver les autres clés du résultat précédent
+                                # Preserve other keys from the previous result
                                 prev_result = result.copy() if hasattr(result, 'copy') else {}
                                 prev_result["text"] = processed_result
                                 result = prev_result
                             else:
-                                # Pour les autres types, les stocker dans un champ générique
-                                # tout en préservant le dictionnaire précédent
+                                # For other types, store them in a generic field
+                                # while preserving the previous dictionary
                                 prev_result = result.copy() if hasattr(result, 'copy') else {}
                                 prev_result["processed_data"] = processed_result
                                 result = prev_result
@@ -657,14 +657,14 @@ class ModuleManager:
                     logger.error(f"Error processing with module {module_info.name}: {str(e)}")
                     import traceback
                     logger.error(traceback.format_exc())
-                    # Continuer avec les autres modules même si l'un d'eux échoue
+                    # Continue with other modules even if one fails
             
-            # VALIDATION FINALE: S'assurer que le résultat est un dictionnaire valide
+            # FINAL VALIDATION: Ensure the result is a valid dictionary
             if not isinstance(result, dict):
                 logger.error(f"Final result is not a dict: {type(result)}. Converting to dict.")
                 return {"text": str(result) if result is not None else ""}
             
-            # S'assurer que le dictionnaire contient au moins une clé
+            # Ensure the dictionary contains at least one key
             if len(result) == 0:
                 logger.warning("Result dictionary is empty, adding default text key")
                 result["text"] = ""
@@ -675,20 +675,20 @@ class ModuleManager:
             logger.error(f"Critical error in process_with_modules: {str(e)}")
             import traceback
             logger.error(traceback.format_exc())
-            # Retourner un dictionnaire minimal en cas d'erreur critique
+            # Return a minimal dictionary in case of critical error
             return {"text": request_data.get("text", "") if isinstance(request_data, dict) else str(request_data) if request_data is not None else ""}
         
         return result
     
     def get_module_info(self, module_name: str = None) -> Dict[str, Any]:
         """
-        Renvoie des informations sur les modules chargés.
+        Returns information about loaded modules.
         
         Args:
-            module_name: Nom du module spécifique ou None pour tous les modules
+            module_name: Name of the specific module or None for all modules
             
         Returns:
-            Informations sur le(s) module(s)
+            Information about the module(s)
         """
         if module_name:
             module = self.registry.get_module(module_name)
@@ -721,11 +721,11 @@ class ModuleManager:
                 })
             return {"modules": modules_info}
 
-# Singleton pour la gestion des modules
+# Singleton for module management
 _module_manager = None
 
 def get_module_manager() -> ModuleManager:
-    """Récupère l'instance singleton du gestionnaire de modules."""
+    """Retrieves the singleton instance of the module manager."""
     global _module_manager
     if _module_manager is None:
         _module_manager = ModuleManager()
