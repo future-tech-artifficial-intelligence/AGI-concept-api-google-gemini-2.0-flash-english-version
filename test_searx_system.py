@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script de test pour valider le système Searx
+Test script to validate the Searx system
 """
 
 import logging
@@ -8,7 +8,7 @@ import time
 import sys
 import os
 
-# Configuration du logging
+# Logging Configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -16,206 +16,206 @@ logging.basicConfig(
 logger = logging.getLogger('searx_test')
 
 def test_docker_availability():
-    """Test de la disponibilité de Docker"""
-    logger.info("🔍 Test 1: Vérification de Docker...")
-    
+    """Test Docker availability"""
+    logger.info("🔍 Test 1: Checking Docker...")
+
     try:
         from searx_manager import SearxManager
         manager = SearxManager()
-        
+
         if manager.check_docker_availability():
-            logger.info("✅ Docker est disponible")
+            logger.info("✅ Docker is available")
             return True
         else:
-            logger.error("❌ Docker n'est pas disponible")
+            logger.error("❌ Docker is not available")
             return False
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test Docker: {e}")
+        logger.error(f"❌ Error during Docker test: {e}")
         return False
 
 def test_searx_startup():
-    """Test du démarrage de Searx"""
-    logger.info("🔍 Test 2: Démarrage de Searx...")
-    
+    """Test Searx startup"""
+    logger.info("🔍 Test 2: Starting Searx...")
+
     try:
         from searx_manager import get_searx_manager
         manager = get_searx_manager()
-        
-        # Tenter de démarrer Searx
+
+        # Attempt to start Searx
         if manager.ensure_searx_running():
-            logger.info("✅ Searx a démarré avec succès")
+            logger.info("✅ Searx started successfully")
             return True
         else:
-            logger.error("❌ Échec du démarrage de Searx")
+            logger.error("❌ Failed to start Searx")
             return False
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test de démarrage: {e}")
+        logger.error(f"❌ Error during startup test: {e}")
         return False
 
 def test_searx_interface():
-    """Test de l'interface Searx"""
-    logger.info("🔍 Test 3: Interface de recherche...")
-    
+    """Test Searx interface"""
+    logger.info("🔍 Test 3: Search interface...")
+
     try:
         from searx_interface import get_searx_interface
         searx = get_searx_interface()
-        
-        # Vérifier que Searx est prêt
+
+        # Check if Searx is ready
         if not searx.check_health():
-            logger.error("❌ Searx n'est pas accessible")
+            logger.error("❌ Searx is not accessible")
             return False
-        
-        # Test de recherche simple
+
+        # Simple search test
         results = searx.search("test python", max_results=3)
-        
+
         if results:
-            logger.info(f"✅ Recherche réussie: {len(results)} résultats trouvés")
-            
-            # Afficher les premiers résultats
+            logger.info(f"✅ Search successful: {len(results)} results found")
+
+            # Display first results
             for i, result in enumerate(results[:2], 1):
                 logger.info(f"   {i}. {result.title[:50]}... (via {result.engine})")
-            
+
             return True
         else:
-            logger.warning("⚠️ Aucun résultat trouvé (service peut-être en cours de démarrage)")
+            logger.warning("⚠️ No results found (service might be starting up)")
             return False
-            
+
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test d'interface: {e}")
+        logger.error(f"❌ Error during interface test: {e}")
         return False
 
 def test_gemini_integration():
-    """Test de l'intégration avec Gemini"""
-    logger.info("🔍 Test 4: Intégration avec l'API Gemini...")
-    
+    """Test integration with artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
+    logger.info("🔍 Test 4: Integration with artificial intelligence API GOOGLE GEMINI 2.0 FLASH...")
+
     try:
         from gemini_api_adapter import GeminiAPI
-        
-        # Créer une instance de l'API
+
+        # Create an API instance
         api = GeminiAPI()
-        
-        # Vérifier que Searx est intégré
+
+        # Check if Searx is integrated
         if hasattr(api, 'searx_available') and api.searx_available:
-            logger.info("✅ Searx est intégré dans l'adaptateur Gemini")
-            
-            # Test de détection de recherche
-            test_prompt = "recherche des informations sur Python"
+            logger.info("✅ Searx is integrated into the artificial intelligence API GOOGLE GEMINI 2.0 FLASH adapter")
+
+            # Test search request detection
+            test_prompt = "search for information on Python"
             if api._detect_web_search_request(test_prompt):
-                logger.info("✅ Détection de requête de recherche fonctionne")
+                logger.info("✅ Web search request detection works")
                 return True
             else:
-                logger.warning("⚠️ Détection de requête de recherche ne fonctionne pas")
+                logger.warning("⚠️ Web search request detection does not work")
                 return False
         else:
-            logger.error("❌ Searx n'est pas intégré dans l'adaptateur Gemini")
+            logger.error("❌ Searx is not integrated into the artificial intelligence API GOOGLE GEMINI 2.0 FLASH adapter")
             return False
-            
+
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test d'intégration: {e}")
+        logger.error(f"❌ Error during integration test: {e}")
         return False
 
 def test_search_categories():
-    """Test des différentes catégories de recherche"""
-    logger.info("🔍 Test 5: Catégories de recherche...")
-    
+    """Test different search categories"""
+    logger.info("🔍 Test 5: Search categories...")
+
     try:
         from searx_interface import get_searx_interface
         searx = get_searx_interface()
-        
+
         if not searx.check_health():
-            logger.warning("⚠️ Searx non accessible, test ignoré")
+            logger.warning("⚠️ Searx not accessible, test skipped")
             return True
-        
-        # Test de différentes catégories
+
+        # Test different categories
         test_queries = [
-            ("intelligence artificielle", "general"),
-            ("tutoriel python", "it"),
-            ("actualités tech", "general")
+            ("artificial intelligence", "general"),
+            ("python tutorial", "it"),
+            ("tech news", "general")
         ]
-        
+
         success_count = 0
-        
+
         for query, category in test_queries:
             try:
                 results = searx.search(query, category=category, max_results=2)
                 if results:
-                    logger.info(f"✅ Recherche '{query}' ({category}): {len(results)} résultats")
+                    logger.info(f"✅ Search '{query}' ({category}): {len(results)} results")
                     success_count += 1
                 else:
-                    logger.warning(f"⚠️ Pas de résultats pour '{query}' ({category})")
-                    
-                # Attendre un peu entre les recherches
+                    logger.warning(f"⚠️ No results for '{query}' ({category})")
+
+                # Wait a bit between searches
                 time.sleep(1)
-                
+
             except Exception as e:
-                logger.warning(f"⚠️ Erreur pour '{query}': {e}")
-        
+                logger.warning(f"⚠️ Error for '{query}': {e}")
+
         if success_count > 0:
-            logger.info(f"✅ Test des catégories: {success_count}/{len(test_queries)} succès")
+            logger.info(f"✅ Categories test: {success_count}/{len(test_queries)} successful")
             return True
         else:
-            logger.error("❌ Aucune recherche par catégorie n'a fonctionné")
+            logger.error("❌ No category search worked")
             return False
-            
+
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test des catégories: {e}")
+        logger.error(f"❌ Error during categories test: {e}")
         return False
 
 def main():
-    """Exécute tous les tests"""
-    logger.info("🧪 TESTS DU SYSTÈME SEARX")
+    """Executes all tests"""
+    logger.info("🧪 SEARX SYSTEM TESTS")
     logger.info("=" * 60)
-    
+
     tests = [
         ("Docker", test_docker_availability),
-        ("Démarrage Searx", test_searx_startup),
-        ("Interface Searx", test_searx_interface),
-        ("Intégration Gemini", test_gemini_integration),
-        ("Catégories de recherche", test_search_categories)
+        ("Searx Startup", test_searx_startup),
+        ("Searx Interface", test_searx_interface),
+        ("artificial intelligence API GOOGLE GEMINI 2.0 FLASH Integration", test_gemini_integration),
+        ("Search Categories", test_search_categories)
     ]
-    
+
     results = []
-    
+
     for test_name, test_func in tests:
         logger.info(f"\n--- {test_name} ---")
         try:
             success = test_func()
             results.append((test_name, success))
-            
+
             if success:
-                logger.info(f"✅ {test_name}: RÉUSSI")
+                logger.info(f"✅ {test_name}: PASSED")
             else:
-                logger.error(f"❌ {test_name}: ÉCHEC")
-                
+                logger.error(f"❌ {test_name}: FAILED")
+
         except Exception as e:
-            logger.error(f"💥 {test_name}: ERREUR - {e}")
+            logger.error(f"💥 {test_name}: ERROR - {e}")
             results.append((test_name, False))
-        
-        # Pause entre les tests
+
+        # Pause between tests
         time.sleep(2)
-    
-    # Résumé final
+
+    # Final summary
     logger.info("\n" + "=" * 60)
-    logger.info("📊 RÉSUMÉ DES TESTS")
+    logger.info("📊 TEST SUMMARY")
     logger.info("=" * 60)
-    
+
     passed = sum(1 for _, success in results if success)
     total = len(results)
-    
+
     for test_name, success in results:
-        status = "✅ RÉUSSI" if success else "❌ ÉCHEC"
+        status = "✅ PASSED" if success else "❌ FAILED"
         logger.info(f"{test_name:<25} {status}")
-    
-    logger.info(f"\nRésultat global: {passed}/{total} tests réussis")
-    
+
+    logger.info(f"\nOverall result: {passed}/{total} tests passed")
+
     if passed == total:
-        logger.info("🎉 Tous les tests sont passés ! Le système Searx est opérationnel.")
+        logger.info("🎉 All tests passed! The Searx system is operational.")
         return True
     elif passed > 0:
-        logger.warning(f"⚠️ {passed} tests réussis sur {total}. Le système est partiellement fonctionnel.")
+        logger.warning(f"⚠️ {passed} tests passed out of {total}. The system is partially functional.")
         return True
     else:
-        logger.error("💥 Aucun test n'a réussi. Le système Searx ne fonctionne pas.")
+        logger.error("💥 No tests passed. The Searx system is not functioning.")
         return False
 
 if __name__ == "__main__":
@@ -223,8 +223,8 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        logger.info("\n⏹️ Tests interrompus par l'utilisateur")
+        logger.info("\n⏹️ Tests interrupted by user")
         sys.exit(1)
     except Exception as e:
-        logger.error(f"💥 Erreur fatale: {e}")
+        logger.error(f"💥 Fatal error: {e}")
         sys.exit(1)
