@@ -1,6 +1,6 @@
 """
-Script de test pour le système de modules d'amélioration.
-Ce script permet de tester le chargement dynamique des modules et leur application.
+Test script for the enhancement modules system.
+This script allows testing dynamic module loading and their application.
 """
 
 import json
@@ -9,7 +9,7 @@ import time
 from module_manager import get_module_manager, ModuleInfo
 
 def print_module_info(module_info: ModuleInfo):
-    """Affiche les informations d'un module."""
+    """Displays information about a module."""
     print(f"Module: {module_info.name} (v{module_info.version})")
     print(f"  Type: {module_info.module_type}")
     print(f"  Enabled: {module_info.enabled}")
@@ -25,13 +25,13 @@ def print_module_info(module_info: ModuleInfo):
     print()
 
 def test_module_loading():
-    """Teste le chargement des modules."""
+    """Tests module loading."""
     print("=== TESTING MODULE LOADING ===")
-    
+
     manager = get_module_manager()
     manager.start()
-    
-    # Afficher tous les modules chargés
+
+    # Display all loaded modules
     print("\nAll loaded modules:")
     modules = manager.registry.get_all_enabled_modules()
     if not modules:
@@ -39,15 +39,15 @@ def test_module_loading():
     else:
         for module in modules:
             print_module_info(module)
-    
-    # Vérifier les modules avec des processeurs auto-générés
+
+    # Check modules with auto-generated processors
     auto_generated_modules = [m for m in modules if m.module_type == "auto_generated"]
     if auto_generated_modules:
         print("\nModules with auto-generated processors:")
         for module in auto_generated_modules:
             print(f"  - {module.name}")
-    
-    # Tester le rechargement d'un module
+
+    # Test module reloading
     if modules:
         module_name = modules[0].name
         print(f"\nReloading module: {module_name}")
@@ -56,19 +56,19 @@ def test_module_loading():
             print(f"  Module {module_name} successfully reloaded.")
         else:
             print(f"  Failed to reload module {module_name}.")
-    
+
     return manager
 
 def test_module_processing(manager):
-    """Teste le traitement avec les modules."""
+    """Tests processing with modules."""
     print("\n=== TESTING MODULE PROCESSING ===")
-    
-    # Exemples de requêtes pour tester
+
+    # Example requests to test
     test_requests = [
         {
             "contents": [{
                 "parts": [{
-                    "text": "Pourquoi le ciel est-il bleu?"
+                    "text": "Why is the sky blue?"
                 }]
             }],
             "generation_config": {
@@ -80,7 +80,7 @@ def test_module_processing(manager):
         {
             "contents": [{
                 "parts": [{
-                    "text": "Peux-tu me faire un plan pour organiser une fête d'anniversaire?"
+                    "text": "Can you give me a plan to organize a birthday party?"
                 }]
             }],
             "generation_config": {
@@ -90,31 +90,31 @@ def test_module_processing(manager):
             }
         }
     ]
-    
+
     for i, request in enumerate(test_requests):
         print(f"\nProcessing request #{i+1}:")
         print(f"  Original: {request['contents'][0]['parts'][0]['text']}")
-        
-        # Traiter avec les modules
+
+        # Process with modules
         processed = manager.process_with_modules(request, "process_request")
-        
+
         print(f"  Processed: {processed['contents'][0]['parts'][0]['text']}")
-        
-        # Vérifier si la requête a été identifiée comme nécessitant une planification
+
+        # Check if the request was identified as requiring planning
         if 'requires_planning' in processed:
             print(f"  Planning required: {processed['requires_planning']}")
             print(f"  Planning keywords: {processed.get('planning_keywords_detected', [])}")
         print()
 
 def test_get_module_info(manager):
-    """Teste la récupération d'informations sur les modules."""
+    """Tests retrieving module information."""
     print("\n=== TESTING MODULE INFO API ===")
-    
-    # Obtenir des informations sur tous les modules
+
+    # Get information about all modules
     info = manager.get_module_info()
     print(f"Total modules: {len(info['modules'])}")
-    
-    # Obtenir des informations sur un module spécifique
+
+    # Get information about a specific module
     modules = manager.registry.get_all_enabled_modules()
     if modules:
         module_name = modules[0].name
@@ -124,16 +124,16 @@ def test_get_module_info(manager):
             print(f"  {key}: {value}")
 
 def main():
-    """Fonction principale du test."""
+    """Main test function."""
     print("Module System Test\n")
-    
+
     manager = test_module_loading()
     test_module_processing(manager)
     test_get_module_info(manager)
-    
+
     print("\nTest completed. Press Ctrl+C to exit.")
     try:
-        # Garder le programme en cours d'exécution pour surveiller les changements de fichiers
+        # Keep the program running to monitor file changes
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
