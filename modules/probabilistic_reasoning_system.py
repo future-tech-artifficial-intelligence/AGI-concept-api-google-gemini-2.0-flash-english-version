@@ -1,10 +1,10 @@
 """
-Système de Raisonnement Probabiliste et Gestion de l'Incertitude
+Python Language System to Improve Probabilistic Reasoning and Uncertainty Management for Artificial Intelligence GOOGLE GEMINI 2.0 FLASH API
 ================================================================
 
-Un système complet pour l'intégration de l'incertitude dans les processus de raisonnement,
-incluant l'inférence bayésienne, la gestion des probabilités conditionnelles,
-la calibration de confiance et la prise de décision sous incertitude.
+A comprehensive system for integrating uncertainty into Artificial Intelligence GOOGLE GEMINI 2.0 FLASH API reasoning processes,
+including Bayesian inference, conditional probability management,
+confidence calibration, and decision-making under uncertainty.
 
 
 """
@@ -20,33 +20,33 @@ import warnings
 from abc import ABC, abstractmethod
 import logging
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @dataclass
 class UncertaintyQuantification:
-    """Structure pour quantifier l'incertitude"""
-    epistemic: float  # Incertitude due au manque de connaissance
-    aleatoric: float  # Incertitude inhérente au système
-    total: float      # Incertitude totale
-    confidence: float # Niveau de confiance
+    """Structure for quantifying uncertainty"""
+    epistemic: float  # Uncertainty due to lack of knowledge
+    aleatoric: float  # Uncertainty inherent to the system
+    total: float      # Total uncertainty
+    confidence: float # Confidence level
 
 class BaseUncertaintyModel(ABC):
-    """Classe de base pour tous les modèles d'incertitude"""
+    """Base class for all uncertainty models"""
     
     @abstractmethod
     def compute_uncertainty(self, *args, **kwargs) -> UncertaintyQuantification:
-        """Calcule l'incertitude pour les données fournies"""
+        """Computes uncertainty for the provided data"""
         pass
     
     @abstractmethod
     def update_beliefs(self, evidence: Any) -> None:
-        """Met à jour les croyances basées sur nouvelles preuves"""
+        """Updates beliefs based on new evidence"""
         pass
 
 class ProbabilisticDistribution:
-    """Classe pour représenter et manipuler les distributions probabilistes"""
+    """Class for representing and manipulating probabilistic distributions"""
     
     def __init__(self, distribution_type: str, parameters: Dict[str, float]):
         self.distribution_type = distribution_type
@@ -54,7 +54,7 @@ class ProbabilisticDistribution:
         self._distribution = self._create_distribution()
     
     def _create_distribution(self):
-        """Crée l'objet distribution scipy correspondant"""
+        """Creates the corresponding scipy distribution object"""
         if self.distribution_type == 'normal':
             return stats.norm(loc=self.parameters['mean'], 
                             scale=self.parameters['std'])
@@ -73,35 +73,35 @@ class ProbabilisticDistribution:
             raise ValueError(f"Distribution type {self.distribution_type} not supported")
     
     def pdf(self, x):
-        """Densité de probabilité"""
+        """Probability density function"""
         return self._distribution.pdf(x)
     
     def logpdf(self, x):
-        """Log-densité de probabilité"""
+        """Log-probability density function"""
         return self._distribution.logpdf(x)
     
     def cdf(self, x):
-        """Fonction de répartition cumulative"""
+        """Cumulative distribution function"""
         return self._distribution.cdf(x)
     
     def sample(self, size: int = 1):
-        """Échantillonnage de la distribution"""
+        """Sampling from the distribution"""
         return self._distribution.rvs(size=size)
     
     def mean(self):
-        """Moyenne de la distribution"""
+        """Mean of the distribution"""
         return self._distribution.mean()
     
     def var(self):
-        """Variance de la distribution"""
+        """Variance of the distribution"""
         return self._distribution.var()
     
     def entropy(self):
-        """Entropie de la distribution"""
+        """Entropy of the distribution"""
         return self._distribution.entropy()
 
 class BayesianNetwork:
-    """Réseau bayésien pour modéliser les dépendances probabilistes"""
+    """Bayesian network for modeling probabilistic dependencies"""
     
     def __init__(self):
         self.nodes = {}
@@ -110,33 +110,33 @@ class BayesianNetwork:
         self.evidence = {}
     
     def add_node(self, name: str, distribution: ProbabilisticDistribution):
-        """Ajoute un nœud au réseau"""
+        """Adds a node to the network"""
         self.nodes[name] = distribution
         self.edges[name] = []
     
     def add_edge(self, parent: str, child: str):
-        """Ajoute une arête dirigée parent -> child"""
+        """Adds a directed edge parent -> child"""
         if parent not in self.edges:
             self.edges[parent] = []
         self.edges[parent].append(child)
     
     def set_conditional_distribution(self, node: str, parents: List[str], 
                                    conditional_func: Callable):
-        """Définit la distribution conditionnelle P(node|parents)"""
+        """Defines the conditional distribution P(node|parents)"""
         self.conditional_distributions[node] = {
             'parents': parents,
             'function': conditional_func
         }
     
     def set_evidence(self, node: str, value: Any):
-        """Définit une évidence pour un nœud"""
+        """Sets evidence for a node"""
         self.evidence[node] = value
     
     def forward_sampling(self, num_samples: int = 1000) -> Dict[str, np.ndarray]:
-        """Échantillonnage forward pour générer des échantillons du réseau"""
+        """Forward sampling to generate samples from the network"""
         samples = {node: [] for node in self.nodes}
         
-        # Tri topologique des nœuds
+        # Topological sort of nodes
         ordered_nodes = self._topological_sort()
         
         for _ in range(num_samples):
@@ -157,14 +157,14 @@ class BayesianNetwork:
         return {node: np.array(values) for node, values in samples.items()}
     
     def _topological_sort(self) -> List[str]:
-        """Tri topologique des nœuds"""
+        """Topological sort of nodes"""
         visited = set()
         temp_visited = set()
         result = []
         
         def visit(node):
             if node in temp_visited:
-                raise ValueError("Cycle détecté dans le réseau bayésien")
+                raise ValueError("Cycle detected in the Bayesian network")
             if node not in visited:
                 temp_visited.add(node)
                 for child in self.edges.get(node, []):
@@ -180,7 +180,7 @@ class BayesianNetwork:
         return result
 
 class BayesianInference:
-    """Classe pour l'inférence bayésienne et la mise à jour des croyances"""
+    """Class for Bayesian inference and belief updating"""
     
     def __init__(self):
         self.priors = {}
@@ -189,41 +189,41 @@ class BayesianInference:
         self.belief_history = []
     
     def set_prior(self, parameter: str, distribution: ProbabilisticDistribution):
-        """Définit une distribution a priori pour un paramètre"""
+        """Sets a prior distribution for a parameter"""
         self.priors[parameter] = distribution
         self.posteriors[parameter] = distribution
     
     def bayesian_update(self, parameter: str, likelihood_func: Callable, 
                        evidence: Any) -> ProbabilisticDistribution:
-        """Met à jour les croyances bayésiennes basées sur de nouvelles preuves"""
+        """Updates Bayesian beliefs based on new evidence"""
         if parameter not in self.posteriors:
-            raise ValueError(f"Paramètre {parameter} non trouvé")
+            raise ValueError(f"Parameter {parameter} not found")
         
         prior = self.posteriors[parameter]
         
-        # Calcul de la vraisemblance
+        # Likelihood calculation
         def unnormalized_posterior(x):
             prior_prob = prior.pdf(x)
             likelihood = likelihood_func(x, evidence)
             return prior_prob * likelihood
         
-        # Normalisation par intégration numérique
+        # Normalization by numerical integration
         from scipy.integrate import quad
         
-        # Pour simplicité, supposons une distribution normale mise à jour
-        # Dans une implémentation complète, utilisez MCMC ou VI
+        # For simplicity, assume an updated normal distribution
+        # In a complete implementation, use MCMC or VI
         if prior.distribution_type == 'normal':
-            # Mise à jour conjuguée pour normale-normale
+            # Conjugate update for normal-normal
             if hasattr(evidence, '__len__'):
                 n = len(evidence)
                 sample_mean = np.mean(evidence)
                 sample_var = np.var(evidence)
                 
-                # Paramètres du prior
+                # Prior parameters
                 prior_mean = prior.parameters['mean']
                 prior_var = prior.parameters['std']**2
                 
-                # Mise à jour bayésienne
+                # Bayesian update
                 posterior_var = 1 / (1/prior_var + n/sample_var)
                 posterior_mean = posterior_var * (prior_mean/prior_var + n*sample_mean/sample_var)
                 
@@ -236,7 +236,7 @@ class BayesianInference:
                 observation = evidence
                 prior_mean = prior.parameters['mean']
                 prior_var = prior.parameters['std']**2
-                obs_var = 1.0  # Supposé
+                obs_var = 1.0  # Assumed
                 
                 posterior_var = 1 / (1/prior_var + 1/obs_var)
                 posterior_mean = posterior_var * (prior_mean/prior_var + observation/obs_var)
@@ -246,7 +246,7 @@ class BayesianInference:
                     {'mean': posterior_mean, 'std': np.sqrt(posterior_var)}
                 )
         else:
-            # Pour d'autres distributions, utiliser MCMC ou approximation
+            # For other distributions, use MCMC or approximation
             posterior = self._approximate_posterior(prior, likelihood_func, evidence)
         
         self.posteriors[parameter] = posterior
@@ -257,8 +257,8 @@ class BayesianInference:
     
     def _approximate_posterior(self, prior: ProbabilisticDistribution, 
                              likelihood_func: Callable, evidence: Any) -> ProbabilisticDistribution:
-        """Approximation de la distribution a posteriori"""
-        # Implémentation simplifiée - dans la pratique, utiliser MCMC/VI
+        """Posterior distribution approximation"""
+        # Simplified implementation - in practice, use MCMC/VI
         samples = prior.sample(10000)
         log_weights = []
         
@@ -270,7 +270,7 @@ class BayesianInference:
         log_weights = np.array(log_weights)
         weights = np.exp(log_weights - logsumexp(log_weights))
         
-        # Approximation par une distribution normale
+        # Approximation by a normal distribution
         weighted_mean = np.average(samples, weights=weights)
         weighted_var = np.average((samples - weighted_mean)**2, weights=weights)
         
@@ -281,25 +281,25 @@ class BayesianInference:
     
     def compute_marginal_likelihood(self, parameter: str, likelihood_func: Callable, 
                                   evidence: Any) -> float:
-        """Calcule la vraisemblance marginale (évidence)"""
+        """Computes the marginal likelihood (evidence)"""
         prior = self.priors[parameter]
         
         def integrand(x):
             return prior.pdf(x) * likelihood_func(x, evidence)
         
         from scipy.integrate import quad
-        result, _ = quad(integrand, -10, 10)  # Limites ajustables
+        result, _ = quad(integrand, -10, 10)  # Adjustable limits
         return result
     
     def compute_bayes_factor(self, param1: str, param2: str, likelihood_func: Callable, 
                            evidence: Any) -> float:
-        """Calcule le facteur de Bayes entre deux modèles"""
+        """Computes the Bayes factor between two models"""
         ml1 = self.compute_marginal_likelihood(param1, likelihood_func, evidence)
         ml2 = self.compute_marginal_likelihood(param2, likelihood_func, evidence)
         return ml1 / ml2
 
 class ConditionalProbabilityManager:
-    """Gestionnaire pour les probabilités conditionnelles complexes"""
+    """Manager for complex conditional probabilities"""
     
     def __init__(self):
         self.conditional_tables = {}
@@ -308,43 +308,43 @@ class ConditionalProbabilityManager:
     
     def add_conditional_probability(self, event: str, given: List[str], 
                                   probability_table: Dict[Tuple, float]):
-        """Ajoute une table de probabilité conditionnelle P(event|given)"""
+        """Adds a conditional probability table P(event|given)"""
         self.conditional_tables[event] = {
             'given': given,
             'table': probability_table
         }
     
     def compute_conditional_probability(self, event: str, given_values: Dict[str, Any]) -> float:
-        """Calcule P(event|given_values)"""
+        """Computes P(event|given_values)"""
         if event not in self.conditional_tables:
-            raise ValueError(f"Probabilité conditionnelle pour {event} non définie")
+            raise ValueError(f"Conditional probability for {event} not defined")
         
         table_info = self.conditional_tables[event]
         given_vars = table_info['given']
         table = table_info['table']
         
-        # Construire la clé pour la table
+        # Build the key for the table
         key = tuple(given_values[var] for var in given_vars)
         
         if key in table:
             return table[key]
         else:
-            raise ValueError(f"Combinaison de valeurs {key} non trouvée dans la table")
+            raise ValueError(f"Combination of values {key} not found in the table")
     
     def compute_joint_probability(self, events: Dict[str, Any]) -> float:
-        """Calcule la probabilité jointe en utilisant la règle de la chaîne"""
+        """Computes the joint probability using the chain rule"""
         # P(A,B,C) = P(A) * P(B|A) * P(C|A,B)
         probability = 1.0
         
-        # Ordre topologique des événements
+        # Topological order of events
         ordered_events = list(events.keys())  # Simplification
         
         for i, event in enumerate(ordered_events):
             if i == 0:
-                # Probabilité marginale du premier événement
+                # Marginal probability of the first event
                 prob = self._get_marginal_probability(event, events[event])
             else:
-                # Probabilité conditionnelle
+                # Conditional probability
                 given_events = {e: events[e] for e in ordered_events[:i]}
                 prob = self.compute_conditional_probability(event, given_events)
             
@@ -353,24 +353,24 @@ class ConditionalProbabilityManager:
         return probability
     
     def _get_marginal_probability(self, event: str, value: Any) -> float:
-        """Obtient la probabilité marginale d'un événement"""
-        # Implémentation simplifiée - dans la pratique, calculer à partir des tables
+        """Gets the marginal probability of an event"""
+        # Simplified implementation - in practice, compute from tables
         return 0.5  # Placeholder
     
     def check_conditional_independence(self, event_a: str, event_b: str, 
                                      given: List[str]) -> bool:
-        """Vérifie l'indépendance conditionnelle P(A|C) = P(A|B,C)"""
-        # Implémentation basée sur la structure du graphe causal
+        """Checks conditional independence P(A|C) = P(A|B,C)"""
+        # Implementation based on causal graph structure
         return self._d_separation(event_a, event_b, given)
     
     def _d_separation(self, node_a: str, node_b: str, conditioning_set: List[str]) -> bool:
-        """Algorithme de d-séparation pour vérifier l'indépendance conditionnelle"""
-        # Implémentation simplifiée du test de d-séparation
-        # Dans une implémentation complète, implémenter l'algorithme complet
+        """D-separation algorithm to check conditional independence"""
+        # Simplified implementation of the d-separation test
+        # In a complete implementation, implement the full algorithm
         return False  # Placeholder
 
 class ConfidenceCalibrator:
-    """Classe pour la calibration de la confiance et quantification de l'incertitude épistémique"""
+    """Class for confidence calibration and epistemic uncertainty quantification"""
     
     def __init__(self):
         self.calibration_data = []
@@ -378,11 +378,11 @@ class ConfidenceCalibrator:
         self.reliability_diagram_data = None
     
     def add_prediction(self, confidence: float, correct: bool):
-        """Ajoute une prédiction avec son niveau de confiance et sa véracité"""
+        """Adds a prediction with its confidence level and truthfulness"""
         self.calibration_data.append((confidence, correct))
     
     def compute_calibration_error(self, num_bins: int = 10) -> Tuple[float, Dict]:
-        """Calcule l'erreur de calibration (ECE - Expected Calibration Error)"""
+        """Computes the calibration error (ECE - Expected Calibration Error)"""
         if not self.calibration_data:
             return 0.0, {}
         
@@ -416,12 +416,12 @@ class ConfidenceCalibrator:
         return ece, bin_data
     
     def temperature_scaling(self, logits: np.ndarray, labels: np.ndarray) -> float:
-        """Calibration par temperature scaling"""
+        """Calibration by temperature scaling"""
         from scipy.optimize import minimize_scalar
         
         def loss(temperature):
             scaled_logits = logits / temperature
-            # Calcul de la log-vraisemblance
+            # Log-likelihood calculation
             exp_logits = np.exp(scaled_logits)
             probs = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
             
@@ -434,35 +434,35 @@ class ConfidenceCalibrator:
         return optimal_temperature
     
     def platt_scaling(self, scores: np.ndarray, labels: np.ndarray) -> Tuple[float, float]:
-        """Calibration par Platt scaling (régression logistique)"""
+        """Calibration by Platt scaling (logistic regression)"""
         from sklearn.linear_model import LogisticRegression
         
         lr = LogisticRegression()
         lr.fit(scores.reshape(-1, 1), labels)
         
-        # Paramètres A et B pour P(y=1|f) = 1/(1 + exp(A*f + B))
+        # Parameters A and B for P(y=1|f) = 1/(1 + exp(A*f + B))
         A = lr.coef_[0][0]
         B = lr.intercept_[0]
         
         return A, B
     
     def compute_epistemic_uncertainty(self, predictions: List[np.ndarray]) -> np.ndarray:
-        """Calcule l'incertitude épistémique à partir de prédictions multiples"""
-        # Variance des prédictions = incertitude épistémique
+        """Computes epistemic uncertainty from multiple predictions"""
+        # Variance of predictions = epistemic uncertainty
         predictions_array = np.array(predictions)
         epistemic_uncertainty = np.var(predictions_array, axis=0)
         return epistemic_uncertainty
     
     def compute_aleatoric_uncertainty(self, prediction_variances: List[np.ndarray]) -> np.ndarray:
-        """Calcule l'incertitude aléatoire moyenne"""
-        # Moyenne des variances = incertitude aléatoire
+        """Computes average aleatoric uncertainty"""
+        # Mean of variances = aleatoric uncertainty
         variances_array = np.array(prediction_variances)
         aleatoric_uncertainty = np.mean(variances_array, axis=0)
         return aleatoric_uncertainty
     
     def decompose_uncertainty(self, predictions: List[np.ndarray], 
                             variances: List[np.ndarray]) -> Dict[str, np.ndarray]:
-        """Décompose l'incertitude totale en épistémique et aléatoire"""
+        """Decomposes total uncertainty into epistemic and aleatoric"""
         epistemic = self.compute_epistemic_uncertainty(predictions)
         aleatoric = self.compute_aleatoric_uncertainty(variances)
         total = epistemic + aleatoric
@@ -474,7 +474,7 @@ class ConfidenceCalibrator:
         }
 
 class GameTheoryDecisionMaker:
-    """Prise de décision sous incertitude avec théorie des jeux"""
+    """Decision-making under uncertainty with game theory"""
     
     def __init__(self):
         self.payoff_matrices = {}
@@ -484,25 +484,25 @@ class GameTheoryDecisionMaker:
     def add_game(self, game_name: str, players: List[str], 
                 strategies: Dict[str, List[str]], 
                 payoff_matrix: np.ndarray):
-        """Ajoute un jeu à la base de données"""
+        """Adds a game to the database"""
         self.strategies[game_name] = strategies
         self.payoff_matrices[game_name] = payoff_matrix
     
     def nash_equilibrium(self, game_name: str) -> List[Tuple]:
-        """Calcule les équilibres de Nash"""
-        # Implémentation simplifiée pour jeux 2x2
+        """Computes Nash equilibria"""
+        # Simplified implementation for 2x2 games
         payoff_matrix = self.payoff_matrices[game_name]
         
-        if payoff_matrix.shape == (2, 2, 2):  # Jeu 2x2 à 2 joueurs
+        if payoff_matrix.shape == (2, 2, 2):  # 2x2 game with 2 players
             equilibria = []
             
-            # Vérifier les équilibres en stratégies pures
+            # Check for pure strategy equilibria
             for i in range(2):
                 for j in range(2):
                     if self._is_nash_equilibrium(payoff_matrix, i, j):
                         equilibria.append((i, j))
             
-            # Calculer l'équilibre en stratégies mixtes s'il n'y a pas d'équilibre pur
+            # Compute mixed strategy equilibrium if no pure equilibrium exists
             if not equilibria:
                 mixed_eq = self._compute_mixed_nash(payoff_matrix)
                 if mixed_eq:
@@ -510,35 +510,35 @@ class GameTheoryDecisionMaker:
             
             return equilibria
         else:
-            raise NotImplementedError("Seulement les jeux 2x2 sont supportés pour l'instant")
+            raise NotImplementedError("Only 2x2 games are supported for now")
     
     def _is_nash_equilibrium(self, payoff_matrix: np.ndarray, i: int, j: int) -> bool:
-        """Vérifie si (i,j) est un équilibre de Nash"""
-        # Joueur 1: vérifier si i est la meilleure réponse à j
+        """Checks if (i,j) is a Nash equilibrium"""
+        # Player 1: check if i is the best response to j
         player1_payoffs = payoff_matrix[:, j, 0]
         best_response_1 = np.argmax(player1_payoffs)
         
-        # Joueur 2: vérifier si j est la meilleure réponse à i
+        # Player 2: check if j is the best response to i
         player2_payoffs = payoff_matrix[i, :, 1]
         best_response_2 = np.argmax(player2_payoffs)
         
         return best_response_1 == i and best_response_2 == j
     
     def _compute_mixed_nash(self, payoff_matrix: np.ndarray) -> Optional[Tuple]:
-        """Calcule l'équilibre de Nash en stratégies mixtes pour un jeu 2x2"""
-        # Pour un jeu 2x2, l'équilibre mixte existe si aucun équilibre pur n'existe
+        """Computes the mixed Nash equilibrium for a 2x2 game"""
+        # For a 2x2 game, a mixed equilibrium exists if no pure equilibrium exists
         
-        # Payoffs pour chaque joueur
-        A = payoff_matrix[:, :, 0]  # Payoffs joueur 1
-        B = payoff_matrix[:, :, 1]  # Payoffs joueur 2
+        # Payoffs for each player
+        A = payoff_matrix[:, :, 0]  # Player 1 payoffs
+        B = payoff_matrix[:, :, 1]  # Player 2 payoffs
         
-        # Probabilité que joueur 1 joue stratégie 0
+        # Probability that Player 1 plays strategy 0
         if A[1, 0] - A[1, 1] - A[0, 0] + A[0, 1] != 0:
             p = (B[1, 1] - B[0, 1]) / (B[1, 0] - B[1, 1] - B[0, 0] + B[0, 1])
         else:
             return None
         
-        # Probabilité que joueur 2 joue stratégie 0
+        # Probability that Player 2 plays strategy 0
         if B[0, 1] - B[1, 1] - B[0, 0] + B[1, 0] != 0:
             q = (A[1, 1] - A[1, 0]) / (A[0, 0] - A[0, 1] - A[1, 0] + A[1, 1])
         else:
@@ -550,16 +550,16 @@ class GameTheoryDecisionMaker:
             return None
     
     def maximin_strategy(self, game_name: str, player: int) -> Tuple[int, float]:
-        """Stratégie maximin (maximiser le gain minimum)"""
+        """Maximin strategy (maximize minimum gain)"""
         payoff_matrix = self.payoff_matrices[game_name]
         
         if player == 0:
-            # Joueur 1: maximiser le minimum sur les colonnes
+            # Player 1: maximize the minimum across columns
             min_payoffs = np.min(payoff_matrix[:, :, 0], axis=1)
             best_strategy = np.argmax(min_payoffs)
             best_payoff = min_payoffs[best_strategy]
         else:
-            # Joueur 2: maximiser le minimum sur les lignes
+            # Player 2: maximize the minimum across rows
             min_payoffs = np.min(payoff_matrix[:, :, 1], axis=0)
             best_strategy = np.argmax(min_payoffs)
             best_payoff = min_payoffs[best_strategy]
@@ -567,12 +567,12 @@ class GameTheoryDecisionMaker:
         return best_strategy, best_payoff
     
     def minimax_regret(self, game_name: str, player: int) -> Tuple[int, float]:
-        """Stratégie minimax regret"""
+        """Minimax regret strategy"""
         payoff_matrix = self.payoff_matrices[game_name]
         
         if player == 0:
             payoffs = payoff_matrix[:, :, 0]
-            # Calcul de la matrice de regret
+            # Regret matrix calculation
             max_per_column = np.max(payoffs, axis=0)
             regret_matrix = max_per_column - payoffs
             
@@ -593,7 +593,7 @@ class GameTheoryDecisionMaker:
     
     def expected_utility_maximization(self, game_name: str, player: int, 
                                     opponent_strategy_distribution: np.ndarray) -> Tuple[int, float]:
-        """Maximisation de l'utilité espérée given une distribution sur les stratégies adverses"""
+        """Expected utility maximization given a distribution over opponent strategies"""
         payoff_matrix = self.payoff_matrices[game_name]
         
         if player == 0:
@@ -610,7 +610,7 @@ class GameTheoryDecisionMaker:
     
     def robust_decision_making(self, game_name: str, player: int, 
                              uncertainty_set: List[np.ndarray]) -> Tuple[int, float]:
-        """Prise de décision robuste sous incertitude d'ensemble"""
+        """Robust decision-making under set uncertainty"""
         payoff_matrix = self.payoff_matrices[game_name]
         
         worst_case_payoffs = []
@@ -634,7 +634,7 @@ class GameTheoryDecisionMaker:
         return best_strategy, best_worst_case
 
 class IntegratedUncertaintySystem:
-    """Système intégré combinant tous les composants de gestion de l'incertitude"""
+    """Integrated system combining all uncertainty management components"""
     
     def __init__(self):
         self.bayesian_inference = BayesianInference()
@@ -646,10 +646,10 @@ class IntegratedUncertaintySystem:
     
     def process_uncertain_reasoning(self, evidence: Dict[str, Any], 
                                   context: Dict[str, Any]) -> Dict[str, Any]:
-        """Processus de raisonnement intégrant l'incertitude"""
+        """Reasoning process integrating uncertainty"""
         results = {}
         
-        # 1. Mise à jour bayésienne des croyances
+        # 1. Bayesian belief updating
         for parameter, value in evidence.items():
             if parameter in self.bayesian_inference.posteriors:
                 likelihood_func = context.get(f'{parameter}_likelihood', 
@@ -659,7 +659,7 @@ class IntegratedUncertaintySystem:
                 )
                 results[f'{parameter}_posterior'] = posterior
         
-        # 2. Inference dans le réseau bayésien
+        # 2. Inference in the Bayesian network
         if hasattr(context, 'network_evidence'):
             for node, value in context['network_evidence'].items():
                 self.bayesian_network.set_evidence(node, value)
@@ -667,7 +667,7 @@ class IntegratedUncertaintySystem:
             network_samples = self.bayesian_network.forward_sampling(1000)
             results['network_inference'] = network_samples
         
-        # 3. Quantification de l'incertitude
+        # 3. Uncertainty quantification
         epistemic_uncertainty = self._compute_epistemic_uncertainty(evidence)
         aleatoric_uncertainty = self._compute_aleatoric_uncertainty(evidence)
         
@@ -680,14 +680,14 @@ class IntegratedUncertaintySystem:
         
         results['uncertainty'] = uncertainty_quantification
         
-        # 4. Prise de décision sous incertitude
+        # 4. Decision-making under uncertainty
         if 'decision_context' in context:
             decision_context = context['decision_context']
             if 'game_name' in decision_context:
                 game_name = decision_context['game_name']
                 player = decision_context['player']
                 
-                # Différentes stratégies de décision
+                # Different decision strategies
                 nash_eq = self.game_theory_dm.nash_equilibrium(game_name)
                 maximin = self.game_theory_dm.maximin_strategy(game_name, player)
                 
@@ -697,7 +697,7 @@ class IntegratedUncertaintySystem:
                     'uncertainty_level': uncertainty_quantification.total
                 }
         
-        # Enregistrer l'historique
+        # Record history
         self.uncertainty_history.append({
             'timestamp': np.datetime64('now'),
             'evidence': evidence,
@@ -707,8 +707,8 @@ class IntegratedUncertaintySystem:
         return results
     
     def _compute_epistemic_uncertainty(self, evidence: Dict[str, Any]) -> float:
-        """Calcule l'incertitude épistémique basée sur l'évidence"""
-        # Simplification: basé sur la variance des posteriors
+        """Computes epistemic uncertainty based on evidence"""
+        # Simplification: based on the variance of posteriors
         total_epistemic = 0.0
         count = 0
         
@@ -720,25 +720,25 @@ class IntegratedUncertaintySystem:
         return total_epistemic / max(count, 1)
     
     def _compute_aleatoric_uncertainty(self, evidence: Dict[str, Any]) -> float:
-        """Calcule l'incertitude aléatoire intrinsèque"""
-        # Simplification: basé sur la variabilité des observations
+        """Computes intrinsic aleatoric uncertainty"""
+        # Simplification: based on observation variability
         if isinstance(evidence, dict) and len(evidence) > 0:
             values = [v for v in evidence.values() if isinstance(v, (int, float))]
             if values:
                 return np.var(values)
-        return 0.1  # Valeur par défaut
+        return 0.1  # Default value
     
     def _compute_confidence_level(self, epistemic: float, aleatoric: float) -> float:
-        """Calcule le niveau de confiance basé sur les incertitudes"""
+        """Computes confidence level based on uncertainties"""
         total_uncertainty = epistemic + aleatoric
-        # Transformation logistique pour obtenir une valeur entre 0 et 1
+        # Logistic transformation to get a value between 0 and 1
         confidence = 1 / (1 + np.exp(total_uncertainty))
         return confidence
     
     def visualize_uncertainty(self, parameter: str = None):
-        """Visualise l'évolution de l'incertitude"""
+        """Visualizes uncertainty evolution"""
         if not self.uncertainty_history:
-            print("Aucune donnée d'historique disponible")
+            print("No history data available")
             return
         
         timestamps = [entry['timestamp'] for entry in self.uncertainty_history]
@@ -747,18 +747,18 @@ class IntegratedUncertaintySystem:
         
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
         
-        # Graphique de l'incertitude totale
-        ax1.plot(timestamps, uncertainties, 'b-', label='Incertitude totale')
-        ax1.set_ylabel('Incertitude')
-        ax1.set_title('Évolution de l\'incertitude dans le temps')
+        # Total uncertainty chart
+        ax1.plot(timestamps, uncertainties, 'b-', label='Total uncertainty')
+        ax1.set_ylabel('Uncertainty')
+        ax1.set_title('Evolution of uncertainty over time')
         ax1.legend()
         ax1.grid(True)
         
-        # Graphique de la confiance
-        ax2.plot(timestamps, confidences, 'r-', label='Niveau de confiance')
-        ax2.set_ylabel('Confiance')
-        ax2.set_xlabel('Temps')
-        ax2.set_title('Évolution de la confiance dans le temps')
+        # Confidence chart
+        ax2.plot(timestamps, confidences, 'r-', label='Confidence level')
+        ax2.set_ylabel('Confidence')
+        ax2.set_xlabel('Time')
+        ax2.set_title('Evolution of confidence over time')
         ax2.legend()
         ax2.grid(True)
         
@@ -766,7 +766,7 @@ class IntegratedUncertaintySystem:
         plt.show()
     
     def generate_uncertainty_report(self) -> Dict[str, Any]:
-        """Génère un rapport détaillé sur l'état de l'incertitude"""
+        """Generates a detailed report on the state of uncertainty"""
         report = {
             'timestamp': np.datetime64('now'),
             'system_state': {
@@ -780,7 +780,7 @@ class IntegratedUncertaintySystem:
             'recommendations': []
         }
         
-        # État actuel des incertitudes par paramètre
+        # Current uncertainties per parameter
         for param, posterior in self.bayesian_inference.posteriors.items():
             report['current_uncertainties'][param] = {
                 'mean': posterior.mean(),
@@ -788,7 +788,7 @@ class IntegratedUncertaintySystem:
                 'entropy': posterior.entropy()
             }
         
-        # Métriques de calibration
+        # Calibration metrics
         if self.confidence_calibrator.calibration_data:
             ece, bin_data = self.confidence_calibrator.compute_calibration_error()
             report['calibration_metrics'] = {
@@ -796,7 +796,7 @@ class IntegratedUncertaintySystem:
                 'reliability_diagram_data': bin_data
             }
         
-        # Recommandations basées sur l'état du système
+        # Recommendations based on system state
         if len(self.uncertainty_history) > 10:
             recent_uncertainties = [
                 entry['results']['uncertainty'].total 
@@ -804,16 +804,16 @@ class IntegratedUncertaintySystem:
             ]
             if np.std(recent_uncertainties) > 0.1:
                 report['recommendations'].append(
-                    "L'incertitude montre une forte variabilité récente. "
-                    "Considérer l'acquisition de données supplémentaires."
+                    "Uncertainty shows high recent variability. "
+                    "Consider acquiring additional data."
                 )
         
         return report
 
-# Fonctions utilitaires pour l'utilisation du système
+# Utility functions for system usage
 
 def create_simple_uncertainty_model(prior_params: Dict[str, Dict[str, float]]) -> IntegratedUncertaintySystem:
-    """Crée un modèle d'incertitude simple avec des priors spécifiés"""
+    """Creates a simple uncertainty model with specified priors"""
     system = IntegratedUncertaintySystem()
     
     for param_name, param_config in prior_params.items():
@@ -826,10 +826,10 @@ def create_simple_uncertainty_model(prior_params: Dict[str, Dict[str, float]]) -
     return system
 
 def demo_uncertainty_system():
-    """Démonstration du système de gestion de l'incertitude"""
-    print("=== Démonstration du Système de Raisonnement Probabiliste ===\n")
+    """Demonstration of the uncertainty management system"""
+    print("=== Probabilistic Reasoning System Demonstration ===\n")
     
-    # Créer un système avec des priors
+    # Create a system with priors
     prior_params = {
         'temperature': {'type': 'normal', 'mean': 20.0, 'std': 5.0},
         'humidity': {'type': 'beta', 'alpha': 2.0, 'beta': 3.0},
@@ -838,27 +838,27 @@ def demo_uncertainty_system():
     
     system = create_simple_uncertainty_model(prior_params)
     
-    # Simuler des observations
+    # Simulate observations
     observations = {
         'temperature': [22.1, 21.8, 23.2, 20.9, 22.5],
         'humidity': 0.65,
         'pressure': 2.3
     }
     
-    print("1. Priors initiaux:")
+    print("1. Initial Priors:")
     for param, prior in system.bayesian_inference.priors.items():
-        print(f"   {param}: moyenne={prior.mean():.2f}, variance={prior.var():.4f}")
+        print(f"   {param}: mean={prior.mean():.2f}, variance={prior.var():.4f}")
     
-    print("\n2. Mise à jour bayésienne avec observations:")
+    print("\n2. Bayesian update with observations:")
     
-    # Fonction de vraisemblance simple
+    # Simple likelihood function
     def simple_likelihood(param_value, observation):
         if isinstance(observation, list):
             return np.prod([stats.norm.pdf(obs, loc=param_value, scale=1.0) for obs in observation])
         else:
             return stats.norm.pdf(observation, loc=param_value, scale=1.0)
     
-    # Traitement des observations
+    # Processing observations
     context = {
         'temperature_likelihood': simple_likelihood,
         'humidity_likelihood': simple_likelihood,
@@ -867,24 +867,24 @@ def demo_uncertainty_system():
     
     results = system.process_uncertain_reasoning(observations, context)
     
-    print("\n3. Posteriors mis à jour:")
+    print("\n3. Updated Posteriors:")
     for param, posterior in system.bayesian_inference.posteriors.items():
-        print(f"   {param}: moyenne={posterior.mean():.2f}, variance={posterior.var():.4f}")
+        print(f"   {param}: mean={posterior.mean():.2f}, variance={posterior.var():.4f}")
     
-    print(f"\n4. Quantification de l'incertitude:")
+    print(f"\n4. Uncertainty Quantification:")
     uncertainty = results['uncertainty']
-    print(f"   Incertitude épistémique: {uncertainty.epistemic:.4f}")
-    print(f"   Incertitude aléatoire: {uncertainty.aleatoric:.4f}")
-    print(f"   Incertitude totale: {uncertainty.total:.4f}")
-    print(f"   Niveau de confiance: {uncertainty.confidence:.4f}")
+    print(f"   Epistemic uncertainty: {uncertainty.epistemic:.4f}")
+    print(f"   Aleatoric uncertainty: {uncertainty.aleatoric:.4f}")
+    print(f"   Total uncertainty: {uncertainty.total:.4f}")
+    print(f"   Confidence level: {uncertainty.confidence:.4f}")
     
-    # Démonstration de la théorie des jeux
-    print("\n5. Exemple de prise de décision avec théorie des jeux:")
+    # Game Theory Demonstration
+    print("\n5. Decision-making example with game theory:")
     
-    # Jeu simple: Dilemme du prisonnier modifié
+    # Simple Game: Modified Prisoner's Dilemma
     payoff_matrix = np.array([
-        [[3, 3], [0, 5]],   # Coopérer
-        [[5, 0], [1, 1]]    # Trahir
+        [[3, 3], [0, 5]],   # Cooperate
+        [[5, 0], [1, 1]]    # Defect
     ])
     
     system.game_theory_dm.add_game(
@@ -897,19 +897,19 @@ def demo_uncertainty_system():
     nash_equilibria = system.game_theory_dm.nash_equilibrium('prisoner_dilemma')
     maximin_p1 = system.game_theory_dm.maximin_strategy('prisoner_dilemma', 0)
     
-    print(f"   Équilibres de Nash: {nash_equilibria}")
-    print(f"   Stratégie maximin joueur 1: stratégie {maximin_p1[0]}, gain {maximin_p1[1]}")
+    print(f"   Nash Equilibria: {nash_equilibria}")
+    print(f"   Maximin strategy player 1: strategy {maximin_p1[0]}, gain {maximin_p1[1]}")
     
-    print("\n6. Rapport de l'état du système:")
+    print("\n6. System Status Report:")
     report = system.generate_uncertainty_report()
-    print(f"   Nombre de paramètres suivis: {report['system_state']['num_parameters_tracked']}")
-    print(f"   Longueur de l'historique: {report['system_state']['history_length']}")
+    print(f"   Number of parameters tracked: {report['system_state']['num_parameters_tracked']}")
+    print(f"   History length: {report['system_state']['history_length']}")
     
     if report['recommendations']:
-        print("   Recommandations:")
+        print("   Recommendations:")
         for rec in report['recommendations']:
             print(f"   - {rec}")
 
 if __name__ == "__main__":
-    # Exécuter la démonstration
+    # Run demonstration
     demo_uncertainty_system()
