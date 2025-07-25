@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script de test complet du système Searx intelligent v2
-Vérifie tous les composants et dépendances avec gestion d'erreurs avancée
+Comprehensive test script for the intelligent Searx system v2
+Verifies all components and dependencies with advanced error handling
 """
 
 import sys
@@ -10,7 +10,7 @@ import traceback
 import time
 from pathlib import Path
 
-# Configuration du logging pour les tests
+# Configure logging for tests
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -19,28 +19,28 @@ logging.basicConfig(
 logger = logging.getLogger('SearxSystemTest')
 
 class SearxSystemTester:
-    """Testeur complet du système Searx"""
+    """Comprehensive tester for the Searx system"""
     
     def __init__(self):
         self.results = {}
         self.start_time = time.time()
     
     def test_imports(self):
-        """Test des imports des modules principaux"""
-        print("🔍 TEST DES IMPORTS")
+        """Tests imports of main modules"""
+        print("🔍 IMPORTS TEST")
         print("=" * 30)
         
         tests = [
-            ("requests", "Requêtes HTTP"),
-            ("psutil", "Gestion des processus"),
-            ("bs4", "BeautifulSoup pour parsing HTML"),
-            ("selenium", "Automation web"),
-            ("PIL", "Pillow pour images"),
-            ("json", "JSON standard"),
-            ("socket", "Sockets réseau"),
-            ("subprocess", "Processus système"),
-            ("platform", "Information plateforme"),
-            ("docker", "Client Docker Python")
+            ("requests", "HTTP Requests"),
+            ("psutil", "Process Management"),
+            ("bs4", "BeautifulSoup for HTML parsing"),
+            ("selenium", "Web Automation"),
+            ("PIL", "Pillow for images"),
+            ("json", "Standard JSON"),
+            ("socket", "Network Sockets"),
+            ("subprocess", "System Processes"),
+            ("platform", "Platform Information"),
+            ("docker", "Python Docker Client")
         ]
         
         success_count = 0
@@ -50,237 +50,237 @@ class SearxSystemTester:
                 print(f"✅ {module:12} - {description}")
                 success_count += 1
             except ImportError as e:
-                print(f"❌ {module:12} - {description} - ERREUR: {e}")
+                print(f"❌ {module:12} - {description} - ERROR: {e}")
         
-        print(f"\n📊 Résultat: {success_count}/{len(tests)} modules disponibles")
+        print(f"\n📊 Result: {success_count}/{len(tests)} modules available")
         self.results['imports'] = success_count == len(tests)
         return self.results['imports']
 
     def test_port_manager(self):
-        """Test du gestionnaire de ports"""
-        print("\n🔧 TEST DU GESTIONNAIRE DE PORTS")
+        """Tests the port manager"""
+        print("\n🔧 PORT MANAGER TEST")
         print("=" * 40)
         
         try:
             from port_manager import PortManager
             pm = PortManager()
             
-            # Test de détection de port
+            # Port detection test
             port_8080_available = pm.is_port_available(8080)
-            print(f"📍 Port 8080 disponible: {'✅ Oui' if port_8080_available else '❌ Non'}")
+            print(f"📍 Port 8080 available: {'✅ Yes' if port_8080_available else '❌ No'}")
             
             if not port_8080_available:
                 process = pm.get_process_using_port(8080)
                 if process:
-                    print(f"🔍 Processus sur 8080: {process['name']} (PID: {process['pid']})")
-                    print(f"   Commande: {process['cmdline'][:50]}...")
+                    print(f"🔍 Process on 8080: {process['name']} (PID: {process['pid']})")
+                    print(f"   Command: {process['cmdline'][:50]}...")
             
-            # Test de recherche de port alternatif
+            # Alternative port search test
             alt_port = pm.find_available_port(8081, 5)
             if alt_port:
-                print(f"🔄 Port alternatif trouvé: {alt_port}")
+                print(f"🔄 Alternative port found: {alt_port}")
             else:
-                print("⚠️  Aucun port alternatif trouvé")
+                print("⚠️  No alternative port found")
             
-            # Test de génération de configuration
+            # Configuration generation test
             config_success, port, compose_file = pm.setup_searx_with_available_port()
             if config_success:
-                print(f"✅ Configuration générée: {compose_file} (port {port})")
+                print(f"✅ Configuration generated: {compose_file} (port {port})")
             else:
-                print("⚠️  Impossible de générer une configuration")
+                print("⚠️  Unable to generate configuration")
             
-            print("✅ Gestionnaire de ports fonctionnel")
+            print("✅ Port manager functional")
             self.results['port_manager'] = True
             return True
             
         except Exception as e:
-            print(f"❌ Erreur gestionnaire de ports: {e}")
+            print(f"❌ Port manager error: {e}")
             self.results['port_manager'] = False
             return False
 
     def test_searx_interface(self):
-        """Test de l'interface Searx"""
-        print("\n🔍 TEST DE L'INTERFACE SEARX")
+        """Tests the Searx interface"""
+        print("\n🔍 SEARX INTERFACE TEST")
         print("=" * 35)
         
         try:
             from searx_interface import SearxInterface
             
-            # Créer une instance sans démarrer Searx
+            # Create an instance without starting Searx
             searx = SearxInterface()
-            print("✅ Interface Searx créée")
+            print("✅ Searx interface created")
             
-            # Vérifier l'initialisation du gestionnaire de ports
+            # Verify port manager initialization
             if searx.port_manager:
-                print("✅ Gestionnaire de ports intégré")
+                print("✅ Port manager integrated")
             else:
-                print("⚠️  Gestionnaire de ports non initialisé")
+                print("⚠️  Port manager not initialized")
             
-            # Vérifier l'initialisation de la capture visuelle
+            # Verify visual capture initialization
             if searx.visual_capture:
-                print("✅ Capture visuelle intégrée")
+                print("✅ Visual capture integrated")
             else:
-                print("⚠️  Capture visuelle non initialisée (normal si ChromeDriver absent)")
+                print("⚠️  Visual capture not initialized (normal if ChromeDriver missing)")
             
-            print("✅ Interface Searx fonctionnelle")
+            print("✅ Searx interface functional")
             self.results['searx_interface'] = True
             return True
             
         except Exception as e:
-            print(f"❌ Erreur interface Searx: {e}")
+            print(f"❌ Searx interface error: {e}")
             self.results['searx_interface'] = False
             return False
 
     def test_docker(self):
-        """Test de la disponibilité de Docker"""
-        print("\n🐳 TEST DE DOCKER")
+        """Tests Docker availability"""
+        print("\n🐳 DOCKER TEST")
         print("=" * 20)
         
         try:
             import subprocess
             
-            # Vérifier si Docker est installé
+            # Check if Docker is installed
             result = subprocess.run(['docker', '--version'], 
                                   capture_output=True, text=True, timeout=10)
             
             if result.returncode == 0:
                 version = result.stdout.strip()
-                print(f"✅ Docker disponible: {version}")
+                print(f"✅ Docker available: {version}")
                 
-                # Vérifier si Docker fonctionne
+                # Check if Docker is running
                 result = subprocess.run(['docker', 'ps'], 
                                       capture_output=True, text=True, timeout=10)
                 
                 if result.returncode == 0:
-                    print("✅ Docker daemon actif")
+                    print("✅ Docker daemon active")
                     
-                    # Vérifier Docker Compose
+                    # Check Docker Compose
                     result = subprocess.run(['docker-compose', '--version'], 
                                           capture_output=True, text=True, timeout=5)
                     if result.returncode == 0:
-                        print(f"✅ Docker Compose disponible: {result.stdout.strip()}")
+                        print(f"✅ Docker Compose available: {result.stdout.strip()}")
                     else:
-                        print("⚠️  Docker Compose non disponible")
+                        print("⚠️  Docker Compose not available")
                     
                     self.results['docker'] = True
                     return True
                 else:
-                    print("⚠️  Docker installé mais daemon non actif")
-                    print("💡 Démarrez Docker Desktop")
+                    print("⚠️  Docker installed but daemon not active")
+                    print("💡 Start Docker Desktop")
                     self.results['docker'] = False
                     return False
             else:
-                print("❌ Docker non installé")
-                print("💡 Installez Docker Desktop")
+                print("❌ Docker not installed")
+                print("💡 Install Docker Desktop")
                 self.results['docker'] = False
                 return False
                 
         except subprocess.TimeoutExpired:
-            print("❌ Docker ne répond pas (timeout)")
+            print("❌ Docker not responding (timeout)")
             self.results['docker'] = False
             return False
         except FileNotFoundError:
-            print("❌ Docker non trouvé dans le PATH")
+            print("❌ Docker not found in PATH")
             self.results['docker'] = False
             return False
         except Exception as e:
-            print(f"❌ Erreur Docker: {e}")
+            print(f"❌ Docker error: {e}")
             self.results['docker'] = False
             return False
 
     def test_files(self):
-        """Test de la présence des fichiers nécessaires"""
-        print("\n📋 TEST DES FICHIERS SYSTÈME")
+        """Tests the presence of necessary files"""
+        print("\n📋 SYSTEM FILES TEST")
         print("=" * 32)
         
         required_files = [
-            ("port_manager.py", "Gestionnaire de ports"),
-            ("searx_interface.py", "Interface Searx"),
-            ("searx_smart_start.py", "Script de démarrage"),
-            ("searx_manager.bat", "Script Windows"),
-            ("requirements.txt", "Dépendances Python")
+            ("port_manager.py", "Port manager"),
+            ("searx_interface.py", "Searx interface"),
+            ("searx_smart_start.py", "Startup script"),
+            ("searx_manager.bat", "Windows script"),
+            ("requirements.txt", "Python dependencies")
         ]
         
         optional_files = [
-            ("docker-compose.searx.yml", "Config Docker principale"),
-            ("docker-compose.searx-alt.yml", "Config Docker alternative"),
-            ("free_port_8080.bat", "Script libération port"),
-            ("searx_visual_capture.py", "Capture visuelle")
+            ("docker-compose.searx.yml", "Main Docker config"),
+            ("docker-compose.searx-alt.yml", "Alternative Docker config"),
+            ("free_port_8080.bat", "Port release script"),
+            ("searx_visual_capture.py", "Visual capture")
         ]
         
         required_count = 0
         optional_count = 0
         
-        print("📁 Fichiers requis:")
+        print("📁 Required files:")
         for filename, description in required_files:
             if Path(filename).exists():
                 print(f"✅ {filename:25} - {description}")
                 required_count += 1
             else:
-                print(f"❌ {filename:25} - {description} - MANQUANT")
+                print(f"❌ {filename:25} - {description} - MISSING")
         
-        print("\n📁 Fichiers optionnels:")
+        print("\n📁 Optional files:")
         for filename, description in optional_files:
             if Path(filename).exists():
                 print(f"✅ {filename:25} - {description}")
                 optional_count += 1
             else:
-                print(f"⚠️  {filename:25} - {description} - Non trouvé")
+                print(f"⚠️  {filename:25} - {description} - Not found")
         
         total_required = len(required_files)
         total_optional = len(optional_files)
         
-        print(f"\n📊 Fichiers requis: {required_count}/{total_required}")
-        print(f"📊 Fichiers optionnels: {optional_count}/{total_optional}")
+        print(f"\n📊 Required files: {required_count}/{total_required}")
+        print(f"📊 Optional files: {optional_count}/{total_optional}")
         
         self.results['files'] = required_count == total_required
         return self.results['files']
 
     def test_smart_start(self):
-        """Test du script de démarrage intelligent"""
-        print("\n🚀 TEST DU DÉMARRAGE INTELLIGENT")
+        """Tests the smart startup script"""
+        print("\n🚀 SMART STARTUP TEST")
         print("=" * 38)
         
         try:
-            # Import du module de démarrage
+            # Import startup module
             import searx_smart_start
-            print("✅ Module de démarrage intelligent importé")
+            print("✅ Smart startup module imported")
             
-            # Tester les fonctions principales
+            # Test main functions
             if hasattr(searx_smart_start, 'main'):
-                print("✅ Fonction main() disponible")
+                print("✅ main() function available")
             
             if hasattr(searx_smart_start, 'show_status'):
-                print("✅ Fonction show_status() disponible")
+                print("✅ show_status() function available")
             
             if hasattr(searx_smart_start, 'stop_all'):
-                print("✅ Fonction stop_all() disponible")
+                print("✅ stop_all() function available")
             
-            print("✅ Script de démarrage intelligent fonctionnel")
+            print("✅ Smart startup script functional")
             self.results['smart_start'] = True
             return True
             
         except Exception as e:
-            print(f"❌ Erreur script démarrage: {e}")
+            print(f"❌ Startup script error: {e}")
             self.results['smart_start'] = False
             return False
 
     def run_full_test(self):
-        """Exécute tous les tests et génère un rapport"""
-        print("🎯 DÉBUT DES TESTS SYSTÈME SEARX")
+        """Runs all tests and generates a report"""
+        print("🎯 SEARX SYSTEM TESTS START")
         print("=" * 60)
         print(f"📅 Date: {time.ctime()}")
-        print(f"🖥️  Plateforme: {sys.platform}")
+        print(f"🖥️  Platform: {sys.platform}")
         print(f"🐍 Python: {sys.version}")
         print("=" * 60)
         
         tests = [
-            ("Imports Python", self.test_imports),
-            ("Gestionnaire de ports", self.test_port_manager),
-            ("Interface Searx", self.test_searx_interface),
+            ("Python Imports", self.test_imports),
+            ("Port Manager", self.test_port_manager),
+            ("Searx Interface", self.test_searx_interface),
             ("Docker", self.test_docker),
-            ("Fichiers système", self.test_files),
-            ("Démarrage intelligent", self.test_smart_start)
+            ("System Files", self.test_files),
+            ("Smart Startup", self.test_smart_start)
         ]
         
         passed_tests = 0
@@ -292,103 +292,103 @@ class SearxSystemTester:
                 if result:
                     passed_tests += 1
             except Exception as e:
-                print(f"❌ ERREUR CRITIQUE dans {test_name}: {e}")
+                print(f"❌ CRITICAL ERROR in {test_name}: {e}")
                 self.results[test_name.lower().replace(' ', '_')] = False
         
-        # Générer le rapport final
+        # Generate final report
         self._generate_final_report(passed_tests, total_tests)
         
         return passed_tests >= total_tests * 0.8
 
     def _generate_final_report(self, passed_tests, total_tests):
-        """Génère le rapport final"""
+        """Generates the final report"""
         elapsed_time = time.time() - self.start_time
         
         print("\n" + "=" * 60)
-        print("📋 RAPPORT FINAL - SYSTÈME SEARX INTELLIGENT")
+        print("📋 FINAL REPORT - INTELLIGENT SEARX SYSTEM")
         print("=" * 60)
         
-        print(f"⏱️  Durée des tests: {elapsed_time:.2f} secondes")
-        print(f"🏆 Score: {passed_tests}/{total_tests} tests réussis")
+        print(f"⏱️  Test duration: {elapsed_time:.2f} seconds")
+        print(f"🏆 Score: {passed_tests}/{total_tests} tests passed")
         
-        # Détail des résultats
-        print("\n📊 DÉTAIL DES RÉSULTATS:")
+        # Results detail
+        print("\n📊 RESULTS DETAIL:")
         for test_name, result in self.results.items():
-            status = "✅ SUCCÈS" if result else "❌ ÉCHEC"
+            status = "✅ SUCCESS" if result else "❌ FAILED"
             print(f"  {status} - {test_name.replace('_', ' ').title()}")
         
-        # Statut global
+        # Global status
         success_rate = passed_tests / total_tests
         if success_rate >= 0.9:
-            print("\n🎉 EXCELLENT! Système complètement fonctionnel")
-            print("🚀 Prêt pour production - Lancez: python searx_smart_start.py")
+            print("\n🎉 EXCELLENT! System fully functional")
+            print("🚀 Ready for production - Run: python searx_smart_start.py")
         elif success_rate >= 0.7:
-            print("\n✅ BON! Système largement fonctionnel")
-            print("💡 Quelques améliorations possibles")
+            print("\n✅ GOOD! System largely functional")
+            print("💡 Some improvements possible")
         elif success_rate >= 0.5:
-            print("\n⚠️  MOYEN! Système partiellement fonctionnel")
-            print("🔧 Corrections nécessaires")
+            print("\n⚠️  AVERAGE! System partially functional")
+            print("🔧 Fixes needed")
         else:
-            print("\n❌ CRITIQUE! Système non fonctionnel")
-            print("🆘 Intervention urgente requise")
+            print("\n❌ CRITICAL! System not functional")
+            print("🆘 Urgent intervention required")
         
-        # Recommandations spécifiques
+        # Specific recommendations
         self._generate_recommendations()
 
     def _generate_recommendations(self):
-        """Génère des recommandations basées sur les résultats"""
-        print("\n💡 RECOMMANDATIONS SPÉCIFIQUES:")
+        """Generates recommendations based on results"""
+        print("\n💡 SPECIFIC RECOMMENDATIONS:")
         
         if not self.results.get('imports', True):
-            print("📦 DÉPENDANCES:")
-            print("   - Exécutez: pip install -r requirements.txt")
-            print("   - Vérifiez votre environnement Python")
+            print("📦 DEPENDENCIES:")
+            print("   - Run: pip install -r requirements.txt")
+            print("   - Check your Python environment")
         
         if not self.results.get('docker', True):
             print("🐳 DOCKER:")
-            print("   - Installez Docker Desktop: https://docker.com/products/docker-desktop")
-            print("   - Démarrez le service Docker")
-            print("   - Vérifiez que Docker fonctionne: docker ps")
+            print("   - Install Docker Desktop: https://docker.com/products/docker-desktop")
+            print("   - Start the Docker service")
+            print("   - Verify Docker is running: docker ps")
         
         if not self.results.get('files', True):
-            print("📁 FICHIERS:")
-            print("   - Vérifiez l'intégrité du projet")
-            print("   - Re-téléchargez les fichiers manquants")
+            print("📁 FILES:")
+            print("   - Check project integrity")
+            print("   - Re-download missing files")
         
         if not self.results.get('port_manager', True):
-            print("🔧 GESTIONNAIRE DE PORTS:")
-            print("   - Installez psutil: pip install psutil")
-            print("   - Vérifiez les permissions système")
+            print("🔧 PORT MANAGER:")
+            print("   - Install psutil: pip install psutil")
+            print("   - Check system permissions")
         
-        print("\n🔗 RESSOURCES:")
-        print("   - Documentation Searx: https://searx.github.io/searx/")
-        print("   - Guide Docker: https://docs.docker.com/get-started/")
-        print("   - Support Python: https://python.org/downloads/")
+        print("\n🔗 RESOURCES:")
+        print("   - Searx Documentation: https://searx.github.io/searx/")
+        print("   - Docker Guide: https://docs.docker.com/get-started/")
+        print("   - Python Support: https://python.org/downloads/")
 
 def main():
-    """Fonction principale"""
+    """Main function"""
     try:
         tester = SearxSystemTester()
         success = tester.run_full_test()
         
         if success:
-            print("\n🎯 PROCHAINES ÉTAPES:")
-            print("1. Lancez: python searx_smart_start.py")
-            print("2. Ou utilisez: searx_manager.bat (Windows)")
-            print("3. Testez l'interface web une fois démarré")
+            print("\n🎯 NEXT STEPS:")
+            print("1. Launch: python searx_smart_start.py")
+            print("2. Or use: searx_manager.bat (Windows)")
+            print("3. Test the web interface once started")
         else:
-            print("\n🔧 ACTIONS REQUISES:")
-            print("1. Corrigez les erreurs signalées")
-            print("2. Relancez ce test: python test_searx_complete.py")
-            print("3. Contactez le support si problèmes persistants")
+            print("\n🔧 REQUIRED ACTIONS:")
+            print("1. Correct the reported errors")
+            print("2. Rerun this test: python test_searx_complete.py")
+            print("3. Contact support if problems persist")
         
         return 0 if success else 1
         
     except KeyboardInterrupt:
-        print("\n❌ Test interrompu par l'utilisateur")
+        print("\n❌ Test interrupted by user")
         return 2
     except Exception as e:
-        print(f"\n💥 ERREUR CRITIQUE: {e}")
+        print(f"\n💥 CRITICAL ERROR: {e}")
         traceback.print_exc()
         return 3
 
