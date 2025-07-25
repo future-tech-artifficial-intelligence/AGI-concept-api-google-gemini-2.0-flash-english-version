@@ -1,6 +1,6 @@
 """
-Système de Capture Visuelle Intelligent pour Sites Web
-Intégré avec Gemini Vision pour l'analyse en temps réel
+Intelligent Visual Capture System for Websites
+Integrated with Google Gemini 2.0 Flash AI Vision for real-time analysis
 """
 
 import os
@@ -14,24 +14,24 @@ from pathlib import Path
 import requests
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('IntelligentWebCapture')
 
 class IntelligentWebCapture:
-    """Système de capture visuelle intelligent pour sites web"""
+    """Intelligent visual capture system for websites"""
     
     def __init__(self, screenshots_dir: str = "intelligent_screenshots"):
         """
-        Initialise le système de capture intelligent
+        Initializes the intelligent capture system
         
         Args:
-            screenshots_dir: Répertoire pour sauvegarder les captures
+            screenshots_dir: Directory to save captures
         """
         self.screenshots_dir = Path(screenshots_dir)
         self.screenshots_dir.mkdir(exist_ok=True)
         
-        # Répertoires organisés
+        # Organized directories
         self.raw_screenshots_dir = self.screenshots_dir / "raw"
         self.optimized_screenshots_dir = self.screenshots_dir / "optimized"
         self.analysis_cache_dir = self.screenshots_dir / "analysis_cache"
@@ -42,17 +42,17 @@ class IntelligentWebCapture:
         self.webdriver = None
         self.driver_initialized = False
         
-        # Configuration de capture
+        # Capture configuration
         self.capture_config = {
             'window_size': (1920, 1080),
             'mobile_size': (375, 667),
             'tablet_size': (768, 1024),
-            'wait_time': 3,  # Temps d'attente pour le chargement
-            'scroll_pause': 1,  # Pause entre les scrolls
-            'element_highlight': True  # Surligner les éléments importants
+            'wait_time': 3,  # Wait time for loading
+            'scroll_pause': 1,  # Pause between scrolls
+            'element_highlight': True  # Highlight important elements
         }
         
-        # Statistiques
+        # Statistics
         self.stats = {
             'captures_taken': 0,
             'successful_optimizations': 0,
@@ -60,10 +60,10 @@ class IntelligentWebCapture:
             'total_processing_time': 0
         }
         
-        logger.info("🎯 Système de Capture Visuelle Intelligent initialisé")
+        logger.info("🎯 Intelligent Visual Capture System initialized")
     
     def _initialize_webdriver(self) -> bool:
-        """Initialise le WebDriver avec configuration optimisée pour l'IA"""
+        """Initializes the WebDriver with AI-optimized configuration"""
         try:
             from selenium import webdriver
             from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -73,50 +73,50 @@ class IntelligentWebCapture:
             from selenium.webdriver.support import expected_conditions as EC
             from selenium.webdriver.common.action_chains import ActionChains
             
-            # Configuration Chrome optimisée pour capture IA
+            # Chrome configuration optimized for AI capture
             chrome_options = ChromeOptions()
-            chrome_options.add_argument('--headless=new')  # Nouveau mode headless
+            chrome_options.add_argument('--headless=new')  # New headless mode
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             chrome_options.add_argument('--disable-gpu')
             chrome_options.add_argument(f'--window-size={self.capture_config["window_size"][0]},{self.capture_config["window_size"][1]}')
             chrome_options.add_argument('--disable-extensions')
             chrome_options.add_argument('--disable-plugins')
-            chrome_options.add_argument('--disable-images')  # Désactiver le chargement d'images pour plus de rapidité
-            chrome_options.add_argument('--disable-javascript')  # Optionnel: désactiver JS pour captures statiques
-            chrome_options.add_argument('--force-device-scale-factor=1')  # Échelle fixe
+            chrome_options.add_argument('--disable-images')  # Disable image loading for faster performance
+            chrome_options.add_argument('--disable-javascript')  # Optional: disable JS for static captures
+            chrome_options.add_argument('--force-device-scale-factor=1')  # Fixed scale
             chrome_options.add_argument('--high-dpi-support=1')
             chrome_options.add_argument('--disable-background-networking')
             chrome_options.add_argument('--disable-default-apps')
             chrome_options.add_argument('--disable-features=TranslateUI')
             
-            # Préférences pour optimiser
+            # Preferences for optimization
             chrome_prefs = {
                 'profile.default_content_setting_values': {
-                    'notifications': 2,  # Bloquer notifications
-                    'media_stream': 2,   # Bloquer média
+                    'notifications': 2,  # Block notifications
+                    'media_stream': 2,   # Block media
                 },
                 'profile.default_content_settings.popups': 0,
-                'profile.managed_default_content_settings.images': 2  # Bloquer images
+                'profile.managed_default_content_settings.images': 2  # Block images
             }
             chrome_options.add_experimental_option('prefs', chrome_prefs)
             
-            # Créer le driver
+            # Create the driver
             self.webdriver = webdriver.Chrome(options=chrome_options)
             self.webdriver.set_page_load_timeout(30)
             
-            # Importer les modules Selenium pour utilisation
+            # Import Selenium modules for use
             self.By = By
             self.WebDriverWait = WebDriverWait
             self.EC = EC
             self.ActionChains = ActionChains
             
             self.driver_initialized = True
-            logger.info("✅ WebDriver Chrome initialisé pour capture IA")
+            logger.info("✅ Chrome WebDriver initialized for AI capture")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Erreur initialisation WebDriver: {e}")
+            logger.error(f"❌ WebDriver initialization error: {e}")
             return False
     
     def capture_website_intelligent(self, 
@@ -125,16 +125,16 @@ class IntelligentWebCapture:
                                   viewport: str = "desktop",
                                   analyze_elements: bool = True) -> Dict[str, Any]:
         """
-        Capture intelligente d'un site web avec optimisation pour l'IA
+        Intelligent website capture with AI optimization
         
         Args:
-            url: URL à capturer
-            capture_type: Type de capture (full_page, visible_area, element_focused)
-            viewport: Taille d'écran (desktop, mobile, tablet)
-            analyze_elements: Analyser les éléments pendant la capture
+            url: URL to capture
+            capture_type: Capture type (full_page, visible_area, element_focused)
+            viewport: Screen size (desktop, mobile, tablet)
+            analyze_elements: Analyze elements during capture
             
         Returns:
-            Informations sur la capture et chemins des fichiers
+            Capture information and file paths
         """
         start_time = datetime.now()
         
@@ -142,11 +142,11 @@ class IntelligentWebCapture:
             if not self.driver_initialized and not self._initialize_webdriver():
                 return {
                     'success': False,
-                    'error': 'Impossible d\'initialiser WebDriver',
+                    'error': 'Could not initialize WebDriver',
                     'captures': []
                 }
             
-            # Configuration du viewport
+            # Viewport configuration
             viewport_sizes = {
                 'desktop': self.capture_config['window_size'],
                 'mobile': self.capture_config['mobile_size'], 
@@ -156,16 +156,16 @@ class IntelligentWebCapture:
             if viewport in viewport_sizes:
                 size = viewport_sizes[viewport]
                 self.webdriver.set_window_size(size[0], size[1])
-                logger.info(f"📱 Viewport configuré: {viewport} ({size[0]}x{size[1]})")
+                logger.info(f"📱 Viewport configured: {viewport} ({size[0]}x{size[1]})")
             
-            # Naviguer vers l'URL
-            logger.info(f"🌐 Navigation vers: {url}")
+            # Navigate to the URL
+            logger.info(f"🌐 Navigating to: {url}")
             self.webdriver.get(url)
             
-            # Attendre le chargement
+            # Wait for loading
             time.sleep(self.capture_config['wait_time'])
             
-            # Générer nom de fichier unique
+            # Generate unique filename
             url_hash = hashlib.md5(url.encode()).hexdigest()[:8]
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             base_filename = f"capture_{viewport}_{url_hash}_{timestamp}"
@@ -173,33 +173,33 @@ class IntelligentWebCapture:
             captures = []
             
             if capture_type == "full_page":
-                # Capture de la page complète avec scrolling intelligent
+                # Intelligent full page capture with adaptive scrolling
                 captures.extend(self._capture_full_page_intelligent(base_filename, analyze_elements))
                 
             elif capture_type == "visible_area":
-                # Capture de la zone visible uniquement
+                # Capture of visible area only
                 captures.extend(self._capture_visible_area(base_filename, analyze_elements))
                 
             elif capture_type == "element_focused":
-                # Capture focalisée sur les éléments importants
+                # Capture focused on important elements
                 captures.extend(self._capture_important_elements(base_filename))
             
-            # Optimiser toutes les captures pour l'IA
+            # Optimize all captures for AI
             optimized_captures = []
             for capture in captures:
                 optimized = self._optimize_for_ai_analysis(capture)
                 if optimized:
                     optimized_captures.append(optimized)
             
-            # Calculer le temps de traitement
+            # Calculate processing time
             processing_time = (datetime.now() - start_time).total_seconds()
             
-            # Mettre à jour les statistiques
+            # Update statistics
             self.stats['captures_taken'] += len(captures)
             self.stats['successful_optimizations'] += len(optimized_captures)
             self.stats['total_processing_time'] += processing_time
             
-            logger.info(f"✅ Capture intelligente réussie: {len(optimized_captures)} images en {processing_time:.2f}s")
+            logger.info(f"✅ Intelligent capture successful: {len(optimized_captures)} images in {processing_time:.2f}s")
             
             return {
                 'success': True,
@@ -214,7 +214,7 @@ class IntelligentWebCapture:
             
         except Exception as e:
             self.stats['failed_captures'] += 1
-            error_msg = f"Erreur capture intelligente {url}: {str(e)}"
+            error_msg = f"Intelligent capture error {url}: {str(e)}"
             logger.error(f"❌ {error_msg}")
             
             return {
@@ -224,42 +224,42 @@ class IntelligentWebCapture:
             }
     
     def _capture_full_page_intelligent(self, base_filename: str, analyze_elements: bool) -> List[Dict[str, Any]]:
-        """Capture intelligente de la page complète avec scrolling adaptatif"""
+        """Intelligent full page capture with adaptive scrolling"""
         captures = []
         
         try:
-            # Obtenir la hauteur totale de la page
+            # Get total page height
             total_height = self.webdriver.execute_script("return document.body.scrollHeight")
             viewport_height = self.webdriver.execute_script("return window.innerHeight")
             
             logger.info(f"📏 Page: {total_height}px, Viewport: {viewport_height}px")
             
-            # Calculer le nombre de captures nécessaires
+            # Calculate number of captures needed
             scroll_positions = []
             current_position = 0
             
             while current_position < total_height:
                 scroll_positions.append(current_position)
-                current_position += viewport_height * 0.8  # 20% de chevauchement
+                current_position += viewport_height * 0.8  # 20% overlap
             
-            # S'assurer de capturer le bas de la page
+            # Ensure bottom of page is captured
             if scroll_positions[-1] < total_height - viewport_height:
                 scroll_positions.append(total_height - viewport_height)
             
-            # Prendre les captures à chaque position
+            # Take captures at each position
             for i, position in enumerate(scroll_positions):
-                # Scroller à la position
+                # Scroll to position
                 self.webdriver.execute_script(f"window.scrollTo(0, {position});")
                 time.sleep(self.capture_config['scroll_pause'])
                 
-                # Nom de fichier pour cette section
+                # Filename for this section
                 section_filename = f"{base_filename}_section_{i+1:02d}.png"
                 raw_path = self.raw_screenshots_dir / section_filename
                 
-                # Prendre la capture
+                # Take screenshot
                 self.webdriver.save_screenshot(str(raw_path))
                 
-                # Analyser les éléments si demandé
+                # Analyze elements if requested
                 elements_info = {}
                 if analyze_elements:
                     elements_info = self._analyze_visible_elements()
@@ -273,27 +273,27 @@ class IntelligentWebCapture:
                     'filename': section_filename
                 })
                 
-                logger.info(f"📸 Section {i+1}/{len(scroll_positions)} capturée")
+                logger.info(f"📸 Section {i+1}/{len(scroll_positions)} captured")
             
-            # Revenir en haut de la page
+            # Scroll back to top of page
             self.webdriver.execute_script("window.scrollTo(0, 0);")
             
             return captures
             
         except Exception as e:
-            logger.error(f"❌ Erreur capture page complète: {e}")
+            logger.error(f"❌ Full page capture error: {e}")
             return []
     
     def _capture_visible_area(self, base_filename: str, analyze_elements: bool) -> List[Dict[str, Any]]:
-        """Capture de la zone visible actuelle"""
+        """Capture of current visible area"""
         try:
             filename = f"{base_filename}_visible.png"
             raw_path = self.raw_screenshots_dir / filename
             
-            # Prendre la capture
+            # Take screenshot
             self.webdriver.save_screenshot(str(raw_path))
             
-            # Analyser les éléments
+            # Analyze elements
             elements_info = {}
             if analyze_elements:
                 elements_info = self._analyze_visible_elements()
@@ -308,15 +308,15 @@ class IntelligentWebCapture:
             }]
             
         except Exception as e:
-            logger.error(f"❌ Erreur capture zone visible: {e}")
+            logger.error(f"❌ Visible area capture error: {e}")
             return []
     
     def _capture_important_elements(self, base_filename: str) -> List[Dict[str, Any]]:
-        """Capture focalisée sur les éléments importants (headers, forms, CTA, etc.)"""
+        """Capture focused on important elements (headers, forms, CTAs, etc.)"""
         captures = []
         
         try:
-            # Sélecteurs d'éléments importants
+            # Important element selectors
             important_selectors = [
                 'header, .header, #header',
                 'nav, .nav, .navigation, #navigation',
@@ -331,11 +331,11 @@ class IntelligentWebCapture:
                     elements = self.webdriver.find_elements(self.By.CSS_SELECTOR, selector)
                     
                     if elements:
-                        # Scroller vers le premier élément trouvé
+                        # Scroll to the first found element
                         self.webdriver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elements[0])
                         time.sleep(1)
                         
-                        # Prendre la capture
+                        # Take screenshot
                         filename = f"{base_filename}_element_{i+1:02d}.png"
                         raw_path = self.raw_screenshots_dir / filename
                         
@@ -350,22 +350,22 @@ class IntelligentWebCapture:
                             'filename': filename
                         })
                         
-                        logger.info(f"🎯 Élément capturé: {selector} ({len(elements)} trouvés)")
+                        logger.info(f"🎯 Element captured: {selector} ({len(elements)} found)")
                 
                 except Exception as e:
-                    logger.warning(f"⚠️ Impossible de capturer {selector}: {e}")
+                    logger.warning(f"⚠️ Could not capture {selector}: {e}")
                     continue
             
             return captures
             
         except Exception as e:
-            logger.error(f"❌ Erreur capture éléments importants: {e}")
+            logger.error(f"❌ Important elements capture error: {e}")
             return []
     
     def _analyze_visible_elements(self) -> Dict[str, Any]:
-        """Analyse les éléments visibles sur la page actuelle"""
+        """Analyzes visible elements on the current page"""
         try:
-            # Compter différents types d'éléments
+            # Count different element types
             elements_count = {
                 'buttons': len(self.webdriver.find_elements(self.By.CSS_SELECTOR, 'button, .btn, input[type="submit"], input[type="button"]')),
                 'links': len(self.webdriver.find_elements(self.By.CSS_SELECTOR, 'a[href]')),
@@ -375,10 +375,10 @@ class IntelligentWebCapture:
                 'headings': len(self.webdriver.find_elements(self.By.CSS_SELECTOR, 'h1, h2, h3, h4, h5, h6'))
             }
             
-            # Obtenir le titre de la page
+            # Get page title
             page_title = self.webdriver.title
             
-            # Obtenir l'URL actuelle
+            # Get current URL
             current_url = self.webdriver.current_url
             
             return {
@@ -390,48 +390,48 @@ class IntelligentWebCapture:
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur analyse éléments: {e}")
+            logger.error(f"❌ Elements analysis error: {e}")
             return {}
     
     def _optimize_for_ai_analysis(self, capture_info: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Optimise une capture pour l'analyse par l'IA"""
+        """Optimizes a capture for AI analysis"""
         try:
             raw_path = Path(capture_info['raw_path'])
             if not raw_path.exists():
                 return None
             
-            # Ouvrir l'image
+            # Open the image
             with Image.open(raw_path) as img:
-                # Convertir en RGB si nécessaire
+                # Convert to RGB if necessary
                 if img.mode != 'RGB':
                     img = img.convert('RGB')
                 
-                # Améliorer la qualité pour l'IA
-                # 1. Améliorer le contraste
+                # Enhance quality for AI
+                # 1. Enhance contrast
                 enhancer = ImageEnhance.Contrast(img)
                 img = enhancer.enhance(1.2)
                 
-                # 2. Améliorer la netteté
+                # 2. Enhance sharpness
                 enhancer = ImageEnhance.Sharpness(img)
                 img = enhancer.enhance(1.1)
                 
-                # 3. Redimensionner si trop grande (optimisation pour Gemini)
+                # 3. Resize if too large (optimization for Google Gemini 2.0 Flash AI)
                 max_size = (1920, 1080)
                 if img.size[0] > max_size[0] or img.size[1] > max_size[1]:
                     img.thumbnail(max_size, Image.Resampling.LANCZOS)
                 
-                # Sauvegarder la version optimisée
+                # Save optimized version
                 optimized_filename = f"opt_{raw_path.stem}.jpg"
                 optimized_path = self.optimized_screenshots_dir / optimized_filename
                 
                 img.save(optimized_path, 'JPEG', quality=90, optimize=True)
                 
-                # Calculer les métadonnées
+                # Calculate metadata
                 file_size_raw = raw_path.stat().st_size
                 file_size_optimized = optimized_path.stat().st_size
                 compression_ratio = file_size_raw / file_size_optimized if file_size_optimized > 0 else 1
                 
-                # Mise à jour des informations de capture
+                # Updating capture information
                 optimized_info = capture_info.copy()
                 optimized_info.update({
                     'optimized_path': str(optimized_path),
@@ -445,25 +445,25 @@ class IntelligentWebCapture:
                     }
                 })
                 
-                logger.info(f"✨ Image optimisée: {compression_ratio:.1f}x compression")
+                logger.info(f"✨ Image optimized: {compression_ratio:.1f}x compression")
                 return optimized_info
                 
         except Exception as e:
-            logger.error(f"❌ Erreur optimisation image: {e}")
+            logger.error(f"❌ Image optimization error: {e}")
             return None
     
     def close(self):
-        """Ferme le WebDriver"""
+        """Closes the WebDriver"""
         if self.webdriver:
             try:
                 self.webdriver.quit()
                 self.driver_initialized = False
-                logger.info("🔚 WebDriver fermé")
+                logger.info("🔚 WebDriver closed")
             except Exception as e:
-                logger.error(f"❌ Erreur fermeture WebDriver: {e}")
+                logger.error(f"❌ WebDriver closing error: {e}")
     
     def get_statistics(self) -> Dict[str, Any]:
-        """Retourne les statistiques du système de capture"""
+        """Returns capture system statistics"""
         avg_time = self.stats['total_processing_time'] / max(self.stats['captures_taken'], 1)
         
         return {
@@ -476,42 +476,42 @@ class IntelligentWebCapture:
         }
     
     def __del__(self):
-        """Destructeur pour nettoyer les ressources"""
+        """Destructor to clean up resources"""
         self.close()
 
-# Instance globale
+# Global instance
 intelligent_capture = None
 
 def initialize_intelligent_capture(screenshots_dir: str = "intelligent_screenshots") -> IntelligentWebCapture:
     """
-    Initialise le système de capture intelligent global
+    Initializes the global intelligent capture system
     
     Args:
-        screenshots_dir: Répertoire pour les captures
+        screenshots_dir: Directory for captures
         
     Returns:
-        Instance du système de capture
+        Capture system instance
     """
     global intelligent_capture
     
     if intelligent_capture is None:
         intelligent_capture = IntelligentWebCapture(screenshots_dir)
-        logger.info("🚀 Système de Capture Intelligent initialisé globalement")
+        logger.info("🚀 Intelligent Capture System initialized globally")
     
     return intelligent_capture
 
 def get_intelligent_capture() -> Optional[IntelligentWebCapture]:
     """
-    Retourne l'instance globale du système de capture
+    Returns the global capture system instance
     
     Returns:
-        Instance ou None si non initialisé
+        Instance or None if not initialized
     """
     global intelligent_capture
     return intelligent_capture
 
 if __name__ == "__main__":
-    # Test du système
+    # System test
     capture_system = initialize_intelligent_capture()
-    print("🧪 Système de Capture Intelligent prêt pour les tests")
-    print(f"📊 Statistiques: {capture_system.get_statistics()}")
+    print("🧪 Intelligent Capture System ready for tests")
+    print(f"📊 Statistics: {capture_system.get_statistics()}")
