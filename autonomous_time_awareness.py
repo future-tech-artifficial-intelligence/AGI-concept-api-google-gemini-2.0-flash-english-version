@@ -1,7 +1,6 @@
 """
-Module de conscience temporelle autonome pour l'IA
-Ce module permet à l'IA de maintenir une awareness constante du temps
-et d'accéder automatiquement aux informations temporelles.
+**Autonomous Time Awareness Module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH**
+This module allows artificial intelligence API GOOGLE GEMINI 2.0 FLASH to maintain a constant awareness of time and automatically access temporal information.
 """
 
 import datetime
