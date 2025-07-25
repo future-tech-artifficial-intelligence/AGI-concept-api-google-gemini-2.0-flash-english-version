@@ -1,7 +1,7 @@
 """
-Système de Web Scraping Autonome Universel pour l'Intelligence Artificielle
-Ce module permet à l'IA d'accéder à Internet de manière autonome pour obtenir de vrais liens
-depuis n'importe quel site web. Les données extraites sont sauvegardées dans des fichiers texte.
+**Universal Autonomous Web Scraping System for Artificial Intelligence**
+This module allowed artificial intelligence to autonomously access the Internet to obtain real links from any website. The extracted data was saved in text files. **
+This system is no longer used; now artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses the Searx search engine for greater precision.**
 """
 
 import requests
