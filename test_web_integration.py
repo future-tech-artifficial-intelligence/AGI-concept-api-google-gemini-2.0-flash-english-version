@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
 """
-Script de test pour vérifier l'intégration du système de web scraping autonome
+Test script to verify the integration of the autonomous web scraping system
+artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses the Searx search engine for greater accuracy in internet searches; web scraping is no longer used.
 """
 
 def test_web_integration():
-    """Test de base pour l'intégration web"""
+    """Basic test for web integration"""
     try:
-        # Test de déclenchement d'une session d'apprentissage web
+        # Test triggering a web learning session
         from web_learning_integration import SimpleWebLearningIntegration
         from autonomous_web_scraper import AutonomousWebScraper
         from intelligent_web_navigator import SimpleWebNavigator
-        
-        # Test du scraper autonome
+
+        # Test the autonomous scraper
         scraper = AutonomousWebScraper()
-        print("✅ AutonomousWebScraper initialisé avec succès")
+        print("✅ AutonomousWebScraper initialized successfully")
 
-        # Test du système d'apprentissage web
+        # Test the web learning system
         learning_system = SimpleWebLearningIntegration()
-        print("✅ SimpleWebLearningIntegration initialisé avec succès")
+        print("✅ SimpleWebLearningIntegration initialized successfully")
 
-        # Test du navigateur intelligent
+        # Test the intelligent navigator
         navigator = SimpleWebNavigator(scraper)
-        print("✅ SimpleWebNavigator initialisé avec succès")
+        print("✅ SimpleWebNavigator initialized successfully")
 
-        print("🌐 Système de Web Scraping Autonome opérationnel")
+        print("🌐 Autonomous Web Scraping System operational")
         return True
     except Exception as e:
-        print(f"❌ Erreur lors du test d'intégration web: {e}")
+        print(f"❌ Error during web integration test: {e}")
         return False
 
 if __name__ == "__main__":
