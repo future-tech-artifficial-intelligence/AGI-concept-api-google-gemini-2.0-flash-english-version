@@ -7,14 +7,14 @@ from datetime import datetime
 DB_PATH = 'gemini_chat.db'
 
 def get_db_connection():
-    """Retourne une connexion à la base de données avec timeout"""
+    """Returns a connection to the database with a timeout"""
     return sqlite3.connect(DB_PATH, timeout=20.0)
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Création de la table utilisateurs
+    # Create users table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
@@ -25,7 +25,7 @@ def init_db():
     )
     ''')
 
-    # Création de la table historique des chats
+    # Create chat history table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS chat_history (
         id INTEGER PRIMARY KEY,
@@ -37,7 +37,7 @@ def init_db():
     )
     ''')
 
-    # Création de la table d'état émotionnel
+    # Create emotional state table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS emotional_state (
         id INTEGER PRIMARY KEY,
@@ -54,7 +54,7 @@ def init_db():
     )
     ''')
 
-    # Création de la table pour la mémoire à long terme (conscience)
+    # Create table for long-term memory (consciousness)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS consciousness_memory (
         id INTEGER PRIMARY KEY,
@@ -67,7 +67,7 @@ def init_db():
     )
     ''')
 
-    # Création de la table pour les interactions utilisateur (contexte)
+    # Create table for user interactions (context)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS user_interaction_context (
         id INTEGER PRIMARY KEY,
@@ -79,7 +79,7 @@ def init_db():
     )
     ''')
 
-    # Créer la table des conversations
+    # Create conversations table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS conversations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,7 +93,7 @@ def init_db():
         )
     ''')
 
-    # Créer la table des préférences utilisateur
+    # Create user preferences table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS user_preferences (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,10 +105,10 @@ def init_db():
         )
     ''')
 
-    # Vérifier si l'état émotionnel par défaut existe déjà
+    # Check if the default emotional state already exists
     cursor.execute("SELECT COUNT(*) FROM emotional_state")
     if cursor.fetchone()[0] == 0:
-        # Insérer l'état émotionnel par défaut (neutre)
+        # Insert the default emotional state (neutral)
         cursor.execute('''
         INSERT INTO emotional_state (base_state, joy, sadness, anger, fear, surprise, disgust, trust, anticipation)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -118,13 +118,13 @@ def init_db():
     conn.close()
 
 def hash_password(password):
-    # Simple hash pour l'exemple - utilisez bcrypt en production
+    # Simple hash for the example - use bcrypt in production
     return hashlib.sha256(password.encode()).hexdigest()
 
 def register_user(username, password, email):
     conn = None
     try:
-        # Ajouter un timeout de 20 secondes et mode EXCLUSIVE pour gérer les blocages
+        # Add a 20-second timeout and EXCLUSIVE mode to handle blocking
         conn = sqlite3.connect(DB_PATH, timeout=20.0, isolation_level="EXCLUSIVE")
         cursor = conn.cursor()
 
@@ -137,31 +137,31 @@ def register_user(username, password, email):
         conn.commit()
         return True
     except sqlite3.IntegrityError:
-        # Utilisateur déjà existant
+        # User already exists
         return False
     except sqlite3.OperationalError as e:
-        # Log de l'erreur pour le débogage
-        print(f"Erreur d'opération SQLite: {e}")
+        # Log error for debugging
+        print(f"SQLite Operational Error: {e}")
         return False
     finally:
-        # S'assurer que la connexion est fermée même en cas d'erreur
+        # Ensure the connection is closed even if an error occurs
         if conn:
             conn.close()
 
 def validate_login(username, password):
     """
-    Valide les identifiants de connexion d'un utilisateur.
+    Validates a user's login credentials.
 
     Args:
-        username: Nom d'utilisateur à vérifier
-        password: Mot de passe à vérifier (non hashé)
+        username: Username to check
+        password: Password to check (unhashed)
 
     Returns:
-        True si les identifiants sont valides, False sinon
+        True if credentials are valid, False otherwise
     """
     conn = None
     try:
-        # Ajouter un timeout et mode de lecture seule pour cette opération
+        # Add a timeout and read-only mode for this operation
         conn = sqlite3.connect(DB_PATH, timeout=20.0)
         cursor = conn.cursor()
 
@@ -174,15 +174,15 @@ def validate_login(username, password):
         user = cursor.fetchone()
         return user is not None
     except Exception as e:
-        print(f"Erreur lors de la validation de connexion: {str(e)}")
+        print(f"Error during login validation: {str(e)}")
         return False
     finally:
-        # S'assurer que la connexion est fermée même en cas d'erreur
+        # Ensure the connection is closed even if an error occurs
         if conn:
             conn.close()
 
 def get_emotional_state():
-    """Récupère l'état émotionnel actuel de l'IA"""
+    """Retrieves the AI's current emotional state"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM emotional_state ORDER BY last_updated DESC LIMIT 1")
@@ -207,11 +207,11 @@ def get_emotional_state():
     return None
 
 def update_emotional_state(emotions):
-    """Met à jour l'état émotionnel de l'IA"""
+    """Updates the AI's emotional state"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Déterminer l'état de base à partir des émotions dominantes
+    # Determine the base state from dominant emotions
     emotions_values = {
         'joy': emotions.get('joy', 0.5),
         'sadness': emotions.get('sadness', 0.5),
@@ -223,10 +223,10 @@ def update_emotional_state(emotions):
         'anticipation': emotions.get('anticipation', 0.5)
     }
 
-    # Trouver l'émotion dominante
+    # Find the dominant emotion
     dominant_emotion = max(emotions_values, key=emotions_values.get)
 
-    # Calculer l'état de base
+    # Calculate the base state
     if emotions_values[dominant_emotion] > 0.7:
         base_state = dominant_emotion
     elif sum(emotions_values.values()) / len(emotions_values) < 0.4:
@@ -253,30 +253,30 @@ def update_emotional_state(emotions):
     conn.close()
 
 def store_memory(topic, knowledge, importance=0.5):
-    """Stocke une information dans la mémoire de l'IA"""
+    """Stores information in the AI's memory"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Vérifier si le sujet existe déjà
+    # Check if the topic already exists
     cursor.execute("SELECT id, knowledge, importance, usage_count FROM consciousness_memory WHERE topic = ?", (topic,))
     existing = cursor.fetchone()
 
     if existing:
         try:
-            # Mettre à jour la connaissance existante (avec gestion d'erreurs robuste)
+            # Update existing knowledge (with robust error handling)
             try:
                 if isinstance(existing[1], str):
                     merged_knowledge = json.loads(existing[1])
                 else:
                     merged_knowledge = existing[1]
 
-                # S'assurer que merged_knowledge est bien un dictionnaire
+                # Ensure merged_knowledge is indeed a dictionary
                 if not isinstance(merged_knowledge, dict):
                     merged_knowledge = {"data": merged_knowledge}
             except (json.JSONDecodeError, TypeError):
                 merged_knowledge = {"error_recovery": True}
 
-            # Préparer new_knowledge avec une protection supplémentaire
+            # Prepare new_knowledge with additional protection
             try:
                 if isinstance(knowledge, str):
                     try:
@@ -286,32 +286,32 @@ def store_memory(topic, knowledge, importance=0.5):
                 else:
                     new_knowledge = knowledge
 
-                # S'assurer que new_knowledge est bien un dictionnaire
+                # Ensure new_knowledge is indeed a dictionary
                 if not isinstance(new_knowledge, dict):
                     new_knowledge = {"data": new_knowledge}
             except Exception:
                 new_knowledge = {"error_recovery": True}
 
-            # Fusion des connaissances avec protection maximale
+            # Merge knowledge with maximum protection
             for key, value in new_knowledge.items():
                 if key in merged_knowledge:
-                    # Triple vérification des types avant d'utiliser update()
+                    # Triple check types before using update()
                     if isinstance(merged_knowledge[key], dict) and isinstance(value, dict):
-                        # Les deux sont des dictionnaires, fusion sécurisée
-                        merged_knowledge[key] = merged_knowledge[key].copy()  # Copie pour éviter les modifications en place
+                        # Both are dictionaries, secure merge
+                        merged_knowledge[key] = merged_knowledge[key].copy()  # Copy to avoid in-place modifications
                         merged_knowledge[key].update(value)
                     else:
-                        # Si l'un d'eux n'est pas un dictionnaire, remplacer simplement
+                        # If one of them is not a dictionary, simply replace
                         merged_knowledge[key] = value
                 else:
                     merged_knowledge[key] = value
         except Exception as e:
-            # En cas d'erreur critique, créer un nouvel objet plutôt que d'échouer
+            # In case of critical error, create a new object rather than failing
             import logging
-            logging.error(f"Erreur lors de la fusion des connaissances: {str(e)}")
+            logging.error(f"Error merging knowledge: {str(e)}")
             merged_knowledge = {"error_recovery": True, "text": str(knowledge) if knowledge else ""}
 
-        # Augmenter l'importance et le compteur d'utilisation
+        # Increase importance and usage count
         new_importance = min(1.0, existing[2] + 0.1)
         new_count = existing[3] + 1
 
@@ -321,7 +321,7 @@ def store_memory(topic, knowledge, importance=0.5):
         WHERE id = ?
         ''', (json.dumps(merged_knowledge), new_importance, new_count, existing[0]))
     else:
-        # Créer une nouvelle entrée
+        # Create a new entry
         cursor.execute('''
         INSERT INTO consciousness_memory (topic, knowledge, importance)
         VALUES (?, ?, ?)
@@ -331,19 +331,19 @@ def store_memory(topic, knowledge, importance=0.5):
     conn.close()
 
 def get_memories(topic=None, min_importance=0.0, limit=5):
-    """Récupère des souvenirs de la mémoire de l'IA"""
+    """Retrieves memories from the AI's memory"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     if topic:
-        # Recherche par sujet
+        # Search by topic
         cursor.execute('''
         SELECT topic, knowledge, importance FROM consciousness_memory 
         WHERE topic LIKE ? AND importance >= ? 
         ORDER BY importance DESC, last_accessed DESC LIMIT ?
         ''', (f"%{topic}%", min_importance, limit))
     else:
-        # Récupérer les souvenirs les plus importants
+        # Retrieve the most important memories
         cursor.execute('''
         SELECT topic, knowledge, importance FROM consciousness_memory 
         WHERE importance >= ? 
@@ -356,11 +356,11 @@ def get_memories(topic=None, min_importance=0.0, limit=5):
     return [{'topic': mem[0], 'knowledge': json.loads(mem[1]), 'importance': mem[2]} for mem in memories]
 
 def update_user_context(user_id, context_data, session_id):
-    """Met à jour ou crée le contexte d'interaction de l'utilisateur"""
+    """Updates or creates the user's interaction context"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Vérifier si un contexte existe déjà pour cet utilisateur et cette session
+    # Check if a context already exists for this user and session
     cursor.execute("SELECT id FROM user_interaction_context WHERE user_id = ? AND session_id = ?", 
                    (user_id, session_id))
     existing = cursor.fetchone()
@@ -381,7 +381,7 @@ def update_user_context(user_id, context_data, session_id):
     conn.close()
 
 def get_user_context(user_id, session_id):
-    """Récupère le contexte d'interaction de l'utilisateur"""
+    """Retrieves the user's interaction context"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
