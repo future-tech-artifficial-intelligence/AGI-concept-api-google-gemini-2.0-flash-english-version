@@ -1,7 +1,7 @@
 """
-Module de synchronisation des fuseaux horaires pour l'IA.
-Ce module assure une synchronisation correcte et cohérente des fuseaux horaires
-entre tous les composants du système.
+Timezone synchronization module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH.
+This module ensures correct and consistent timezone synchronization
+across all system components.
 """
 
 import logging
@@ -10,13 +10,13 @@ import datetime
 from typing import Dict, Optional, Any
 from database import get_db_connection
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class TimezoneSynchronizer:
     """
-    Classe pour gérer la synchronisation des fuseaux horaires dans tout le système.
+    Class to manage timezone synchronization throughout the system.
     """
 
     def __init__(self):
@@ -25,40 +25,40 @@ class TimezoneSynchronizer:
 
     def set_user_timezone(self, user_id: int, timezone: str) -> bool:
         """
-        Définit et sauvegarde le fuseau horaire d'un utilisateur.
+        Sets and saves a user's timezone.
 
         Args:
-            user_id: ID de l'utilisateur
-            timezone: Fuseau horaire à définir
+            user_id: User ID
+            timezone: Timezone to set
 
         Returns:
-            True si la configuration a réussi, False sinon
+            True if configuration was successful, False otherwise
         """
         try:
-            # Valider le fuseau horaire
+            # Validate timezone
             pytz.timezone(timezone)
 
-            # Mettre à jour le cache
+            # Update cache
             self.user_timezones_cache[user_id] = timezone
 
-            # Sauvegarder en base de données
+            # Save to database
             conn = get_db_connection()
             cursor = conn.cursor()
 
-            # Vérifier si l'utilisateur existe déjà dans les préférences
+            # Check if user already exists in preferences
             cursor.execute("""
                 SELECT id FROM user_preferences WHERE user_id = ?
             """, (user_id,))
 
             if cursor.fetchone():
-                # Mettre à jour le fuseau horaire existant
+                # Update existing timezone
                 cursor.execute("""
-                    UPDATE user_preferences 
+                    UPDATE user_preferences
                     SET timezone = ?, updated_at = CURRENT_TIMESTAMP
                     WHERE user_id = ?
                 """, (timezone, user_id))
             else:
-                # Créer une nouvelle entrée
+                # Create new entry
                 cursor.execute("""
                     INSERT INTO user_preferences (user_id, timezone, created_at, updated_at)
                     VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
@@ -67,33 +67,33 @@ class TimezoneSynchronizer:
             conn.commit()
             conn.close()
 
-            logger.info(f"Fuseau horaire configuré pour l'utilisateur {user_id}: {timezone}")
+            logger.info(f"Timezone configured for user {user_id}: {timezone}")
             return True
 
         except pytz.exceptions.UnknownTimeZoneError:
-            logger.error(f"Fuseau horaire invalide: {timezone}")
+            logger.error(f"Invalid timezone: {timezone}")
             return False
         except Exception as e:
-            logger.error(f"Erreur lors de la configuration du fuseau horaire: {str(e)}")
+            logger.error(f"Error configuring timezone: {str(e)}")
             return False
 
     def get_user_timezone(self, user_id: int) -> str:
         """
-        Récupère le fuseau horaire d'un utilisateur.
+        Retrieves a user's timezone.
 
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
 
         Returns:
-            Fuseau horaire de l'utilisateur ou par défaut
+            User's timezone or default
         """
-        # Vérifier le cache d'abord
+        # Check cache first
         if user_id in self.user_timezones_cache:
             timezone = self.user_timezones_cache[user_id]
-            logger.debug(f"Fuseau horaire récupéré du cache pour l'utilisateur {user_id}: {timezone}")
+            logger.debug(f"Timezone retrieved from cache for user {user_id}: {timezone}")
             return timezone
 
-        # Récupérer depuis la base de données
+        # Retrieve from database
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -107,27 +107,27 @@ class TimezoneSynchronizer:
 
             if result and result[0]:
                 timezone = result[0]
-                # Mettre en cache
+                # Cache it
                 self.user_timezones_cache[user_id] = timezone
-                logger.info(f"Fuseau horaire récupéré de la DB pour l'utilisateur {user_id}: {timezone}")
+                logger.info(f"Timezone retrieved from DB for user {user_id}: {timezone}")
                 return timezone
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération du fuseau horaire: {str(e)}")
+            logger.error(f"Error retrieving timezone: {str(e)}")
 
-        # Retourner le fuseau horaire par défaut
-        logger.info(f"Utilisation du fuseau horaire par défaut pour l'utilisateur {user_id}: {self.default_timezone}")
+        # Return default timezone
+        logger.info(f"Using default timezone for user {user_id}: {self.default_timezone}")
         return self.default_timezone
 
     def get_user_current_time(self, user_id: int) -> datetime.datetime:
         """
-        Obtient l'heure actuelle dans le fuseau horaire de l'utilisateur.
+        Gets the current time in the user's timezone.
 
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
 
         Returns:
-            Datetime actuel dans le fuseau horaire de l'utilisateur
+            Current datetime in the user's timezone
         """
         timezone_str = self.get_user_timezone(user_id)
 
@@ -135,51 +135,51 @@ class TimezoneSynchronizer:
             tz = pytz.timezone(timezone_str)
             current_time = datetime.datetime.now(tz)
 
-            logger.debug(f"Heure actuelle pour l'utilisateur {user_id} ({timezone_str}): {current_time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+            logger.debug(f"Current time for user {user_id} ({timezone_str}): {current_time.strftime('%Y-%m-%d %H:%M:%S %Z')}")
             return current_time
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération de l'heure: {str(e)}")
-            # Retourner l'heure par défaut
+            logger.error(f"Error retrieving time: {str(e)}")
+            # Return default time
             tz = pytz.timezone(self.default_timezone)
             return datetime.datetime.now(tz)
 
     def format_time_for_user(self, user_id: int, dt: Optional[datetime.datetime] = None) -> str:
         """
-        Formate l'heure pour l'affichage à l'utilisateur.
+        Formats time for user display.
 
         Args:
-            user_id: ID de l'utilisateur
-            dt: Datetime à formater (par défaut: maintenant)
+            user_id: User ID
+            dt: Datetime to format (default: now)
 
         Returns:
-            Chaîne formatée avec l'heure dans le fuseau horaire de l'utilisateur
+            Formatted string with time in user's timezone
         """
         if dt is None:
             dt = self.get_user_current_time(user_id)
 
-        # Convertir dans le fuseau horaire de l'utilisateur si nécessaire
+        # Convert to user's timezone if necessary
         user_timezone = self.get_user_timezone(user_id)
 
         if dt.tzinfo is None:
-            # Si pas de timezone, assumer UTC et convertir
+            # If no timezone, assume UTC and convert
             dt = pytz.utc.localize(dt)
 
-        # Convertir dans le fuseau horaire de l'utilisateur
+        # Convert to user's timezone
         user_tz = pytz.timezone(user_timezone)
         dt_user = dt.astimezone(user_tz)
 
-        return dt_user.strftime("%A %d %B %Y à %H:%M:%S (%Z)")
+        return dt_user.strftime("%A %d %B %Y at %H:%M:%S (%Z)")
 
     def verify_conversation_timestamps(self, user_id: int) -> Dict[str, Any]:
         """
-        Vérifie et corrige les timestamps des conversations pour un utilisateur.
+        Verifies and corrects conversation timestamps for a user.
 
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
 
         Returns:
-            Rapport de vérification
+            Verification report
         """
         report = {
             "user_id": user_id,
@@ -193,10 +193,10 @@ class TimezoneSynchronizer:
             conn = get_db_connection()
             cursor = conn.cursor()
 
-            # Récupérer toutes les conversations de l'utilisateur
+            # Retrieve all user conversations
             cursor.execute("""
-                SELECT id, timestamp, created_at FROM conversations 
-                WHERE user_id = ? 
+                SELECT id, timestamp, created_at FROM conversations
+                WHERE user_id = ?
                 ORDER BY timestamp DESC
             """, (user_id,))
 
@@ -206,43 +206,43 @@ class TimezoneSynchronizer:
             for conv in conversations:
                 conv_id, timestamp, created_at = conv
 
-                # Vérifier si le timestamp nécessite une correction
+                # Check if timestamp needs correction
                 try:
-                    # Parser le timestamp existant
+                    # Parse existing timestamp
                     if isinstance(timestamp, str):
                         dt = datetime.datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
                     else:
                         dt = timestamp
 
-                    # Convertir dans le fuseau horaire de l'utilisateur
+                    # Convert to user's timezone
                     user_tz = pytz.timezone(report["user_timezone"])
                     dt_corrected = dt.astimezone(user_tz)
 
-                    # Mettre à jour si nécessaire
+                    # Update if necessary
                     new_timestamp = dt_corrected.isoformat()
                     if new_timestamp != timestamp:
                         cursor.execute("""
-                            UPDATE conversations 
+                            UPDATE conversations
                             SET timestamp = ?
                             WHERE id = ?
                         """, (new_timestamp, conv_id))
                         report["corrections_made"] += 1
 
                 except Exception as e:
-                    report["errors"].append(f"Erreur avec la conversation {conv_id}: {str(e)}")
+                    report["errors"].append(f"Error with conversation {conv_id}: {str(e)}")
 
             conn.commit()
             conn.close()
 
         except Exception as e:
-            report["errors"].append(f"Erreur générale: {str(e)}")
+            report["errors"].append(f"General error: {str(e)}")
 
-        logger.info(f"Vérification des timestamps terminée pour l'utilisateur {user_id}: {report['corrections_made']} corrections effectuées")
+        logger.info(f"Timestamp verification completed for user {user_id}: {report['corrections_made']} corrections made")
         return report
 
-# Instance globale
+# Global instance
 timezone_sync = TimezoneSynchronizer()
 
 def get_timezone_synchronizer():
-    """Retourne l'instance globale du synchroniseur de fuseaux horaires."""
+    """Returns the global instance of the timezone synchronizer."""
     return timezone_sync
