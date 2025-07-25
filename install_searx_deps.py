@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Installation des dépendances pour le système Searx
+Dependency installation for the Searx system
 """
 
 import subprocess
@@ -11,28 +11,28 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('searx_deps_installer')
 
 def install_package(package_name):
-    """Installe un package Python avec pip"""
+    """Installs a Python package with pip"""
     try:
-        logger.info(f"Installation de {package_name}...")
+        logger.info(f"Installing {package_name}...")
         result = subprocess.run([
             sys.executable, '-m', 'pip', 'install', package_name
         ], capture_output=True, text=True, check=True)
         
-        logger.info(f"✅ {package_name} installé avec succès")
+        logger.info(f"✅ {package_name} installed successfully")
         return True
         
     except subprocess.CalledProcessError as e:
-        logger.error(f"❌ Erreur lors de l'installation de {package_name}: {e.stderr}")
+        logger.error(f"❌ Error installing {package_name}: {e.stderr}")
         return False
 
 def main():
-    """Installe toutes les dépendances nécessaires pour Searx"""
-    logger.info("🔧 Installation des dépendances pour le système Searx")
+    """Installs all necessary dependencies for Searx"""
+    logger.info("🔧 Installing dependencies for the Searx system")
     
     dependencies = [
-        'beautifulsoup4',  # Pour le parsing HTML
-        'lxml',           # Parser XML/HTML plus rapide
-        'requests',       # Client HTTP (normalement déjà installé)
+        'beautifulsoup4',  # For HTML parsing
+        'lxml',           # Faster XML/HTML parser
+        'requests',       # HTTP client (usually already installed)
     ]
     
     success_count = 0
@@ -42,13 +42,13 @@ def main():
         if install_package(package):
             success_count += 1
     
-    logger.info(f"📊 Installation terminée: {success_count}/{total_count} packages installés")
+    logger.info(f"📊 Installation complete: {success_count}/{total_count} packages installed")
     
     if success_count == total_count:
-        logger.info("✅ Toutes les dépendances ont été installées avec succès")
+        logger.info("✅ All dependencies have been installed successfully")
         return True
     else:
-        logger.warning("⚠️ Certaines dépendances n'ont pas pu être installées")
+        logger.warning("⚠️ Some dependencies could not be installed")
         return False
 
 if __name__ == "__main__":
