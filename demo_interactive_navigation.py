@@ -1,6 +1,6 @@
 """
-Démonstration du Système de Navigation Interactive avec l'API Gemini
-Ce script montre les nouvelles capacités d'interaction avec les éléments web
+**Demonstration of the Interactive Navigation System with the artificial intelligence API GOOGLE GEMINI 2.0 FLASH**
+This script showcases the new capabilities for interacting with web elements.
 """
 
 import logging
