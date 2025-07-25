@@ -1,32 +1,32 @@
 """
-Module de sécurité qui intercepte et corrige les données de type incorrect.
-Réécrit complètement pour offrir une protection maximale contre les erreurs de type.
+Security module that intercepts and corrects incorrect data types.
+Completely rewritten to provide maximum protection against type errors.
 """
 
 import logging
 import traceback
 from typing import Any, Dict, Union
 
-# Métadonnées du module
+# Module Metadata
 MODULE_METADATA = {
     "enabled": True,
-    "priority": 1,  # Priorité MAXIMALE pour s'exécuter avant tous les autres modules
-    "description": "Module de sécurité qui protège contre les erreurs de type",
+    "priority": 1,  # MAXIMUM priority to run before all other modules
+    "description": "Security module that protects against type errors",
     "version": "0.2.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
 }
 
-# Configuration du logger spécifique avec plus de détails
+# Specific logger configuration with more details
 logger = logging.getLogger('type_security')
 logger.setLevel(logging.DEBUG)
 if not logger.handlers:
-    # Ajouter un handler pour fichier avec plus de détails
+    # Add a file handler with more details
     file_handler = logging.FileHandler('type_security.log')
     file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(file_handler)
     
-    # Ajouter un handler console pour les erreurs critiques
+    # Add a console handler for critical errors
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.ERROR)
     console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
@@ -34,7 +34,7 @@ if not logger.handlers:
 
 def safe_copy(obj: Any) -> Any:
     """
-    Crée une copie sûre d'un objet en fonction de son type.
+    Creates a safe copy of an object based on its type.
     """
     try:
         if obj is None:
@@ -48,67 +48,67 @@ def safe_copy(obj: Any) -> Any:
         elif isinstance(obj, tuple):
             return tuple(safe_copy(item) for item in obj)
         else:
-            # Pour les types non pris en charge, tenter de les convertir en chaîne
+            # For unsupported types, attempt to convert them to string
             return str(obj)
     except Exception as e:
-        logger.error(f"Erreur lors de la copie: {str(e)}")
+        logger.error(f"Error during copy: {str(e)}")
         return None
 
 def process(data: Any, hook: str) -> Dict[str, Any]:
     """
-    Fonction de sécurité qui garantit que les données sont toujours dans un format valide.
+    Security function that ensures data is always in a valid format.
     """
     try:
-        logger.debug(f"[{hook}] Entrée: type={type(data)}")
+        logger.debug(f"[{hook}] Input: type={type(data)}")
         
-        # 1. Protection contre les données non-dictionnaire
+        # 1. Protection against non-dictionary data
         if not isinstance(data, dict):
-            logger.warning(f"[{hook}] Données non-dictionnaire détectées: {type(data)}")
+            logger.warning(f"[{hook}] Non-dictionary data detected: {type(data)}")
             
             if isinstance(data, str):
-                logger.info(f"[{hook}] Conversion d'une chaîne en dictionnaire")
+                logger.info(f"[{hook}] Converting a string to a dictionary")
                 return {"text": data, "_secured": True}
             else:
                 try:
-                    # Tenter de convertir en dictionnaire si possible
+                    # Attempt to convert to dictionary if possible
                     dict_data = dict(data) if hasattr(data, "__iter__") else {"value": str(data)}
                     dict_data["_secured"] = True
                     return dict_data
                 except:
-                    # En cas d'échec, créer un nouveau dictionnaire
+                    # If unsuccessful, create a new dictionary
                     return {"value": str(data) if data is not None else "", "_secured": True}
         
-        # 2. Créer une copie sécurisée du dictionnaire
+        # 2. Create a secure copy of the dictionary
         result = {}
         for key, value in data.items():
-            # Protection contre les clés non-str
+            # Protection against non-string keys
             safe_key = str(key) if not isinstance(key, str) else key
             
-            # Traitement spécial de la clé "text"
+            # Special handling for the "text" key
             if safe_key == "text":
                 if not isinstance(value, str):
-                    logger.warning(f"[{hook}] Clé 'text' contient un type incorrect: {type(value)}")
+                    logger.warning(f"[{hook}] 'text' key contains an incorrect type: {type(value)}")
                     result["text"] = str(value) if value is not None else ""
                     result["_text_corrected"] = True
                 else:
                     result["text"] = value
             else:
-                # Copie sécurisée des autres valeurs
+                # Secure copy of other values
                 result[safe_key] = safe_copy(value)
         
-        # 3. Vérification de la présence de la clé "text" si nécessaire dans le hook de réponse
+        # 3. Check for the presence of the "text" key if necessary in the response hook
         if hook == "process_response" and "text" not in result:
-            logger.warning(f"[{hook}] Clé 'text' manquante dans les données de réponse")
+            logger.warning(f"[{hook}] 'text' key missing in response data")
             result["text"] = data.get("value", "") if isinstance(data, dict) else ""
             result["_text_added"] = True
         
-        # 4. Ajouter un marqueur de sécurité
+        # 4. Add a security marker
         result["_secured"] = True
         
         return result
         
     except Exception as e:
-        # En cas d'erreur critique, retourner un dictionnaire minimal
-        logger.critical(f"Erreur critique dans le module de sécurité: {str(e)}")
+        # In case of a critical error, return a minimal dictionary
+        logger.critical(f"Critical error in the security module: {str(e)}")
         logger.critical(traceback.format_exc())
-        return {"text": "Désolé, une erreur est survenue.", "_error": str(e), "_secured": True}
+        return {"text": "Sorry, an error occurred.", "_error": str(e), "_secured": True}
