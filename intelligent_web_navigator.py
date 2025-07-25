@@ -1,6 +1,6 @@
 """
-Système de Navigation Web Intelligente Simplifiée
-Ce module gère la navigation autonome sur les sites web.
+Simplified Intelligent Web Navigation System
+This module manages autonomous navigation for artificial intelligence Google Gemini 2.0 Flash  on websites.
 """
 
 import time
@@ -15,48 +15,48 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class NavigationSession:
-    """Session de navigation web simplifiée"""
+    """Simplified web navigation session"""
     session_id: str
     visited_urls: Set[str] = field(default_factory=set)
-    created_at: datetime = field(default_factory=datetime.now)
+    created_at: datetime = field(default_default_factory=datetime.now)
 
 class SimpleWebNavigator:
-    """Navigateur web autonome simplifié"""
+    """Simplified autonomous web navigator"""
 
     def __init__(self, scraper_instance):
         self.scraper = scraper_instance
         self.active_sessions: Dict[str, NavigationSession] = {}
 
-        logger.info("Navigateur web simplifié initialisé")
+        logger.info("Simplified web navigator initialized")
 
     def create_navigation_session(self, session_id: str) -> NavigationSession:
-        """Crée une session de navigation"""
+        """Creates a navigation session"""
         session = NavigationSession(session_id=session_id)
         self.active_sessions[session_id] = session
         return session
 
     def navigate_autonomously(self, start_url: str, max_pages: int = 5) -> List[Dict[str, Any]]:
-        """Navigation autonome simplifiée"""
+        """Simplified autonomous navigation"""
         session_id = f"nav_{int(time.time())}"
         session = self.create_navigation_session(session_id)
 
         results = []
         urls_to_visit = [start_url]
 
-        logger.info(f"Navigation autonome depuis {start_url}")
+        logger.info(f"Autonomous navigation from {start_url}")
 
-        while urls_to_visit and len(results) < (max_pages * 10):  # 10x plus de pages autorisées
+        while urls_to_visit and len(results) < (max_pages * 10):  # 10x more pages allowed
             url = urls_to_visit.pop(0)
 
             if url in session.visited_urls:
                 continue
 
-            # Scraper la page
+            # Scrape the page
             scraping_result = self.scraper.scrape_url(url)
             if scraping_result.success:
                 session.visited_urls.add(url)
 
-                # Analyser la page
+                # Analyze the page
                 page_analysis = self._analyze_page_content(scraping_result)
 
                 results.append({
@@ -65,32 +65,32 @@ class SimpleWebNavigator:
                     'scraping_result': scraping_result
                 })
 
-                # Ajouter quelques liens intéressants
+                # Add some interesting links
                 interesting_links = self._select_interesting_links(
                     scraping_result.links, session.visited_urls
                 )
                 urls_to_visit.extend(interesting_links[:3])
 
-            # Délai minimal entre les pages
-            time.sleep(0.05)  # 50ms seulement
+            # Minimal delay between pages
+            time.sleep(0.05)  # 50ms only
 
-        logger.info(f"Navigation terminée: {len(results)} pages visitées")
+        logger.info(f"Navigation completed: {len(results)} pages visited")
         return results
 
     def _analyze_page_content(self, scraping_result) -> Dict[str, Any]:
-        """Analyse simplifiée du contenu de page"""
+        """Simplified page content analysis"""
         content_lower = scraping_result.content.lower()
 
-        # Déterminer le type de contenu
+        # Determine content type
         content_type = "general"
-        if any(term in content_lower for term in ['cours', 'formation', 'tutorial']):
+        if any(term in content_lower for term in ['course', 'training', 'tutorial']):
             content_type = "educational"
-        elif any(term in content_lower for term in ['actualité', 'news']):
+        elif any(term in content_lower for term in ['news']):
             content_type = "news"
         elif any(term in content_lower for term in ['documentation', 'api']):
             content_type = "technical"
 
-        # Calculer la qualité du contenu
+        # Calculate content quality
         quality_score = self._calculate_content_quality(scraping_result)
 
         return {
@@ -103,66 +103,66 @@ class SimpleWebNavigator:
         }
 
     def _select_interesting_links(self, links: List[str], visited: Set[str]) -> List[str]:
-        """Sélectionne les liens les plus intéressants"""
+        """Selects the most interesting links"""
         interesting = []
 
         for link in links:
             if link in visited:
                 continue
 
-            # Critères de sélection simple
+            # Simple selection criteria
             link_lower = link.lower()
 
-            # Privilégier les liens éducatifs/informatifs
+            # Prioritize educational/informative links
             if any(term in link_lower for term in [
-                'cours', 'guide', 'tutorial', 'documentation',
-                'article', 'blog', 'formation'
+                'course', 'guide', 'tutorial', 'documentation',
+                'article', 'blog', 'training'
             ]):
                 interesting.append(link)
-            elif len(interesting) < 10:  # Ajouter d'autres liens si pas assez
+            elif len(interesting) < 10:  # Add other links if not enough
                 interesting.append(link)
 
-        return interesting[:5]  # Limiter à 5 liens
+        return interesting[:5]  # Limit to 5 links
 
     def _calculate_content_quality(self, result) -> int:
-        """Calcule un score de qualité simple"""
+        """Calculates a simple quality score"""
         score = 0
 
-        # Longueur du contenu
+        # Content length
         if len(result.content) > 1000:
             score += 3
         elif len(result.content) > 500:
             score += 2
 
-        # Présence de titre
+        # Title presence
         if result.title and len(result.title) > 10:
             score += 2
 
-        # Nombre de liens
+        # Number of links
         if len(result.links) > 5:
             score += 2
 
-        # Indicateurs de qualité dans le contenu
+        # Quality indicators in content
         content_lower = result.content.lower()
-        quality_indicators = ['formation', 'cours', 'guide', 'explication', 'principe']
+        quality_indicators = ['training', 'course', 'guide', 'explanation', 'principle']
         score += sum(1 for indicator in quality_indicators if indicator in content_lower)
 
         return min(score, 10)
 
-# Instance globale (sera initialisée avec le scraper)
+# Global instance (will be initialized with the scraper)
 simple_navigator = None
 
 def set_scraper_instance(scraper):
-    """Configure l'instance de scraper"""
+    """Configures the scraper instance"""
     global simple_navigator
     simple_navigator = SimpleWebNavigator(scraper)
 
 def navigate_autonomously(start_url: str, max_pages: int = 5) -> List[Dict[str, Any]]:
-    """Interface publique pour la navigation autonome"""
+    """Public interface for autonomous navigation"""
     if simple_navigator:
         return simple_navigator.navigate_autonomously(start_url, max_pages)
     return []
 
 if __name__ == "__main__":
-    print("=== Test du Système de Navigation Simplifiée ===")
-    print("Module chargé avec succès")
+    print("=== Simplified Navigation System Test ===")
+    print("Module loaded successfully")
