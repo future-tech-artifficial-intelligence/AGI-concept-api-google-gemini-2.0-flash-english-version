@@ -1,6 +1,6 @@
 """
-Route API pour configurer quelle API d'IA utiliser.
-Ce module expose une API REST pour configurer l'API d'IA à utiliser.
+**API Route for Configuring Which Artificial Intelligence API to Use.**
+This module exposes a REST API to configure the artificial intelligence API to be used.
 """
 
 from flask import Blueprint, request, jsonify, session
