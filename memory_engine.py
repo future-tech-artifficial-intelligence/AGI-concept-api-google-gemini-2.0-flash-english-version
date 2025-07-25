@@ -10,40 +10,40 @@ from pathlib import Path
 import pytz
 
 from time_engine import should_remember_conversation, timestamp_to_readable_time_diff, MEMORY_RETENTION
-from modules.text_memory_manager import TextMemoryManager  # Nouveau module de gestion de mémoire textuelle
+from modules.text_memory_manager import TextMemoryManager  # New text memory management module
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger('memory_engine')
 
-# Chemins pour le stockage des données
+# Paths for data storage
 from database import DB_PATH
 IMAGES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'conversation_images')
 os.makedirs(IMAGES_DIR, exist_ok=True)
 
 class MemoryEngine:
     """
-    Gère la mémoire des conversations de l'IA Gemini, y compris le texte et les images.
+    Manages the Google Gemini 2.0 Flash AI's conversation memory, including text and images.
     """
 
     def __init__(self):
-        """Initialise le moteur de mémoire."""
+        """Initializes the memory engine."""
         self.db_path = DB_PATH
         self.setup_database()
 
-        # Initialiser le gestionnaire de mémoire textuelle
-        self.text_memory_enabled = True  # Activer la sauvegarde en fichiers texte
-        self.upload_folder_enabled = True  # Activer le dossier d'uploads
+        # Initialize the text memory manager
+        self.text_memory_enabled = True  # Enable text file saving
+        self.upload_folder_enabled = True  # Enable uploads folder
 
     def setup_database(self):
-        """Configure la base de données pour stocker les conversations."""
+        """Configures the database to store conversations."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Table des conversations (sessions)
+        # Conversations table (sessions)
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS conversations (
             id INTEGER PRIMARY KEY,
@@ -57,12 +57,12 @@ class MemoryEngine:
         )
         ''')
 
-        # Table des messages dans les conversations
+        # Message table in conversations
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS conversation_messages (
             id INTEGER PRIMARY KEY,
             conversation_id INTEGER NOT NULL,
-            message_type TEXT NOT NULL,  -- 'user' ou 'assistant'
+            message_type TEXT NOT NULL,  -- 'user' or 'assistant'
             content TEXT,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             has_image BOOLEAN DEFAULT FALSE,
@@ -73,7 +73,7 @@ class MemoryEngine:
         )
         ''')
 
-        # Table des images liées aux messages
+        # Table for images linked to messages
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS message_images (
             id INTEGER PRIMARY KEY,
@@ -88,7 +88,7 @@ class MemoryEngine:
         )
         ''')
 
-        # Table des fichiers liés aux messages
+        # Table for files linked to messages
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS message_files (
             id INTEGER PRIMARY KEY,
@@ -99,7 +99,7 @@ class MemoryEngine:
         )
         ''')
 
-        # Table pour la mémoire à court terme (conversations récentes)
+        # Table for short-term memory (recent conversations)
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS conversation_memory (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -112,7 +112,7 @@ class MemoryEngine:
         )
         ''')
 
-        # Table pour la mémoire à long terme (faits importants, préférences, etc.)
+        # Table for long-term memory (important facts, preferences, etc.)
         cursor.execute('''
         CREATE TABLE IF NOT EXISTS long_term_memory (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -125,7 +125,7 @@ class MemoryEngine:
         )
         ''')
 
-        # Index pour améliorer les performances des requêtes
+        # Indexes to improve query performance
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_conversations_user ON conversations (user_id)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_messages_conversation ON conversation_messages (conversation_id)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_images_message ON message_images (message_id)')
@@ -139,17 +139,17 @@ class MemoryEngine:
 
     def create_conversation(self, user_id: int, title: Optional[str] = None) -> str:
         """
-        Crée une nouvelle conversation pour un utilisateur.
+        Creates a new conversation for a user.
 
         Args:
-            user_id: ID de l'utilisateur
-            title: Titre optionnel de la conversation
+            user_id: User ID
+            title: Optional conversation title
 
         Returns:
-            ID de session unique pour la conversation
+            Unique session ID for the conversation
         """
         session_id = str(uuid.uuid4())
-        title = title or f"Conversation du {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}"
+        title = title or f"Conversation on {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}"
 
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -167,14 +167,14 @@ class MemoryEngine:
 
     def get_or_create_conversation(self, user_id: int, session_id: Optional[str] = None) -> str:
         """
-        Récupère une conversation existante ou en crée une nouvelle.
+        Retrieves an existing conversation or creates a new one.
 
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de session optionnel
+            user_id: User ID
+            session_id: Optional session ID
 
         Returns:
-            ID de session de la conversation
+            Conversation session ID
         """
         if not session_id:
             return self.create_conversation(user_id)
@@ -182,7 +182,7 @@ class MemoryEngine:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Vérifier si la conversation existe
+        # Check if the conversation exists
         cursor.execute(
             'SELECT id FROM conversations WHERE session_id = ? AND user_id = ?',
             (session_id, user_id)
@@ -203,28 +203,28 @@ class MemoryEngine:
                    file_id: Optional[int] = None,
                    emotional_state: Optional[Dict] = None) -> int:
         """
-        Ajoute un message à une conversation.
+        Adds a message to a conversation.
 
         Args:
-            session_id: ID de la session de conversation
-            user_id: ID de l'utilisateur
-            message_type: Type de message ('user' ou 'assistant')
-            content: Contenu textuel du message
-            image_data: Données d'image en base64 (optionnel)
-            file_id: ID du fichier associé (optionnel)
-            emotional_state: État émotionnel de l'assistant (optionnel)
+            session_id: Conversation session ID
+            user_id: User ID
+            message_type: Message type ('user' or 'assistant')
+            content: Text content of the message
+            image_data: Base64 image data (optional)
+            file_id: Associated file ID (optional)
+            emotional_state: Assistant's emotional state (optional)
 
         Returns:
-            ID du message créé
+            ID of the created message
         """
-        # Valider le type de message
+        # Validate message type
         if message_type not in ['user', 'assistant']:
             raise ValueError(f"Invalid message type: {message_type}")
 
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Récupérer l'ID de conversation
+        # Retrieve conversation ID
         cursor.execute(
             'SELECT id FROM conversations WHERE session_id = ? AND user_id = ?',
             (session_id, user_id)
@@ -237,20 +237,20 @@ class MemoryEngine:
 
         conversation_id = result[0]
 
-        # Mettre à jour la date de dernière mise à jour
+        # Update last updated date
         cursor.execute(
             'UPDATE conversations SET last_updated = CURRENT_TIMESTAMP WHERE id = ?',
             (conversation_id,)
         )
 
-        # Préparer les métadonnées du message
+        # Prepare message metadata
         has_image = bool(image_data)
         has_file = bool(file_id)
 
-        # Préparer l'état émotionnel
+        # Prepare emotional state
         emotional_state_json = json.dumps(emotional_state) if emotional_state else None
 
-        # Insérer le message
+        # Insert message
         cursor.execute(
             '''INSERT INTO conversation_messages 
                (conversation_id, message_type, content, has_image, has_file, emotional_state)
@@ -260,7 +260,7 @@ class MemoryEngine:
 
         message_id = cursor.lastrowid
 
-        # Traiter l'image si présente
+        # Process image if present
         if image_data:
             image_path = self._save_image(image_data, session_id, message_id)
 
@@ -268,10 +268,10 @@ class MemoryEngine:
                 '''INSERT INTO message_images 
                    (message_id, image_path, content_type)
                    VALUES (?, ?, ?)''',
-                (message_id, image_path, 'image/jpeg')  # Suppose que c'est un JPEG, à adapter si nécessaire
+                (message_id, image_path, 'image/jpeg')  # Assume it's a JPEG, adjust if needed
             )
 
-        # Associer le fichier si présent
+        # Associate file if present
         if file_id:
             cursor.execute(
                 'INSERT INTO message_files (message_id, file_id) VALUES (?, ?)',
@@ -281,11 +281,11 @@ class MemoryEngine:
         conn.commit()
         conn.close()
 
-        # Sauvegarde parallèle dans le fichier texte
+        # Parallel saving to text file
         if self.text_memory_enabled:
-            # Récupérer le titre pour la première sauvegarde
+            # Retrieve title for the first save
             title = None
-            if message_id == 1:  # Premier message de la conversation
+            if message_id == 1:  # First message of the conversation
                 title_conn = sqlite3.connect(self.db_path)
                 title_cursor = title_conn.cursor()
                 title_cursor.execute(
@@ -297,10 +297,10 @@ class MemoryEngine:
                     title = result[0]
                 title_conn.close()
 
-            # Récupérer le chemin de l'image si elle a été sauvegardée
+            # Retrieve image path if it was saved
             img_path = None
             if has_image and image_data:
-                # Image déjà sauvegardée par _save_image, récupérer le chemin
+                # Image already saved by _save_image, retrieve path
                 img_conn = sqlite3.connect(self.db_path)
                 img_cursor = img_conn.cursor()
                 img_cursor.execute(
@@ -312,7 +312,7 @@ class MemoryEngine:
                     img_path = img_result[0]
                 img_conn.close()
 
-            # Sauvegarder dans le fichier texte
+            # Save to text file
             self.save_to_text_file(
                 user_id=user_id,
                 session_id=session_id,
@@ -322,7 +322,7 @@ class MemoryEngine:
                 title=title
             )
 
-            # Sauvegarder également dans le dossier d'uploads si c'est une image
+            # Also save to uploads folder if it's an image
             if has_image and image_data and self.upload_folder_enabled:
                 upload_filename = f"{session_id}_{message_id}.jpg"
                 self.save_uploaded_image(user_id, image_data, upload_filename)
@@ -332,30 +332,30 @@ class MemoryEngine:
 
     def _save_image(self, image_data: str, session_id: str, message_id: int) -> str:
         """
-        Sauvegarde une image sur le disque.
+        Saves an image to disk.
 
         Args:
-            image_data: Image en format base64
-            session_id: ID de la session
-            message_id: ID du message
+            image_data: Image in base64 format
+            session_id: Session ID
+            message_id: Message ID
 
         Returns:
-            Chemin de l'image sauvegardée
+            Path of the saved image
         """
-        # Créer un dossier pour la session si nécessaire
+        # Create a folder for the session if necessary
         session_dir = os.path.join(IMAGES_DIR, session_id)
         os.makedirs(session_dir, exist_ok=True)
 
-        # Générer un nom de fichier unique
+        # Generate a unique filename
         image_filename = f"msg_{message_id}_{int(datetime.datetime.now().timestamp())}.jpg"
         image_path = os.path.join(session_dir, image_filename)
 
         try:
-            # Extraire les données binaires de l'image (retirer le préfixe data:image/xxx;base64,)
+            # Extract binary image data (remove the data:image/xxx;base64, prefix)
             if ',' in image_data:
                 image_data = image_data.split(',', 1)[1]
 
-            # Décoder et sauvegarder l'image
+            # Decode and save image
             with open(image_path, 'wb') as f:
                 f.write(base64.b64decode(image_data))
 
@@ -367,21 +367,21 @@ class MemoryEngine:
 
     def get_conversation_history(self, session_id: str, user_id: int, limit: int = 50) -> List[Dict]:
         """
-        Récupère l'historique d'une conversation.
+        Retrieves conversation history.
 
         Args:
-            session_id: ID de la session
-            user_id: ID de l'utilisateur
-            limit: Nombre maximum de messages à récupérer
+            session_id: Session ID
+            user_id: User ID
+            limit: Maximum number of messages to retrieve
 
         Returns:
-            Liste des messages de la conversation
+            List of conversation messages
         """
         conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row  # Pour avoir les résultats sous forme de dictionnaires
+        conn.row_factory = sqlite3.Row  # To get results as dictionaries
         cursor = conn.cursor()
 
-        # Récupérer l'ID de conversation
+        # Retrieve conversation ID
         cursor.execute(
             'SELECT id FROM conversations WHERE session_id = ? AND user_id = ?',
             (session_id, user_id)
@@ -394,7 +394,7 @@ class MemoryEngine:
 
         conversation_id = result['id']
 
-        # Récupérer les messages
+        # Retrieve messages
         cursor.execute(
             '''SELECT id, message_type, content, timestamp, has_image, has_file, emotional_state
                FROM conversation_messages 
@@ -407,14 +407,14 @@ class MemoryEngine:
         for row in cursor.fetchall():
             message = dict(row)
 
-            # Transformer l'état émotionnel en dictionnaire
+            # Transform emotional state into dictionary
             if message['emotional_state']:
                 try:
                     message['emotional_state'] = json.loads(message['emotional_state'])
                 except:
                     message['emotional_state'] = None
 
-            # Récupérer l'image si présente
+            # Retrieve image if present
             if message['has_image']:
                 cursor.execute(
                     'SELECT image_path FROM message_images WHERE message_id = ?',
@@ -424,7 +424,7 @@ class MemoryEngine:
                 if image_result:
                     message['image_path'] = image_result['image_path']
 
-            # Récupérer les informations du fichier si présent
+            # Retrieve file information if present
             if message['has_file']:
                 cursor.execute(
                     '''SELECT f.id, f.original_filename, f.file_type, f.file_size
@@ -441,19 +441,19 @@ class MemoryEngine:
 
         conn.close()
 
-        # Inverser pour avoir l'ordre chronologique
+        # Reverse to get chronological order
         return messages[::-1]
 
     def get_user_conversations(self, user_id: int, limit: int = 20) -> List[Dict]:
         """
-        Récupère la liste des conversations d'un utilisateur.
+        Retrieves a user's conversation list.
 
         Args:
-            user_id: ID de l'utilisateur
-            limit: Nombre maximum de conversations à récupérer
+            user_id: User ID
+            limit: Maximum number of conversations to retrieve
 
         Returns:
-            Liste des conversations
+            List of conversations
         """
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
@@ -469,7 +469,7 @@ class MemoryEngine:
 
         conversations = [dict(row) for row in cursor.fetchall()]
 
-        # Récupérer le dernier message pour chaque conversation
+        # Retrieve the last message for each conversation
         for conversation in conversations:
             cursor.execute(
                 '''SELECT content, message_type
@@ -482,7 +482,7 @@ class MemoryEngine:
             if last_message:
                 conversation['last_message'] = dict(last_message)
 
-            # Compter le nombre de messages
+            # Count the number of messages
             cursor.execute(
                 'SELECT COUNT(*) as count FROM conversation_messages WHERE conversation_id = ?',
                 (conversation['id'],)
@@ -495,15 +495,15 @@ class MemoryEngine:
 
     def update_conversation_title(self, session_id: str, user_id: int, title: str) -> bool:
         """
-        Met à jour le titre d'une conversation.
+        Updates a conversation's title.
 
         Args:
-            session_id: ID de la session
-            user_id: ID de l'utilisateur
-            title: Nouveau titre
+            session_id: Session ID
+            user_id: User ID
+            title: New title
 
         Returns:
-            True si la mise à jour a réussi, False sinon
+            True if update was successful, False otherwise
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -517,42 +517,42 @@ class MemoryEngine:
         conn.commit()
         conn.close()
 
-        # Mettre à jour le titre dans le fichier texte si la fonctionnalité est activée
+        # Update title in text file if feature is enabled
         if success and self.text_memory_enabled:
             file_path = os.path.join(TextMemoryManager.get_user_dir(user_id), f"{session_id}.txt")
             if os.path.exists(file_path):
                 try:
-                    # Lire le contenu du fichier
+                    # Read file content
                     with open(file_path, 'r', encoding='utf-8') as f:
                         lines = f.readlines()
 
-                    # Remplacer la première ligne (titre)
+                    # Replace the first line (title)
                     if lines and lines[0].startswith('# '):
                         lines[0] = f"# {title}\n"
 
-                        # Réécrire le fichier
+                        # Rewrite the file
                         with open(file_path, 'w', encoding='utf-8') as f:
                             f.writelines(lines)
                 except Exception as e:
-                    logger.error(f"Erreur lors de la mise à jour du titre dans le fichier texte: {e}")
+                    logger.error(f"Error updating title in text file: {e}")
 
         return success
 
     def delete_conversation(self, session_id: str, user_id: int) -> bool:
         """
-        Supprime une conversation et tous ses messages.
+        Deletes a conversation and all its messages.
 
         Args:
-            session_id: ID de la session
-            user_id: ID de l'utilisateur
+            session_id: Session ID
+            user_id: User ID
 
         Returns:
-            True si la suppression a réussi, False sinon
+            True if deletion was successful, False otherwise
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Récupérer l'ID de conversation
+        # Retrieve conversation ID
         cursor.execute(
             'SELECT id FROM conversations WHERE session_id = ? AND user_id = ?',
             (session_id, user_id)
@@ -566,7 +566,7 @@ class MemoryEngine:
         conversation_id = result[0]
 
         try:
-            # Supprimer les images liées aux messages
+            # Delete images linked to messages
             cursor.execute(
                 '''SELECT mi.image_path 
                    FROM message_images mi
@@ -583,10 +583,10 @@ class MemoryEngine:
                 except Exception as e:
                     logger.warning(f"Failed to delete image {image_path}: {str(e)}")
 
-            # Utiliser une transaction pour assurer l'intégrité
+            # Use a transaction to ensure integrity
             cursor.execute('BEGIN TRANSACTION')
 
-            # Supprimer les références aux images
+            # Delete image references
             cursor.execute(
                 '''DELETE FROM message_images 
                    WHERE message_id IN (
@@ -595,7 +595,7 @@ class MemoryEngine:
                 (conversation_id,)
             )
 
-            # Supprimer les références aux fichiers
+            # Delete file references
             cursor.execute(
                 '''DELETE FROM message_files 
                    WHERE message_id IN (
@@ -604,13 +604,13 @@ class MemoryEngine:
                 (conversation_id,)
             )
 
-            # Supprimer les messages
+            # Delete messages
             cursor.execute(
                 'DELETE FROM conversation_messages WHERE conversation_id = ?',
                 (conversation_id,)
             )
 
-            # Supprimer la conversation
+            # Delete conversation
             cursor.execute(
                 'DELETE FROM conversations WHERE id = ?',
                 (conversation_id,)
@@ -619,12 +619,12 @@ class MemoryEngine:
             cursor.execute('COMMIT')
             conn.close()
 
-            # Nettoyer le dossier d'images si vide
+            # Clean up image folder if empty
             session_dir = os.path.join(IMAGES_DIR, session_id)
             if os.path.exists(session_dir) and not os.listdir(session_dir):
                 os.rmdir(session_dir)
 
-            # Supprimer également le fichier texte si la fonctionnalité est activée
+            # Also delete text file if feature is enabled
             if self.text_memory_enabled:
                 self.delete_text_conversation(user_id, session_id)
 
@@ -639,21 +639,21 @@ class MemoryEngine:
 
     def search_conversations(self, user_id: int, query: str, limit: int = 20) -> List[Dict]:
         """
-        Recherche dans les conversations d'un utilisateur.
+        Searches a user's conversations.
 
         Args:
-            user_id: ID de l'utilisateur
-            query: Texte à rechercher
-            limit: Nombre maximum de résultats
+            user_id: User ID
+            query: Text to search for
+            limit: Maximum number of results
 
         Returns:
-            Liste des conversations correspondantes
+            List of matching conversations
         """
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
-        # Recherche dans les titres et le contenu des messages
+        # Search in titles and message content
         cursor.execute(
             '''SELECT DISTINCT c.id, c.session_id, c.title, c.created_at, c.last_updated
                FROM conversations c
@@ -665,7 +665,7 @@ class MemoryEngine:
 
         conversations = [dict(row) for row in cursor.fetchall()]
 
-        # Récupérer les extraits pertinents pour chaque conversation
+        # Retrieve relevant excerpts for each conversation
         for conversation in conversations:
             cursor.execute(
                 '''SELECT id, content, message_type
@@ -678,7 +678,7 @@ class MemoryEngine:
             matching_messages = [dict(row) for row in cursor.fetchall()]
             conversation['matching_messages'] = matching_messages
 
-            # Compter le nombre total de messages
+            # Count total number of messages
             cursor.execute(
                 'SELECT COUNT(*) as count FROM conversation_messages WHERE conversation_id = ?',
                 (conversation['id'],)
@@ -691,56 +691,56 @@ class MemoryEngine:
 
     def get_context_for_gemini(self, session_id: str, user_id: int, max_messages: int = 10) -> str:
         """
-        Construit un contexte pour Gemini à partir de l'historique de conversation.
+        Builds a context for the Google Gemini 2.0 Flash AI from conversation history.
 
         Args:
-            session_id: ID de la session
-            user_id: ID de l'utilisateur
-            max_messages: Nombre maximum de messages à inclure
+            session_id: Session ID
+            user_id: User ID
+            max_messages: Maximum number of messages to include
 
         Returns:
-            Contexte formaté pour Gemini
+            Context formatted for the Google Gemini 2.0 Flash AI
         """
         messages = self.get_conversation_history(session_id, user_id, max_messages)
 
         if not messages:
             return ""
 
-        context = ["Voici le contexte des messages précédents de cette conversation:"]
+        context = ["Here is the context from previous messages in this conversation:"]
 
         for msg in messages:
             if msg['message_type'] == 'user':
-                prefix = "Utilisateur: "
+                prefix = "User: "
             else:
-                prefix = "Gemini: "
+                prefix = "Google Gemini 2.0 Flash AI: "
 
-            # Ajouter le contenu textuel
+            # Add textual content
             text = msg['content'] or ""
             if text:
                 context.append(f"{prefix}{text}")
 
-            # Mentionner les images et fichiers mais pas leur contenu
+            # Mention images and files but not their content
             if msg.get('image_path'):
-                context.append(f"{prefix}[a partagé une image]")
+                context.append(f"{prefix}[shared an image]")
             if msg.get('file'):
-                context.append(f"{prefix}[a partagé un fichier: {msg['file']['original_filename']}]")
+                context.append(f"{prefix}[shared a file: {msg['file']['original_filename']}]")
 
         return "\n\n".join(context)
 
     def cleanup_old_conversations(self, days_threshold: int = 30) -> int:
         """
-        Nettoie les conversations inactives depuis un certain temps.
+        Cleans up conversations inactive for a certain period.
 
         Args:
-            days_threshold: Nombre de jours après lesquels une conversation est considérée vieille
+            days_threshold: Number of days after which a conversation is considered old
 
         Returns:
-            Nombre de conversations supprimées
+            Number of deleted conversations
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Trouver les conversations inactives
+        # Find inactive conversations
         cursor.execute(
             '''SELECT session_id, user_id FROM conversations
                WHERE datetime(last_updated) < datetime('now', ?)''',
@@ -750,7 +750,7 @@ class MemoryEngine:
         old_conversations = cursor.fetchall()
         conn.close()
 
-        # Supprimer chaque conversation
+        # Delete each conversation
         deleted_count = 0
         for session_id, user_id in old_conversations:
             if self.delete_conversation(session_id, user_id):
@@ -764,27 +764,27 @@ class MemoryEngine:
                           metadata: Dict[str, Any] = None,
                           user_timezone: Optional[str] = None) -> int:
         """
-        Stocke une conversation dans la mémoire.
+        Stores a conversation in memory.
 
         Args:
-            session_id: ID de la session de conversation
-            user_id: ID de l'utilisateur
-            content: Contenu à mémoriser
-            memory_level: Niveau de rétention (SHORT_TERM, MEDIUM_TERM, LONG_TERM, PERMANENT)
-            metadata: Métadonnées supplémentaires en format dictionnaire
-            user_timezone: Fuseau horaire de l'utilisateur (optionnel)
+            session_id: Conversation session ID
+            user_id: User ID
+            content: Content to memorize
+            memory_level: Retention level (SHORT_TERM, MEDIUM_TERM, LONG_TERM, PERMANENT)
+            metadata: Additional metadata in dictionary format
+            user_timezone: User's timezone (optional)
 
         Returns:
-            ID de l'enregistrement créé
+            ID of the created record
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
         try:
-            # Générer un ID unique pour cette conversation
+            # Generate a unique ID for this conversation
             conversation_id = str(uuid.uuid4())
 
-            # Déterminer le fuseau horaire à utiliser
+            # Determine timezone to use
             if user_timezone:
                 try:
                     tz = pytz.timezone(user_timezone)
@@ -798,12 +798,12 @@ class MemoryEngine:
 
             timestamp = current_time.timestamp()
 
-            # Convertir les métadonnées en JSON si présentes
+            # Convert metadata to JSON if present
             metadata_json = None
             if metadata:
                 metadata_json = json.dumps(metadata)
 
-            # Préparer les métadonnées complètes avec informations temporelles détaillées
+            # Prepare full metadata with detailed temporal information
             full_metadata = {
                 'memory_level': memory_level,
                 'timestamp': timestamp,
@@ -834,7 +834,7 @@ class MemoryEngine:
 
         except Exception as e:
             conn.rollback()
-            logger.error(f"Erreur lors du stockage de la conversation dans la mémoire: {e}")
+            logger.error(f"Error storing conversation in memory: {e}")
             return None
 
     def get_recent_conversations(self, 
@@ -843,23 +843,23 @@ class MemoryEngine:
                                  limit: int = 10,
                                  include_time_context: bool = True) -> List[Dict[str, Any]]:
         """
-        Récupère les conversations récentes d'un utilisateur, en tenant compte
-        de la durée de rétention configurée.
+        Retrieves a user's recent conversations, considering
+        the configured retention period.
 
         Args:
-            user_id: ID de l'utilisateur
-            session_id: Optionnellement filtrer par session spécifique
-            limit: Nombre maximal de conversations à récupérer
-            include_time_context: Ajouter des informations sur le temps écoulé
+            user_id: User ID
+            session_id: Optionally filter by specific session
+            limit: Maximum number of conversations to retrieve
+            include_time_context: Add information about elapsed time
 
         Returns:
-            Liste des conversations récentes
+            List of recent conversations
         """
         conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row  # Pour accéder aux colonnes par nom
+        conn.row_factory = sqlite3.Row  # To access columns by name
         cursor = conn.cursor()
 
-        # Construire la requête SQL en fonction des paramètres
+        # Build SQL query based on parameters
         sql = '''
         SELECT id, session_id, user_id, timestamp, content, memory_level, metadata
         FROM conversation_memory
@@ -877,37 +877,37 @@ class MemoryEngine:
         cursor.execute(sql, params)
         rows = cursor.fetchall()
 
-        # Convertir les résultats en liste de dictionnaires
+        # Convert results to list of dictionaries
         result = []
         current_time = datetime.datetime.now(pytz.utc)
 
         for row in rows:
-            # Convertir la chaîne de timestamp en objet datetime
+            # Convert timestamp string to datetime object
             timestamp_str = row['timestamp']
             if isinstance(timestamp_str, str):
                 timestamp = datetime.datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
                 timestamp = pytz.utc.localize(timestamp)
             else:
-                # Si c'est déjà un datetime ou autre format
+                # If it's already a datetime or another format
                 timestamp = datetime.datetime.utcfromtimestamp(timestamp_str)
                 timestamp = pytz.utc.localize(timestamp)
 
-            # Vérifier si cette conversation doit être mémorisée en fonction du niveau de rétention
+            # Check if this conversation should be remembered based on retention level
             memory_level = row['memory_level']
             if not should_remember_conversation(timestamp, memory_level):
                 continue
 
-            # Créer l'entrée pour cette conversation
+            # Create entry for this conversation
             conversation = dict(row)
 
-            # Deserialiser les métadonnées JSON
+            # Deserialize JSON metadata
             if conversation['metadata']:
                 try:
                     conversation['metadata'] = json.loads(conversation['metadata'])
                 except:
                     conversation['metadata'] = {}
 
-            # Ajouter des informations de contexte temporel si demandé
+            # Add temporal context information if requested
             if include_time_context:
                 conversation['time_ago'] = timestamp_to_readable_time_diff(timestamp, user_id)
                 conversation['seconds_ago'] = (current_time - timestamp).total_seconds()
@@ -924,30 +924,30 @@ class MemoryEngine:
                           content: str, 
                           metadata: Dict[str, Any] = None) -> str:
         """
-        Stocke un contenu textuel dans un fichier.
+        Stores textual content in a file.
 
         Args:
-            session_id: ID de la session
-            user_id: ID de l'utilisateur
-            content: Contenu textuel à stocker
-            metadata: Métadonnées supplémentaires (optionnel)
+            session_id: Session ID
+            user_id: User ID
+            content: Text content to store
+            metadata: Additional metadata (optional)
 
         Returns:
-            Chemin du fichier texte créé
+            Path of the created text file
         """
         if not self.text_memory_enabled:
             raise RuntimeError("Text memory storage is disabled.")
 
-        # Créer un dossier pour la session si nécessaire
+        # Create a folder for the session if necessary
         session_dir = os.path.join(IMAGES_DIR, session_id)
         os.makedirs(session_dir, exist_ok=True)
 
-        # Générer un nom de fichier unique
+        # Generate a unique filename
         file_name = f"memory_{user_id}_{int(datetime.datetime.now().timestamp())}.txt"
         file_path = os.path.join(session_dir, file_name)
 
         try:
-            # Sauvegarder le contenu dans le fichier
+            # Save content to file
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(content)
 
@@ -959,25 +959,25 @@ class MemoryEngine:
             return ""
 
     def enable_text_memory(self, enabled: bool = True):
-        """Active ou désactive la mémoire textuelle."""
+        """Enables or disables text memory."""
         self.text_memory_enabled = enabled
 
     def is_text_memory_enabled(self) -> bool:
-        """Vérifie si la mémoire textuelle est activée."""
+        """Checks if text memory is enabled."""
         return self.text_memory_enabled
 
     def upload_file(self, user_id: int, file_data: bytes, file_name: str, metadata: Dict[str, Any] = None) -> int:
         """
-        Télécharge un fichier et l'associe à un utilisateur.
+        Uploads a file and associates it with a user.
 
         Args:
-            user_id: ID de l'utilisateur
-            file_data: Données du fichier
-            file_name: Nom original du fichier
-            metadata: Métadonnées supplémentaires (optionnel)
+            user_id: User ID
+            file_data: File data
+            file_name: Original file name
+            metadata: Additional metadata (optional)
 
         Returns:
-            ID du fichier téléchargé
+            ID of the uploaded file
         """
         if not self.upload_folder_enabled:
             raise RuntimeError("File upload is disabled.")
@@ -985,7 +985,7 @@ class MemoryEngine:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Insérer le fichier dans la table des fichiers téléchargés
+        # Insert file into uploaded files table
         cursor.execute('''
         INSERT INTO uploaded_files (user_id, original_filename, file_type, file_size, metadata, created_at)
         VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
@@ -993,7 +993,7 @@ class MemoryEngine:
 
         file_id = cursor.lastrowid
 
-        # Sauvegarder le fichier sur le disque
+        # Save file to disk
         user_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'uploads', str(user_id))
         os.makedirs(user_dir, exist_ok=True)
 
@@ -1008,24 +1008,24 @@ class MemoryEngine:
         return file_id
 
     def enable_upload_folder(self, enabled: bool = True):
-        """Active ou désactive le dossier d'uploads."""
+        """Enables or disables the uploads folder."""
         self.upload_folder_enabled = enabled
 
     def is_upload_folder_enabled(self) -> bool:
-        """Vérifie si le dossier d'uploads est activé."""
+        """Checks if the uploads folder is enabled."""
         return self.upload_folder_enabled
 
     def search_files(self, user_id: int, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """
-        Recherche des fichiers téléchargés par un utilisateur.
+        Searches for files uploaded by a user.
 
         Args:
-            user_id: ID de l'utilisateur
-            query: Texte à rechercher dans les métadonnées
-            limit: Nombre maximum de résultats
+            user_id: User ID
+            query: Text to search for in metadata
+            limit: Maximum number of results
 
         Returns:
-            Liste des fichiers correspondants
+            List of matching files
         """
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
@@ -1046,13 +1046,13 @@ class MemoryEngine:
 
     def get_file_metadata(self, file_id: int) -> Dict[str, Any]:
         """
-        Récupère les métadonnées d'un fichier.
+        Retrieves file metadata.
 
         Args:
-            file_id: ID du fichier
+            file_id: File ID
 
         Returns:
-            Dictionnaire des métadonnées du fichier
+            Dictionary of file metadata
         """
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
@@ -1070,18 +1070,18 @@ class MemoryEngine:
 
     def delete_file(self, file_id: int) -> bool:
         """
-        Supprime un fichier téléchargé.
+        Deletes an uploaded file.
 
         Args:
-            file_id: ID du fichier
+            file_id: File ID
 
         Returns:
-            True si la suppression a réussi, False sinon
+            True if deletion was successful, False otherwise
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Récupérer les informations du fichier
+        # Retrieve file information
         cursor.execute(
             'SELECT original_filename, user_id FROM uploaded_files WHERE id = ?',
             (file_id,)
@@ -1095,12 +1095,12 @@ class MemoryEngine:
         original_filename, user_id = result
 
         try:
-            # Supprimer le fichier du disque
+            # Delete file from disk
             file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'uploads', str(user_id), f"{file_id}_{original_filename}")
             if os.path.exists(file_path):
                 os.remove(file_path)
 
-            # Supprimer l'enregistrement de la base de données
+            # Delete record from database
             cursor.execute('DELETE FROM uploaded_files WHERE id = ?', (file_id,))
             conn.commit()
             return True
@@ -1113,25 +1113,25 @@ class MemoryEngine:
 
     def clear_uploads(self, user_id: int) -> int:
         """
-        Supprime tous les fichiers téléchargés par un utilisateur.
+        Deletes all files uploaded by a user.
 
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
 
         Returns:
-            Nombre de fichiers supprimés
+            Number of files deleted
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Récupérer les fichiers de l'utilisateur
+        # Retrieve user's files
         cursor.execute(
             'SELECT id, original_filename FROM uploaded_files WHERE user_id = ?',
             (user_id,)
         )
         files = cursor.fetchall()
 
-        # Supprimer les fichiers du disque
+        # Delete files from disk
         deleted_count = 0
         for file_id, original_filename in files:
             try:
@@ -1142,7 +1142,7 @@ class MemoryEngine:
             except Exception as e:
                 logger.warning(f"Failed to delete file {original_filename}: {str(e)}")
 
-        # Supprimer les enregistrements de la base de données
+        # Delete records from database
         cursor.execute('DELETE FROM uploaded_files WHERE user_id = ?', (user_id,))
         conn.commit()
         conn.close()
@@ -1157,22 +1157,22 @@ class MemoryEngine:
                        search_conversations: bool = True,
                        limit: int = 10) -> Dict[str, List[Dict[str, Any]]]:
         """
-        Recherche dans les souvenirs d'un utilisateur.
+        Searches a user's memories.
 
         Args:
-            user_id: ID de l'utilisateur
-            query: Texte à rechercher
-            search_long_term: Rechercher dans les souvenirs à long terme
-            search_conversations: Rechercher dans les conversations
-            limit: Nombre maximal de résultats par catégorie
+            user_id: User ID
+            query: Text to search for
+            search_long_term: Search in long-term memories
+            search_conversations: Search in conversations
+            limit: Maximum number of results per category
 
         Returns:
-            Dictionnaire avec les résultats par catégorie
+            Dictionary with results by category
         """
         results = {}
 
         if search_conversations:
-            # Recherche dans les conversations avec une recherche de texte simple
+            # Search in conversations with a simple text search
             conn = sqlite3.connect(self.db_path)
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
@@ -1186,12 +1186,12 @@ class MemoryEngine:
 
             rows = cursor.fetchall()
 
-            # Traiter les résultats comme dans get_recent_conversations
+            # Process results as in get_recent_conversations
             conversations = []
             current_time = datetime.datetime.now(pytz.utc)
 
             for row in rows:
-                # Convertir timestamp
+                # Convert timestamp
                 timestamp_str = row['timestamp']
                 if isinstance(timestamp_str, str):
                     timestamp = datetime.datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
@@ -1200,14 +1200,14 @@ class MemoryEngine:
                     timestamp = datetime.datetime.utcfromtimestamp(timestamp_str)
                     timestamp = pytz.utc.localize(timestamp)
 
-                # Vérifier la rétention
+                # Check retention
                 memory_level = row['memory_level']
                 if not should_remember_conversation(timestamp, memory_level):
                     continue
 
                 conversation = dict(row)
 
-                # Deserialiser les métadonnées
+                # Deserialize metadata
                 if conversation['metadata']:
                     try:
                         conversation['metadata'] = json.loads(conversation['metadata'])
@@ -1223,7 +1223,7 @@ class MemoryEngine:
             results['conversations'] = conversations
 
         if search_long_term:
-            # Recherche dans les souvenirs à long terme
+            # Search in long-term memories
             conn = sqlite3.connect(self.db_path)
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
@@ -1237,7 +1237,7 @@ class MemoryEngine:
 
             rows = cursor.fetchall()
 
-            # Mettre à jour la date de dernier accès
+            # Update last accessed date
             if rows:
                 memory_ids = [row['id'] for row in rows]
                 placeholders = ','.join(['?'] * len(memory_ids))
@@ -1256,13 +1256,13 @@ class MemoryEngine:
 
     def forget_conversation(self, memory_id: int) -> bool:
         """
-        Supprime une conversation spécifique de la mémoire.
+        Deletes a specific conversation from memory.
 
         Args:
-            memory_id: ID de l'enregistrement à supprimer
+            memory_id: ID of the record to delete
 
         Returns:
-            True si suppression réussie, False sinon
+            True if deletion successful, False otherwise
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -1282,19 +1282,19 @@ class MemoryEngine:
                            max_long_term: int = 3,
                            format_as_text: bool = True) -> Union[str, Dict[str, Any]]:
         """
-        Génère un contexte mémoire pour être utilisé dans les interactions avec l'IA.
+        Generates a memory context for use in Google Gemini 2.0 Flash AI interactions.
 
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de session optionnel pour se concentrer sur une conversation
-            max_conversations: Nombre max de conversations récentes à inclure
-            max_long_term: Nombre max de souvenirs à long terme à inclure
-            format_as_text: Formatter le résultat en texte ou renvoyer un dictionnaire
+            user_id: User ID
+            session_id: Optional session ID to focus on a conversation
+            max_conversations: Max number of recent conversations to include
+            max_long_term: Max number of long-term memories to include
+            format_as_text: Format the result as text or return a dictionary
 
         Returns:
-            Contexte mémoire au format texte ou dictionnaire
+            Memory context in text or dictionary format
         """
-        # Récupérer les conversations récentes
+        # Retrieve recent conversations
         recent = self.get_recent_conversations(
             user_id=user_id,
             session_id=session_id,
@@ -1302,19 +1302,19 @@ class MemoryEngine:
             include_time_context=True
         )
 
-        # Récupérer les souvenirs à long terme les plus importants
+        # Retrieve most important long-term memories
         long_term = self.get_long_term_memories(
             user_id=user_id,
             limit=max_long_term
         )
 
         if format_as_text:
-            # Formatter en texte pour l'IA
-            context = "Mémoire des conversations récentes:\n"
+            # Format as text for the Google Gemini 2.0 Flash AI
+            context = "Recent conversation memory:\n"
 
             if recent:
                 for i, conv in enumerate(recent):
-                    # Formater l'entrée avec contexte temporel complet
+                    # Format entry with full temporal context
                     time_context = ""
                     if conv['metadata']:
                         try:
@@ -1329,24 +1329,24 @@ class MemoryEngine:
                             timezone_info = metadata.get('timezone', 'UTC')
 
                             if date_complete:
-                                time_context = f" ({time_ago} - {date_complete} à {metadata.get('time_only', '')} ({timezone_info}))"
+                                time_context = f" ({time_ago} - {date_complete} at {metadata.get('time_only', '')} ({timezone_info}))"
                             else:
                                 time_context = f" ({time_ago} - {readable_time})"
                     context += f"{i+1}. {conv['content']}{time_context}\n"
             else:
-                context += "Aucune conversation récente mémorisée.\n"
+                context += "No recent conversations memorized.\n"
 
-            context += "\nInformations importantes:\n"
+            context += "\nImportant information:\n"
 
             if long_term:
                 for i, memory in enumerate(long_term):
                     context += f"{i+1}. {memory['category']}: {memory['content']}\n"
             else:
-                context += "Aucune information importante mémorisée.\n"
+                context += "No important information memorized.\n"
 
             return context
         else:
-            # Renvoyer un dictionnaire structuré
+            # Return a structured dictionary
             return {
                 "recent_conversations": recent,
                 "long_term_memories": long_term
@@ -1354,16 +1354,16 @@ class MemoryEngine:
 
     def update_memory_importance(self, memory_id: int, importance: int) -> bool:
         """
-        Met à jour l'importance d'un souvenir à long terme.
+        Updates the importance of a long-term memory.
 
         Args:
-            memory_id: ID du souvenir
-            importance: Nouvelle valeur d'importance (1-10)
+            memory_id: Memory ID
+            importance: New importance value (1-10)
 
         Returns:
-            True si mise à jour réussie, False sinon
+            True if update successful, False otherwise
         """
-        importance = max(1, min(10, importance))  # Limiter entre 1 et 10
+        importance = max(1, min(10, importance))  # Limit between 1 and 10
 
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -1382,26 +1382,26 @@ class MemoryEngine:
 
     def clear_expired_memories(self) -> int:
         """
-        Supprime les souvenirs expirés selon leur niveau de rétention.
+        Deletes expired memories based on their retention level.
 
         Returns:
-            Nombre de souvenirs supprimés
+            Number of deleted memories
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        # Calculer les timestamps de coupure pour chaque niveau
+        # Calculate cutoff timestamps for each level
         now = datetime.datetime.now()
         short_term_cutoff = now - datetime.timedelta(minutes=MEMORY_RETENTION["SHORT_TERM"])
         medium_term_cutoff = now - datetime.timedelta(minutes=MEMORY_RETENTION["MEDIUM_TERM"])
         long_term_cutoff = now - datetime.timedelta(minutes=MEMORY_RETENTION["LONG_TERM"])
 
-        # Formater en chaîne SQLite
+        # Format as SQLite string
         short_term_cutoff_str = short_term_cutoff.strftime('%Y-%m-%d %H:%M:%S')
         medium_term_cutoff_str = medium_term_cutoff.strftime('%Y-%m-%d %H:%M:%S')
         long_term_cutoff_str = long_term_cutoff.strftime('%Y-%m-%d %H:%M:%S')
 
-        # Supprimer les souvenirs expirés selon leur niveau
+        # Delete expired memories based on their level
         cursor.execute('''
         DELETE FROM conversation_memory 
         WHERE (memory_level = 'SHORT_TERM' AND timestamp < ?) 
@@ -1423,18 +1423,18 @@ class MemoryEngine:
                       image_path: Optional[str] = None,
                       title: Optional[str] = None) -> bool:
         """
-        Sauvegarde un message dans un fichier texte en plus de la base de données.
+        Saves a message to a text file in addition to the database.
 
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
-            message_type: Type de message ('user' ou 'assistant')
-            content: Contenu du message
-            image_path: Chemin de l'image (optionnel)
-            title: Titre de la conversation (optionnel)
+            user_id: User ID
+            session_id: Session ID
+            message_type: Message type ('user' or 'assistant')
+            content: Message content
+            image_path: Image path (optional)
+            title: Conversation title (optional)
 
         Returns:
-            True si le message a été sauvegardé avec succès
+            True if message was saved successfully
         """
         if not self.text_memory_enabled:
             return False
@@ -1450,14 +1450,14 @@ class MemoryEngine:
 
     def get_text_conversation(self, user_id: int, session_id: str) -> Optional[str]:
         """
-        Récupère une conversation à partir d'un fichier texte.
+        Retrieves a conversation from a text file.
 
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
+            user_id: User ID
+            session_id: Session ID
 
         Returns:
-            Contenu de la conversation ou None si le fichier n'existe pas
+            Conversation content or None if file does not exist
         """
         if not self.text_memory_enabled:
             return None
@@ -1466,13 +1466,13 @@ class MemoryEngine:
 
     def list_text_conversations(self, user_id: int) -> List[Dict[str, Any]]:
         """
-        Liste toutes les conversations textuelles d'un utilisateur.
+        Lists all textual conversations for a user.
 
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
 
         Returns:
-            Liste des conversations textuelles de l'utilisateur
+            List of user's textual conversations
         """
         if not self.text_memory_enabled:
             return []
@@ -1481,14 +1481,14 @@ class MemoryEngine:
 
     def search_text_conversations(self, user_id: int, query: str) -> List[Dict[str, Any]]:
         """
-        Recherche dans les conversations textuelles d'un utilisateur.
+        Searches a user's textual conversations.
 
         Args:
-            user_id: ID de l'utilisateur
-            query: Texte à rechercher
+            user_id: User ID
+            query: Text to search for
 
         Returns:
-            Liste des conversations textuelles contenant la requête
+            List of textual conversations containing the query
         """
         if not self.text_memory_enabled:
             return []
@@ -1497,14 +1497,14 @@ class MemoryEngine:
 
     def delete_text_conversation(self, user_id: int, session_id: str) -> bool:
         """
-        Supprime une conversation textuelle.
+        Deletes a textual conversation.
 
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
+            user_id: User ID
+            session_id: Session ID
 
         Returns:
-            True si la suppression a réussi
+            True if deletion was successful
         """
         if not self.text_memory_enabled:
             return False
@@ -1513,15 +1513,15 @@ class MemoryEngine:
 
     def save_uploaded_image(self, user_id: int, image_data: str, filename: Optional[str] = None) -> Optional[str]:
         """
-        Sauvegarde une image téléchargée.
+        Saves an uploaded image.
 
         Args:
-            user_id: ID de l'utilisateur
-            image_data: Données de l'image en base64
-            filename: Nom de fichier (optionnel)
+            user_id: User ID
+            image_data: Base64 image data
+            filename: File name (optional)
 
         Returns:
-            Chemin relatif de l'image sauvegardée ou None en cas d'erreur
+            Relative path of the saved image or None if error
         """
         if not self.upload_folder_enabled:
             return None
@@ -1530,13 +1530,13 @@ class MemoryEngine:
 
     def list_uploaded_images(self, user_id: int) -> List[Dict[str, Any]]:
         """
-        Liste les images téléchargées par un utilisateur.
+        Lists images uploaded by a user.
 
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
 
         Returns:
-            Liste des images téléchargées
+            List of uploaded images
         """
         if not self.upload_folder_enabled:
             return []
