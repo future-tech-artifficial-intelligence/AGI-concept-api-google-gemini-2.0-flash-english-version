@@ -1,149 +1,149 @@
-# 🛠️ Guide de dépannage Searx
+# 🛠️ Searx Troubleshooting Guide
 
-## Problème: Docker non accessible
+## Problem: Docker not accessible
 
-### Symptômes
+### Symptoms
 ```
-unable to get image 'searxng/searxng:latest': error during connect: 
-Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.49/...": 
-open //./pipe/dockerDesktopLinuxEngine: Le fichier spéciﬁé est introuvable.
+unable to get image 'searxng/searxng:latest': error during connect:
+Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.49/...":
+open //./pipe/dockerDesktopLinuxEngine: The specified file was not found.
 ```
 
 ### Solutions
 
-#### 1. Vérifier Docker Desktop
+#### 1. Verify Docker Desktop
 ```cmd
-# Vérifier si Docker Desktop est installé
+# Check if Docker Desktop is installed
 check_docker.bat
 
-# Si non installé, télécharger depuis:
+# If not installed, download from:
 # https://www.docker.com/products/docker-desktop/
 ```
 
-#### 2. Démarrer Docker Desktop manuellement
-1. Chercher "Docker Desktop" dans le menu Démarrer
-2. Cliquer droit → "Exécuter en tant qu'administrateur"
-3. Attendre le démarrage complet (icône Docker dans la barre des tâches)
+#### 2. Start Docker Desktop manually
+1. Search for "Docker Desktop" in the Start menu
+2. Right-click → "Run as administrator"
+3. Wait for full startup (Docker icon in the taskbar)
 
-#### 3. Redémarrer les services Docker
+#### 3. Restart Docker services
 ```cmd
-# Dans un terminal administrateur
+# In an administrator terminal
 net stop com.docker.service
 net start com.docker.service
 ```
 
-#### 4. Vérification complète
+#### 4. Full verification
 ```cmd
-# Test complet de Docker
+# Complete Docker test
 docker --version
 docker info
 docker ps
 ```
 
-## Problème: Port 8080 occupé
+## Problem: Port 8080 occupied
 
-### Symptômes
+### Symptoms
 ```
-Error response from daemon: driver failed programming external connectivity 
+Error response from daemon: driver failed programming external connectivity
 on endpoint ai_searx: Bind for 0.0.0.0:8080 failed: port is already allocated
 ```
 
 ### Solutions
 
-#### 1. Identifier le processus
+#### 1. Identify the process
 ```cmd
 netstat -ano | findstr :8080
 ```
 
-#### 2. Arrêter le processus
+#### 2. Stop the process
 ```cmd
-# Remplacer PID par le numéro trouvé
+# Replace PID with the found number
 taskkill /PID <PID> /F
 ```
 
-#### 3. Changer le port (optionnel)
-Modifier dans `docker-compose.searx.yml`:
+#### 3. Change the port (optional)
+Modify in `docker-compose.searx.yml`:
 ```yaml
 ports:
-  - "8081:8080"  # Utiliser le port 8081 à la place
+  - "8081:8080"  # Use port 8081 instead
 ```
 
-## Problème: Pas de résultats de recherche
+## Problem: No search results
 
-### Causes possibles
-1. Connectivité Internet
-2. Moteurs de recherche bloqués
-3. Configuration Searx incorrecte
+### Possible causes
+1. Internet connectivity
+2. Blocked search engines
+3. Incorrect Searx configuration
 
 ### Solutions
 
-#### 1. Test de connectivité
+#### 1. Connectivity test
 ```cmd
 ping google.com
 curl http://localhost:8080/stats
 ```
 
-#### 2. Vérifier les logs
+#### 2. Check logs
 ```cmd
 docker logs ai_searx
 ```
 
-#### 3. Redémarrer Searx
+#### 3. Restart Searx
 ```cmd
 docker-compose -f docker-compose.searx.yml restart
 ```
 
-## Problème: Application Python ne trouve pas Searx
+## Problem: Python application cannot find Searx
 
 ### Solutions
 
-#### 1. Vérifier l'intégration
+#### 1. Verify integration
 ```python
 python -c "from searx_interface import get_searx_interface; print('OK')"
 ```
 
-#### 2. Test manuel
+#### 2. Manual test
 ```python
 python searx_interface.py
 ```
 
-#### 3. Vérifier les logs Python
-Chercher dans la console les messages:
-- `✅ Interface Searx intégrée`
-- `⚠️ Interface Searx non disponible`
+#### 3. Check Python logs
+Look in the console for messages:
+- `✅ Searx interface integrated`
+- `⚠️ Searx interface not available`
 
-## 🆘 Commandes de diagnostic rapide
+## 🆘 Quick diagnostic commands
 
 ```cmd
-# Status complet
+# Full status
 docker ps -a | findstr searx
-curl http://localhost:8080/ 
+curl http://localhost:8080/
 python test_searx_system.py
 
-# Nettoyage complet
+# Full cleanup
 docker-compose -f docker-compose.searx.yml down --volumes
 docker system prune -f
 
-# Redémarrage complet
+# Full restart
 docker-compose -f docker-compose.searx.yml up -d --force-recreate
 ```
 
-## 📞 Support
+##  Support
 
-Si aucune solution ne fonctionne:
+If no solution works:
 
-1. **Vérifier les prérequis:**
-   - Windows 10/11 avec WSL2 activé
-   - Docker Desktop 4.0+ installé
-   - 4GB RAM libre minimum
+1.  **Check prerequisites:**
+    -   Windows 10/11 with WSL2 enabled
+    -   Docker Desktop 4.0+ installed
+    -   4GB free RAM minimum
 
-2. **Collecter les informations:**
-   ```cmd
-   docker --version
-   docker info > docker-info.txt
-   docker logs ai_searx > searx-logs.txt
-   ```
+2.  **Collect information:**
+    ```cmd
+    docker --version
+    docker info > docker-info.txt
+    docker logs ai_searx > searx-logs.txt
+    ```
 
-3. **Solutions alternatives:**
-   - Utiliser le système de web scraping existant
-   - Désactiver temporairement Searx dans `gemini_api_adapter.py`
+3.  **Alternative solutions:**
+    -   Use the existing web scraping system
+    -   Temporarily disable Searx in `gemini_api_adapter.py`
