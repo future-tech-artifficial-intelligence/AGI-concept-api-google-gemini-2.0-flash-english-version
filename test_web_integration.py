@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Test script to verify the integration of the autonomous web scraping system
-artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses the Searx search engine for greater accuracy in internet searches; web scraping is no longer used.
+artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses the Searx search engine for greater accuracy in internet searches;
+web scraping is no longer used.
 """
 
 def test_web_integration():
