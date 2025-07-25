@@ -1,7 +1,7 @@
 """
-Module de gestion du temps pour Gemini
-Ce module permet à l'IA d'accéder à l'heure et à la date en temps réel,
-et de comprendre les concepts temporels.
+Time management module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+This module allows the AI to access real-time hour and date,
+and to understand temporal concepts.
 """
 
 import datetime
@@ -9,179 +9,179 @@ import pytz
 import re
 from typing import Dict, Any, Optional, List, Tuple
 
-# Configuration par défaut
+# Default configuration
 DEFAULT_TIMEZONE = 'Europe/Paris'
 AVAILABLE_TIMEZONES = pytz.common_timezones
 
-# Constantes pour la rétention de mémoire
+# Constants for memory retention
 MEMORY_RETENTION = {
     'SHORT_TERM': datetime.timedelta(minutes=30),
     'MEDIUM_TERM': datetime.timedelta(days=1),
     'LONG_TERM': datetime.timedelta(days=7)
 }
 
-# Cache pour les fuseaux horaires fréquemment utilisés
+# Cache for frequently used timezones
 timezone_cache = {}
 
 def get_current_datetime(timezone_str: str = DEFAULT_TIMEZONE) -> datetime.datetime:
     """
-    Obtient l'heure et la date actuelles dans le fuseau horaire spécifié
-    
+    Gets the current hour and date in the specified timezone
+
     Args:
-        timezone_str: Le fuseau horaire (par défaut: Europe/Paris)
-        
+        timezone_str: The timezone (default: Europe/Paris)
+
     Returns:
-        L'objet datetime actuel dans le fuseau horaire spécifié
+        The current datetime object in the specified timezone
     """
     import logging
     logger = logging.getLogger(__name__)
-    
+
     original_timezone = timezone_str
-    
-    # Utiliser le cache si disponible
+
+    # Use cache if available
     if timezone_str in timezone_cache:
         tz = timezone_cache[timezone_str]
-        logger.debug(f"Fuseau horaire récupéré du cache: {timezone_str}")
+        logger.debug(f"Timezone retrieved from cache: {timezone_str}")
     else:
-        # Vérifier si le fuseau horaire est valide
+        # Check if the timezone is valid
         if timezone_str not in AVAILABLE_TIMEZONES:
-            logger.warning(f"Fuseau horaire invalide détecté: {timezone_str}, utilisation du défaut: {DEFAULT_TIMEZONE}")
+            logger.warning(f"Invalid timezone detected: {timezone_str}, using default: {DEFAULT_TIMEZONE}")
             timezone_str = DEFAULT_TIMEZONE
-        
+
         try:
-            # Obtenir l'objet timezone et le mettre en cache
+            # Get the timezone object and cache it
             tz = pytz.timezone(timezone_str)
             timezone_cache[timezone_str] = tz
-            logger.info(f"Fuseau horaire configuré et mis en cache: {timezone_str}")
+            logger.info(f"Timezone configured and cached: {timezone_str}")
         except pytz.exceptions.UnknownTimeZoneError:
-            logger.error(f"Erreur lors de la configuration du fuseau horaire {timezone_str}, utilisation d'UTC")
+            logger.error(f"Error configuring timezone {timezone_str}, using UTC")
             tz = pytz.timezone('UTC')
             timezone_cache[timezone_str] = tz
-    
-    # Obtenir le datetime actuel avec le fuseau horaire
+
+    # Get the current datetime with the timezone
     current_dt = datetime.datetime.now(tz)
-    
+
     if original_timezone != timezone_str:
-        logger.warning(f"Fuseau horaire modifié de {original_timezone} vers {timezone_str}")
-    
-    logger.debug(f"Heure actuelle dans {timezone_str}: {current_dt.strftime('%Y-%m-%d %H:%M:%S %Z')}")
+        logger.warning(f"Timezone changed from {original_timezone} to {timezone_str}")
+
+    logger.debug(f"Current time in {timezone_str}: {current_dt.strftime('%Y-%m-%d %H:%M:%S %Z')}")
     return current_dt
 
-def format_datetime(dt: datetime.datetime, format_str: str = "complet") -> str:
+def format_datetime(dt: datetime.datetime, format_str: str = "full") -> str:
     """
-    Formate un objet datetime en chaîne de caractères lisible
-    
+    Formats a datetime object into a readable string
+
     Args:
-        dt: L'objet datetime à formater
-        format_str: Le format souhaité ("complet", "date", "heure", "court")
-        
+        dt: The datetime object to format
+        format_str: The desired format ("full", "date", "time", "short")
+
     Returns:
-        La chaîne formatée
+        The formatted string
     """
-    if format_str == "complet":
+    if format_str == "full":
         return dt.strftime("%A %d %B %Y, %H:%M:%S")
     elif format_str == "date":
         return dt.strftime("%d/%m/%Y")
-    elif format_str == "heure":
+    elif format_str == "time":
         return dt.strftime("%H:%M")
-    elif format_str == "court":
+    elif format_str == "short":
         return dt.strftime("%d/%m/%Y %H:%M")
     else:
         return dt.strftime(format_str)
 
 def is_time_request(text: str) -> bool:
     """
-    Détecte si un texte contient une demande explicite d'heure ou de date
-    
+    Detects if a text contains an explicit request for time or date
+
     Args:
-        text: Le texte à analyser
-        
+        text: The text to analyze
+
     Returns:
-        True si le texte demande l'heure ou la date, False sinon
+        True if the text asks for time or date, False otherwise
     """
     text_lower = text.lower()
-    
-    # Patterns pour détecter les demandes d'heure et de date
+
+    # Patterns to detect time and date requests
     time_patterns = [
-        r"quelle\s+(?:heure|est-il)",
-        r"l[''']heure\s+actuelle",
-        r"heure\s+(?:est-il|actuelle)",
-        r"l'heure\s+s'il\s+(?:te|vous)\s+pla[iî]t"
+        r"what\s+time(?:\s+is\s+it)?",
+        r"the\s+current\s+time",
+        r"time\s+(?:is\s+it|current)",
+        r"time\s+please"
     ]
-    
+
     date_patterns = [
-        r"quelle\s+(?:date|jour)",
-        r"(?:date|jour)\s+(?:sommes-nous|est-on)",
-        r"(?:date|jour)\s+d'aujourd'hui",
-        r"quel\s+jour\s+(?:sommes-nous|est-on)"
+        r"what\s+(?:date|day)(?:\s+is\s+it)?",
+        r"(?:date|day)\s+(?:are\s+we|is\s+it)",
+        r"(?:date|day)\s+of\s+today",
+        r"what\s+day\s+(?:are\s+we|is\s+it)"
     ]
-    
-    # Combiner tous les patterns
+
+    # Combine all patterns
     all_patterns = time_patterns + date_patterns
-    
-    # Vérifier si l'un des patterns correspond
+
+    # Check if any of the patterns match
     for pattern in all_patterns:
         if re.search(pattern, text_lower):
             return True
-    
+
     return False
 
 def should_remember_conversation(creation_time: datetime.datetime, current_time: Optional[datetime.datetime] = None) -> bool:
     """
-    Détermine si une conversation devrait être mémorisée en fonction de son ancienneté
-    
+    Determines if a conversation should be memorized based on its age
+
     Args:
-        creation_time: Le moment où la conversation a été créée
-        current_time: Le moment actuel (par défaut: maintenant)
-        
+        creation_time: The time the conversation was created
+        current_time: The current time (default: now)
+
     Returns:
-        True si la conversation devrait être mémorisée, False sinon
+        True if the conversation should be memorized, False otherwise
     """
     if current_time is None:
         current_time = datetime.datetime.now(creation_time.tzinfo)
-    
-    # Calculer la différence de temps
+
+    # Calculate time difference
     time_diff = current_time - creation_time
-    
-    # Si moins de 7 jours, mémoriser
+
+    # If less than 7 days, memorize
     return time_diff.days < 7
 
 def timestamp_to_readable_time_diff(timestamp: str) -> str:
     """
-    Convertit un timestamp en une différence de temps lisible
-    
+    Converts a timestamp to a readable time difference
+
     Args:
-        timestamp: Le timestamp au format ISO
-        
+        timestamp: The timestamp in ISO format
+
     Returns:
-        Une chaîne décrivant la différence de temps (ex: "il y a 2 jours")
+        A string describing the time difference (e.g., "2 days ago")
     """
     try:
-        # Convertir le timestamp en objet datetime
+        # Convert timestamp to datetime object
         dt = datetime.datetime.fromisoformat(timestamp)
-        
-        # Obtenir le moment actuel avec le même fuseau horaire
+
+        # Get current time with the same timezone
         now = datetime.datetime.now(dt.tzinfo)
-        
-        # Calculer la différence
+
+        # Calculate the difference
         diff = now - dt
-        
-        # Convertir en formulation lisible
+
+        # Convert to readable phrasing
         if diff.days > 365:
             years = diff.days // 365
-            return f"il y a {years} an{'s' if years > 1 else ''}"
+            return f"{years} year{'s' if years > 1 else ''} ago"
         elif diff.days > 30:
             months = diff.days // 30
-            return f"il y a {months} mois"
+            return f"{months} month{'s' if months > 1 else ''} ago"
         elif diff.days > 0:
-            return f"il y a {diff.days} jour{'s' if diff.days > 1 else ''}"
+            return f"{diff.days} day{'s' if diff.days > 1 else ''} ago"
         elif diff.seconds >= 3600:
             hours = diff.seconds // 3600
-            return f"il y a {hours} heure{'s' if hours > 1 else ''}"
+            return f"{hours} hour{'s' if hours > 1 else ''} ago"
         elif diff.seconds >= 60:
             minutes = diff.seconds // 60
-            return f"il y a {minutes} minute{'s' if minutes > 1 else ''}"
+            return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
         else:
-            return "à l'instant"
+            return "just now"
     except (ValueError, TypeError):
-        return "à un moment inconnu"
+        return "at an unknown time"
