@@ -1,10 +1,10 @@
 """
-Module d'amélioration du raisonnement structuré et de déduction logique
+Module for improving structured reasoning for artificial intelligence API GOOGLE GEMINI 2.0 FLASH and logical deduction
 """
 
 MODULE_METADATA = {
     'name': 'enhanced_reasoning',
-    'description': 'Améliore les capacités de raisonnement structuré et de déduction logique de Gemini',
+    'description': 'Enhances Gemini\'s structured reasoning and logical deduction capabilities',
     'version': '0.1.0',
     'priority': 50,
     'hooks': ['process_request', 'process_response'],
@@ -14,14 +14,14 @@ MODULE_METADATA = {
 
 def process(data, hook):
     """
-    Fonction principale de traitement pour le raisonnement amélioré
+    Main processing function for enhanced reasoning
 
     Args:
-        data (dict): Données à traiter
-        hook (str): Type de hook ('process_request' ou 'process_response')
+        data (dict): Data to be processed
+        hook (str): Type of hook ('process_request' or 'process_response')
 
     Returns:
-        dict: Données modifiées
+        dict: Modified data
     """
     if not isinstance(data, dict):
         return data
@@ -34,46 +34,46 @@ def process(data, hook):
     return data
 
 def enhance_request_reasoning(data):
-    """Améliore le raisonnement dans les requêtes"""
+    """Enhances reasoning in requests"""
     text = data.get('text', '')
 
-    # Détecter les questions nécessitant un raisonnement structuré
+    # Detect questions requiring structured reasoning
     reasoning_keywords = [
-        'pourquoi', 'comment', 'expliquer', 'analyser', 'comparer',
-        'évaluer', 'démontrer', 'prouver', 'justifier', 'raisonner'
+        'why', 'how', 'explain', 'analyze', 'compare',
+        'evaluate', 'demonstrate', 'prove', 'justify', 'reason'
     ]
 
     if any(keyword in text.lower() for keyword in reasoning_keywords):
-        # Ajouter des instructions pour un raisonnement structuré
+        # Add instructions for structured reasoning
         reasoning_prompt = """
 
-Pour cette question, veuillez structurer votre raisonnement de manière claire :
-1. Identifiez les éléments clés du problème
-2. Analysez les relations causales
-3. Présentez les arguments de manière logique
-4. Tirez des conclusions justifiées
+For this question, please structure your reasoning clearly:
+1. Identify the key elements of the problem
+2. Analyze causal relationships
+3. Present arguments logically
+4. Draw justified conclusions
         """
         data['text'] = text + reasoning_prompt
 
     return data
 
 def enhance_response_reasoning(data):
-    """Améliore le raisonnement dans les réponses"""
+    """Enhances reasoning in responses"""
     text = data.get('text', '')
 
-    # Vérifier la cohérence logique basique
-    if 'mais' in text.lower() and 'cependant' in text.lower():
-        # Éviter les contradictions multiples
+    # Check basic logical consistency
+    if 'but' in text.lower() and 'however' in text.lower():
+        # Avoid multiple contradictions
         pass
 
     return data
 
 def analyze_logical_structure(text):
-    """Analyse la structure logique d'un texte"""
+    """Analyzes the logical structure of a text"""
     logical_indicators = {
-        'premises': ['car', 'parce que', 'puisque', 'étant donné'],
-        'conclusions': ['donc', 'ainsi', 'par conséquent', 'c\'est pourquoi'],
-        'oppositions': ['mais', 'cependant', 'néanmoins', 'toutefois']
+        'premises': ['because', 'because', 'since', 'given that'],
+        'conclusions': ['therefore', 'thus', 'consequently', 'that\'s why'],
+        'oppositions': ['but', 'however', 'nevertheless', 'though']
     }
 
     structure = {}
@@ -83,24 +83,24 @@ def analyze_logical_structure(text):
     return structure
 
 def validate_reasoning_chain(premises, conclusions):
-    """Valide une chaîne de raisonnement"""
-    # Vérification basique de cohérence
+    """Validates a reasoning chain"""
+    # Basic consistency check
     if len(premises) == 0 and len(conclusions) > 0:
-        return False, "Conclusions sans prémisses"
+        return False, "Conclusions without premises"
 
-    return True, "Raisonnement valide"
+    return True, "Valid reasoning"
 
 """
-Module d'amélioration du raisonnement multi-niveaux et hiérarchique pour Gemini.
-Ce module implémente un système de raisonnement avancé avec plusieurs niveaux d'abstraction,
-logiques hybrides et décomposition récursive des problèmes.
+Module for multi-level and hierarchical reasoning improvement for Gemini.
+This module implements an advanced reasoning system with multiple levels of abstraction,
+hybrid logics, and recursive problem decomposition.
 
-Fonctionnalités principales :
-- Raisonnement multi-niveaux (opérationnel, tactique, stratégique)
-- Logiques hybrides (déductive, inductive, abductive, analogique)
-- Décomposition récursive des problèmes complexes
-- Système d'apprentissage et d'optimisation
-- Gestion de l'incertitude et des conflits
+Main features:
+- Multi-level reasoning (operational, tactical, strategic)
+- Hybrid logics (deductive, inductive, abductive, analogical)
+- Recursive decomposition of complex problems
+- Learning and optimization system
+- Uncertainty and conflict management
 """
 
 import random
@@ -115,30 +115,30 @@ from datetime import datetime
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class TypeLogique(Enum):
-    """Types de logique supportés par le système de raisonnement."""
-    DEDUCTIVE = "déductive"
+    """Types of logic supported by the reasoning system."""
+    DEDUCTIVE = "deductive"
     INDUCTIVE = "inductive" 
     ABDUCTIVE = "abductive"
-    ANALOGIQUE = "analogique"
-    FLOUE = "floue"
-    TEMPORELLE = "temporelle"
-    MODALE = "modale"
-    PROBABILISTE = "probabiliste"
+    ANALOGIQUE = "analogical"
+    FLOUE = "fuzzy"
+    TEMPORELLE = "temporal"
+    MODALE = "modal"
+    PROBABILISTE = "probabilistic"
 
 class NiveauRaisonnement(Enum):
-    """Niveaux hiérarchiques de raisonnement."""
-    OPERATIONNEL = 1  # Niveau détaillé, actions concrètes
-    TACTIQUE = 2      # Niveau intermédiaire, stratégies locales
-    STRATEGIQUE = 3   # Niveau élevé, vision globale
-    META = 4          # Méta-raisonnement sur le raisonnement
+    """Hierarchical levels of reasoning."""
+    OPERATIONNEL = 1  # Detailed level, concrete actions
+    TACTIQUE = 2      # Intermediate level, local strategies
+    STRATEGIQUE = 3   # High level, global vision
+    META = 4          # Meta-reasoning about reasoning
 
 class StatutProbleme(Enum):
-    """Statut d'un problème dans le processus de résolution."""
+    """Status of a problem in the resolution process."""
     NOUVEAU = auto()
     EN_COURS = auto()
     DECOMPOSE = auto()
@@ -148,7 +148,7 @@ class StatutProbleme(Enum):
 
 @dataclass
 class Concept:
-    """Représente un concept dans le système de raisonnement."""
+    """Represents a concept in the reasoning system."""
     nom: str
     proprietes: Dict[str, Any] = field(default_factory=dict)
     relations: Dict[str, List[str]] = field(default_factory=dict)
@@ -157,18 +157,18 @@ class Concept:
     timestamp: datetime = field(default_factory=datetime.now)
     
     def ajouter_relation(self, type_relation: str, cible: str) -> None:
-        """Ajoute une relation vers un autre concept."""
+        """Adds a relation to another concept."""
         if type_relation not in self.relations:
             self.relations[type_relation] = []
         if cible not in self.relations[type_relation]:
             self.relations[type_relation].append(cible)
     
     def calculer_similarite(self, autre: 'Concept') -> float:
-        """Calcule la similarité avec un autre concept."""
+        """Calculates similarity with another concept."""
         if not autre:
             return 0.0
         
-        # Similarité basée sur les propriétés communes
+        # Similarity based on common properties
         props_communes = set(self.proprietes.keys()) & set(autre.proprietes.keys())
         if not props_communes:
             return 0.0
@@ -182,7 +182,7 @@ class Concept:
 
 @dataclass
 class Probleme:
-    """Représente un problème à résoudre."""
+    """Represents a problem to be solved."""
     id: str
     description: str
     contexte: Dict[str, Any] = field(default_factory=dict)
@@ -198,13 +198,13 @@ class Probleme:
     tags: Set[str] = field(default_factory=set)
     
     def ajouter_sous_probleme(self, sous_probleme_id: str) -> None:
-        """Ajoute un sous-problème."""
+        """Adds a sub-problem."""
         if sous_probleme_id not in self.sous_problemes:
             self.sous_problemes.append(sous_probleme_id)
 
 @dataclass
 class Solution:
-    """Représente une solution à un problème."""
+    """Represents a solution to a problem."""
     id: str
     probleme_id: str
     description: str
@@ -220,16 +220,16 @@ class Solution:
     timestamp: datetime = field(default_factory=datetime.now)
     
     def calculer_score(self) -> float:
-        """Calcule un score global pour la solution."""
+        """Calculates an overall score for the solution."""
         score_confiance = self.confiance
-        score_cout = max(0, 1 - (self.cout_estime / 100))  # Normalisation approximative
-        score_temps = max(0, 1 - (self.duree_estimee / 24))  # Normalisation en heures
+        score_cout = max(0, 1 - (self.cout_estime / 100))  # Approximate normalization
+        score_temps = max(0, 1 - (self.duree_estimee / 24))  # Normalization in hours
         score_risque = max(0, 1 - (len(self.risques) / 10))
         
         return (score_confiance + score_cout + score_temps + score_risque) / 4
 
 class BaseConcepts:
-    """Base de connaissances pour les concepts."""
+    """Knowledge base for concepts."""
     
     def __init__(self):
         self.concepts: Dict[str, Concept] = {}
@@ -237,10 +237,10 @@ class BaseConcepts:
         self.index_relations: Dict[str, Set[str]] = {}
     
     def ajouter_concept(self, concept: Concept) -> None:
-        """Ajoute un concept à la base."""
+        """Adds a concept to the base."""
         self.concepts[concept.nom] = concept
         
-        # Mise à jour des index
+        # Index update
         for prop in concept.proprietes:
             if prop not in self.index_proprietes:
                 self.index_proprietes[prop] = set()
@@ -252,7 +252,7 @@ class BaseConcepts:
             self.index_relations[relation].add(concept.nom)
     
     def rechercher_concepts(self, criteres: Dict[str, Any]) -> List[Concept]:
-        """Recherche des concepts selon des critères."""
+        """Searches for concepts based on criteria."""
         resultats = []
         
         for concept in self.concepts.values():
@@ -272,7 +272,7 @@ class BaseConcepts:
         return resultats
     
     def trouver_analogies(self, concept_source: str, seuil_similarite: float = 0.3) -> List[Tuple[str, float]]:
-        """Trouve des concepts analogues."""
+        """Finds analogous concepts."""
         if concept_source not in self.concepts:
             return []
         
@@ -288,7 +288,7 @@ class BaseConcepts:
         return sorted(analogies, key=lambda x: x[1], reverse=True)
 
 class MoteurLogique:
-    """Moteur de logique hybride."""
+    """Hybrid logic engine."""
     
     def __init__(self, base_concepts: BaseConcepts):
         self.base_concepts = base_concepts
@@ -297,14 +297,14 @@ class MoteurLogique:
         self.hypotheses_abduction: List[Dict[str, Any]] = []
     
     def raisonnement_deductif(self, premisses: List[str], regles: List[str]) -> List[str]:
-        """Applique un raisonnement déductif."""
+        """Applies deductive reasoning."""
         conclusions = []
         
         for regle in regles:
-            # Format simple : "SI condition ALORS conclusion"
-            if " ALORS " in regle:
-                condition, conclusion = regle.split(" ALORS ", 1)
-                condition = condition.replace("SI ", "").strip()
+            # Simple format: "IF condition THEN conclusion"
+            if " THEN " in regle:
+                condition, conclusion = regle.split(" THEN ", 1)
+                condition = condition.replace("IF ", "").strip()
                 
                 if condition in premisses:
                     conclusions.append(conclusion.strip())
@@ -312,80 +312,80 @@ class MoteurLogique:
         return conclusions
     
     def raisonnement_inductif(self, observations: List[Dict[str, Any]]) -> List[str]:
-        """Génère des généralisations par induction."""
+        """Generates generalizations by induction."""
         if len(observations) < 2:
             return []
         
         generalisations = []
         
-        # Recherche de patterns communs
+        # Search for common patterns
         proprietes_communes = set(observations[0].keys())
         for obs in observations[1:]:
             proprietes_communes &= set(obs.keys())
         
         for prop in proprietes_communes:
             valeurs = [obs[prop] for obs in observations]
-            if len(set(valeurs)) == 1:  # Même valeur pour tous
-                generalisation = f"Tous les éléments observés ont {prop} = {valeurs[0]}"
+            if len(set(valeurs)) == 1:  # Same value for all
+                generalisation = f"All observed elements have {prop} = {valeurs[0]}"
                 generalisations.append(generalisation)
         
         return generalisations
     
     def raisonnement_abductif(self, observation: str, hypotheses_possibles: List[str]) -> List[Tuple[str, float]]:
-        """Trouve la meilleure explication pour une observation."""
+        """Finds the best explanation for an observation."""
         explications = []
         
         for hypothese in hypotheses_possibles:
-            # Score simple basé sur la plausibilité
-            score = random.uniform(0.1, 1.0)  # À remplacer par une vraie évaluation
+            # Simple score based on plausibility
+            score = random.uniform(0.1, 1.0)  # To be replaced by a real evaluation
             explications.append((hypothese, score))
         
         return sorted(explications, key=lambda x: x[1], reverse=True)
     
     def raisonnement_analogique(self, probleme_source: str, probleme_cible: str) -> List[str]:
-        """Applique un raisonnement par analogie."""
+        """Applies analogical reasoning."""
         suggestions = []
         
-        # Recherche d'analogies dans la base de concepts
+        # Search for analogies in the concept base
         analogies = self.base_concepts.trouver_analogies(probleme_source)
         
         for analogie, score in analogies[:3]:  # Top 3
-            suggestion = f"Par analogie avec {analogie} (score: {score:.2f}), "
-            suggestion += f"considérer des solutions similaires pour {probleme_cible}"
+            suggestion = f"By analogy with {analogie} (score: {score:.2f}), "
+            suggestion += f"consider similar solutions for {probleme_cible}"
             suggestions.append(suggestion)
         
         return suggestions
 
 class DecomposeurProblemes:
-    """Décompose les problèmes complexes en sous-problèmes."""
+    """Decomposes complex problems into sub-problems."""
     
     def __init__(self):
         self.strategies_decomposition = {
-            "fonctionnelle": self._decomposition_fonctionnelle,
-            "temporelle": self._decomposition_temporelle,
-            "hierarchique": self._decomposition_hierarchique,
-            "par_contraintes": self._decomposition_par_contraintes
+            "functional": self._decomposition_fonctionnelle,
+            "temporal": self._decomposition_temporelle,
+            "hierarchical": self._decomposition_hierarchique,
+            "by_constraints": self._decomposition_par_contraintes
         }
     
-    def decomposer(self, probleme: Probleme, strategie: str = "fonctionnelle") -> List[Probleme]:
-        """Décompose un problème selon une stratégie."""
+    def decomposer(self, probleme: Probleme, strategie: str = "functional") -> List[Probleme]:
+        """Decomposes a problem according to a strategy."""
         if strategie not in self.strategies_decomposition:
-            strategie = "fonctionnelle"
+            strategie = "functional"
         
         return self.strategies_decomposition[strategie](probleme)
     
     def _decomposition_fonctionnelle(self, probleme: Probleme) -> List[Probleme]:
-        """Décomposition basée sur les fonctions."""
+        """Decomposition based on functions."""
         sous_problemes = []
         
-        # Analyse des mots-clés pour identifier les fonctions
-        mots_cles = ["analyser", "concevoir", "implémenter", "tester", "déployer"]
+        # Keyword analysis to identify functions
+        mots_cles = ["analyze", "design", "implement", "test", "deploy"]
         
         for i, mot_cle in enumerate(mots_cles):
             if mot_cle in probleme.description.lower():
                 sous_pb = Probleme(
                     id=f"{probleme.id}_func_{i}",
-                    description=f"{mot_cle.capitalize()} pour {probleme.description}",
+                    description=f"{mot_cle.capitalize()} for {probleme.description}",
                     contexte=probleme.contexte.copy(),
                     parent=probleme.id,
                     niveau=NiveauRaisonnement.OPERATIONNEL,
@@ -396,8 +396,8 @@ class DecomposeurProblemes:
         return sous_problemes
     
     def _decomposition_temporelle(self, probleme: Probleme) -> List[Probleme]:
-        """Décomposition basée sur les phases temporelles."""
-        phases = ["court_terme", "moyen_terme", "long_terme"]
+        """Decomposition based on temporal phases."""
+        phases = ["short_term", "medium_term", "long_term"]
         sous_problemes = []
         
         for i, phase in enumerate(phases):
@@ -414,18 +414,18 @@ class DecomposeurProblemes:
         return sous_problemes
     
     def _decomposition_hierarchique(self, probleme: Probleme) -> List[Probleme]:
-        """Décomposition hiérarchique par niveaux."""
+        """Hierarchical decomposition by levels."""
         sous_problemes = []
         
         if probleme.niveau.value > 1:
             niveau_inferieur = NiveauRaisonnement(probleme.niveau.value - 1)
             
-            # Créer 2-4 sous-problèmes de niveau inférieur
+            # Create 2-4 lower-level sub-problems
             nb_sous_pb = random.randint(2, 4)
             for i in range(nb_sous_pb):
                 sous_pb = Probleme(
                     id=f"{probleme.id}_hier_{i}",
-                    description=f"Aspect {i+1} de: {probleme.description}",
+                    description=f"Aspect {i+1} of: {probleme.description}",
                     contexte=probleme.contexte.copy(),
                     parent=probleme.id,
                     niveau=niveau_inferieur,
@@ -436,55 +436,55 @@ class DecomposeurProblemes:
         return sous_problemes
     
     def _decomposition_par_contraintes(self, probleme: Probleme) -> List[Probleme]:
-        """Décomposition basée sur les contraintes."""
+        """Decomposition based on constraints."""
         sous_problemes = []
         
         for i, contrainte in enumerate(probleme.contraintes):
             sous_pb = Probleme(
                 id=f"{probleme.id}_const_{i}",
-                description=f"Gérer contrainte '{contrainte}' pour {probleme.description}",
+                description=f"Manage constraint '{contrainte}' for {probleme.description}",
                 contexte=probleme.contexte.copy(),
                 contraintes=[contrainte],
                 parent=probleme.id,
                 niveau=probleme.niveau,
-                priorite=probleme.priorite + 1  # Plus prioritaire
+                priorite=probleme.priorite + 1  # Higher priority
             )
             sous_problemes.append(sous_pb)
         
         return sous_problemes
 
 class GenerateurSolutions:
-    """Génère des solutions pour les problèmes."""
+    """Generates solutions for problems."""
     
     def __init__(self, moteur_logique: MoteurLogique):
         self.moteur_logique = moteur_logique
         self.templates_solutions = {
-            "analyse": ["Collecter données", "Analyser patterns", "Identifier tendances", "Formuler conclusions"],
-            "conception": ["Définir spécifications", "Créer architecture", "Détailler composants", "Valider design"],
-            "implementation": ["Préparer environnement", "Développer solution", "Tester fonctionnalités", "Optimiser performance"],
-            "default": ["Identifier le problème", "Rechercher solutions", "Évaluer options", "Implémenter solution"]
+            "analysis": ["Collect data", "Analyze patterns", "Identify trends", "Formulate conclusions"],
+            "design": ["Define specifications", "Create architecture", "Detail components", "Validate design"],
+            "implementation": ["Prepare environment", "Develop solution", "Test functionalities", "Optimize performance"],
+            "default": ["Identify the problem", "Search for solutions", "Evaluate options", "Implement solution"]
         }
     
     def generer_solutions(self, probleme: Probleme) -> List[Solution]:
-        """Génère des solutions pour un problème."""
+        """Generates solutions for a problem."""
         solutions = []
         
-        # Solution déductive
+        # Deductive solution
         sol_deductive = self._generer_solution_deductive(probleme)
         if sol_deductive:
             solutions.append(sol_deductive)
         
-        # Solution inductive
+        # Inductive solution
         sol_inductive = self._generer_solution_inductive(probleme)
         if sol_inductive:
             solutions.append(sol_inductive)
         
-        # Solution analogique
+        # Analogical solution
         sol_analogique = self._generer_solution_analogique(probleme)
         if sol_analogique:
             solutions.append(sol_analogique)
         
-        # Solution créative (combinaison)
+        # Creative solution (combination)
         sol_creative = self._generer_solution_creative(probleme)
         if sol_creative:
             solutions.append(sol_creative)
@@ -492,13 +492,13 @@ class GenerateurSolutions:
         return solutions
     
     def _generer_solution_deductive(self, probleme: Probleme) -> Optional[Solution]:
-        """Génère une solution par déduction logique."""
+        """Generates a solution by logical deduction."""
         template = self._choisir_template(probleme)
         
         solution = Solution(
             id=f"{probleme.id}_sol_deductive",
             probleme_id=probleme.id,
-            description=f"Solution déductive pour {probleme.description}",
+            description=f"Deductive solution for {probleme.description}",
             etapes=template.copy(),
             type_logique=TypeLogique.DEDUCTIVE,
             confiance=0.8,
@@ -509,16 +509,16 @@ class GenerateurSolutions:
         return solution
     
     def _generer_solution_inductive(self, probleme: Probleme) -> Optional[Solution]:
-        """Génère une solution par induction."""
+        """Generates a solution by induction."""
         template = self._choisir_template(probleme)
         
-        # Modifier le template pour l'approche inductive
-        etapes_inductives = ["Observer cas similaires"] + template + ["Généraliser pattern"]
+        # Modify the template for the inductive approach
+        etapes_inductives = ["Observe similar cases"] + template + ["Generalize pattern"]
         
         solution = Solution(
             id=f"{probleme.id}_sol_inductive",
             probleme_id=probleme.id,
-            description=f"Solution inductive pour {probleme.description}",
+            description=f"Inductive solution for {probleme.description}",
             etapes=etapes_inductives,
             type_logique=TypeLogique.INDUCTIVE,
             confiance=0.6,
@@ -529,7 +529,7 @@ class GenerateurSolutions:
         return solution
     
     def _generer_solution_analogique(self, probleme: Probleme) -> Optional[Solution]:
-        """Génère une solution par analogie."""
+        """Generates a solution by analogy."""
         analogies = self.moteur_logique.raisonnement_analogique(probleme.description, probleme.id)
         
         if not analogies:
@@ -538,8 +538,8 @@ class GenerateurSolutions:
         solution = Solution(
             id=f"{probleme.id}_sol_analogique",
             probleme_id=probleme.id,
-            description=f"Solution analogique pour {probleme.description}",
-            etapes=["Identifier analogies"] + analogies[:3] + ["Adapter solution"],
+            description=f"Analogical solution for {probleme.description}",
+            etapes=["Identify analogies"] + analogies[:3] + ["Adapt solution"],
             type_logique=TypeLogique.ANALOGIQUE,
             confiance=0.5,
             cout_estime=random.uniform(5, 30),
@@ -549,22 +549,22 @@ class GenerateurSolutions:
         return solution
     
     def _generer_solution_creative(self, probleme: Probleme) -> Optional[Solution]:
-        """Génère une solution créative en combinant approches."""
+        """Generates a creative solution by combining approaches."""
         template = self._choisir_template(probleme)
         
-        # Ajout d'étapes créatives
+        # Adding creative steps
         etapes_creatives = [
-            "Brainstorming créatif",
-            "Analyse multi-perspective"
+            "Creative Brainstorming",
+            "Multi-perspective Analysis"
         ] + template + [
-            "Synthèse innovante",
-            "Validation créative"
+            "Innovative Synthesis",
+            "Creative Validation"
         ]
         
         solution = Solution(
             id=f"{probleme.id}_sol_creative",
             probleme_id=probleme.id,
-            description=f"Solution créative pour {probleme.description}",
+            description=f"Creative solution for {probleme.description}",
             etapes=etapes_creatives,
             type_logique=TypeLogique.ABDUCTIVE,
             confiance=0.4,
@@ -575,7 +575,7 @@ class GenerateurSolutions:
         return solution
     
     def _choisir_template(self, probleme: Probleme) -> List[str]:
-        """Choisit un template d'étapes basé sur le problème."""
+        """Chooses a step template based on the problem."""
         description_lower = probleme.description.lower()
         
         for mot_cle, template in self.templates_solutions.items():
@@ -585,44 +585,44 @@ class GenerateurSolutions:
         return self.templates_solutions["default"].copy()
 
 class EvaluateurSolutions:
-    """Évalue et classe les solutions."""
+    """Evaluates and ranks solutions."""
     
     def __init__(self):
         self.criteres_evaluation = {
-            "faisabilite": 0.3,
-            "efficacite": 0.25,
-            "cout": 0.2,
-            "temps": 0.15,
-            "risque": 0.1
+            "feasibility": 0.3,
+            "efficiency": 0.25,
+            "cost": 0.2,
+            "time": 0.15,
+            "risk": 0.1
         }
     
     def evaluer_solution(self, solution: Solution, contexte: Dict[str, Any] = None) -> Dict[str, float]:
-        """Évalue une solution selon plusieurs critères."""
+        """Evaluates a solution based on several criteria."""
         if contexte is None:
             contexte = {}
         
         scores = {}
         
-        # Faisabilité basée sur la confiance et les ressources
-        scores["faisabilite"] = min(solution.confiance, 0.9)
+        # Feasibility based on confidence and resources
+        scores["feasibility"] = min(solution.confiance, 0.9)
         
-        # Efficacité basée sur le nombre d'étapes et la complexité
+        # Efficiency based on number of steps and complexity
         nb_etapes = len(solution.etapes)
-        scores["efficacite"] = max(0.1, 1.0 - (nb_etapes / 20))
+        scores["efficiency"] = max(0.1, 1.0 - (nb_etapes / 20))
         
-        # Coût (inversé pour que moins cher = meilleur score)
-        scores["cout"] = max(0.1, 1.0 - min(solution.cout_estime / 100, 0.9))
+        # Cost (inverted so cheaper = better score)
+        scores["cost"] = max(0.1, 1.0 - min(solution.cout_estime / 100, 0.9))
         
-        # Temps (inversé)
-        scores["temps"] = max(0.1, 1.0 - min(solution.duree_estimee / 24, 0.9))
+        # Time (inverted)
+        scores["time"] = max(0.1, 1.0 - min(solution.duree_estimee / 24, 0.9))
         
-        # Risque (inversé)
-        scores["risque"] = max(0.1, 1.0 - min(len(solution.risques) / 10, 0.9))
+        # Risk (inverted)
+        scores["risk"] = max(0.1, 1.0 - min(len(solution.risques) / 10, 0.9))
         
         return scores
     
     def calculer_score_global(self, solution: Solution, contexte: Dict[str, Any] = None) -> float:
-        """Calcule le score global pondéré."""
+        """Calculates the weighted overall score."""
         scores = self.evaluer_solution(solution, contexte)
         
         score_global = 0.0
@@ -632,7 +632,7 @@ class EvaluateurSolutions:
         return score_global
     
     def classer_solutions(self, solutions: List[Solution], contexte: Dict[str, Any] = None) -> List[Tuple[Solution, float]]:
-        """Classe les solutions par score décroissant."""
+        """Ranks solutions by descending score."""
         solutions_scorees = []
         
         for solution in solutions:
@@ -642,14 +642,14 @@ class EvaluateurSolutions:
         return sorted(solutions_scorees, key=lambda x: x[1], reverse=True)
 
 class GestionnaireIncertitude:
-    """Gère l'incertitude et les conflits dans le raisonnement."""
+    """Manages uncertainty and conflicts in reasoning."""
     
     def __init__(self):
         self.seuil_confiance = 0.7
-        self.strategies_resolution = ["vote_majoritaire", "moyenne_ponderee", "expert_system"]
+        self.strategies_resolution = ["majority_vote", "weighted_average", "expert_system"]
     
     def detecter_conflits(self, solutions: List[Solution]) -> List[Dict[str, Any]]:
-        """Détecte les conflits entre solutions."""
+        """Detects conflicts between solutions."""
         conflits = []
         
         for i, sol1 in enumerate(solutions):
@@ -658,82 +658,82 @@ class GestionnaireIncertitude:
                     conflit = {
                         "type": "contradiction",
                         "solutions": [sol1.id, sol2.id],
-                        "description": f"Conflit entre {sol1.description} et {sol2.description}",
+                        "description": f"Conflict between {sol1.description} and {sol2.description}",
                         "severite": self._calculer_severite_conflit(sol1, sol2)
                     }
                     conflits.append(conflit)
         
         return conflits
     
-    def resoudre_conflit(self, conflit: Dict[str, Any], solutions: List[Solution], strategie: str = "moyenne_ponderee") -> Solution:
-        """Résout un conflit entre solutions."""
+    def resoudre_conflit(self, conflit: Dict[str, Any], solutions: List[Solution], strategie: str = "weighted_average") -> Solution:
+        """Resolves a conflict between solutions."""
         solutions_en_conflit = [s for s in solutions if s.id in conflit["solutions"]]
         
-        if strategie == "vote_majoritaire":
+        if strategie == "majority_vote":
             return self._resolution_par_vote(solutions_en_conflit)
-        elif strategie == "moyenne_ponderee":
+        elif strategie == "weighted_average":
             return self._resolution_par_moyenne(solutions_en_conflit)
         else:
             return self._resolution_expert_system(solutions_en_conflit)
     
     def propager_incertitude(self, solution: Solution, facteur_propagation: float = 0.9) -> Solution:
-        """Propage l'incertitude dans une solution."""
+        """Propagates uncertainty in a solution."""
         solution_modifiee = copy.deepcopy(solution)
         solution_modifiee.confiance *= facteur_propagation
         
-        # Ajout de mise en garde
+        # Add a warning
         if solution_modifiee.confiance < self.seuil_confiance:
-            solution_modifiee.risques.append("Niveau de confiance faible")
+            solution_modifiee.risques.append("Low confidence level")
         
         return solution_modifiee
     
     def _solutions_en_conflit(self, sol1: Solution, sol2: Solution) -> bool:
-        """Vérifie si deux solutions sont en conflit."""
-        # Conflit simple : si les étapes sont très différentes
+        """Checks if two solutions are in conflict."""
+        # Simple conflict: if steps are very different
         etapes1 = set(sol1.etapes)
         etapes2 = set(sol2.etapes)
         intersection = etapes1 & etapes2
         
-        # Conflit si moins de 20% d'étapes communes
+        # Conflict if less than 20% common steps
         return len(intersection) / max(len(etapes1), len(etapes2)) < 0.2
     
     def _calculer_severite_conflit(self, sol1: Solution, sol2: Solution) -> float:
-        """Calcule la sévérité d'un conflit."""
+        """Calculates the severity of a conflict."""
         diff_confiance = abs(sol1.confiance - sol2.confiance)
         diff_cout = abs(sol1.cout_estime - sol2.cout_estime) / max(sol1.cout_estime, sol2.cout_estime, 1)
         
         return (diff_confiance + diff_cout) / 2
     
     def _resolution_par_vote(self, solutions: List[Solution]) -> Solution:
-        """Résolution par vote majoritaire."""
+        """Resolution by majority vote."""
         return max(solutions, key=lambda s: s.confiance)
     
     def _resolution_par_moyenne(self, solutions: List[Solution]) -> Solution:
-        """Résolution par moyenne pondérée."""
+        """Resolution by weighted average."""
         if not solutions:
             return None
         
-        # Créer une solution hybride
+        # Create a hybrid solution
         solution_hybride = copy.deepcopy(solutions[0])
         solution_hybride.id += "_hybride"
-        solution_hybride.description = "Solution hybride résolvant conflit"
+        solution_hybride.description = "Hybrid solution resolving conflict"
         
-        # Moyenne des paramètres numériques
+        # Average of numeric parameters
         solution_hybride.confiance = sum(s.confiance for s in solutions) / len(solutions)
         solution_hybride.cout_estime = sum(s.cout_estime for s in solutions) / len(solutions)
         solution_hybride.duree_estimee = sum(s.duree_estimee for s in solutions) / len(solutions)
         
-        # Combinaison des étapes
+        # Combination of steps
         toutes_etapes = []
         for sol in solutions:
             toutes_etapes.extend(sol.etapes)
-        solution_hybride.etapes = list(dict.fromkeys(toutes_etapes))  # Supprime doublons
+        solution_hybride.etapes = list(dict.fromkeys(toutes_etapes))  # Removes duplicates
         
         return solution_hybride
     
     def _resolution_expert_system(self, solutions: List[Solution]) -> Solution:
-        """Résolution par système expert."""
-        # Privilégier la solution avec le meilleur équilibre confiance/coût
+        """Resolution by expert system."""
+        # Prioritize the solution with the best confidence/cost balance
         meilleur_score = -1
         meilleure_solution = solutions[0]
         
@@ -746,7 +746,7 @@ class GestionnaireIncertitude:
         return meilleure_solution
 
 class RaisonnementAmeliore:
-    """Classe principale du système de raisonnement amélioré."""
+    """Main class of the enhanced reasoning system."""
     
     def __init__(self):
         self.base_concepts = BaseConcepts()
@@ -760,133 +760,133 @@ class RaisonnementAmeliore:
         self.solutions: Dict[str, List[Solution]] = {}
         self.historique_raisonnement: List[Dict[str, Any]] = []
         
-        # Initialisation avec quelques concepts de base
+        # Initialization with some basic concepts
         self._initialiser_concepts_base()
     
     def _initialiser_concepts_base(self):
-        """Initialise la base avec quelques concepts fondamentaux."""
+        """Initializes the base with some fundamental concepts."""
         concepts_base = [
-            Concept("probleme", {"type": "abstraction", "complexite": "variable"}),
-            Concept("solution", {"type": "action", "efficacite": "mesurable"}),
-            Concept("analyse", {"type": "processus", "precision": "importante"}),
-            Concept("synthese", {"type": "processus", "creativite": "elevee"}),
-            Concept("evaluation", {"type": "jugement", "objectivite": "requise"})
+            Concept("problem", {"type": "abstraction", "complexity": "variable"}),
+            Concept("solution", {"type": "action", "efficiency": "measurable"}),
+            Concept("analysis", {"type": "process", "precision": "important"}),
+            Concept("synthesis", {"type": "process", "creativity": "high"}),
+            Concept("evaluation", {"type": "judgment", "objectivity": "required"})
         ]
         
         for concept in concepts_base:
             self.base_concepts.ajouter_concept(concept)
     
     async def resoudre_probleme(self, probleme: Probleme, profondeur_max: int = 3) -> Dict[str, Any]:
-        """Résout un problème de manière complète et asynchrone."""
-        logger.info(f"Début résolution du problème: {probleme.id}")
+        """Resolves a problem completely and asynchronously."""
+        logger.info(f"Starting problem resolution: {probleme.id}")
         
-        # Enregistrer le problème
+        # Register the problem
         self.problemes[probleme.id] = probleme
         
         try:
-            # Étape 1: Analyse du problème
+            # Step 1: Problem Analysis
             resultat_analyse = await self._analyser_probleme(probleme)
             
-            # Étape 2: Décomposition si nécessaire
+            # Step 2: Decomposition if necessary
             sous_problemes = []
             if probleme.niveau.value > 1 and profondeur_max > 0:
                 sous_problemes = await self._decomposer_probleme(probleme, profondeur_max)
             
-            # Étape 3: Génération de solutions
+            # Step 3: Solution Generation
             solutions = await self._generer_solutions_async(probleme)
             
-            # Étape 4: Résolution des sous-problèmes
+            # Step 4: Sub-problem Resolution
             solutions_sous_problemes = []
             if sous_problemes:
                 solutions_sous_problemes = await self._resoudre_sous_problemes(sous_problemes, profondeur_max - 1)
             
-            # Étape 5: Évaluation et classement
+            # Step 5: Evaluation and Ranking
             toutes_solutions = solutions + solutions_sous_problemes
             solutions_classees = self.evaluateur.classer_solutions(toutes_solutions)
             
-            # Étape 6: Gestion des conflits et incertitudes
+            # Step 6: Conflict and Uncertainty Management
             conflits = self.gestionnaire_incertitude.detecter_conflits(toutes_solutions)
             solutions_resolues = await self._resoudre_conflits(conflits, toutes_solutions)
             
-            # Étape 7: Sélection de la meilleure solution
+            # Step 7: Best Solution Selection
             meilleure_solution = solutions_resolues[0] if solutions_resolues else None
             
-            # Enregistrement du résultat
+            # Recording the result
             resultat = {
-                "probleme_id": probleme.id,
-                "statut": "resolu" if meilleure_solution else "echec",
-                "solution_principale": meilleure_solution,
-                "solutions_alternatives": solutions_resolues[1:5],  # Top 5
-                "sous_problemes": [sp.id for sp in sous_problemes],
-                "conflits_detectes": len(conflits),
-                "confiance_globale": meilleure_solution.confiance if meilleure_solution else 0,
-                "temps_resolution": datetime.now(),
-                "analyse": resultat_analyse
+                "problem_id": probleme.id,
+                "status": "resolved" if meilleure_solution else "failure",
+                "main_solution": meilleure_solution,
+                "alternative_solutions": solutions_resolues[1:5],  # Top 5
+                "sub_problems": [sp.id for sp in sous_problemes],
+                "conflicts_detected": len(conflits),
+                "overall_confidence": meilleure_solution.confiance if meilleure_solution else 0,
+                "resolution_time": datetime.now(),
+                "analysis": resultat_analyse
             }
             
             self.solutions[probleme.id] = solutions_resolues
             self.historique_raisonnement.append(resultat)
             
-            logger.info(f"Problème {probleme.id} résolu avec confiance {resultat['confiance_globale']:.2f}")
+            logger.info(f"Problem {probleme.id} resolved with confidence {resultat['overall_confidence']:.2f}")
             return resultat
             
         except Exception as e:
-            logger.error(f"Erreur lors de la résolution du problème {probleme.id}: {str(e)}")
+            logger.error(f"Error during problem resolution {probleme.id}: {str(e)}")
             return {
-                "probleme_id": probleme.id,
-                "statut": "erreur",
+                "problem_id": probleme.id,
+                "status": "error",
                 "message": str(e),
-                "temps_resolution": datetime.now()
+                "resolution_time": datetime.now()
             }
     
     async def _analyser_probleme(self, probleme: Probleme) -> Dict[str, Any]:
-        """Analyse approfondie d'un problème."""
+        """In-depth analysis of a problem."""
         return await asyncio.get_event_loop().run_in_executor(
             None, self._analyser_probleme_sync, probleme
         )
     
     def _analyser_probleme_sync(self, probleme: Probleme) -> Dict[str, Any]:
-        """Version synchrone de l'analyse de problème."""
+        """Synchronous version of problem analysis."""
         analyse = {
-            "complexite": self._evaluer_complexite(probleme),
-            "domaine": self._identifier_domaine(probleme),
-            "type_raisonnement_suggere": self._suggerer_type_raisonnement(probleme),
-            "concepts_lies": self._identifier_concepts_lies(probleme),
-            "contraintes_critiques": self._analyser_contraintes(probleme)
+            "complexity": self._evaluer_complexite(probleme),
+            "domain": self._identifier_domaine(probleme),
+            "suggested_reasoning_type": self._suggerer_type_raisonnement(probleme),
+            "linked_concepts": self._identifier_concepts_lies(probleme),
+            "critical_constraints": self._analyser_contraintes(probleme)
         }
         
         return analyse
     
     async def _decomposer_probleme(self, probleme: Probleme, profondeur_max: int) -> List[Probleme]:
-        """Décompose un problème de manière asynchrone."""
+        """Decomposes a problem asynchronously."""
         return await asyncio.get_event_loop().run_in_executor(
             None, self.decomposeur.decomposer, probleme
         )
     
     async def _generer_solutions_async(self, probleme: Probleme) -> List[Solution]:
-        """Génère des solutions de manière asynchrone."""
+        """Generates solutions asynchronously."""
         return await asyncio.get_event_loop().run_in_executor(
             None, self.generateur_solutions.generer_solutions, probleme
         )
     
     async def _resoudre_sous_problemes(self, sous_problemes: List[Probleme], profondeur_max: int) -> List[Solution]:
-        """Résout les sous-problèmes de manière concurrente."""
+        """Resolves sub-problems concurrently."""
         if profondeur_max <= 0:
             return []
         
-        # Résolution concurrente des sous-problèmes
+        # Concurrent resolution of sub-problems
         taches = [self.resoudre_probleme(sp, profondeur_max) for sp in sous_problemes]
         resultats = await asyncio.gather(*taches, return_exceptions=True)
         
         solutions = []
         for resultat in resultats:
-            if isinstance(resultat, dict) and resultat.get("solution_principale"):
-                solutions.append(resultat["solution_principale"])
+            if isinstance(resultat, dict) and resultat.get("main_solution"):
+                solutions.append(resultat["main_solution"])
         
         return solutions
     
     async def _resoudre_conflits(self, conflits: List[Dict[str, Any]], solutions: List[Solution]) -> List[Solution]:
-        """Résout les conflits détectés."""
+        """Resolves detected conflicts."""
         if not conflits:
             return self.evaluateur.classer_solutions(solutions)
         
@@ -895,36 +895,36 @@ class RaisonnementAmeliore:
         for conflit in conflits:
             solution_resolue = self.gestionnaire_incertitude.resoudre_conflit(conflit, solutions_resolues)
             if solution_resolue:
-                # Remplacer les solutions en conflit par la solution résolue
+                # Replace conflicting solutions with the resolved solution
                 solutions_resolues = [s for s in solutions_resolues if s.id not in conflit["solutions"]]
                 solutions_resolues.append(solution_resolue)
         
         return [sol for sol, score in self.evaluateur.classer_solutions(solutions_resolues)]
     
     def _evaluer_complexite(self, probleme: Probleme) -> str:
-        """Évalue la complexité d'un problème."""
+        """Evaluates the complexity of a problem."""
         score_complexite = 0
         
-        # Facteurs de complexité
+        # Complexity factors
         score_complexite += len(probleme.contraintes) * 2
         score_complexite += len(probleme.objectifs) * 1.5
         score_complexite += len(probleme.description.split()) * 0.1
         score_complexite += probleme.niveau.value * 3
         
         if score_complexite < 5:
-            return "faible"
+            return "low"
         elif score_complexite < 15:
-            return "moyenne"
+            return "medium"
         else:
-            return "elevee"
+            return "high"
     
     def _identifier_domaine(self, probleme: Probleme) -> str:
-        """Identifie le domaine d'un problème."""
+        """Identifies the domain of a problem."""
         domaines = {
-            "technique": ["code", "système", "algorithme", "données"],
-            "business": ["stratégie", "marché", "client", "vente"],
-            "recherche": ["analyse", "étude", "investigation", "découverte"],
-            "créatif": ["design", "innovation", "création", "art"]
+            "technical": ["code", "system", "algorithm", "data"],
+            "business": ["strategy", "market", "client", "sale"],
+            "research": ["analysis", "study", "investigation", "discovery"],
+            "creative": ["design", "innovation", "creation", "art"]
         }
         
         description_lower = probleme.description.lower()
@@ -936,22 +936,22 @@ class RaisonnementAmeliore:
         return "general"
     
     def _suggerer_type_raisonnement(self, probleme: Probleme) -> TypeLogique:
-        """Suggère le type de raisonnement le plus adapté."""
+        """Suggests the most suitable reasoning type."""
         description_lower = probleme.description.lower()
         
-        if any(mot in description_lower for mot in ["démontrer", "prouver", "déduire"]):
+        if any(mot in description_lower for mot in ["demonstrate", "prove", "deduce"]):
             return TypeLogique.DEDUCTIVE
-        elif any(mot in description_lower for mot in ["pattern", "tendance", "généraliser"]):
+        elif any(mot in description_lower for mot in ["pattern", "trend", "generalize"]):
             return TypeLogique.INDUCTIVE
-        elif any(mot in description_lower for mot in ["expliquer", "cause", "pourquoi"]):
+        elif any(mot in description_lower for mot in ["explain", "cause", "why"]):
             return TypeLogique.ABDUCTIVE
-        elif any(mot in description_lower for mot in ["similaire", "comme", "analogue"]):
+        elif any(mot in description_lower for mot in ["similar", "like", "analogous"]):
             return TypeLogique.ANALOGIQUE
         else:
-            return TypeLogique.DEDUCTIVE  # Par défaut
+            return TypeLogique.DEDUCTIVE  # By default
     
     def _identifier_concepts_lies(self, probleme: Probleme) -> List[str]:
-        """Identifie les concepts liés à un problème."""
+        """Identifies concepts related to a problem."""
         mots_probleme = set(probleme.description.lower().split())
         concepts_lies = []
         
@@ -962,28 +962,28 @@ class RaisonnementAmeliore:
         return concepts_lies
     
     def _analyser_contraintes(self, probleme: Probleme) -> List[str]:
-        """Analyse les contraintes critiques."""
+        """Analyzes critical constraints."""
         contraintes_critiques = []
         
         for contrainte in probleme.contraintes:
-            if any(mot in contrainte.lower() for mot in ["temps", "budget", "urgent", "critique"]):
+            if any(mot in contrainte.lower() for mot in ["time", "budget", "urgent", "critical"]):
                 contraintes_critiques.append(contrainte)
         
         return contraintes_critiques
     
     def obtenir_statistiques(self) -> Dict[str, Any]:
-        """Retourne des statistiques sur l'utilisation du système."""
+        """Returns statistics on system usage."""
         return {
-            "problemes_traites": len(self.problemes),
-            "solutions_generees": sum(len(sols) for sols in self.solutions.values()),
-            "concepts_bases": len(self.base_concepts.concepts),
-            "taux_resolution": len([p for p in self.problemes.values() if p.statut == StatutProbleme.RESOLU]) / max(len(self.problemes), 1),
-            "type_logique_populaire": self._type_logique_plus_utilise(),
-            "niveau_raisonnement_moyen": self._niveau_raisonnement_moyen()
+            "problems_processed": len(self.problemes),
+            "solutions_generated": sum(len(sols) for sols in self.solutions.values()),
+            "base_concepts": len(self.base_concepts.concepts),
+            "resolution_rate": len([p for p in self.problemes.values() if p.statut == StatutProbleme.RESOLU]) / max(len(self.problemes), 1),
+            "most_popular_logic_type": self._type_logique_plus_utilise(),
+            "average_reasoning_level": self._niveau_raisonnement_moyen()
         }
     
     def _type_logique_plus_utilise(self) -> str:
-        """Trouve le type de logique le plus utilisé."""
+        """Finds the most used logic type."""
         compteurs = {}
         
         for solutions_list in self.solutions.values():
@@ -992,12 +992,12 @@ class RaisonnementAmeliore:
                 compteurs[type_logique] = compteurs.get(type_logique, 0) + 1
         
         if not compteurs:
-            return "aucun"
+            return "none"
         
         return max(compteurs.items(), key=lambda x: x[1])[0]
     
     def _niveau_raisonnement_moyen(self) -> float:
-        """Calcule le niveau de raisonnement moyen."""
+        """Calculates the average reasoning level."""
         if not self.problemes:
             return 0
         
@@ -1005,7 +1005,7 @@ class RaisonnementAmeliore:
         return total / len(self.problemes)
     
     def sauvegarder_etat(self, fichier: str) -> bool:
-        """Sauvegarde l'état du système."""
+        """Saves the system state."""
         try:
             etat = {
                 "concepts": {nom: {
@@ -1015,27 +1015,27 @@ class RaisonnementAmeliore:
                     "confiance": c.confiance,
                     "source": c.source
                 } for nom, c in self.base_concepts.concepts.items()},
-                "historique": self.historique_raisonnement,
-                "statistiques": self.obtenir_statistiques()
+                "history": self.historique_raisonnement,
+                "statistics": self.obtenir_statistiques()
             }
             
             with open(fichier, 'w', encoding='utf-8') as f:
                 json.dump(etat, f, indent=2, ensure_ascii=False, default=str)
             
-            logger.info(f"État sauvegardé dans {fichier}")
+            logger.info(f"State saved to {fichier}")
             return True
             
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde: {str(e)}")
+            logger.error(f"Error during save: {str(e)}")
             return False
     
     def charger_etat(self, fichier: str) -> bool:
-        """Charge l'état du système."""
+        """Loads the system state."""
         try:
             with open(fichier, 'r', encoding='utf-8') as f:
                 etat = json.load(f)
             
-            # Restaurer les concepts
+            # Restore concepts
             for nom, data in etat.get("concepts", {}).items():
                 concept = Concept(
                     nom=data["nom"],
@@ -1046,50 +1046,50 @@ class RaisonnementAmeliore:
                 )
                 self.base_concepts.ajouter_concept(concept)
             
-            # Restaurer l'historique
-            self.historique_raisonnement = etat.get("historique", [])
+            # Restore history
+            self.historique_raisonnement = etat.get("history", [])
             
-            logger.info(f"État chargé depuis {fichier}")
+            logger.info(f"State loaded from {fichier}")
             return True
             
         except Exception as e:
-            logger.error(f"Erreur lors du chargement: {str(e)}")
+            logger.error(f"Error during load: {str(e)}")
             return False
 
-# Fonction utilitaire pour créer facilement un système de raisonnement
+# Utility function to easily create a reasoning system
 def creer_systeme_raisonnement() -> RaisonnementAmeliore:
-    """Crée et initialise un nouveau système de raisonnement."""
+    """Creates and initializes a new reasoning system."""
     return RaisonnementAmeliore()
 
-# Exemple d'utilisation
+# Example usage
 if __name__ == "__main__":
     async def exemple_utilisation():
-        # Créer le système
+        # Create the system
         systeme = creer_systeme_raisonnement()
         
-        # Créer un problème exemple
+        # Create an example problem
         probleme = Probleme(
             id="pb_001",
-            description="Analyser et optimiser les performances d'un système distribué",
-            contexte={"environnement": "production", "criticite": "haute"},
-            contraintes=["temps limité", "budget restreint", "disponibilité 24/7"],
-            objectifs=["améliorer latence", "réduire coûts", "maintenir fiabilité"],
+            description="Analyze and optimize the performance of a distributed system",
+            contexte={"environment": "production", "criticality": "high"},
+            contraintes=["limited time", "restricted budget", "24/7 availability"],
+            objectifs=["improve latency", "reduce costs", "maintain reliability"],
             niveau=NiveauRaisonnement.STRATEGIQUE,
             priorite=8
         )
         
-        # Résoudre le problème
+        # Resolve the problem
         resultat = await systeme.resoudre_probleme(probleme)
         
-        print("=== RÉSULTAT DE RÉSOLUTION ===")
-        print(f"Statut: {resultat['statut']}")
-        if resultat.get('solution_principale'):
-            sol = resultat['solution_principale']
+        print("=== RESOLUTION RESULT ===")
+        print(f"Status: {resultat['status']}")
+        if resultat.get('main_solution'):
+            sol = resultat['main_solution']
             print(f"Solution: {sol.description}")
-            print(f"Confiance: {sol.confiance:.2f}")
-            print(f"Étapes: {sol.etapes}")
+            print(f"Confidence: {sol.confiance:.2f}")
+            print(f"Steps: {sol.etapes}")
         
-        print(f"\nStatistiques: {systeme.obtenir_statistiques()}")
+        print(f"\nStatistics: {systeme.obtenir_statistiques()}")
     
-    # Exécuter l'exemple
+    # Execute the example
     asyncio.run(exemple_utilisation())
