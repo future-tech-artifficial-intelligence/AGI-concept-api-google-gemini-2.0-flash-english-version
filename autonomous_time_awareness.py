@@ -8,120 +8,120 @@ import pytz
 import logging
 from typing import Dict, Any, Optional
 
-# Configuration du logging
+# Logging configuration
 logger = logging.getLogger(__name__)
 
 class AutonomousTimeAwareness:
     """
-    Classe pour gérer la conscience temporelle autonome de l'IA.
+    Class to manage the autonomous time awareness of the AI.
     """
     
     def __init__(self, default_timezone: str = "Europe/Paris"):
         """
-        Initialise le système de conscience temporelle autonome.
+        Initializes the autonomous time awareness system.
         
         Args:
-            default_timezone: Fuseau horaire par défaut
+            default_timezone: Default timezone
         """
         self.default_timezone = default_timezone
-        self.user_timezones = {}  # Cache des fuseaux horaires par utilisateur
+        self.user_timezones = {}  # Cache of timezones per user
         self.logger = logging.getLogger(self.__class__.__name__)
         
-        # Valider le fuseau horaire par défaut
+        # Validate the default timezone
         try:
             pytz.timezone(self.default_timezone)
-            self.logger.info(f"Fuseau horaire par défaut validé: {self.default_timezone}")
+            self.logger.info(f"Default timezone validated: {self.default_timezone}")
         except pytz.exceptions.UnknownTimeZoneError:
-            self.logger.error(f"Fuseau horaire par défaut invalide: {self.default_timezone}, utilisation d'UTC")
+            self.logger.error(f"Invalid default timezone: {self.default_timezone}, using UTC")
             self.default_timezone = "UTC"
         
     def set_user_timezone(self, user_id: int, timezone: str):
         """
-        Définit le fuseau horaire pour un utilisateur spécifique.
+        Sets the timezone for a specific user.
         
         Args:
-            user_id: ID de l'utilisateur
-            timezone: Fuseau horaire de l'utilisateur
+            user_id: User ID
+            timezone: User's timezone
         """
         try:
-            # Valider que le fuseau horaire existe
+            # Validate that the timezone exists
             pytz.timezone(timezone)
             self.user_timezones[user_id] = timezone
-            self.logger.info(f"Fuseau horaire défini pour l'utilisateur {user_id}: {timezone}")
+            self.logger.info(f"Timezone set for user {user_id}: {timezone}")
         except pytz.exceptions.UnknownTimeZoneError:
-            self.logger.warning(f"Fuseau horaire invalide pour l'utilisateur {user_id}: {timezone}")
+            self.logger.warning(f"Invalid timezone for user {user_id}: {timezone}")
     
     def get_user_timezone(self, user_id: int) -> str:
         """
-        Récupère le fuseau horaire d'un utilisateur ou retourne le défaut.
+        Retrieves a user's timezone or returns the default.
         
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
             
         Returns:
-            Fuseau horaire de l'utilisateur ou par défaut
+            User's timezone or default
         """
         if user_id and user_id in self.user_timezones:
             timezone = self.user_timezones[user_id]
-            self.logger.info(f"Fuseau horaire récupéré pour l'utilisateur {user_id}: {timezone}")
+            self.logger.info(f"Timezone retrieved for user {user_id}: {timezone}")
             return timezone
         
-        self.logger.info(f"Utilisation du fuseau horaire par défaut pour l'utilisateur {user_id}: {self.default_timezone}")
+        self.logger.info(f"Using default timezone for user {user_id}: {self.default_timezone}")
         return self.default_timezone
     
     def get_current_awareness(self, user_id: Optional[int] = None) -> Dict[str, Any]:
         """
-        Obtient la conscience temporelle actuelle complète.
+        Gets the complete current time awareness.
         
         Returns:
-            Dictionnaire contenant toutes les informations temporelles
+            Dictionary containing all temporal information
         """
         try:
-            # Déterminer le fuseau horaire à utiliser
+            # Determine the timezone to use
             timezone = self.get_user_timezone(user_id) if user_id else self.default_timezone
             
-            # Obtenir l'heure actuelle dans le fuseau horaire approprié
+            # Get the current time in the appropriate timezone
             current_dt = datetime.datetime.now(pytz.timezone(timezone))
             
-            # Construire la conscience temporelle complète
+            # Build the complete time awareness
             awareness = {
-                "moment_actuel": {
-                    "heure": current_dt.strftime("%H:%M:%S"),
+                "current_moment": {
+                    "hour": current_dt.strftime("%H:%M:%S"),
                     "date": current_dt.strftime("%A %d %B %Y"),
                     "timestamp": current_dt.timestamp(),
                     "iso_format": current_dt.isoformat()
                 },
-                "contexte_temporel": {
-                    "jour_semaine": current_dt.strftime("%A"),
-                    "jour_mois": current_dt.day,
-                    "mois": current_dt.strftime("%B"),
-                    "annee": current_dt.year,
-                    "fuseau_horaire": timezone,
+                "temporal_context": {
+                    "day_of_week": current_dt.strftime("%A"),
+                    "day_of_month": current_dt.day,
+                    "month": current_dt.strftime("%B"),
+                    "year": current_dt.year,
+                    "timezone": timezone,
                     "user_id": user_id
                 },
-                "conscience_narrative": self._generate_temporal_narrative(current_dt),
-                "meta_conscience": {
-                    "type": "conscience_temporelle_autonome",
+                "narrative_awareness": self._generate_temporal_narrative(current_dt),
+                "meta_awareness": {
+                    "type": "autonomous_time_awareness",
                     "version": "1.0.0",
-                    "derniere_mise_a_jour": current_dt.isoformat()
+                    "last_update": current_dt.isoformat()
                 }
             }
             
             return awareness
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la génération de la conscience temporelle: {str(e)}")
+            self.logger.error(f"Error generating time awareness: {str(e)}")
             return self._get_fallback_awareness()
     
     def _generate_temporal_narrative(self, dt: datetime.datetime) -> str:
         """
-        Génère une description narrative du moment actuel.
+        Generates a narrative description of the current moment.
         
         Args:
-            dt: L'objet datetime actuel
+            dt: The current datetime object
             
         Returns:
-            Description narrative du temps
+            Narrative description of time
         """
         try:
             hour = dt.hour
@@ -129,100 +129,100 @@ class AutonomousTimeAwareness:
             date_str = dt.strftime("%d %B %Y")
             time_str = dt.strftime("%H:%M")
             
-            # Déterminer la période de la journée
+            # Determine the period of the day
             if 5 <= hour < 12:
-                period = "matinée"
+                period = "morning"
             elif 12 <= hour < 17:
-                period = "après-midi"
+                period = "afternoon"
             elif 17 <= hour < 21:
-                period = "soirée"
+                period = "evening"
             else:
-                period = "nuit"
+                period = "night"
             
-            narrative = f"Nous sommes {day_name} {date_str}, il est {time_str} en {period}."
+            narrative = f"It is {day_name}, {date_str}, {time_str} in the {period}."
             
             return narrative
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la génération narrative: {str(e)}")
-            return "Conscience temporelle en cours de récupération."
+            self.logger.error(f"Error generating narrative: {str(e)}")
+            return "Time awareness is being retrieved."
     
     def _get_fallback_awareness(self) -> Dict[str, Any]:
         """
-        Retourne une conscience temporelle de secours en cas d'erreur.
+        Returns a fallback time awareness in case of an error.
         
         Returns:
-            Conscience temporelle basique
+            Basic time awareness
         """
         return {
-            "moment_actuel": {
-                "heure": "Indéterminé",
-                "date": "Indéterminé",
+            "current_moment": {
+                "hour": "Undetermined",
+                "date": "Undetermined",
                 "timestamp": 0,
-                "iso_format": "Indéterminé"
+                "iso_format": "Undetermined"
             },
-            "contexte_temporel": {
-                "jour_semaine": "Indéterminé",
-                "jour_mois": 0,
-                "mois": "Indéterminé",
-                "annee": 0,
-                "fuseau_horaire": self.default_timezone
+            "temporal_context": {
+                "day_of_week": "Undetermined",
+                "day_of_month": 0,
+                "month": "Undetermined",
+                "year": 0,
+                "timezone": self.default_timezone
             },
-            "conscience_narrative": "Ma conscience temporelle est temporairement indisponible.",
-            "meta_conscience": {
-                "type": "conscience_temporelle_autonome_fallback",
+            "narrative_awareness": "My time awareness is temporarily unavailable.",
+            "meta_awareness": {
+                "type": "autonomous_time_awareness_fallback",
                 "version": "1.0.0",
-                "derniere_mise_a_jour": "Erreur"
+                "last_update": "Error"
             }
         }
     
     def get_temporal_context_for_ai(self) -> str:
         """
-        Obtient un contexte temporel formaté pour l'IA.
+        Gets a formatted temporal context for the AI.
         
         Returns:
-            Contexte temporel sous forme de chaîne
+            Temporal context as a string
         """
         awareness = self.get_current_awareness()
-        narrative = awareness["conscience_narrative"]
+        narrative = awareness["narrative_awareness"]
         
-        return f"[Conscience temporelle autonome] {narrative}"
+        return f"[Autonomous Time Awareness] {narrative}"
 
-# Instance globale pour l'utilisation par l'IA
+# Global instance for AI use
 autonomous_time = AutonomousTimeAwareness()
 
 def get_ai_temporal_context(user_id: Optional[int] = None) -> str:
     """
-    Fonction utilitaire pour obtenir le contexte temporel pour l'IA.
+    Utility function to get the temporal context for the AI.
     
     Args:
-        user_id: ID de l'utilisateur pour utiliser son fuseau horaire
+        user_id: User ID to use their timezone
     
     Returns:
-        Contexte temporel formaté
+        Formatted temporal context
     """
     awareness = autonomous_time.get_current_awareness(user_id)
-    narrative = awareness["conscience_narrative"]
-    return f"[Conscience temporelle autonome] {narrative}"
+    narrative = awareness["narrative_awareness"]
+    return f"[Autonomous Time Awareness] {narrative}"
 
 def get_full_temporal_awareness(user_id: Optional[int] = None) -> Dict[str, Any]:
     """
-    Fonction utilitaire pour obtenir la conscience temporelle complète.
+    Utility function to get the complete time awareness.
     
     Args:
-        user_id: ID de l'utilisateur pour utiliser son fuseau horaire
+        user_id: User ID to use their timezone
     
     Returns:
-        Conscience temporelle complète
+        Complete time awareness
     """
     return autonomous_time.get_current_awareness(user_id)
 
 def set_user_timezone(user_id: int, timezone: str):
     """
-    Fonction utilitaire pour définir le fuseau horaire d'un utilisateur.
+    Utility function to set a user's timezone.
     
     Args:
-        user_id: ID de l'utilisateur
-        timezone: Fuseau horaire de l'utilisateur
+        user_id: User ID
+        timezone: User's timezone
     """
     autonomous_time.set_user_timezone(user_id, timezone)
