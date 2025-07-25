@@ -1,6 +1,6 @@
 """
-Implémentation de l'interface AIApiInterface pour l'API Claude d'Anthropic.
-Ce module ne fait que simuler l'intégration avec Claude car nous n'avons pas accès à l'API directement.
+Implementation of the AIApiInterface for Anthropic's Claude API.
+
 """
 import logging
 import os
