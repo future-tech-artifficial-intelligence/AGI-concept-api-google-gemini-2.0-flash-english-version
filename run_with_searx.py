@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 """
-Lanceur automatique : Searx + Application
-Lance automatiquement Searx puis démarre python app.py
+Automatic Launcher: Searx + Application
+Automatically launches Searx then starts python app.py
 """
 
 import sys
 import os
 import logging
 
-# Configuration du logging
+# Logging Configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('AutoLauncher')
 
 def main():
-    """Lance automatiquement Searx puis l'application"""
+    """Automatically launches Searx then the application"""
     
-    print("\n🚀 LANCEUR AUTOMATIQUE - SEARX + APPLICATION")
+    print("\n🚀 AUTOMATIC LAUNCHER - SEARX + APPLICATION")
     print("=" * 60)
     
     try:
-        # Étape 1 : Démarrer Searx automatiquement
-        logger.info("🔧 Phase 1: Démarrage automatique de Searx...")
+        # Step 1: Start Searx automatically
+        logger.info("🔧 Phase 1: Automatic Searx startup...")
         
         try:
             from searx_auto_starter import SearxAutoStarter
@@ -28,33 +28,33 @@ def main():
             searx_ready = auto_starter.start_complete_system()
             
             if searx_ready:
-                logger.info("✅ Searx prêt!")
+                logger.info("✅ Searx ready!")
             else:
-                logger.info("⚠️ Searx en mode dégradé")
+                logger.info("⚠️ Searx in degraded mode")
                 
         except Exception as e:
-            logger.warning(f"⚠️ Erreur Searx: {e}")
-            logger.info("🔄 Continuation sans Searx")
+            logger.warning(f"⚠️ Searx Error: {e}")
+            logger.info("🔄 Continuing without Searx")
         
-        # Étape 2 : Lancer l'application
-        logger.info("🌐 Phase 2: Lancement de l'application...")
+        # Step 2: Launch the application
+        logger.info("🌐 Phase 2: Launching the application...")
         
         print("\n" + "=" * 60)
-        print("🎉 DÉMARRAGE DE L'APPLICATION")
+        print("🎉 STARTING THE APPLICATION")
         print("=" * 60)
         
-        # Importer et lancer l'application Flask
+        # Import and launch the Flask application
         from app import app
         
-        print("🌐 Interface web: http://localhost:5000")
-        print("🤖 IA Gemini avec recherches autonomes")
-        print("📸 Analyse visuelle disponible")
-        print("🔧 Gestion intelligente des ports")
+        print("🌐 Web Interface: http://localhost:5000")
+        print("🤖 artificial intelligence API GOOGLE GEMINI 2.0 FLASH with autonomous searches")
+        print("📸 Visual analysis available")
+        print("🔧 Intelligent port management")
         print("=" * 60)
-        print("💡 Pour arrêter: Ctrl+C")
+        print("💡 To stop: Ctrl+C")
         print()
         
-        # Lancer l'application
+        # Launch the application
         app.run(
             host='0.0.0.0',
             port=5000,
@@ -63,21 +63,21 @@ def main():
         )
         
     except KeyboardInterrupt:
-        logger.info("\n⏹️ Arrêt demandé par l'utilisateur")
+        logger.info("\n⏹️ Shutdown requested by user")
         
-        # Nettoyer Searx
+        # Clean up Searx
         try:
             from port_manager import get_port_manager
             pm = get_port_manager()
             pm.stop_all_searx_containers()
-            logger.info("✅ Nettoyage Searx terminé")
+            logger.info("✅ Searx cleanup completed")
         except:
             pass
         
-        print("👋 Application arrêtée proprement!")
+        print("👋 Application stopped cleanly!")
         
     except Exception as e:
-        logger.error(f"💥 Erreur: {e}")
+        logger.error(f"💥 Error: {e}")
         import traceback
         traceback.print_exc()
 
