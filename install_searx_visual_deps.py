@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Installation des dépendances pour le système de capture visuelle Searx
+Dependency installation for the Searx visual capture system
 """
 
 import subprocess
@@ -16,22 +16,22 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('searx_visual_deps_installer')
 
 def install_package(package_name):
-    """Installe un package Python avec pip"""
+    """Installs a Python package with pip"""
     try:
-        logger.info(f"Installation de {package_name}...")
+        logger.info(f"Installing {package_name}...")
         result = subprocess.run([
             sys.executable, '-m', 'pip', 'install', package_name
         ], capture_output=True, text=True, check=True)
         
-        logger.info(f"✅ {package_name} installé avec succès")
+        logger.info(f"✅ {package_name} installed successfully")
         return True
         
     except subprocess.CalledProcessError as e:
-        logger.error(f"❌ Erreur lors de l'installation de {package_name}: {e.stderr}")
+        logger.error(f"❌ Error installing {package_name}: {e.stderr}")
         return False
 
 def check_chrome_installed():
-    """Vérifie si Chrome est installé"""
+    """Checks if Chrome is installed"""
     try:
         if platform.system() == "Windows":
             chrome_paths = [
@@ -46,7 +46,7 @@ def check_chrome_installed():
         return False
 
 def check_edge_installed():
-    """Vérifie si Edge est installé"""
+    """Checks if Edge is installed"""
     try:
         if platform.system() == "Windows":
             edge_paths = [
@@ -61,11 +61,11 @@ def check_edge_installed():
         return False
 
 def download_chromedriver():
-    """Télécharge ChromeDriver automatiquement"""
+    """Downloads ChromeDriver automatically"""
     try:
-        logger.info("Téléchargement de ChromeDriver...")
+        logger.info("Downloading ChromeDriver...")
         
-        # Déterminer la version de Chrome
+        # Determine Chrome version
         if platform.system() == "Windows":
             chrome_path = None
             for path in [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -75,79 +75,79 @@ def download_chromedriver():
                     break
             
             if not chrome_path:
-                logger.warning("Chrome non trouvé pour déterminer la version")
+                logger.warning("Chrome not found to determine version")
                 return False
         
-        # Utiliser webdriver-manager pour une installation automatique
-        logger.info("Utilisation de webdriver-manager pour l'installation automatique")
+        # Use webdriver-manager for automatic installation
+        logger.info("Using webdriver-manager for automatic installation")
         return True
         
     except Exception as e:
-        logger.error(f"Erreur téléchargement ChromeDriver: {e}")
+        logger.error(f"ChromeDriver download error: {e}")
         return False
 
 def main():
-    """Installe toutes les dépendances nécessaires pour la capture visuelle"""
-    logger.info("🔧 Installation des dépendances pour la capture visuelle Searx")
+    """Installs all necessary dependencies for visual capture"""
+    logger.info("🔧 Installing dependencies for Searx visual capture")
     
-    # Dépendances Python
+    # Python dependencies
     dependencies = [
-        'selenium',              # WebDriver pour automation navigateur
-        'webdriver-manager',     # Gestion automatique des drivers
-        'Pillow',               # Traitement d'images
+        'selenium',              # WebDriver for browser automation
+        'webdriver-manager',     # Automatic driver management
+        'Pillow',               # Image processing
     ]
     
     success_count = 0
     total_count = len(dependencies)
     
-    # Installation des packages Python
+    # Installing Python packages
     for package in dependencies:
         if install_package(package):
             success_count += 1
     
-    logger.info(f"📊 Installation Python terminée: {success_count}/{total_count} packages installés")
+    logger.info(f"📊 Python installation complete: {success_count}/{total_count} packages installed")
     
-    # Vérification des navigateurs
-    logger.info("🌐 Vérification des navigateurs disponibles...")
+    # Checking browsers
+    logger.info("🌐 Checking available browsers...")
     
     chrome_available = check_chrome_installed()
     edge_available = check_edge_installed()
     
     if chrome_available:
-        logger.info("✅ Google Chrome détecté")
+        logger.info("✅ Google Chrome detected")
     else:
-        logger.warning("⚠️ Google Chrome non détecté")
+        logger.warning("⚠️ Google Chrome not detected")
     
     if edge_available:
-        logger.info("✅ Microsoft Edge détecté")
+        logger.info("✅ Microsoft Edge detected")
     else:
-        logger.warning("⚠️ Microsoft Edge non détecté")
+        logger.warning("⚠️ Microsoft Edge not detected")
     
     if not chrome_available and not edge_available:
-        logger.error("❌ Aucun navigateur compatible détecté")
-        logger.error("Veuillez installer Google Chrome ou Microsoft Edge")
+        logger.error("❌ No compatible browser detected")
+        logger.error("Please install Google Chrome or Microsoft Edge")
         return False
     
-    # Test d'importation
-    logger.info("🧪 Test des imports...")
+    # Import test
+    logger.info("🧪 Testing imports...")
     
     try:
         import selenium
         from selenium import webdriver
-        logger.info("✅ Selenium importé avec succès")
+        logger.info("✅ Selenium imported successfully")
         
         import PIL
-        logger.info("✅ Pillow importé avec succès")
+        logger.info("✅ Pillow imported successfully")
         
         from webdriver_manager.chrome import ChromeDriverManager
-        logger.info("✅ WebDriver Manager importé avec succès")
+        logger.info("✅ WebDriver Manager imported successfully")
         
     except ImportError as e:
-        logger.error(f"❌ Erreur d'import: {e}")
+        logger.error(f"❌ Import error: {e}")
         return False
     
-    # Test rapide WebDriver
-    logger.info("🔧 Test rapide du WebDriver...")
+    # Quick WebDriver test
+    logger.info("🔧 Quick WebDriver test...")
     
     try:
         from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -165,12 +165,12 @@ def main():
             )
             driver.get("about:blank")
             driver.quit()
-            logger.info("✅ Test WebDriver Chrome réussi")
+            logger.info("✅ Chrome WebDriver test successful")
             
     except Exception as e:
-        logger.warning(f"⚠️ Test WebDriver Chrome échoué: {e}")
+        logger.warning(f"⚠️ Chrome WebDriver test failed: {e}")
         
-        # Essayer Edge comme alternative
+        # Try Edge as an alternative
         try:
             from selenium.webdriver.edge.options import Options as EdgeOptions
             from webdriver_manager.microsoft import EdgeChromiumDriverManager
@@ -185,25 +185,25 @@ def main():
                 )
                 driver.get("about:blank")
                 driver.quit()
-                logger.info("✅ Test WebDriver Edge réussi")
+                logger.info("✅ Edge WebDriver test successful")
                 
         except Exception as e2:
-            logger.error(f"❌ Test WebDriver Edge aussi échoué: {e2}")
-            logger.error("La capture visuelle pourrait ne pas fonctionner")
+            logger.error(f"❌ Edge WebDriver test also failed: {e2}")
+            logger.error("Visual capture might not work")
             return False
     
-    logger.info("🎉 Installation terminée avec succès !")
-    logger.info("Le système de capture visuelle Searx est prêt à l'emploi")
+    logger.info("🎉 Installation completed successfully!")
+    logger.info("The Searx visual capture system is ready for use")
     
     return True
 
 if __name__ == "__main__":
     success = main()
     if not success:
-        logger.error("\n💡 Solutions possibles:")
-        logger.error("1. Installer Google Chrome: https://www.google.com/chrome/")
-        logger.error("2. Installer Microsoft Edge: https://www.microsoft.com/edge")
-        logger.error("3. Vérifier les permissions d'installation")
-        logger.error("4. Réessayer avec des droits administrateur")
+        logger.error("\n💡 Possible solutions:")
+        logger.error("1. Install Google Chrome: https://www.google.com/chrome/")
+        logger.error("2. Install Microsoft Edge: https://www.microsoft.com/edge")
+        logger.error("3. Check installation permissions")
+        logger.error("4. Retry with administrator privileges")
     
     sys.exit(0 if success else 1)
