@@ -1,8 +1,8 @@
 
 #!/usr/bin/env python3
 """
-Script de vérification des dépendances
-Affiche l'état de tous les modules requis sans les installer
+**Dependency Verification Script**
+Displays the status of all required modules without installing them
 """
 
 from auto_installer import AutoInstaller
