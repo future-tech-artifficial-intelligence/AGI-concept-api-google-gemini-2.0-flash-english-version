@@ -1,6 +1,6 @@
 """
-Module de Configuration des APIs AI
-Fournit l'accès centralisé aux configurations des différentes APIs AI
+**AI APIs Configuration Module**
+Provides centralized access to the configurations of various AI APIs.
 """
 
 import json
