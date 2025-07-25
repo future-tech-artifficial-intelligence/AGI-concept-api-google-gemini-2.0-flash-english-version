@@ -1,6 +1,6 @@
 """
-Interface abstraite pour les différentes APIs d'intelligence artificielle.
-Ce module définit une interface commune pour toutes les APIs d'IA supportées.
+**Abstract Interface for Various Artificial Intelligence APIs.**
+This module defines a common interface for all supported AI APIs.
 """
 import logging
 import abc
