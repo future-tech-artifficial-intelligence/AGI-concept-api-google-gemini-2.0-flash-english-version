@@ -1,40 +1,40 @@
-# Implémentation Multi-API
+# Multi-API Implementation
 
-Cette extension permet d'utiliser différentes API d'intelligence artificielle au sein de GeminiChat.
+This extension allows the use of different artificial intelligence APIs within GeminiChat.
 
-## Compatibilité API
+## API Compatibility
 
-GeminiChat supporte maintenant plusieurs fournisseurs d'API d'IA :
+GeminiChat now supports multiple artificial intelligence API providers:
 
-- **Google Gemini** (par défaut) - API Gemini 2.0 Flash
-- **Claude by Anthropic** - Support pour Claude-3 Opus
+-   **Google Gemini** (default) - artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   **Claude by Anthropic** - Support for Claude-3 Opus
 
-D'autres fournisseurs peuvent être facilement ajoutés en implémentant l'interface `AIApiInterface`.
+Other providers can be easily added by implementing the `AIApiInterface`.
 
 ## Architecture
 
-Le système utilise une architecture modulaire avec les composants suivants :
+The system uses a modular architecture with the following components:
 
-- `ai_api_interface.py` - Interface abstraite que toutes les implémentations d'API doivent suivre
-- `ai_api_manager.py` - Gestionnaire centralisant l'accès aux différentes API d'IA
-- `gemini_api_adapter.py` - Implémentation de l'interface pour Google Gemini
-- `claude_api_adapter.py` - Implémentation de l'interface pour Claude by Anthropic
+-   `ai_api_interface.py` - Abstract interface that all API implementations must follow
+-   `ai_api_manager.py` - Manager centralizing access to different artificial intelligence APIs
+-   `gemini_api_adapter.py` - Interface implementation for Google Gemini
+-   `claude_api_adapter.py` - Interface implementation for Claude by Anthropic
 
 ## Configuration
 
-### Interface utilisateur
+### User Interface
 
-Une interface utilisateur est disponible pour configurer les API :
-1. Connectez-vous à votre compte GeminiChat
-2. Cliquez sur "Config API" dans le menu de navigation
-3. Pour chaque API :
-   - Entrez votre clé API
-   - Cliquez sur "Enregistrer la clé"
-   - Cliquez sur "Activer cette API" pour l'utiliser
+A user interface is available to configure the APIs:
+1.  Log in to your GeminiChat account
+2.  Click on "Config API" in the navigation menu
+3.  For each API:
+    -   Enter your API key
+    -   Click on "Save Key"
+    -   Click on "Activate this API" to use it
 
-### Configuration par fichier
+### File Configuration
 
-Vous pouvez également configurer les API via le fichier `ai_api_config.json` :
+You can also configure the APIs via the `ai_api_config.json` file:
 
 ```json
 {
@@ -52,15 +52,15 @@ Vous pouvez également configurer les API via le fichier `ai_api_config.json` :
 }
 ```
 
-## Ajouter une nouvelle API
+## Add a New API
 
-Pour ajouter le support d'une nouvelle API d'IA :
+To add support for a new artificial intelligence API:
 
-1. Créez une nouvelle classe implémentant `AIApiInterface`
-2. Enregistrez cette classe auprès du `AIApiManager`
-3. Mettez à jour la configuration pour inclure les paramètres de la nouvelle API
+1.  Create a new class implementing `AIApiInterface`
+2.  Register this class with the `AIApiManager`
+3.  Update the configuration to include the new API's parameters
 
-Exemple d'enregistrement d'une nouvelle API :
+Example of registering a new API:
 
 ```python
 from my_new_api_adapter import MyNewAPI
@@ -70,13 +70,13 @@ api_manager = get_ai_api_manager()
 api_manager.add_api_implementation('my_new_api', MyNewAPI)
 ```
 
-## API REST pour la gestion des API
+## REST API for API Management
 
-Le système expose plusieurs endpoints REST pour gérer les API :
+The system exposes several REST endpoints to manage the APIs:
 
-- `GET /api/config/apis` - Liste des API disponibles
-- `GET /api/config/apis/current` - API actuellement active
-- `POST /api/config/apis/current` - Changer l'API active
-- `GET /api/keys` - Liste des clés API configurées
-- `POST /api/keys/{api_name}` - Configurer une clé API
-- `DELETE /api/keys/{api_name}` - Supprimer une clé API
+-   `GET /api/config/apis` - List of available APIs
+-   `GET /api/config/apis/current` - Currently active API
+-   `POST /api/config/apis/current` - Change the active API
+-   `GET /api/keys` - List of configured API keys
+-   `POST /api/keys/{api_name}` - Configure an API key
+-   `DELETE /api/keys/{api_name}` - Delete an API key
