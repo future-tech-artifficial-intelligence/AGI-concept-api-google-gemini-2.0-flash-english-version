@@ -1,7 +1,8 @@
 """
-Système de Logique Formelle Avancée et Non-Classique
-Un framework complet pour la manipulation de différents systèmes logiques,
-la démonstration automatique de théorèmes, et le raisonnement formel.
+Advanced and Non-Classical Formal Logic System for
+artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+A comprehensive framework for manipulating different logical systems,
+automatic theorem proving, and formal reasoning.
 """
 
 import numpy as np
@@ -14,188 +15,188 @@ import networkx as nx
 from dataclasses import dataclass
 import functools
 import re
-
+import random # Added for SecondOrderLogic._generate_functions
 
 ##########################################
-# PARTIE 1: LOGIQUES NON-CLASSIQUES
+# PART 1: NON-CLASSICAL LOGICS
 ##########################################
 
-class Formule(ABC):
-    """Classe abstraite de base pour toutes les formules logiques."""
+class Formula(ABC):
+    """Abstract base class for all logical formulas."""
     
     @abstractmethod
-    def evaluer(self, *args, **kwargs):
-        """Évalue la formule selon la sémantique appropriée."""
+    def evaluate(self, *args, **kwargs):
+        """Evaluates the formula according to the appropriate semantics."""
         pass
     
     @abstractmethod
     def __str__(self):
-        """Représentation sous forme de chaîne de caractères de la formule."""
+        """String representation of the formula."""
         pass
 
 
 #########################################
-# LOGIQUE FLOUE
+# FUZZY LOGIC
 #########################################
 
-class ValeurFloue:
-    """Représente une valeur dans la logique floue entre 0 et 1."""
+class FuzzyValue:
+    """Represents a value in fuzzy logic between 0 and 1."""
     
-    def __init__(self, valeur: float):
-        if not 0 <= valeur <= 1:
-            raise ValueError("Une valeur floue doit être entre 0 et 1")
-        self.valeur = valeur
+    def __init__(self, value: float):
+        if not 0 <= value <= 1:
+            raise ValueError("A fuzzy value must be between 0 and 1")
+        self.value = value
     
-    def __and__(self, autre):
-        if isinstance(autre, ValeurFloue):
-            return ValeurFloue(min(self.valeur, autre.valeur))
+    def __and__(self, other):
+        if isinstance(other, FuzzyValue):
+            return FuzzyValue(min(self.value, other.value))
         return NotImplemented
     
-    def __or__(self, autre):
-        if isinstance(autre, ValeurFloue):
-            return ValeurFloue(max(self.valeur, autre.valeur))
+    def __or__(self, other):
+        if isinstance(other, FuzzyValue):
+            return FuzzyValue(max(self.value, other.value))
         return NotImplemented
     
     def __invert__(self):
-        return ValeurFloue(1 - self.valeur)
+        return FuzzyValue(1 - self.value)
     
     def __str__(self):
-        return f"{self.valeur:.3f}"
+        return f"{self.value:.3f}"
     
     def __repr__(self):
-        return f"ValeurFloue({self.valeur})"
+        return f"FuzzyValue({self.value})"
 
 
-class FormuleFloue(Formule):
-    """Classe de base pour les formules de logique floue."""
+class FuzzyFormula(Formula):
+    """Base class for fuzzy logic formulas."""
     pass
 
 
-class VariableFloue(FormuleFloue):
-    """Variable floue avec un nom et une fonction d'appartenance."""
+class FuzzyVariable(FuzzyFormula):
+    """Fuzzy variable with a name and a membership function."""
     
-    def __init__(self, nom: str, fonction_appartenance: Callable[[Any], float] = None):
-        self.nom = nom
-        self.fonction_appartenance = fonction_appartenance
+    def __init__(self, name: str, membership_function: Callable[[Any], float] = None):
+        self.name = name
+        self.membership_function = membership_function
         
-    def evaluer(self, contexte=None, **kwargs):
-        if contexte and self.nom in contexte:
-            return contexte[self.nom]
-        if self.fonction_appartenance and 'valeur' in kwargs:
-            return ValeurFloue(self.fonction_appartenance(kwargs['valeur']))
-        raise ValueError(f"Impossible d'évaluer la variable {self.nom}")
+    def evaluate(self, context=None, **kwargs):
+        if context and self.name in context:
+            return context[self.name]
+        if self.membership_function and 'value' in kwargs:
+            return FuzzyValue(self.membership_function(kwargs['value']))
+        raise ValueError(f"Cannot evaluate variable {self.name}")
         
     def __str__(self):
-        return self.nom
+        return self.name
 
 
-class EtFloue(FormuleFloue):
-    """Conjonction floue (t-norme)."""
+class FuzzyAnd(FuzzyFormula):
+    """Fuzzy conjunction (t-norm)."""
     
-    def __init__(self, gauche: FormuleFloue, droite: FormuleFloue, t_norme: str = 'min'):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left: FuzzyFormula, right: FuzzyFormula, t_norm: str = 'min'):
+        self.left = left
+        self.right = right
         
-        # Différentes t-normes disponibles
-        self.t_normes = {
+        # Different t-norms available
+        self.t_norms = {
             'min': lambda a, b: min(a, b),
-            'produit': lambda a, b: a * b,
+            'product': lambda a, b: a * b,
             'lukasiewicz': lambda a, b: max(0, a + b - 1),
         }
         
-        if t_norme not in self.t_normes:
-            raise ValueError(f"T-norme '{t_norme}' non reconnue")
+        if t_norm not in self.t_norms:
+            raise ValueError(f"T-norm '{t_norm}' not recognized")
         
-        self.t_norme = t_norme
+        self.t_norm = t_norm
     
-    def evaluer(self, contexte=None, **kwargs):
-        val_gauche = self.gauche.evaluer(contexte, **kwargs).valeur
-        val_droite = self.droite.evaluer(contexte, **kwargs).valeur
-        resultat = self.t_normes[self.t_norme](val_gauche, val_droite)
-        return ValeurFloue(resultat)
+    def evaluate(self, context=None, **kwargs):
+        left_val = self.left.evaluate(context, **kwargs).value
+        right_val = self.right.evaluate(context, **kwargs).value
+        result = self.t_norms[self.t_norm](left_val, right_val)
+        return FuzzyValue(result)
     
     def __str__(self):
-        return f"({self.gauche} ∧ {self.droite})"
+        return f"({self.left} ∧ {self.right})"
 
 
-class OuFloue(FormuleFloue):
-    """Disjonction floue (t-conorme)."""
+class FuzzyOr(FuzzyFormula):
+    """Fuzzy disjunction (t-conorm)."""
     
-    def __init__(self, gauche: FormuleFloue, droite: FormuleFloue, t_conorme: str = 'max'):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left: FuzzyFormula, right: FuzzyFormula, t_conorm: str = 'max'):
+        self.left = left
+        self.right = right
         
-        # Différentes t-conormes disponibles
-        self.t_conormes = {
+        # Different t-conorms available
+        self.t_conorms = {
             'max': lambda a, b: max(a, b),
-            'somme_prob': lambda a, b: a + b - a * b,
+            'prob_sum': lambda a, b: a + b - a * b,
             'lukasiewicz': lambda a, b: min(1, a + b),
         }
         
-        if t_conorme not in self.t_conormes:
-            raise ValueError(f"T-conorme '{t_conorme}' non reconnue")
+        if t_conorm not in self.t_conorms:
+            raise ValueError(f"T-conorm '{t_conorm}' not recognized")
         
-        self.t_conorme = t_conorme
+        self.t_conorm = t_conorm
     
-    def evaluer(self, contexte=None, **kwargs):
-        val_gauche = self.gauche.evaluer(contexte, **kwargs).valeur
-        val_droite = self.droite.evaluer(contexte, **kwargs).valeur
-        resultat = self.t_conormes[self.t_conorme](val_gauche, val_droite)
-        return ValeurFloue(resultat)
+    def evaluate(self, context=None, **kwargs):
+        left_val = self.left.evaluate(context, **kwargs).value
+        right_val = self.right.evaluate(context, **kwargs).value
+        result = self.t_conorms[self.t_conorm](left_val, right_val)
+        return FuzzyValue(result)
     
     def __str__(self):
-        return f"({self.gauche} ∨ {self.droite})"
+        return f"({self.left} ∨ {self.right})"
 
 
-class NonFloue(FormuleFloue):
-    """Négation floue."""
+class FuzzyNot(FuzzyFormula):
+    """Fuzzy negation."""
     
-    def __init__(self, formule: FormuleFloue, type_neg: str = 'standard'):
-        self.formule = formule
+    def __init__(self, formula: FuzzyFormula, neg_type: str = 'standard'):
+        self.formula = formula
         
-        # Différents types de négation
+        # Different negation types
         self.negations = {
             'standard': lambda a: 1 - a,
             'sugeno': lambda a, lambda_: 1 - a / (1 + lambda_ * a) if lambda_ > 0 else 1 - a,
             'yager': lambda a, w: (1 - a**w)**(1/w) if w > 0 else 1 - a,
         }
         
-        self.type_neg = type_neg
+        self.neg_type = neg_type
         self.params = {}
     
     def with_params(self, **params):
-        """Configure les paramètres pour les négations paramétrables."""
+        """Configures parameters for parameterized negations."""
         self.params = params
         return self
     
-    def evaluer(self, contexte=None, **kwargs):
-        val = self.formule.evaluer(contexte, **kwargs).valeur
+    def evaluate(self, context=None, **kwargs):
+        val = self.formula.evaluate(context, **kwargs).value
         
-        if self.type_neg == 'standard':
-            resultat = self.negations[self.type_neg](val)
-        elif self.type_neg == 'sugeno':
+        if self.neg_type == 'standard':
+            result = self.negations[self.neg_type](val)
+        elif self.neg_type == 'sugeno':
             lambda_ = self.params.get('lambda', 1)
-            resultat = self.negations[self.type_neg](val, lambda_)
-        elif self.type_neg == 'yager':
+            result = self.negations[self.neg_type](val, lambda_)
+        elif self.neg_type == 'yager':
             w = self.params.get('w', 2)
-            resultat = self.negations[self.type_neg](val, w)
+            result = self.negations[self.neg_type](val, w)
         else:
-            raise ValueError(f"Type de négation non pris en charge: {self.type_neg}")
+            raise ValueError(f"Negation type not supported: {self.neg_type}")
             
-        return ValeurFloue(resultat)
+        return FuzzyValue(result)
     
     def __str__(self):
-        return f"¬({self.formule})"
+        return f"¬({self.formula})"
 
 
-class ImplicationFloue(FormuleFloue):
-    """Implication floue avec différentes sémantiques."""
+class FuzzyImplication(FuzzyFormula):
+    """Fuzzy implication with different semantics."""
     
-    def __init__(self, antecedent: FormuleFloue, consequent: FormuleFloue, type_impl: str = 'godel'):
+    def __init__(self, antecedent: FuzzyFormula, consequent: FuzzyFormula, impl_type: str = 'godel'):
         self.antecedent = antecedent
         self.consequent = consequent
         
-        # Différentes implications floues
+        # Different fuzzy implications
         self.implications = {
             'godel': lambda a, b: 1 if a <= b else b,
             'lukasiewicz': lambda a, b: min(1, 1 - a + b),
@@ -204,1368 +205,1371 @@ class ImplicationFloue(FormuleFloue):
             'reichenbach': lambda a, b: 1 - a + a*b,
         }
         
-        if type_impl not in self.implications:
-            raise ValueError(f"Type d'implication '{type_impl}' non reconnu")
+        if impl_type not in self.implications:
+            raise ValueError(f"Implication type '{impl_type}' not recognized")
         
-        self.type_impl = type_impl
+        self.impl_type = impl_type
     
-    def evaluer(self, contexte=None, **kwargs):
-        val_ant = self.antecedent.evaluer(contexte, **kwargs).valeur
-        val_cons = self.consequent.evaluer(contexte, **kwargs).valeur
-        resultat = self.implications[self.type_impl](val_ant, val_cons)
-        return ValeurFloue(resultat)
+    def evaluate(self, context=None, **kwargs):
+        ant_val = self.antecedent.evaluate(context, **kwargs).value
+        cons_val = self.consequent.evaluate(context, **kwargs).value
+        result = self.implications[self.impl_type](ant_val, cons_val)
+        return FuzzyValue(result)
     
     def __str__(self):
         return f"({self.antecedent} → {self.consequent})"
 
 
-class EnsembleFlou:
-    """Représente un ensemble flou avec une fonction d'appartenance."""
+class FuzzySet:
+    """Represents a fuzzy set with a membership function."""
     
-    def __init__(self, nom: str, univers: List, fonction_appartenance: Callable[[Any], float]):
-        self.nom = nom
-        self.univers = univers
-        self.fonction_appartenance = fonction_appartenance
+    def __init__(self, name: str, universe: List, membership_function: Callable[[Any], float]):
+        self.name = name
+        self.universe = universe
+        self.membership_function = membership_function
     
-    def appartenance(self, element):
-        """Retourne le degré d'appartenance d'un élément à l'ensemble."""
-        return ValeurFloue(self.fonction_appartenance(element))
+    def membership(self, element):
+        """Returns the membership degree of an element to the set."""
+        return FuzzyValue(self.membership_function(element))
     
-    def alpha_coupe(self, alpha: float):
-        """Retourne l'α-coupe de l'ensemble flou."""
-        return [x for x in self.univers if self.fonction_appartenance(x) >= alpha]
+    def alpha_cut(self, alpha: float):
+        """Returns the α-cut of the fuzzy set."""
+        return [x for x in self.universe if self.membership_function(x) >= alpha]
     
     def support(self):
-        """Retourne le support de l'ensemble flou."""
-        return self.alpha_coupe(0.0)
+        """Returns the support of the fuzzy set."""
+        return self.alpha_cut(0.0)
     
-    def noyau(self):
-        """Retourne le noyau de l'ensemble flou."""
-        return self.alpha_coupe(1.0)
+    def core(self):
+        """Returns the core of the fuzzy set."""
+        return self.alpha_cut(1.0)
     
-    def est_normal(self):
-        """Vérifie si l'ensemble flou est normal."""
-        return any(self.fonction_appartenance(x) == 1 for x in self.univers)
+    def is_normal(self):
+        """Checks if the fuzzy set is normal."""
+        return any(self.membership_function(x) == 1 for x in self.universe)
     
-    def cardinalite(self):
-        """Calcule la cardinalité de l'ensemble flou."""
-        return sum(self.fonction_appartenance(x) for x in self.univers)
+    def cardinality(self):
+        """Calculates the cardinality of the fuzzy set."""
+        return sum(self.membership_function(x) for x in self.universe)
     
     def __str__(self):
-        return f"EnsembleFlou({self.nom})"
+        return f"FuzzySet({self.name})"
 
 
-class OperationsEnsemblesFlous:
-    """Opérations sur les ensembles flous."""
+class FuzzySetOperations:
+    """Operations on fuzzy sets."""
     
     @staticmethod
-    def intersection(ensemble1: EnsembleFlou, ensemble2: EnsembleFlou, t_norme: str = 'min'):
-        """Intersection de deux ensembles flous."""
-        t_normes = {
+    def intersection(set1: FuzzySet, set2: FuzzySet, t_norm: str = 'min'):
+        """Intersection of two fuzzy sets."""
+        t_norms = {
             'min': lambda a, b: min(a, b),
-            'produit': lambda a, b: a * b,
+            'product': lambda a, b: a * b,
             'lukasiewicz': lambda a, b: max(0, a + b - 1),
         }
         
-        if t_norme not in t_normes:
-            raise ValueError(f"T-norme '{t_norme}' non reconnue")
+        if t_norm not in t_norms:
+            raise ValueError(f"T-norm '{t_norm}' not recognized")
         
-        # Vérifier que les univers sont compatibles
-        if ensemble1.univers != ensemble2.univers:
-            raise ValueError("Les ensembles flous doivent avoir le même univers")
+        # Check that universes are compatible
+        if set1.universe != set2.universe:
+            raise ValueError("Fuzzy sets must have the same universe")
         
-        nom = f"({ensemble1.nom} ∩ {ensemble2.nom})"
+        name = f"({set1.name} ∩ {set2.name})"
         
-        def fonction_appartenance(x):
-            val1 = ensemble1.fonction_appartenance(x)
-            val2 = ensemble2.fonction_appartenance(x)
-            return t_normes[t_norme](val1, val2)
+        def membership_function(x):
+            val1 = set1.membership_function(x)
+            val2 = set2.membership_function(x)
+            return t_norms[t_norm](val1, val2)
         
-        return EnsembleFlou(nom, ensemble1.univers, fonction_appartenance)
+        return FuzzySet(name, set1.universe, membership_function)
     
     @staticmethod
-    def union(ensemble1: EnsembleFlou, ensemble2: EnsembleFlou, t_conorme: str = 'max'):
-        """Union de deux ensembles flous."""
-        t_conormes = {
+    def union(set1: FuzzySet, set2: FuzzySet, t_conorm: str = 'max'):
+        """Union of two fuzzy sets."""
+        t_conorms = {
             'max': lambda a, b: max(a, b),
-            'somme_prob': lambda a, b: a + b - a * b,
+            'prob_sum': lambda a, b: a + b - a * b,
             'lukasiewicz': lambda a, b: min(1, a + b),
         }
         
-        if t_conorme not in t_conormes:
-            raise ValueError(f"T-conorme '{t_conorme}' non reconnue")
+        if t_conorm not in t_conorms:
+            raise ValueError(f"T-conorm '{t_conorm}' not recognized")
         
-        # Vérifier que les univers sont compatibles
-        if ensemble1.univers != ensemble2.univers:
-            raise ValueError("Les ensembles flous doivent avoir le même univers")
+        # Check that universes are compatible
+        if set1.universe != set2.universe:
+            raise ValueError("Fuzzy sets must have the same universe")
         
-        nom = f"({ensemble1.nom} ∪ {ensemble2.nom})"
+        name = f"({set1.name} ∪ {set2.name})"
         
-        def fonction_appartenance(x):
-            val1 = ensemble1.fonction_appartenance(x)
-            val2 = ensemble2.fonction_appartenance(x)
-            return t_conormes[t_conorme](val1, val2)
+        def membership_function(x):
+            val1 = set1.membership_function(x)
+            val2 = set2.membership_function(x)
+            return t_conorms[t_conorm](val1, val2)
         
-        return EnsembleFlou(nom, ensemble1.univers, fonction_appartenance)
+        return FuzzySet(name, set1.universe, membership_function)
     
     @staticmethod
-    def complement(ensemble: EnsembleFlou):
-        """Complément d'un ensemble flou."""
-        nom = f"¬({ensemble.nom})"
+    def complement(f_set: FuzzySet):
+        """Complement of a fuzzy set."""
+        name = f"¬({f_set.name})"
         
-        def fonction_appartenance(x):
-            return 1 - ensemble.fonction_appartenance(x)
+        def membership_function(x):
+            return 1 - f_set.membership_function(x)
         
-        return EnsembleFlou(nom, ensemble.univers, fonction_appartenance)
+        return FuzzySet(name, f_set.universe, membership_function)
 
 
-class SystemeReglesFloues:
-    """Système d'inférence floue basé sur des règles."""
+class FuzzyRuleSystem:
+    """Rule-based fuzzy inference system."""
     
-    def __init__(self, nom: str):
-        self.nom = nom
-        self.regles = []
-        self.variables_entree = {}
-        self.variables_sortie = {}
+    def __init__(self, name: str):
+        self.name = name
+        self.rules = []
+        self.input_variables = {}
+        self.output_variables = {}
     
-    def ajouter_variable_entree(self, nom: str, univers: List, ensembles_flous: Dict[str, EnsembleFlou]):
-        """Ajoute une variable d'entrée avec ses ensembles flous associés."""
-        self.variables_entree[nom] = {
-            'univers': univers,
-            'ensembles': ensembles_flous
+    def add_input_variable(self, name: str, universe: List, fuzzy_sets: Dict[str, FuzzySet]):
+        """Adds an input variable with its associated fuzzy sets."""
+        self.input_variables[name] = {
+            'universe': universe,
+            'sets': fuzzy_sets
         }
         return self
     
-    def ajouter_variable_sortie(self, nom: str, univers: List, ensembles_flous: Dict[str, EnsembleFlou]):
-        """Ajoute une variable de sortie avec ses ensembles flous associés."""
-        self.variables_sortie[nom] = {
-            'univers': univers,
-            'ensembles': ensembles_flous
+    def add_output_variable(self, name: str, universe: List, fuzzy_sets: Dict[str, FuzzySet]):
+        """Adds an output variable with its associated fuzzy sets."""
+        self.output_variables[name] = {
+            'universe': universe,
+            'sets': fuzzy_sets
         }
         return self
     
-    def ajouter_regle(self, antecedents: List[Tuple[str, str, str]], consequents: List[Tuple[str, str]]):
+    def add_rule(self, antecedents: List[Tuple[str, str, str]], consequents: List[Tuple[str, str]]):
         """
-        Ajoute une règle floue.
-        antecedents: liste de tuples (variable, ensemble_flou, operateur)
-        consequents: liste de tuples (variable, ensemble_flou)
+        Adds a fuzzy rule.
+        antecedents: list of tuples (variable, fuzzy_set, operator)
+        consequents: list of tuples (variable, fuzzy_set)
         """
-        self.regles.append({
+        self.rules.append({
             'antecedents': antecedents,
             'consequents': consequents
         })
         return self
     
-    def fuzzifier(self, entrees: Dict[str, Any]):
-        """Fuzzifie les entrées crisp."""
-        resultats = {}
-        for var, valeur in entrees.items():
-            if var not in self.variables_entree:
-                raise ValueError(f"Variable d'entrée inconnue: {var}")
+    def fuzzify(self, inputs: Dict[str, Any]):
+        """Fuzzifies crisp inputs."""
+        results = {}
+        for var, value in inputs.items():
+            if var not in self.input_variables:
+                raise ValueError(f"Unknown input variable: {var}")
             
-            # Calcul des degrés d'appartenance pour chaque ensemble flou
-            resultats[var] = {}
-            for nom_ens, ens_flou in self.variables_entree[var]['ensembles'].items():
-                resultats[var][nom_ens] = ens_flou.fonction_appartenance(valeur)
+            # Calculation of membership degrees for each fuzzy set
+            results[var] = {}
+            for set_name, f_set in self.input_variables[var]['sets'].items():
+                results[var][set_name] = f_set.membership_function(value)
         
-        return resultats
+        return results
     
-    def evaluer_regle(self, regle, entrees_fuzzifiees):
-        """Évalue une règle floue et retourne le degré d'activation."""
-        # Évaluer les antécédents
-        degres_activation = []
+    def evaluate_rule(self, rule, fuzzified_inputs):
+        """Evaluates a fuzzy rule and returns the activation degree."""
+        # Evaluate antecedents
+        activation_degrees = []
         
-        for var, ens_flou, operateur in regle['antecedents']:
-            if var not in entrees_fuzzifiees or ens_flou not in entrees_fuzzifiees[var]:
-                raise ValueError(f"Antécédent invalide: {var}.{ens_flou}")
+        for var, f_set, operator in rule['antecedents']:
+            if var not in fuzzified_inputs or f_set not in fuzzified_inputs[var]:
+                raise ValueError(f"Invalid antecedent: {var}.{f_set}")
             
-            degre = entrees_fuzzifiees[var][ens_flou]
-            degres_activation.append((degre, operateur))
+            degree = fuzzified_inputs[var][f_set]
+            activation_degrees.append((degree, operator))
         
-        # Combiner les degrés d'activation selon les opérateurs
-        degre_final = degres_activation[0][0]
-        for i in range(1, len(degres_activation)):
-            degre, op = degres_activation[i]
-            if op == 'ET':
-                degre_final = min(degre_final, degre)
-            elif op == 'OU':
-                degre_final = max(degre_final, degre)
+        # Combine activation degrees according to operators
+        final_degree = activation_degrees[0][0]
+        for i in range(1, len(activation_degrees)):
+            degree, op = activation_degrees[i]
+            if op == 'AND':
+                final_degree = min(final_degree, degree)
+            elif op == 'OR':
+                final_degree = max(final_degree, degree)
         
-        return degre_final
+        return final_degree
     
-    def inferer(self, entrees: Dict[str, Any], methode_agregation: str = 'max', methode_defuzzification: str = 'centroide'):
+    def infer(self, inputs: Dict[str, Any], aggregation_method: str = 'max', defuzzification_method: str = 'centroid'):
         """
-        Effectue l'inférence floue complète:
-        1. Fuzzification des entrées
-        2. Évaluation des règles
-        3. Agrégation des sorties
-        4. Défuzzification
+        Performs full fuzzy inference:
+        1. Fuzzification of inputs
+        2. Rule evaluation
+        3. Output aggregation
+        4. Defuzzification
         """
-        # Étape 1: Fuzzification
-        entrees_fuzzifiees = self.fuzzifier(entrees)
+        # Step 1: Fuzzification
+        fuzzified_inputs = self.fuzzify(inputs)
         
-        # Étape 2: Évaluation des règles
+        # Step 2: Rule evaluation
         activations = {}
-        for i, regle in enumerate(self.regles):
-            degre = self.evaluer_regle(regle, entrees_fuzzifiees)
+        for i, rule in enumerate(self.rules):
+            degree = self.evaluate_rule(rule, fuzzified_inputs)
             
-            # Enregistrer l'activation pour chaque conséquent
-            for var, ens_flou in regle['consequents']:
+            # Record activation for each consequent
+            for var, f_set in rule['consequents']:
                 if var not in activations:
                     activations[var] = {}
                 
-                if ens_flou not in activations[var]:
-                    activations[var][ens_flou] = []
+                if f_set not in activations[var]:
+                    activations[var][f_set] = []
                 
-                activations[var][ens_flou].append(degre)
+                activations[var][f_set].append(degree)
         
-        # Étape 3: Agrégation des sorties
-        sorties_agregees = {}
-        for var in self.variables_sortie:
-            sorties_agregees[var] = {}
+        # Step 3: Output aggregation
+        aggregated_outputs = {}
+        for var in self.output_variables:
+            aggregated_outputs[var] = {}
             
-            # Si la variable n'a pas été activée par une règle
+            # If the variable has not been activated by a rule
             if var not in activations:
                 continue
                 
-            for ens_flou in self.variables_sortie[var]['ensembles']:
-                if ens_flou not in activations[var]:
+            for f_set in self.output_variables[var]['sets']:
+                if f_set not in activations[var]:
                     continue
                     
-                # Agréger les activations de cet ensemble flou
-                if methode_agregation == 'max':
-                    sorties_agregees[var][ens_flou] = max(activations[var][ens_flou])
-                elif methode_agregation == 'somme':
-                    sorties_agregees[var][ens_flou] = sum(activations[var][ens_flou])
+                # Aggregate activations for this fuzzy set
+                if aggregation_method == 'max':
+                    aggregated_outputs[var][f_set] = max(activations[var][f_set])
+                elif aggregation_method == 'sum':
+                    aggregated_outputs[var][f_set] = sum(activations[var][f_set])
                 else:
-                    raise ValueError(f"Méthode d'agrégation non reconnue: {methode_agregation}")
+                    raise ValueError(f"Aggregation method not recognized: {aggregation_method}")
         
-        # Étape 4: Défuzzification
-        resultats = {}
-        for var in self.variables_sortie:
-            if var not in sorties_agregees or not sorties_agregees[var]:
-                resultats[var] = None
+        # Step 4: Defuzzification
+        results = {}
+        for var in self.output_variables:
+            if var not in aggregated_outputs or not aggregated_outputs[var]:
+                results[var] = None
                 continue
                 
-            univers = self.variables_sortie[var]['univers']
+            universe = self.output_variables[var]['universe']
             
-            if methode_defuzzification == 'centroide':
-                numerateur = 0
-                denominateur = 0
+            if defuzzification_method == 'centroid':
+                numerator = 0
+                denominator = 0
                 
-                for x in univers:
-                    # Calculer le degré d'appartenance agrégé pour x
-                    degre_max = 0
-                    for ens_flou, activation in sorties_agregees[var].items():
-                        degre = min(activation, self.variables_sortie[var]['ensembles'][ens_flou].fonction_appartenance(x))
-                        degre_max = max(degre_max, degre)
+                for x in universe:
+                    # Calculate the aggregated membership degree for x
+                    max_degree = 0
+                    for f_set, activation in aggregated_outputs[var].items():
+                        degree = min(activation, self.output_variables[var]['sets'][f_set].membership_function(x))
+                        max_degree = max(max_degree, degree)
                     
-                    numerateur += x * degre_max
-                    denominateur += degre_max
+                    numerator += x * max_degree
+                    denominator += max_degree
                 
-                if denominateur > 0:
-                    resultats[var] = numerateur / denominateur
+                if denominator > 0:
+                    results[var] = numerator / denominator
                 else:
-                    resultats[var] = None
+                    results[var] = None
                     
-            elif methode_defuzzification == 'moyenne_max':
-                # Méthode de la moyenne des maximums
-                degres_max = {}
-                for x in univers:
-                    degre_max = 0
-                    for ens_flou, activation in sorties_agregees[var].items():
-                        degre = min(activation, self.variables_sortie[var]['ensembles'][ens_flou].fonction_appartenance(x))
-                        degre_max = max(degre_max, degre)
+            elif defuzzification_method == 'mean_of_max':
+                # Mean of maximums method
+                max_degrees = {}
+                for x in universe:
+                    max_degree = 0
+                    for f_set, activation in aggregated_outputs[var].items():
+                        degree = min(activation, self.output_variables[var]['sets'][f_set].membership_function(x))
+                        max_degree = max(max_degree, degree)
                     
-                    degres_max[x] = degre_max
+                    max_degrees[x] = max_degree
                 
-                max_degre = max(degres_max.values()) if degres_max else 0
+                overall_max_degree = max(max_degrees.values()) if max_degrees else 0
                 
-                # Trouver les points avec le degré maximum
-                points_max = [x for x, degre in degres_max.items() if degre == max_degre]
+                # Find points with maximum degree
+                points_at_max = [x for x, degree in max_degrees.items() if degree == overall_max_degree]
                 
-                if points_max:
-                    resultats[var] = sum(points_max) / len(points_max)
+                if points_at_max:
+                    results[var] = sum(points_at_max) / len(points_at_max)
                 else:
-                    resultats[var] = None
+                    results[var] = None
             
-            elif methode_defuzzification == 'premier_max':
-                # Méthode du premier maximum
-                degres_max = {}
-                for x in univers:
-                    degre_max = 0
-                    for ens_flou, activation in sorties_agregees[var].items():
-                        degre = min(activation, self.variables_sortie[var]['ensembles'][ens_flou].fonction_appartenance(x))
-                        degre_max = max(degre_max, degre)
+            elif defuzzification_method == 'first_max':
+                # First maximum method
+                max_degrees = {}
+                for x in universe:
+                    max_degree = 0
+                    for f_set, activation in aggregated_outputs[var].items():
+                        degree = min(activation, self.output_variables[var]['sets'][f_set].membership_function(x))
+                        max_degree = max(max_degree, degree)
                     
-                    degres_max[x] = degre_max
+                    max_degrees[x] = max_degree
                 
-                max_degre = max(degres_max.values()) if degres_max else 0
+                overall_max_degree = max(max_degrees.values()) if max_degrees else 0
                 
-                # Trouver le premier point avec le degré maximum
-                for x, degre in sorted(degres_max.items()):
-                    if degre == max_degre:
-                        resultats[var] = x
+                # Find the first point with maximum degree
+                for x, degree in sorted(max_degrees.items()):
+                    if degree == overall_max_degree:
+                        results[var] = x
                         break
                 else:
-                    resultats[var] = None
+                    results[var] = None
             
             else:
-                raise ValueError(f"Méthode de défuzzification non reconnue: {methode_defuzzification}")
+                raise ValueError(f"Defuzzification method not recognized: {defuzzification_method}")
         
-        return resultats
+        return results
 
 
 #########################################
-# LOGIQUE MODALE
+# MODAL LOGIC
 #########################################
 
-class MondesPossibles:
-    """Représente un modèle de mondes possibles pour la logique modale."""
+class PossibleWorlds:
+    """Represents a possible worlds model for modal logic."""
     
     def __init__(self):
-        self.mondes = set()
-        self.relations = {}  # Relations d'accessibilité entre mondes
-        self.valuations = {}  # Valuations des propositions dans chaque monde
+        self.worlds = set()
+        self.relations = {}  # Accessibility relations between worlds
+        self.valuations = {}  # Valuations of propositions in each world
     
-    def ajouter_monde(self, monde):
-        """Ajoute un monde possible au modèle."""
-        self.mondes.add(monde)
-        self.relations[monde] = set()
-        self.valuations[monde] = {}
+    def add_world(self, world):
+        """Adds a possible world to the model."""
+        self.worlds.add(world)
+        self.relations[world] = set()
+        self.valuations[world] = {}
         return self
     
-    def ajouter_relation(self, monde1, monde2):
-        """Ajoute une relation d'accessibilité entre deux mondes."""
-        if monde1 not in self.mondes or monde2 not in self.mondes:
-            raise ValueError("Les mondes doivent être dans le modèle")
+    def add_relation(self, world1, world2):
+        """Adds an accessibility relation between two worlds."""
+        if world1 not in self.worlds or world2 not in self.worlds:
+            raise ValueError("Worlds must be in the model")
         
-        self.relations[monde1].add(monde2)
+        self.relations[world1].add(world2)
         return self
     
-    def definir_valuation(self, monde, proposition, valeur):
-        """Définit la valeur de vérité d'une proposition dans un monde."""
-        if monde not in self.mondes:
-            raise ValueError(f"Le monde {monde} n'est pas dans le modèle")
+    def define_valuation(self, world, proposition, value):
+        """Defines the truth value of a proposition in a world."""
+        if world not in self.worlds:
+            raise ValueError(f"World {world} is not in the model")
         
-        self.valuations[monde][proposition] = valeur
+        self.valuations[world][proposition] = value
         return self
     
-    def valuation(self, monde, proposition):
-        """Retourne la valeur de vérité d'une proposition dans un monde."""
-        if monde not in self.mondes:
-            raise ValueError(f"Le monde {monde} n'est pas dans le modèle")
+    def get_valuation(self, world, proposition):
+        """Returns the truth value of a proposition in a world."""
+        if world not in self.worlds:
+            raise ValueError(f"World {world} is not in the model")
         
-        return self.valuations[monde].get(proposition, False)
+        return self.valuations[world].get(proposition, False)
     
-    def mondes_accessibles(self, monde):
-        """Retourne les mondes accessibles depuis un monde donné."""
-        if monde not in self.mondes:
-            raise ValueError(f"Le monde {monde} n'est pas dans le modèle")
+    def accessible_worlds(self, world):
+        """Returns the accessible worlds from a given world."""
+        if world not in self.worlds:
+            raise ValueError(f"World {world} is not in the model")
         
-        return self.relations[monde]
+        return self.relations[world]
     
-    def verifier_proprietes(self):
-        """Vérifie les propriétés de la relation d'accessibilité."""
-        resultats = {
+    def check_properties(self):
+        """Checks the properties of the accessibility relation."""
+        results = {
             'reflexive': True,
-            'symetrique': True,
+            'symmetric': True,
             'transitive': True,
-            'serielle': True,
-            'euclidienne': True
+            'serial': True,
+            'euclidean': True
         }
         
-        # Vérifier la réflexivité
-        for monde in self.mondes:
-            if monde not in self.relations[monde]:
-                resultats['reflexive'] = False
+        # Check reflexivity
+        for world in self.worlds:
+            if world not in self.relations[world]:
+                results['reflexive'] = False
                 break
         
-        # Vérifier la symétrie
-        for monde1 in self.mondes:
-            for monde2 in self.relations[monde1]:
-                if monde1 not in self.relations[monde2]:
-                    resultats['symetrique'] = False
+        # Check symmetry
+        for world1 in self.worlds:
+            for world2 in self.relations[world1]:
+                if world1 not in self.relations[world2]:
+                    results['symmetric'] = False
                     break
         
-        # Vérifier la transitivité
-        for monde1 in self.mondes:
-            for monde2 in self.relations[monde1]:
-                for monde3 in self.relations[monde2]:
-                    if monde3 not in self.relations[monde1]:
-                        resultats['transitive'] = False
+        # Check transitivity
+        for world1 in self.worlds:
+            for world2 in self.relations[world1]:
+                for world3 in self.relations[world2]:
+                    if world3 not in self.relations[world1]:
+                        results['transitive'] = False
                         break
         
-        # Vérifier la sérialité (chaque monde a au moins un monde accessible)
-        for monde in self.mondes:
-            if not self.relations[monde]:
-                resultats['serielle'] = False
+        # Check seriality (each world has at least one accessible world)
+        for world in self.worlds:
+            if not self.relations[world]:
+                results['serial'] = False
                 break
         
-        # Vérifier la propriété euclidienne
-        for monde1 in self.mondes:
-            for monde2 in self.relations[monde1]:
-                for monde3 in self.relations[monde1]:
-                    if monde3 not in self.relations[monde2]:
-                        resultats['euclidienne'] = False
+        # Check Euclidean property
+        for world1 in self.worlds:
+            for world2 in self.relations[world1]:
+                for world3 in self.relations[world1]:
+                    if world3 not in self.relations[world2]:
+                        results['euclidean'] = False
                         break
         
-        return resultats
+        return results
     
-    def type_logique(self):
-        """Détermine le type de logique modale selon les propriétés de la relation."""
-        proprietes = self.verifier_proprietes()
+    def logic_type(self):
+        """Determines the type of modal logic based on the properties of the relation."""
+        properties = self.check_properties()
         
-        if proprietes['reflexive'] and proprietes['transitive']:
-            if proprietes['symetrique']:
+        if properties['reflexive'] and properties['transitive']:
+            if properties['symmetric']:
                 return "S5"
             else:
                 return "S4"
-        elif proprietes['reflexive']:
+        elif properties['reflexive']:
             return "T"
-        elif proprietes['serielle']:
-            if proprietes['transitive'] and proprietes['euclidienne']:
+        elif properties['serial']:
+            if properties['transitive'] and properties['euclidean']:
                 return "D45"
-            elif proprietes['transitive']:
+            elif properties['transitive']:
                 return "D4"
-            elif proprietes['euclidienne']:
+            elif properties['euclidean']:
                 return "D5"
             else:
                 return "D"
-        elif proprietes['transitive'] and proprietes['euclidienne']:
+        elif properties['transitive'] and properties['euclidean']:
             return "K45"
-        elif proprietes['transitive']:
+        elif properties['transitive']:
             return "K4"
-        elif proprietes['euclidienne']:
+        elif properties['euclidean']:
             return "K5"
         else:
             return "K"
 
 
-class FormuleModale(Formule):
-    """Classe de base pour les formules de logique modale."""
+class ModalFormula(Formula):
+    """Base class for modal logic formulas."""
     pass
 
 
-class PropositionModale(FormuleModale):
-    """Représente une proposition atomique en logique modale."""
+class ModalProposition(ModalFormula):
+    """Represents an atomic proposition in modal logic."""
     
-    def __init__(self, nom: str):
-        self.nom = nom
+    def __init__(self, name: str):
+        self.name = name
     
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue la proposition dans un monde donné du modèle."""
-        return modele.valuation(monde, self.nom)
-    
-    def __str__(self):
-        return self.nom
-
-
-class NonModale(FormuleModale):
-    """Négation en logique modale."""
-    
-    def __init__(self, formule: FormuleModale):
-        self.formule = formule
-    
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue la négation dans un monde donné du modèle."""
-        return not self.formule.evaluer(monde, modele)
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates the proposition in a given world of the model."""
+        return model.get_valuation(world, self.name)
     
     def __str__(self):
-        return f"¬{self.formule}"
+        return self.name
 
 
-class EtModale(FormuleModale):
-    """Conjonction en logique modale."""
+class ModalNot(ModalFormula):
+    """Negation in modal logic."""
     
-    def __init__(self, gauche: FormuleModale, droite: FormuleModale):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, formula: ModalFormula):
+        self.formula = formula
     
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue la conjonction dans un monde donné du modèle."""
-        return self.gauche.evaluer(monde, modele) and self.droite.evaluer(monde, modele)
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates the negation in a given world of the model."""
+        return not self.formula.evaluate(world, model)
     
     def __str__(self):
-        return f"({self.gauche} ∧ {self.droite})"
+        return f"¬{self.formula}"
 
 
-class OuModale(FormuleModale):
-    """Disjonction en logique modale."""
+class ModalAnd(ModalFormula):
+    """Conjunction in modal logic."""
     
-    def __init__(self, gauche: FormuleModale, droite: FormuleModale):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left: ModalFormula, right: ModalFormula):
+        self.left = left
+        self.right = right
     
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue la disjonction dans un monde donné du modèle."""
-        return self.gauche.evaluer(monde, modele) or self.droite.evaluer(monde, modele)
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates the conjunction in a given world of the model."""
+        return self.left.evaluate(world, model) and self.right.evaluate(world, model)
     
     def __str__(self):
-        return f"({self.gauche} ∨ {self.droite})"
+        return f"({self.left} ∧ {self.right})"
 
 
-class ImplicationModale(FormuleModale):
-    """Implication en logique modale."""
+class ModalOr(ModalFormula):
+    """Disjunction in modal logic."""
     
-    def __init__(self, antecedent: FormuleModale, consequent: FormuleModale):
+    def __init__(self, left: ModalFormula, right: ModalFormula):
+        self.left = left
+        self.right = right
+    
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates the disjunction in a given world of the model."""
+        return self.left.evaluate(world, model) or self.right.evaluate(world, model)
+    
+    def __str__(self):
+        return f"({self.left} ∨ {self.right})"
+
+
+class ModalImplication(ModalFormula):
+    """Implication in modal logic."""
+    
+    def __init__(self, antecedent: ModalFormula, consequent: ModalFormula):
         self.antecedent = antecedent
         self.consequent = consequent
     
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue l'implication dans un monde donné du modèle."""
-        return not self.antecedent.evaluer(monde, modele) or self.consequent.evaluer(monde, modele)
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates the implication in a given world of the model."""
+        return not self.antecedent.evaluate(world, model) or self.consequent.evaluate(world, model)
     
     def __str__(self):
         return f"({self.antecedent} → {self.consequent})"
 
 
-class Necessite(FormuleModale):
-    """Opérateur de nécessité (□) en logique modale."""
+class Necessity(ModalFormula):
+    """Necessity operator (□) in modal logic."""
     
-    def __init__(self, formule: FormuleModale):
-        self.formule = formule
+    def __init__(self, formula: ModalFormula):
+        self.formula = formula
     
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue la nécessité dans un monde donné du modèle."""
-        # Une formule est nécessaire si elle est vraie dans tous les mondes accessibles
-        mondes_accessibles = modele.mondes_accessibles(monde)
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates necessity in a given world of the model."""
+        # A formula is necessary if it is true in all accessible worlds
+        accessible_worlds = model.accessible_worlds(world)
         
-        if not mondes_accessibles:
-            # Si aucun monde n'est accessible, la nécessité est vraie par vacuité
+        if not accessible_worlds:
+            # If no world is accessible, necessity is true vacuously
             return True
         
-        return all(self.formule.evaluer(m, modele) for m in mondes_accessibles)
+        return all(self.formula.evaluate(m, model) for m in accessible_worlds)
     
     def __str__(self):
-        return f"□{self.formule}"
+        return f"□{self.formula}"
 
 
-class Possibilite(FormuleModale):
-    """Opérateur de possibilité (◇) en logique modale."""
+class Possibility(ModalFormula):
+    """Possibility operator (◇) in modal logic."""
     
-    def __init__(self, formule: FormuleModale):
-        self.formule = formule
+    def __init__(self, formula: ModalFormula):
+        self.formula = formula
     
-    def evaluer(self, monde, modele: MondesPossibles):
-        """Évalue la possibilité dans un monde donné du modèle."""
-        # Une formule est possible si elle est vraie dans au moins un monde accessible
-        mondes_accessibles = modele.mondes_accessibles(monde)
+    def evaluate(self, world, model: PossibleWorlds):
+        """Evaluates possibility in a given world of the model."""
+        # A formula is possible if it is true in at least one accessible world
+        accessible_worlds = model.accessible_worlds(world)
         
-        if not mondes_accessibles:
-            # Si aucun monde n'est accessible, la possibilité est fausse par vacuité
+        if not accessible_worlds:
+            # If no world is accessible, possibility is false vacuously
             return False
         
-        return any(self.formule.evaluer(m, modele) for m in mondes_accessibles)
+        return any(self.formula.evaluate(m, model) for m in accessible_worlds)
     
     def __str__(self):
-        return f"◇{self.formule}"
+        return f"◇{self.formula}"
 
 
-class VerificateurModele:
-    """Vérificateur de modèle pour la logique modale."""
+class ModelChecker:
+    """Model checker for modal logic."""
     
     @staticmethod
-    def verifier(formule: FormuleModale, modele: MondesPossibles, monde=None):
+    def check(formula: ModalFormula, model: PossibleWorlds, world=None):
         """
-        Vérifie si une formule est vraie dans un monde donné ou dans tous les mondes.
-        Si monde est None, vérifie si la formule est vraie dans tous les mondes.
+        Checks if a formula is true in a given world or in all worlds.
+        If world is None, checks if the formula is true in all worlds.
         """
-        if monde is not None:
-            return formule.evaluer(monde, modele)
+        if world is not None:
+            return formula.evaluate(world, model)
         
-        return all(formule.evaluer(m, modele) for m in modele.mondes)
+        return all(formula.evaluate(m, model) for m in model.worlds)
     
     @staticmethod
-    def mondes_satisfaisant(formule: FormuleModale, modele: MondesPossibles):
-        """Retourne l'ensemble des mondes qui satisfont la formule."""
-        return {m for m in modele.mondes if formule.evaluer(m, modele)}
+    def satisfying_worlds(formula: ModalFormula, model: PossibleWorlds):
+        """Returns the set of worlds that satisfy the formula."""
+        return {m for m in model.worlds if formula.evaluate(m, model)}
     
     @staticmethod
-    def est_valide(formule: FormuleModale, modele: MondesPossibles):
-        """Vérifie si une formule est valide dans le modèle (vraie dans tous les mondes)."""
-        return all(formule.evaluer(m, modele) for m in modele.mondes)
+    def is_valid(formula: ModalFormula, model: PossibleWorlds):
+        """Checks if a formula is valid in the model (true in all worlds)."""
+        return all(formula.evaluate(m, model) for m in model.worlds)
     
     @staticmethod
-    def est_satisfaisable(formule: FormuleModale, modele: MondesPossibles):
-        """Vérifie si une formule est satisfaisable dans le modèle (vraie dans au moins un monde)."""
-        return any(formule.evaluer(m, modele) for m in modele.mondes)
+    def is_satisfiable(formula: ModalFormula, model: PossibleWorlds):
+        """Checks if a formula is satisfiable in the model (true in at least one world)."""
+        return any(formula.evaluate(m, model) for m in model.worlds)
 
 
-class LogiqueDeontique:
-    """Implémentation de la logique déontique en utilisant la logique modale."""
+class DeonticLogic:
+    """Implementation of deontic logic using modal logic."""
     
     def __init__(self):
-        self.modele = MondesPossibles()
+        self.model = PossibleWorlds()
     
-    def ajouter_monde_ideal(self, monde):
-        """Ajoute un monde idéal au modèle."""
-        self.modele.ajouter_monde(monde)
+    def add_ideal_world(self, world):
+        """Adds an ideal world to the model."""
+        self.model.add_world(world)
         return self
     
-    def ajouter_monde_reel(self, monde):
-        """Ajoute un monde réel au modèle."""
-        self.modele.ajouter_monde(monde)
+    def add_real_world(self, world):
+        """Adds a real world to the model."""
+        self.model.add_world(world)
         return self
     
-    def definir_accessibilite_ideale(self, monde_reel, monde_ideal):
-        """Définit qu'un monde idéal est accessible depuis un monde réel."""
-        self.modele.ajouter_relation(monde_reel, monde_ideal)
+    def define_ideal_accessibility(self, real_world, ideal_world):
+        """Defines that an ideal world is accessible from a real world."""
+        self.model.add_relation(real_world, ideal_world)
         return self
     
-    def definir_valuation(self, monde, proposition, valeur):
-        """Définit la valeur de vérité d'une proposition dans un monde."""
-        self.modele.definir_valuation(monde, proposition, valeur)
+    def define_valuation(self, world, proposition, value):
+        """Defines the truth value of a proposition in a world."""
+        self.model.define_valuation(world, proposition, value)
         return self
     
-    def obligation(self, formule: FormuleModale):
-        """Crée une formule d'obligation (O)."""
-        return Necessite(formule)
+    def obligation(self, formula: ModalFormula):
+        """Creates an obligation formula (O)."""
+        return Necessity(formula)
     
-    def permission(self, formule: FormuleModale):
-        """Crée une formule de permission (P)."""
-        return Possibilite(formule)
+    def permission(self, formula: ModalFormula):
+        """Creates a permission formula (P)."""
+        return Possibility(formula)
     
-    def interdiction(self, formule: FormuleModale):
-        """Crée une formule d'interdiction (F)."""
-        return Necessite(NonModale(formule))
+    def prohibition(self, formula: ModalFormula):
+        """Creates a prohibition formula (F)."""
+        return Necessity(ModalNot(formula))
     
-    def optionnel(self, formule: FormuleModale):
-        """Crée une formule optionnelle (tout ce qui n'est ni obligatoire ni interdit)."""
-        # Quelque chose est optionnel si ni lui ni sa négation ne sont obligatoires
-        non_formule = NonModale(formule)
-        return EtModale(NonModale(self.obligation(formule)), NonModale(self.obligation(non_formule)))
+    def optional(self, formula: ModalFormula):
+        """Creates an optional formula (anything that is neither obligatory nor forbidden)."""
+        # Something is optional if neither it nor its negation are obligatory
+        neg_formula = ModalNot(formula)
+        return ModalAnd(ModalNot(self.obligation(formula)), ModalNot(self.obligation(neg_formula)))
     
-    def verifier(self, formule: FormuleModale, monde=None):
-        """Vérifie si une formule est vraie dans un monde donné ou dans tous les mondes."""
-        return VerificateurModele.verifier(formule, self.modele, monde)
+    def check(self, formula: ModalFormula, world=None):
+        """Checks if a formula is true in a given world or in all worlds."""
+        return ModelChecker.check(formula, self.model, world)
 
 
 #########################################
-# LOGIQUE TEMPORELLE
+# TEMPORAL LOGIC
 #########################################
 
-class StructureTemporelle:
-    """Représente une structure temporelle pour la logique temporelle."""
+class TemporalStructure:
+    """Represents a temporal structure for temporal logic."""
     
-    def __init__(self, type_temps: str = 'lineaire'):
+    def __init__(self, time_type: str = 'linear'):
         """
-        Initialise une structure temporelle.
-        type_temps: 'lineaire', 'branchant', 'cyclique'
+        Initializes a temporal structure.
+        time_type: 'linear', 'branching', 'cyclic'
         """
         self.instants = set()
-        self.relations = {}  # Relations d'ordre entre instants
-        self.valuations = {}  # Valuations des propositions à chaque instant
-        self.type_temps = type_temps
+        self.relations = {}  # Order relations between instants
+        self.valuations = {}  # Valuations of propositions at each instant
+        self.time_type = time_type
     
-    def ajouter_instant(self, instant):
-        """Ajoute un instant à la structure temporelle."""
+    def add_instant(self, instant):
+        """Adds an instant to the temporal structure."""
         self.instants.add(instant)
         self.relations[instant] = set()
         self.valuations[instant] = {}
         return self
     
-    def ajouter_relation(self, instant1, instant2):
-        """Ajoute une relation temporelle: instant1 précède instant2."""
+    def add_relation(self, instant1, instant2):
+        """Adds a temporal relation: instant1 precedes instant2."""
         if instant1 not in self.instants or instant2 not in self.instants:
-            raise ValueError("Les instants doivent être dans la structure")
+            raise ValueError("Instants must be in the structure")
         
         self.relations[instant1].add(instant2)
         return self
     
-    def definir_valuation(self, instant, proposition, valeur):
-        """Définit la valeur de vérité d'une proposition à un instant donné."""
+    def define_valuation(self, instant, proposition, value):
+        """Defines the truth value of a proposition at a given instant."""
         if instant not in self.instants:
-            raise ValueError(f"L'instant {instant} n'est pas dans la structure")
+            raise ValueError(f"Instant {instant} is not in the structure")
         
-        self.valuations[instant][proposition] = valeur
+        self.valuations[instant][proposition] = value
         return self
     
-    def valuation(self, instant, proposition):
-        """Retourne la valeur de vérité d'une proposition à un instant donné."""
+    def get_valuation(self, instant, proposition):
+        """Returns the truth value of a proposition at a given instant."""
         if instant not in self.instants:
-            raise ValueError(f"L'instant {instant} n'est pas dans la structure")
+            raise ValueError(f"Instant {instant} is not in the structure")
         
         return self.valuations[instant].get(proposition, False)
     
-    def instants_futurs(self, instant):
-        """Retourne les instants futurs immédiats depuis un instant donné."""
+    def future_instants(self, instant):
+        """Returns the immediate future instants from a given instant."""
         if instant not in self.instants:
-            raise ValueError(f"L'instant {instant} n'est pas dans la structure")
+            raise ValueError(f"Instant {instant} is not in the structure")
         
         return self.relations[instant]
     
-    def instants_passes(self, instant):
-        """Retourne les instants passés immédiats depuis un instant donné."""
+    def past_instants(self, instant):
+        """Returns the immediate past instants from a given instant."""
         if instant not in self.instants:
-            raise ValueError(f"L'instant {instant} n'est pas dans la structure")
+            raise ValueError(f"Instant {instant} is not in the structure")
         
         return {i for i in self.instants if instant in self.relations[i]}
     
-    def verifier_proprietes(self):
-        """Vérifie les propriétés de la relation temporelle."""
-        resultats = {
-            'irreflexive': True,  # Un instant ne précède pas lui-même
-            'antisymetrique': True,  # Si t1 précède t2, t2 ne précède pas t1
-            'transitive': True,  # Si t1 précède t2 et t2 précède t3, alors t1 précède t3
-            'connexe': True,  # Pour tout t1 et t2, soit t1 précède t2, soit t2 précède t1, soit t1=t2
-            'lineaire': True,  # Chaque instant a au plus un successeur
-            'dense': True  # Entre deux instants, il y a toujours un autre instant
+    def check_properties(self):
+        """Checks the properties of the temporal relation."""
+        results = {
+            'irreflexive': True,  # An instant does not precede itself
+            'antisymmetric': True,  # If t1 precedes t2, t2 does not precede t1
+            'transitive': True,  # If t1 precedes t2 and t2 precedes t3, then t1 precedes t3
+            'connected': True,  # For any t1 and t2, either t1 precedes t2, or t2 precedes t1, or t1=t2
+            'linear': True,  # Each instant has at most one successor
+            'dense': True  # Between two instants, there is always another instant
         }
         
-        # Vérifier l'irréflexivité
+        # Check irreflexivity
         for instant in self.instants:
             if instant in self.relations[instant]:
-                resultats['irreflexive'] = False
+                results['irreflexive'] = False
                 break
         
-        # Vérifier l'antisymétrie
+        # Check antisymmetry
         for instant1 in self.instants:
             for instant2 in self.relations[instant1]:
                 if instant1 in self.relations[instant2]:
-                    resultats['antisymetrique'] = False
+                    results['antisymmetric'] = False
                     break
         
-        # Vérifier la transitivité
+        # Check transitivity
         for instant1 in self.instants:
             for instant2 in self.relations[instant1]:
                 for instant3 in self.relations[instant2]:
                     if instant3 not in self.relations[instant1]:
-                        resultats['transitive'] = False
+                        results['transitive'] = False
                         break
         
-        # Vérifier la connexité
+        # Check connectivity
         for instant1 in self.instants:
             for instant2 in self.instants:
                 if instant1 != instant2:
                     if instant2 not in self.relations[instant1] and instant1 not in self.relations[instant2]:
-                        resultats['connexe'] = False
+                        results['connected'] = False
                         break
         
-        # Vérifier la linéarité
+        # Check linearity
         for instant in self.instants:
             if len(self.relations[instant]) > 1:
-                resultats['lineaire'] = False
+                results['linear'] = False
                 break
         
-        # Vérifier la densité
+        # Check density
         for instant1 in self.instants:
             for instant2 in self.relations[instant1]:
                 if not any(instant1 in self.relations[i] and instant2 in self.relations[i] for i in self.instants):
-                    resultats['dense'] = False
+                    results['dense'] = False
                     break
         
-        return resultats
+        return results
     
-    def type_logique(self):
-        """Détermine le type de logique temporelle selon les propriétés de la relation."""
-        proprietes = self.verifier_proprietes()
+    def logic_type(self):
+        """Determines the type of temporal logic based on the properties of the relation."""
+        properties = self.check_properties()
         
-        if self.type_temps == 'lineaire':
-            if proprietes['transitive'] and proprietes['irreflexive']:
-                if proprietes['dense']:
-                    return "LTL dense"
+        if self.time_type == 'linear':
+            if properties['transitive'] and properties['irreflexive']:
+                if properties['dense']:
+                    return "Dense LTL"
                 else:
-                    return "LTL discrète"
+                    return "Discrete LTL"
             else:
-                return "Structure temporelle linéaire non standard"
-        elif self.type_temps == 'branchant':
-            if proprietes['transitive'] and proprietes['irreflexive']:
+                return "Non-standard linear temporal structure"
+        elif self.time_type == 'branching':
+            if properties['transitive'] and properties['irreflexive']:
                 return "CTL"
             else:
-                return "Structure temporelle branchante non standard"
-        elif self.type_temps == 'cyclique':
-            return "Structure temporelle cyclique"
+                return "Non-standard branching temporal structure"
+        elif self.time_type == 'cyclic':
+            return "Cyclic temporal structure"
         else:
-            return "Structure temporelle non standard"
+            return "Non-standard temporal structure"
 
 
-class FormuleTemporelle(Formule):
-    """Classe de base pour les formules de logique temporelle."""
+class TemporalFormula(Formula):
+    """Base class for temporal logic formulas."""
     pass
 
 
-class PropositionTemporelle(FormuleTemporelle):
-    """Représente une proposition atomique en logique temporelle."""
+class TemporalProposition(TemporalFormula):
+    """Represents an atomic proposition in temporal logic."""
     
-    def __init__(self, nom: str):
-        self.nom = nom
+    def __init__(self, name: str):
+        self.name = name
     
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue la proposition à un instant donné de la structure."""
-        return structure.valuation(instant, self.nom)
-    
-    def __str__(self):
-        return self.nom
-
-
-class NonTemporelle(FormuleTemporelle):
-    """Négation en logique temporelle."""
-    
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
-    
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue la négation à un instant donné de la structure."""
-        return not self.formule.evaluer(instant, structure)
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the proposition at a given instant of the structure."""
+        return structure.get_valuation(instant, self.name)
     
     def __str__(self):
-        return f"¬{self.formule}"
+        return self.name
 
 
-class EtTemporelle(FormuleTemporelle):
-    """Conjonction en logique temporelle."""
+class TemporalNot(TemporalFormula):
+    """Negation in temporal logic."""
     
-    def __init__(self, gauche: FormuleTemporelle, droite: FormuleTemporelle):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue la conjonction à un instant donné de la structure."""
-        return self.gauche.evaluer(instant, structure) and self.droite.evaluer(instant, structure)
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the negation at a given instant of the structure."""
+        return not self.formula.evaluate(instant, structure)
     
     def __str__(self):
-        return f"({self.gauche} ∧ {self.droite})"
+        return f"¬{self.formula}"
 
 
-class OuTemporelle(FormuleTemporelle):
-    """Disjonction en logique temporelle."""
+class TemporalAnd(TemporalFormula):
+    """Conjunction in temporal logic."""
     
-    def __init__(self, gauche: FormuleTemporelle, droite: FormuleTemporelle):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left: TemporalFormula, right: TemporalFormula):
+        self.left = left
+        self.right = right
     
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue la disjonction à un instant donné de la structure."""
-        return self.gauche.evaluer(instant, structure) or self.droite.evaluer(instant, structure)
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the conjunction at a given instant of the structure."""
+        return self.left.evaluate(instant, structure) and self.right.evaluate(instant, structure)
     
     def __str__(self):
-        return f"({self.gauche} ∨ {self.droite})"
+        return f"({self.left} ∧ {self.right})"
 
 
-class ImplicationTemporelle(FormuleTemporelle):
-    """Implication en logique temporelle."""
+class TemporalOr(TemporalFormula):
+    """Disjunction in temporal logic."""
     
-    def __init__(self, antecedent: FormuleTemporelle, consequent: FormuleTemporelle):
+    def __init__(self, left: TemporalFormula, right: TemporalFormula):
+        self.left = left
+        self.right = right
+    
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the disjunction at a given instant of the structure."""
+        return self.left.evaluate(instant, structure) or self.right.evaluate(instant, structure)
+    
+    def __str__(self):
+        return f"({self.left} ∨ {self.right})"
+
+
+class TemporalImplication(TemporalFormula):
+    """Implication in temporal logic."""
+    
+    def __init__(self, antecedent: TemporalFormula, consequent: TemporalFormula):
         self.antecedent = antecedent
         self.consequent = consequent
     
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue l'implication à un instant donné de la structure."""
-        return not self.antecedent.evaluer(instant, structure) or self.consequent.evaluer(instant, structure)
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the implication at a given instant of the structure."""
+        return not self.antecedent.evaluate(instant, structure) or self.consequent.evaluate(instant, structure)
     
     def __str__(self):
         return f"({self.antecedent} → {self.consequent})"
 
 
-class FuturProche(FormuleTemporelle):
-    """Opérateur X (next) en logique temporelle: vrai si la formule est vraie à l'instant suivant."""
+class Next(TemporalFormula):
+    """X (next) operator in temporal logic: true if the formula is true at the next instant."""
     
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue l'opérateur X à un instant donné de la structure."""
-        instants_futurs = structure.instants_futurs(instant)
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the X operator at a given instant of the structure."""
+        future_instants = structure.future_instants(instant)
         
-        if not instants_futurs:
-            # Si aucun instant futur, X est faux par défaut
+        if not future_instants:
+            # If no future instant, X is false by default
             return False
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, il y a au plus un instant futur immédiat
-            if len(instants_futurs) != 1:
-                raise ValueError("Une structure temporelle linéaire devrait avoir exactement un futur immédiat")
+        if structure.time_type == 'linear':
+            # In linear time, there is at most one immediate future instant
+            if len(future_instants) != 1:
+                raise ValueError("A linear temporal structure should have exactly one immediate future")
             
-            prochain_instant = next(iter(instants_futurs))
-            return self.formule.evaluer(prochain_instant, structure)
+            next_instant = next(iter(future_instants))
+            return self.formula.evaluate(next_instant, structure)
         else:
-            # Dans un temps branchant, X est vrai si la formule est vraie dans tous les futurs immédiats possibles
-            return all(self.formule.evaluer(i, structure) for i in instants_futurs)
+            # In branching time, X is true if the formula is true in all possible immediate futures
+            return all(self.formula.evaluate(i, structure) for i in future_instants)
     
     def __str__(self):
-        return f"X{self.formule}"
+        return f"X{self.formula}"
 
 
-class FuturEventuel(FormuleTemporelle):
-    """Opérateur F (finally) en logique temporelle: vrai si la formule est vraie à un instant futur."""
+class Eventually(TemporalFormula):
+    """F (finally) operator in temporal logic: true if the formula is true at a future instant."""
     
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle, visite=None):
-        """Évalue l'opérateur F à un instant donné de la structure."""
-        if visite is None:
-            visite = set()
+    def evaluate(self, instant, structure: TemporalStructure, visited=None):
+        """Evaluates the F operator at a given instant of the structure."""
+        if visited is None:
+            visited = set()
         
-        if instant in visite:
-            # Détection de cycle, évite les boucles infinies
+        if instant in visited:
+            # Cycle detection, avoids infinite loops
             return False
         
-        visite.add(instant)
+        visited.add(instant)
         
-        # Vérifier si la formule est vraie à l'instant actuel
-        if self.formule.evaluer(instant, structure):
+        # Check if the formula is true at the current instant
+        if self.formula.evaluate(instant, structure):
             return True
         
-        # Vérifier récursivement dans les instants futurs
-        instants_futurs = structure.instants_futurs(instant)
+        # Recursively check in future instants
+        future_instants = structure.future_instants(instant)
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, F est vrai si la formule est vraie dans au moins un instant futur
-            for prochain_instant in instants_futurs:
-                if self.evaluer(prochain_instant, structure, visite):
+        if structure.time_type == 'linear':
+            # In linear time, F is true if the formula is true in at least one future instant
+            for next_instant in future_instants:
+                if self.evaluate(next_instant, structure, visited):
                     return True
             return False
         else:
-            # Dans un temps branchant, F est vrai s'il existe un chemin où la formule devient vraie
-            return any(self.evaluer(i, structure, visite.copy()) for i in instants_futurs)
+            # In branching time, F is true if there is a path where the formula becomes true
+            return any(self.evaluate(i, structure, visited.copy()) for i in future_instants)
     
     def __str__(self):
-        return f"F{self.formule}"
+        return f"F{self.formula}"
 
 
-class FuturToujoursFutur(FormuleTemporelle):
-    """Opérateur G (globally) en logique temporelle: vrai si la formule est vraie à tous les instants futurs."""
+class Globally(TemporalFormula):
+    """G (globally) operator in temporal logic: true if the formula is true at all future instants."""
     
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle, visite=None):
-        """Évalue l'opérateur G à un instant donné de la structure."""
-        if visite is None:
-            visite = set()
+    def evaluate(self, instant, structure: TemporalStructure, visited=None):
+        """Evaluates the G operator at a given instant of the structure."""
+        if visited is None:
+            visited = set()
         
-        if instant in visite:
-            # Détection de cycle, pour les structures cycliques
+        if instant in visited:
+            # Cycle detection, for cyclic structures
             return True
         
-        visite.add(instant)
+        visited.add(instant)
         
-        # Vérifier si la formule est vraie à l'instant actuel
-        if not self.formule.evaluer(instant, structure):
+        # Check if the formula is true at the current instant
+        if not self.formula.evaluate(instant, structure):
             return False
         
-        # Vérifier récursivement dans les instants futurs
-        instants_futurs = structure.instants_futurs(instant)
+        # Recursively check in future instants
+        future_instants = structure.future_instants(instant)
         
-        if not instants_futurs:
-            # Si aucun futur, G est vrai par vacuité (fin du temps)
+        if not future_instants:
+            # If no future, G is true vacuously (end of time)
             return True
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, G est vrai si la formule est vraie dans tous les instants futurs
-            for prochain_instant in instants_futurs:
-                if not self.evaluer(prochain_instant, structure, visite):
+        if structure.time_type == 'linear':
+            # In linear time, G is true if the formula is true in all future instants
+            for next_instant in future_instants:
+                if not self.evaluate(next_instant, structure, visited):
                     return False
             return True
         else:
-            # Dans un temps branchant, G est vrai si la formule est vraie dans tous les chemins futurs
-            return all(self.evaluer(i, structure, visite.copy()) for i in instants_futurs)
+            # In branching time, G is true if the formula is true in all future paths
+            return all(self.evaluate(i, structure, visited.copy()) for i in future_instants)
     
     def __str__(self):
-        return f"G{self.formule}"
+        return f"G{self.formula}"
 
 
-class Jusqu_a(FormuleTemporelle):
+class Until(TemporalFormula):
     """
-    Opérateur U (until) en logique temporelle: 
-    f U g est vrai si g est vrai à un moment futur et f est vrai jusqu'à ce moment.
+    U (until) operator in temporal logic:
+    f U g is true if g is true at some future moment and f is true until that moment.
     """
     
-    def __init__(self, gauche: FormuleTemporelle, droite: FormuleTemporelle):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left: TemporalFormula, right: TemporalFormula):
+        self.left = left
+        self.right = right
     
-    def evaluer(self, instant, structure: StructureTemporelle, visite=None):
-        """Évalue l'opérateur U à un instant donné de la structure."""
-        if visite is None:
-            visite = set()
+    def evaluate(self, instant, structure: TemporalStructure, visited=None):
+        """Evaluates the U operator at a given instant of the structure."""
+        if visited is None:
+            visited = set()
         
-        if instant in visite:
-            # Détection de cycle
+        if instant in visited:
+            # Cycle detection
             return False
         
-        visite.add(instant)
+        visited.add(instant)
         
-        # Vérifier si la condition droite est vraie à l'instant actuel
-        if self.droite.evaluer(instant, structure):
+        # Check if the right condition is true at the current instant
+        if self.right.evaluate(instant, structure):
             return True
         
-        # Vérifier si la condition gauche est vraie à l'instant actuel
-        if not self.gauche.evaluer(instant, structure):
+        # Check if the left condition is true at the current instant
+        if not self.left.evaluate(instant, structure):
             return False
         
-        # Vérifier récursivement dans les instants futurs
-        instants_futurs = structure.instants_futurs(instant)
+        # Recursively check in future instants
+        future_instants = structure.future_instants(instant)
         
-        if not instants_futurs:
-            # Si aucun futur, U est faux car la condition droite n'est jamais atteinte
+        if not future_instants:
+            # If no future, U is false because the right condition is never met
             return False
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, U est vrai s'il existe un instant futur où la condition droite est vraie
-            # et la condition gauche est vraie jusqu'à cet instant
-            for prochain_instant in instants_futurs:
-                if self.evaluer(prochain_instant, structure, visite):
+        if structure.time_type == 'linear':
+            # In linear time, U is true if there exists a future instant where the right condition is true
+            # and the left condition is true until that instant
+            for next_instant in future_instants:
+                if self.evaluate(next_instant, structure, visited):
                     return True
             return False
         else:
-            # Dans un temps branchant, U est vrai s'il existe un chemin où la condition est satisfaite
-            return any(self.evaluer(i, structure, visite.copy()) for i in instants_futurs)
+            # In branching time, U is true if there exists a path where the condition is satisfied
+            return any(self.evaluate(i, structure, visited.copy()) for i in future_instants)
     
     def __str__(self):
-        return f"({self.gauche} U {self.droite})"
+        return f"({self.left} U {self.right})"
 
 
-class PasseProche(FormuleTemporelle):
-    """Opérateur Y (yesterday) en logique temporelle: vrai si la formule était vraie à l'instant précédent."""
+class Yesterday(TemporalFormula):
+    """Y (yesterday) operator in temporal logic: true if the formula was true at the previous instant."""
     
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle):
-        """Évalue l'opérateur Y à un instant donné de la structure."""
-        instants_passes = structure.instants_passes(instant)
+    def evaluate(self, instant, structure: TemporalStructure):
+        """Evaluates the Y operator at a given instant of the structure."""
+        past_instants = structure.past_instants(instant)
         
-        if not instants_passes:
-            # Si aucun instant passé, Y est faux par défaut
+        if not past_instants:
+            # If no past instant, Y is false by default
             return False
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, il y a au plus un instant passé immédiat
-            if len(instants_passes) != 1:
-                raise ValueError("Une structure temporelle linéaire devrait avoir exactement un passé immédiat")
+        if structure.time_type == 'linear':
+            # In linear time, there is at most one immediate past instant
+            if len(past_instants) != 1:
+                raise ValueError("A linear temporal structure should have exactly one immediate past")
             
-            instant_precedent = next(iter(instants_passes))
-            return self.formule.evaluer(instant_precedent, structure)
+            previous_instant = next(iter(past_instants))
+            return self.formula.evaluate(previous_instant, structure)
         else:
-            # Dans un temps branchant, Y est vrai si la formule était vraie dans tous les passés immédiats possibles
-            return all(self.formule.evaluer(i, structure) for i in instants_passes)
+            # In branching time, Y is true if the formula was true in all possible immediate pasts
+            return all(self.formula.evaluate(i, structure) for i in past_instants)
     
     def __str__(self):
-        return f"Y{self.formule}"
+        return f"Y{self.formula}"
 
 
-class PasseEventuel(FormuleTemporelle):
-    """Opérateur P (past) en logique temporelle: vrai si la formule était vraie à un instant passé."""
+class Previously(TemporalFormula):
+    """P (past) operator in temporal logic: true if the formula was true at a past instant."""
     
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle, visite=None):
-        """Évalue l'opérateur P à un instant donné de la structure."""
-        if visite is None:
-            visite = set()
+    def evaluate(self, instant, structure: TemporalStructure, visited=None):
+        """Evaluates the P operator at a given instant of the structure."""
+        if visited is None:
+            visited = set()
         
-        if instant in visite:
-            # Détection de cycle
+        if instant in visited:
+            # Cycle detection
             return False
         
-        visite.add(instant)
+        visited.add(instant)
         
-        # Vérifier si la formule est vraie à l'instant actuel
-        if self.formule.evaluer(instant, structure):
+        # Check if the formula is true at the current instant
+        if self.formula.evaluate(instant, structure):
             return True
         
-        # Vérifier récursivement dans les instants passés
-        instants_passes = structure.instants_passes(instant)
+        # Recursively check in past instants
+        past_instants = structure.past_instants(instant)
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, P est vrai si la formule était vraie dans au moins un instant passé
-            for instant_precedent in instants_passes:
-                if self.evaluer(instant_precedent, structure, visite):
+        if structure.time_type == 'linear':
+            # In linear time, P is true if the formula was true in at least one past instant
+            for previous_instant in past_instants:
+                if self.evaluate(previous_instant, structure, visited):
                     return True
             return False
         else:
-            # Dans un temps branchant, P est vrai s'il existe un chemin où la formule était vraie
-            return any(self.evaluer(i, structure, visite.copy()) for i in instants_passes)
+            # In branching time, P is true if there exists a path where the formula was true
+            return any(self.evaluate(i, structure, visited.copy()) for i in past_instants)
     
     def __str__(self):
-        return f"P{self.formule}"
+        return f"P{self.formula}"
 
 
-class PasseToujoursPasse(FormuleTemporelle):
-    """Opérateur H (historically) en logique temporelle: vrai si la formule était vraie à tous les instants passés."""
+class Historically(TemporalFormula):
+    """H (historically) operator in temporal logic: true if the formula was true at all past instants."""
     
-    def __init__(self, formule: FormuleTemporelle):
-        self.formule = formule
+    def __init__(self, formula: TemporalFormula):
+        self.formula = formula
     
-    def evaluer(self, instant, structure: StructureTemporelle, visite=None):
-        """Évalue l'opérateur H à un instant donné de la structure."""
-        if visite is None:
-            visite = set()
+    def evaluate(self, instant, structure: TemporalStructure, visited=None):
+        """Evaluates the H operator at a given instant of the structure."""
+        if visited is None:
+            visited = set()
         
-        if instant in visite:
-            # Détection de cycle
+        if instant in visited:
+            # Cycle detection
             return True
         
-        visite.add(instant)
+        visited.add(instant)
         
-        # Vérifier si la formule est vraie à l'instant actuel
-        if not self.formule.evaluer(instant, structure):
+        # Check if the formula is true at the current instant
+        if not self.formula.evaluate(instant, structure):
             return False
         
-        # Vérifier récursivement dans les instants passés
-        instants_passes = structure.instants_passes(instant)
+        # Recursively check in past instants
+        past_instants = structure.past_instants(instant)
         
-        if not instants_passes:
-            # Si aucun passé, H est vrai par vacuité (début du temps)
+        if not past_instants:
+            # If no past, H is true vacuously (beginning of time)
             return True
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, H est vrai si la formule était vraie dans tous les instants passés
-            for instant_precedent in instants_passes:
-                if not self.evaluer(instant_precedent, structure, visite):
+        if structure.time_type == 'linear':
+            # In linear time, H is true if the formula was true in all past instants
+            for previous_instant in past_instants:
+                if not self.evaluate(previous_instant, structure, visited):
                     return False
             return True
         else:
-            # Dans un temps branchant, H est vrai si la formule était vraie dans tous les chemins passés
-            return all(self.evaluer(i, structure, visite.copy()) for i in instants_passes)
+            # In branching time, H is true if the formula was true in all past paths
+            return all(self.evaluate(i, structure, visited.copy()) for i in past_instants)
     
     def __str__(self):
-        return f"H{self.formule}"
+        return f"H{self.formula}"
 
 
-class Depuis(FormuleTemporelle):
+class Since(TemporalFormula):
     """
-    Opérateur S (since) en logique temporelle: 
-    f S g est vrai si g était vrai à un moment passé et f a été vrai depuis ce moment.
+    S (since) operator in temporal logic:
+    f S g is true if g was true at a past moment and f has been true since that moment.
     """
     
-    def __init__(self, gauche: FormuleTemporelle, droite: FormuleTemporelle):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left: TemporalFormula, right: TemporalFormula):
+        self.left = left
+        self.right = right
     
-    def evaluer(self, instant, structure: StructureTemporelle, visite=None):
-        """Évalue l'opérateur S à un instant donné de la structure."""
-        if visite is None:
-            visite = set()
+    def evaluate(self, instant, structure: TemporalStructure, visited=None):
+        """Evaluates the S operator at a given instant of the structure."""
+        if visited is None:
+            visited = set()
         
-        if instant in visite:
-            # Détection de cycle
+        if instant in visited:
+            # Cycle detection
             return False
         
-        visite.add(instant)
+        visited.add(instant)
         
-        # Vérifier si la condition droite est vraie à l'instant actuel
-        if self.droite.evaluer(instant, structure):
+        # Check if the right condition is true at the current instant
+        if self.right.evaluate(instant, structure):
             return True
         
-        # Vérifier si la condition gauche est vraie à l'instant actuel
-        if not self.gauche.evaluer(instant, structure):
+        # Check if the left condition is true at the current instant
+        if not self.left.evaluate(instant, structure):
             return False
         
-        # Vérifier récursivement dans les instants passés
-        instants_passes = structure.instants_passes(instant)
+        # Recursively check in past instants
+        past_instants = structure.past_instants(instant)
         
-        if not instants_passes:
-            # Si aucun passé, S est faux car la condition droite n'est jamais atteinte
+        if not past_instants:
+            # If no past, S is false because the right condition is never met
             return False
         
-        if structure.type_temps == 'lineaire':
-            # Dans un temps linéaire, S est vrai s'il existe un instant passé où la condition droite était vraie
-            # et la condition gauche a été vraie depuis cet instant
-            for instant_precedent in instants_passes:
-                if self.evaluer(instant_precedent, structure, visite):
+        if structure.time_type == 'linear':
+            # In linear time, S is true if there exists a past instant where the right condition was true
+            # and the left condition has been true since that instant
+            for previous_instant in past_instants:
+                if self.evaluate(previous_instant, structure, visited):
                     return True
             return False
         else:
-            # Dans un temps branchant, S est vrai s'il existe un chemin où la condition est satisfaite
-            return any(self.evaluer(i, structure, visite.copy()) for i in instants_passes)
+            # In branching time, S is true if there exists a path where the condition is satisfied
+            return any(self.evaluate(i, structure, visited.copy()) for i in past_instants)
     
     def __str__(self):
-        return f"({self.gauche} S {self.droite})"
+        return f"({self.left} S {self.right})"
 
 
-class VerificateurTemporel:
-    """Vérificateur de modèle pour la logique temporelle."""
+class TemporalChecker:
+    """Model checker for temporal logic."""
     
     @staticmethod
-    def verifier(formule: FormuleTemporelle, structure: StructureTemporelle, instant=None):
+    def check(formula: TemporalFormula, structure: TemporalStructure, instant=None):
         """
-        Vérifie si une formule est vraie à un instant donné ou à tous les instants.
-        Si instant est None, vérifie si la formule est vraie à tous les instants.
+        Checks if a formula is true at a given instant or at all instants.
+        If instant is None, checks if the formula is true at all instants.
         """
         if instant is not None:
-            return formule.evaluer(instant, structure)
+            return formula.evaluate(instant, structure)
         
-        return all(formule.evaluer(i, structure) for i in structure.instants)
+        return all(formula.evaluate(i, structure) for i in structure.instants)
     
     @staticmethod
-    def instants_satisfaisant(formule: FormuleTemporelle, structure: StructureTemporelle):
-        """Retourne l'ensemble des instants qui satisfont la formule."""
-        return {i for i in structure.instants if formule.evaluer(i, structure)}
+    def satisfying_instants(formula: TemporalFormula, structure: TemporalStructure):
+        """Returns the set of instants that satisfy the formula."""
+        return {i for i in structure.instants if formula.evaluate(i, structure)}
     
     @staticmethod
-    def est_valide(formule: FormuleTemporelle, structure: StructureTemporelle):
-        """Vérifie si une formule est valide dans la structure (vraie à tous les instants)."""
-        return all(formule.evaluer(i, structure) for i in structure.instants)
+    def is_valid(formula: TemporalFormula, structure: TemporalStructure):
+        """Checks if a formula is valid in the structure (true at all instants)."""
+        return all(formula.evaluate(i, structure) for i in structure.instants)
     
     @staticmethod
-    def est_satisfaisable(formule: FormuleTemporelle, structure: StructureTemporelle):
-        """Vérifie si une formule est satisfaisable dans la structure (vraie à au moins un instant)."""
-        return any(formule.evaluer(i, structure) for i in structure.instants)
+    def is_satisfiable(formula: TemporalFormula, structure: TemporalStructure):
+        """Checks if a formula is satisfiable in the structure (true at at least one instant)."""
+        return any(formula.evaluate(i, structure) for i in structure.instants)
 
 
 #########################################
-# LOGIQUE DÉONTIQUE
+# DEONTIC LOGIC
 #########################################
 
-class SystemeNormatif:
-    """Représente un système normatif pour la logique déontique."""
+class NormativeSystem:
+    """Represents a normative system for deontic logic."""
     
     def __init__(self):
-        # Utiliser la logique modale comme base pour la logique déontique
-        self.logique_deontique = LogiqueDeontique()
-        self.monde_reel = "monde_reel"
-        self.mondes_ideaux = set()
+        # Use modal logic as the basis for deontic logic
+        self.deontic_logic = DeonticLogic()
+        self.real_world = "real_world"
+        self.ideal_worlds = set()
         
-        # Ajouter le monde réel
-        self.logique_deontique.ajouter_monde_reel(self.monde_reel)
+        # Add the real world
+        self.deontic_logic.add_real_world(self.real_world)
         
-        def ajouter_monde_ideal(self, nom: str):
-            """Ajoute un monde idéal au système normatif."""
-            self.mondes_ideaux.add(nom)
-            self.logique_deontique.ajouter_monde_ideal(nom)
-            self.logique_deontique.definir_accessibilite_ideale(self.monde_reel, nom)
-            return self
+        # Corrected method definition from class scope to instance scope
+        self.add_ideal_world = self._add_ideal_world_impl 
     
-    def definir_valuation(self, monde, proposition, valeur):
-        """Définit la valeur de vérité d'une proposition dans un monde."""
-        self.logique_deontique.definir_valuation(monde, proposition, valeur)
+    def _add_ideal_world_impl(self, name: str):
+        """Adds an ideal world to the normative system."""
+        self.ideal_worlds.add(name)
+        self.deontic_logic.add_ideal_world(name)
+        self.deontic_logic.define_ideal_accessibility(self.real_world, name)
         return self
     
-    def obligation(self, formule: FormuleModale):
-        """Crée une formule d'obligation (O)."""
-        return self.logique_deontique.obligation(formule)
+    def define_valuation(self, world, proposition, value):
+        """Defines the truth value of a proposition in a world."""
+        self.deontic_logic.define_valuation(world, proposition, value)
+        return self
     
-    def permission(self, formule: FormuleModale):
-        """Crée une formule de permission (P)."""
-        return self.logique_deontique.permission(formule)
+    def obligation(self, formula: ModalFormula):
+        """Creates an obligation formula (O)."""
+        return self.deontic_logic.obligation(formula)
     
-    def interdiction(self, formule: FormuleModale):
-        """Crée une formule d'interdiction (F)."""
-        return self.logique_deontique.interdiction(formule)
+    def permission(self, formula: ModalFormula):
+        """Creates a permission formula (P)."""
+        return self.deontic_logic.permission(formula)
     
-    def optionnel(self, formule: FormuleModale):
-        """Crée une formule optionnelle."""
-        return self.logique_deontique.optionnel(formule)
+    def prohibition(self, formula: ModalFormula):
+        """Creates a prohibition formula (F)."""
+        return self.deontic_logic.prohibition(formula)
     
-    def verifier(self, formule: FormuleModale):
-        """Vérifie si une formule est vraie dans le monde réel."""
-        return self.logique_deontique.verifier(formule, self.monde_reel)
+    def optional(self, formula: ModalFormula):
+        """Creates an optional formula."""
+        return self.deontic_logic.optional(formula)
     
-    def est_coherent(self):
-        """Vérifie si le système normatif est cohérent (non contradictoire)."""
-        for proposition in set(v for m in self.logique_deontique.modele.valuations.values() for v in m.keys()):
-            formule = PropositionModale(proposition)
-            if self.verifier(self.obligation(formule)) and self.verifier(self.interdiction(formule)):
+    def check(self, formula: ModalFormula):
+        """Checks if a formula is true in the real world."""
+        return self.deontic_logic.check(formula, self.real_world)
+    
+    def is_consistent(self):
+        """Checks if the normative system is consistent (non-contradictory)."""
+        for proposition in set(v for m in self.deontic_logic.model.valuations.values() for v in m.keys()):
+            formula = ModalProposition(proposition)
+            if self.check(self.obligation(formula)) and self.check(self.prohibition(formula)):
                 return False
         return True
     
-    def identifier_conflits(self):
-        """Identifie les conflits normatifs dans le système."""
-        conflits = []
-        for proposition in set(v for m in self.logique_deontique.modele.valuations.values() for v in m.keys()):
-            formule = PropositionModale(proposition)
-            if self.verifier(self.obligation(formule)) and self.verifier(self.interdiction(formule)):
-                conflits.append(proposition)
-        return conflits
+    def identify_conflicts(self):
+        """Identifies normative conflicts in the system."""
+        conflicts = []
+        for proposition in set(v for m in self.deontic_logic.model.valuations.values() for v in m.keys()):
+            formula = ModalProposition(proposition)
+            if self.check(self.obligation(formula)) and self.check(self.prohibition(formula)):
+                conflicts.append(proposition)
+        return conflicts
     
-    def resoudre_conflit(self, proposition, priorite="obligation"):
-        """Résout un conflit normatif en donnant la priorité à l'obligation ou l'interdiction."""
-        formule = PropositionModale(proposition)
+    def resolve_conflict(self, proposition, priority="obligation"):
+        """Resolves a normative conflict by prioritizing obligation or prohibition."""
+        formula = ModalProposition(proposition)
         
-        if priorite == "obligation":
-            # Garder l'obligation, supprimer l'interdiction
-            for monde_ideal in self.mondes_ideaux:
-                self.logique_deontique.definir_valuation(monde_ideal, proposition, True)
-        elif priorite == "interdiction":
-            # Garder l'interdiction, supprimer l'obligation
-            for monde_ideal in self.mondes_ideaux:
-                self.logique_deontique.definir_valuation(monde_ideal, proposition, False)
+        if priority == "obligation":
+            # Keep the obligation, remove the prohibition
+            for ideal_world in self.ideal_worlds:
+                self.deontic_logic.define_valuation(ideal_world, proposition, True)
+        elif priority == "prohibition":
+            # Keep the prohibition, remove the obligation
+            for ideal_world in self.ideal_worlds:
+                self.deontic_logic.define_valuation(ideal_world, proposition, False)
         else:
-            raise ValueError(f"Priorité inconnue: {priorite}")
+            raise ValueError(f"Unknown priority: {priority}")
         
         return self
 
 
 ##########################################
-# PARTIE 2: DÉMONSTRATION AUTOMATIQUE DE THÉORÈMES
+# PART 2: AUTOMATIC THEOREM PROVING
 ##########################################
 
-class Preuve:
-    """Représente une preuve formelle."""
+class Proof:
+    """Represents a formal proof."""
     
-    def __init__(self, nom: str = ""):
-        self.nom = nom
-        self.lignes = []  # Liste des lignes de la preuve
-        self.hypotheses = set()  # Ensemble des hypothèses utilisées
+    def __init__(self, name: str = ""):
+        self.name = name
+        self.lines = []  # List of proof lines
+        self.hypotheses = set()  # Set of used hypotheses
     
-    def ajouter_ligne(self, formule, justification, references=None):
+    def add_line(self, formula, justification, references=None):
         """
-        Ajoute une ligne à la preuve.
-        formule: la formule démontrée
-        justification: la règle d'inférence utilisée
-        references: références aux lignes précédentes
+        Adds a line to the proof.
+        formula: the demonstrated formula
+        justification: the inference rule used
+        references: references to previous lines
         """
         if references is None:
             references = []
         
-        ligne = {
-            "numero": len(self.lignes) + 1,
-            "formule": formule,
+        line = {
+            "number": len(self.lines) + 1,
+            "formula": formula,
             "justification": justification,
             "references": references
         }
         
-        self.lignes.append(ligne)
+        self.lines.append(line)
         return self
     
-    def ajouter_hypothese(self, formule):
-        """Ajoute une hypothèse à la preuve."""
-        self.hypotheses.add(formule)
-        self.ajouter_ligne(formule, "Hypothèse")
+    def add_hypothesis(self, formula):
+        """Adds a hypothesis to the proof."""
+        self.hypotheses.add(formula)
+        self.add_line(formula, "Hypothesis")
         return self
     
     def conclusion(self):
-        """Retourne la conclusion de la preuve."""
-        if not self.lignes:
+        """Returns the conclusion of the proof."""
+        if not self.lines:
             return None
-        return self.lignes[-1]["formule"]
+        return self.lines[-1]["formula"]
     
-    def est_valide(self):
-        """Vérifie si la preuve est valide."""
-        # Vérifier que chaque ligne est justifiée correctement
-        for ligne in self.lignes:
-            if ligne["justification"] == "Hypothèse":
-                if str(ligne["formule"]) not in map(str, self.hypotheses):
+    def is_valid(self):
+        """Checks if the proof is valid."""
+        # Check that each line is correctly justified
+        for line in self.lines:
+            if line["justification"] == "Hypothesis":
+                if str(line["formula"]) not in map(str, self.hypotheses):
                     return False
-            elif not self.verifier_justification(ligne):
+            elif not self._check_justification(line): # Changed method name to be internal
                 return False
         
         return True
     
-    def verifier_justification(self, ligne):
-        """Vérifie qu'une justification est correcte."""
-        # Cette méthode serait complétée pour chaque règle d'inférence
-        # Pour simplifier, nous supposons que toutes les justifications sont valides
+    def _check_justification(self, line):
+        """Checks that a justification is correct."""
+        # This method would be completed for each inference rule
+        # For simplicity, we assume all justifications are valid
         return True
     
     def to_latex(self):
-        """Génère une représentation LaTeX de la preuve."""
+        """Generates a LaTeX representation of the proof."""
         latex = "\\begin{proof}\n"
         latex += "\\begin{enumerate}\n"
         
-        for ligne in self.lignes:
-            formule = str(ligne["formule"]).replace("∧", "\\land").replace("∨", "\\lor").replace("¬", "\\neg").replace("→", "\\rightarrow")
+        for line in self.lines:
+            formula = str(line["formula"]).replace("∧", "\\land").replace("∨", "\\lor").replace("¬", "\\neg").replace("→", "\\rightarrow")
             
             refs = ""
-            if ligne["references"]:
-                refs = " [" + ", ".join(map(str, ligne["references"])) + "]"
+            if line["references"]:
+                refs = " [" + ", ".join(map(str, line["references"])) + "]"
             
-            latex += f"\\item {formule} \\hfill ({ligne['justification']}{refs})\n"
+            latex += f"\\item {formula} \\hfill ({line['justification']}{refs})\n"
         
         latex += "\\end{enumerate}\n"
         latex += "\\end{proof}"
@@ -1573,964 +1577,1010 @@ class Preuve:
         return latex
     
     def __str__(self):
-        resultat = f"Preuve: {self.nom}\n"
-        resultat += "Hypothèses: " + ", ".join(map(str, self.hypotheses)) + "\n"
-        resultat += "Lignes:\n"
+        result = f"Proof: {self.name}\n"
+        result += "Hypotheses: " + ", ".join(map(str, self.hypotheses)) + "\n"
+        result += "Lines:\n"
         
-        for ligne in self.lignes:
+        for line in self.lines:
             refs = ""
-            if ligne["references"]:
-                refs = " [" + ", ".join(map(str, ligne["references"])) + "]"
+            if line["references"]:
+                refs = " [" + ", ".join(map(str, line["references"])) + "]"
             
-            resultat += f"{ligne['numero']}. {ligne['formule']} ({ligne['justification']}{refs})\n"
+            result += f"{line['number']}. {line['formula']} ({line['justification']}{refs})\n"
         
-        return resultat
+        return result
 
 
-class RegleInference:
-    """Représente une règle d'inférence pour la déduction naturelle."""
+class InferenceRule:
+    """Represents an inference rule for natural deduction."""
     
-    def __init__(self, nom, schemas_premisses, schema_conclusion):
-        self.nom = nom
-        self.schemas_premisses = schemas_premisses  # Liste de schémas de formules pour les prémisses
-        self.schema_conclusion = schema_conclusion  # Schéma de formule pour la conclusion
+    def __init__(self, name, premise_schemas, conclusion_schema):
+        self.name = name
+        self.premise_schemas = premise_schemas  # Formula schemas for premises
+        self.conclusion_schema = conclusion_schema  # Formula schema for the conclusion
     
-    def appliquer(self, formules):
+    def apply(self, formulas):
         """
-        Applique la règle d'inférence aux formules données.
-        Retourne la conclusion si la règle est applicable, None sinon.
+        Applies the inference rule to the given formulas.
+        Returns the conclusion if the rule is applicable, None otherwise.
         """
-        # Cette méthode serait implémentée pour chaque règle d'inférence spécifique
+        # This method would be implemented for each specific inference rule
         return None
     
     def __str__(self):
-        premisses = ", ".join(map(str, self.schemas_premisses))
-        return f"{self.nom}: {premisses} ⊢ {self.schema_conclusion}"
+        premisses = ", ".join(map(str, self.premise_schemas))
+        return f"{self.name}: {premisses} ⊢ {self.conclusion_schema}"
 
 
-class SystemeDeduction:
-    """Système de déduction pour la logique propositionnelle et prédicative."""
+class DeductionSystem:
+    """Deduction system for propositional and predicate logic."""
     
     def __init__(self):
-        self.regles = {}
-        self.initialiser_regles()
+        self.rules = {}
+        self.initialize_rules()
     
-    def initialiser_regles(self):
-        """Initialise les règles d'inférence standard."""
-        # Règles pour la logique propositionnelle
-        self.ajouter_regle_modus_ponens()
-        self.ajouter_regle_modus_tollens()
-        self.ajouter_regle_introduction_et()
-        self.ajouter_regle_elimination_et()
-        self.ajouter_regle_introduction_ou()
-        self.ajouter_regle_elimination_ou()
-        self.ajouter_regle_introduction_implication()
+    def initialize_rules(self):
+        """Initializes standard inference rules."""
+        # Rules for propositional logic
+        self.add_modus_ponens_rule()
+        self.add_modus_tollens_rule()
+        self.add_conjunction_introduction_rule()
+        self.add_conjunction_elimination_rule()
+        self.add_disjunction_introduction_rule()
+        self.add_disjunction_elimination_rule()
+        self.add_implication_introduction_rule()
         
-        # Règles pour la logique prédicative
-        self.ajouter_regle_introduction_universel()
-        self.ajouter_regle_elimination_universel()
-        self.ajouter_regle_introduction_existentiel()
-        self.ajouter_regle_elimination_existentiel()
+        # Rules for predicate logic
+        self.add_universal_introduction_rule()
+        self.add_universal_elimination_rule()
+        self.add_existential_introduction_rule()
+        self.add_existential_elimination_rule()
     
-    def ajouter_regle(self, regle):
-        """Ajoute une règle d'inférence au système."""
-        self.regles[regle.nom] = regle
+    def add_rule(self, rule):
+        """Adds an inference rule to the system."""
+        self.rules[rule.name] = rule
         return self
     
-    def ajouter_regle_modus_ponens(self):
-        """Ajoute la règle de Modus Ponens: A, A→B ⊢ B"""
-        class ModusPonens(RegleInference):
+    def add_modus_ponens_rule(self):
+        """Adds the Modus Ponens rule: A, A→B ⊢ B"""
+        class ModusPonens(InferenceRule):
             def __init__(self):
                 super().__init__("Modus Ponens", ["A", "A→B"], "B")
             
-            def appliquer(self, formules):
-                if len(formules) != 2:
+            def apply(self, formulas):
+                if len(formulas) != 2:
                     return None
                 
-                # Vérifier si la deuxième formule est une implication
-                if not isinstance(formules[1], ImplicationModale) and not isinstance(formules[1], ImplicationTemporelle):
+                # Check if the second formula is an implication
+                if not isinstance(formulas[1], ModalImplication) and not isinstance(formulas[1], TemporalImplication):
                     return None
                 
-                # Vérifier si la première formule correspond à l'antécédent de l'implication
-                if str(formules[0]) == str(formules[1].antecedent):
-                    return formules[1].consequent
+                # Check if the first formula corresponds to the antecedent of the implication
+                if str(formulas[0]) == str(formulas[1].antecedent):
+                    return formulas[1].consequent
                 
                 return None
         
-        self.ajouter_regle(ModusPonens())
+        self.add_rule(ModusPonens())
     
-    def ajouter_regle_modus_tollens(self):
-        """Ajoute la règle de Modus Tollens: A→B, ¬B ⊢ ¬A"""
-        class ModusTollens(RegleInference):
+    def add_modus_tollens_rule(self):
+        """Adds the Modus Tollens rule: A→B, ¬B ⊢ ¬A"""
+        class ModusTollens(InferenceRule):
             def __init__(self):
                 super().__init__("Modus Tollens", ["A→B", "¬B"], "¬A")
             
-            def appliquer(self, formules):
-                if len(formules) != 2:
+            def apply(self, formulas):
+                if len(formulas) != 2:
                     return None
                 
-                # Vérifier si la première formule est une implication
-                if not isinstance(formules[0], ImplicationModale) and not isinstance(formules[0], ImplicationTemporelle):
+                # Check if the first formula is an implication
+                if not isinstance(formulas[0], ModalImplication) and not isinstance(formulas[0], TemporalImplication):
                     return None
                 
-                # Vérifier si la deuxième formule est une négation
-                if not isinstance(formules[1], NonModale) and not isinstance(formules[1], NonTemporelle):
+                # Check if the second formula is a negation
+                if not isinstance(formulas[1], ModalNot) and not isinstance(formulas[1], TemporalNot):
                     return None
                 
-                # Vérifier si la négation correspond au conséquent de l'implication
-                if str(formules[1].formule) == str(formules[0].consequent):
-                    if isinstance(formules[0], ImplicationModale):
-                        return NonModale(formules[0].antecedent)
+                # Check if the negation corresponds to the consequent of the implication
+                if str(formulas[1].formula) == str(formulas[0].consequent):
+                    if isinstance(formulas[0], ModalImplication):
+                        return ModalNot(formulas[0].antecedent)
                     else:
-                        return NonTemporelle(formules[0].antecedent)
+                        return TemporalNot(formulas[0].antecedent)
                 
                 return None
         
-        self.ajouter_regle(ModusTollens())
+        self.add_rule(ModusTollens())
     
-    def ajouter_regle_introduction_et(self):
-        """Ajoute la règle d'introduction de la conjonction: A, B ⊢ A∧B"""
-        class IntroductionEt(RegleInference):
+    def add_conjunction_introduction_rule(self):
+        """Adds the Conjunction Introduction rule: A, B ⊢ A∧B"""
+        class ConjunctionIntroduction(InferenceRule):
             def __init__(self):
-                super().__init__("Introduction ∧", ["A", "B"], "A∧B")
+                super().__init__("Conjunction Introduction", ["A", "B"], "A∧B")
             
-            def appliquer(self, formules):
-                if len(formules) != 2:
+            def apply(self, formulas):
+                if len(formulas) != 2:
                     return None
                 
-                # Déterminer le type de formule
-                if isinstance(formules[0], FormuleModale) and isinstance(formules[1], FormuleModale):
-                    return EtModale(formules[0], formules[1])
-                elif isinstance(formules[0], FormuleTemporelle) and isinstance(formules[1], FormuleTemporelle):
-                    return EtTemporelle(formules[0], formules[1])
+                # Determine formula type
+                if isinstance(formulas[0], ModalFormula) and isinstance(formulas[1], ModalFormula):
+                    return ModalAnd(formulas[0], formulas[1])
+                elif isinstance(formulas[0], TemporalFormula) and isinstance(formulas[1], TemporalFormula):
+                    return TemporalAnd(formulas[0], formulas[1])
                 
                 return None
         
-        self.ajouter_regle(IntroductionEt())
+        self.add_rule(ConjunctionIntroduction())
     
-    def ajouter_regle_elimination_et(self):
-        """Ajoute les règles d'élimination de la conjonction: A∧B ⊢ A et A∧B ⊢ B"""
-        class EliminationEtGauche(RegleInference):
+    def add_conjunction_elimination_rule(self):
+        """Adds the Conjunction Elimination rules: A∧B ⊢ A and A∧B ⊢ B"""
+        class ConjunctionEliminationLeft(InferenceRule):
             def __init__(self):
-                super().__init__("Élimination ∧ (gauche)", ["A∧B"], "A")
+                super().__init__("Conjunction Elimination (left)", ["A∧B"], "A")
             
-            def appliquer(self, formules):
-                if len(formules) != 1:
+            def apply(self, formulas):
+                if len(formulas) != 1:
                     return None
                 
-                if isinstance(formules[0], EtModale):
-                    return formules[0].gauche
-                elif isinstance(formules[0], EtTemporelle):
-                    return formules[0].gauche
+                if isinstance(formulas[0], ModalAnd):
+                    return formulas[0].left
+                elif isinstance(formulas[0], TemporalAnd):
+                    return formulas[0].left
                 
                 return None
         
-        class EliminationEtDroite(RegleInference):
+        class ConjunctionEliminationRight(InferenceRule):
             def __init__(self):
-                super().__init__("Élimination ∧ (droite)", ["A∧B"], "B")
+                super().__init__("Conjunction Elimination (right)", ["A∧B"], "B")
             
-            def appliquer(self, formules):
-                if len(formules) != 1:
+            def apply(self, formulas):
+                if len(formulas) != 1:
                     return None
                 
-                if isinstance(formules[0], EtModale):
-                    return formules[0].droite
-                elif isinstance(formules[0], EtTemporelle):
-                    return formules[0].droite
+                if isinstance(formulas[0], ModalAnd):
+                    return formulas[0].right
+                elif isinstance(formulas[0], TemporalAnd):
+                    return formulas[0].right
                 
                 return None
         
-        self.ajouter_regle(EliminationEtGauche())
-        self.ajouter_regle(EliminationEtDroite())
+        self.add_rule(ConjunctionEliminationLeft())
+        self.add_rule(ConjunctionEliminationRight())
     
-    def ajouter_regle_introduction_ou(self):
-        """Ajoute les règles d'introduction de la disjonction: A ⊢ A∨B et B ⊢ A∨B"""
-        class IntroductionOuGauche(RegleInference):
+    def add_disjunction_introduction_rule(self):
+        """Adds the Disjunction Introduction rules: A ⊢ A∨B and B ⊢ A∨B"""
+        class DisjunctionIntroductionLeft(InferenceRule):
             def __init__(self):
-                super().__init__("Introduction ∨ (gauche)", ["A"], "A∨B")
+                super().__init__("Disjunction Introduction (left)", ["A"], "A∨B")
             
-            def appliquer(self, formules):
-                if len(formules) != 1:
+            def apply(self, formulas):
+                if len(formulas) != 1:
                     return None
                 
-                # Ici, nous aurions besoin de la formule B pour construire A∨B
-                # Dans une implémentation complète, B pourrait être fourni comme argument supplémentaire
+                # Here, we would need formula B to construct A∨B
+                # In a full implementation, B could be provided as an additional argument
                 return None
         
-        class IntroductionOuDroite(RegleInference):
+        class DisjunctionIntroductionRight(InferenceRule):
             def __init__(self):
-                super().__init__("Introduction ∨ (droite)", ["B"], "A∨B")
+                super().__init__("Disjunction Introduction (right)", ["B"], "A∨B")
             
-            def appliquer(self, formules):
-                if len(formules) != 1:
+            def apply(self, formulas):
+                if len(formulas) != 1:
                     return None
                 
-                # Ici, nous aurions besoin de la formule A pour construire A∨B
+                # Here, we would need formula A to construct A∨B
                 return None
         
-        self.ajouter_regle(IntroductionOuGauche())
-        self.ajouter_regle(IntroductionOuDroite())
+        self.add_rule(DisjunctionIntroductionLeft())
+        self.add_rule(DisjunctionIntroductionRight())
     
-    def ajouter_regle_elimination_ou(self):
-        """Ajoute la règle d'élimination de la disjonction: A∨B, A→C, B→C ⊢ C"""
-        class EliminationOu(RegleInference):
+    def add_disjunction_elimination_rule(self):
+        """Adds the Disjunction Elimination rule: A∨B, A→C, B→C ⊢ C"""
+        class DisjunctionElimination(InferenceRule):
             def __init__(self):
-                super().__init__("Élimination ∨", ["A∨B", "A→C", "B→C"], "C")
+                super().__init__("Disjunction Elimination", ["A∨B", "A→C", "B→C"], "C")
             
-            def appliquer(self, formules):
-                if len(formules) != 3:
+            def apply(self, formulas):
+                if len(formulas) != 3:
                     return None
                 
-                # Vérifier si la première formule est une disjonction
-                if not isinstance(formules[0], OuModale) and not isinstance(formules[0], OuTemporelle):
+                # Check if the first formula is a disjunction
+                if not isinstance(formulas[0], ModalOr) and not isinstance(formulas[0], TemporalOr):
                     return None
                 
-                # Vérifier si les deux autres formules sont des implications
-                if (not isinstance(formules[1], ImplicationModale) and not isinstance(formules[1], ImplicationTemporelle) or
-                    not isinstance(formules[2], ImplicationModale) and not isinstance(formules[2], ImplicationTemporelle)):
+                # Check if the other two formulas are implications
+                if (not isinstance(formulas[1], ModalImplication) and not isinstance(formulas[1], TemporalImplication) or
+                    not isinstance(formulas[2], ModalImplication) and not isinstance(formulas[2], TemporalImplication)):
                     return None
                 
-                # Vérifier la cohérence des formules
-                if (str(formules[0].gauche) == str(formules[1].antecedent) and
-                    str(formules[0].droite) == str(formules[2].antecedent) and
-                    str(formules[1].consequent) == str(formules[2].consequent)):
-                    return formules[1].consequent
+                # Check formula consistency
+                if (str(formulas[0].left) == str(formulas[1].antecedent) and
+                    str(formulas[0].right) == str(formulas[2].antecedent) and
+                    str(formulas[1].consequent) == str(formulas[2].consequent)):
+                    return formulas[1].consequent
                 
                 return None
         
-        self.ajouter_regle(EliminationOu())
+        self.add_rule(DisjunctionElimination())
     
-    def ajouter_regle_introduction_implication(self):
-        """Ajoute la règle d'introduction de l'implication."""
-        # Cette règle nécessiterait une gestion des sous-preuves
+    def add_implication_introduction_rule(self):
+        """Adds the Implication Introduction rule."""
+        # This rule would require sub-proof management
         pass
     
-    def ajouter_regle_introduction_universel(self):
-        """Ajoute la règle d'introduction du quantificateur universel."""
-        # Ces règles seront implémentées dans la partie logique de premier et second ordre
+    def add_universal_introduction_rule(self):
+        """Adds the Universal Quantifier Introduction rule."""
+        # These rules will be implemented in the first and second order logic part
         pass
     
-    def ajouter_regle_elimination_universel(self):
-        """Ajoute la règle d'élimination du quantificateur universel."""
+    def add_universal_elimination_rule(self):
+        """Adds the Universal Quantifier Elimination rule."""
         pass
     
-    def ajouter_regle_introduction_existentiel(self):
-        """Ajoute la règle d'introduction du quantificateur existentiel."""
+    def add_existential_introduction_rule(self):
+        """Adds the Existential Quantifier Introduction rule."""
         pass
     
-    def ajouter_regle_elimination_existentiel(self):
-        """Ajoute la règle d'élimination du quantificateur existentiel."""
+    def add_existential_elimination_rule(self):
+        """Adds the Existential Quantifier Elimination rule."""
         pass
     
-    def appliquer_regle(self, nom_regle, formules):
-        """Applique une règle d'inférence aux formules données."""
-        if nom_regle not in self.regles:
-            raise ValueError(f"Règle d'inférence inconnue: {nom_regle}")
+    def apply_rule(self, rule_name, formulas):
+        """Applies an inference rule to the given formulas."""
+        if rule_name not in self.rules:
+            raise ValueError(f"Unknown inference rule: {rule_name}")
         
-        return self.regles[nom_regle].appliquer(formules)
+        return self.rules[rule_name].apply(formulas)
     
-    def prouver(self, hypotheses, conclusion, max_etapes=100):
+    def prove(self, hypotheses, conclusion, max_steps=100):
         """
-        Tente de construire une preuve de la conclusion à partir des hypothèses.
-        Retourne une preuve si elle existe, None sinon.
+        Attempts to construct a proof of the conclusion from the hypotheses.
+        Returns a proof if it exists, None otherwise.
         """
-        # Pour simplifier, nous utilisons une stratégie de recherche en avant
-        preuve = Preuve()
+        # For simplicity, we use a forward chaining strategy
+        proof = Proof()
         
-        # Ajouter les hypothèses à la preuve
+        # Add hypotheses to the proof
         for hyp in hypotheses:
-            preuve.ajouter_hypothese(hyp)
+            proof.add_hypothesis(hyp)
         
-        # Ensemble des formules déjà démontrées
-        formules_demontrees = set(hypotheses)
+        # Set of already proven formulas
+        demonstrated_formulas = set(hypotheses)
         
-        # Tentative de preuve par application des règles
-        for _ in range(max_etapes):
-            # Si la conclusion a été démontrée, la preuve est terminée
-            if str(conclusion) in map(str, formules_demontrees):
-                for formule in formules_demontrees:
-                    if str(formule) == str(conclusion):
-                        preuve.ajouter_ligne(formule, "Déjà démontrée")
-                        return preuve
+        # Attempt to prove by applying rules
+        for _ in range(max_steps):
+            # If the conclusion has been demonstrated, the proof is complete
+            if str(conclusion) in map(str, demonstrated_formulas):
+                for formula in demonstrated_formulas:
+                    if str(formula) == str(conclusion):
+                        proof.add_line(formula, "Already demonstrated")
+                        return proof
             
-            # Appliquer toutes les règles d'inférence possibles
-            nouvelles_formules = set()
+            # Apply all possible inference rules
+            new_formulas = set()
             
-            for nom_regle, regle in self.regles.items():
-                # Pour chaque combinaison de formules déjà démontrées
-                for comb in itertools.combinations(formules_demontrees, min(len(formules_demontrees), len(regle.schemas_premisses))):
-                    # Tenter d'appliquer la règle
-                    nouvelle_formule = regle.appliquer(comb)
+            for rule_name, rule in self.rules.items():
+                # For each combination of already proven formulas
+                for comb in itertools.combinations(demonstrated_formulas, min(len(demonstrated_formulas), len(rule.premise_schemas))):
+                    # Attempt to apply the rule
+                    new_formula = rule.apply(comb)
                     
-                    if nouvelle_formule is not None and str(nouvelle_formule) not in map(str, formules_demontrees):
-                        nouvelles_formules.add(nouvelle_formule)
-                        refs = [i+1 for i, f in enumerate(preuve.lignes) if str(f["formule"]) in map(str, comb)]
-                        preuve.ajouter_ligne(nouvelle_formule, nom_regle, refs)
+                    if new_formula is not None and str(new_formula) not in map(str, demonstrated_formulas):
+                        new_formulas.add(new_formula)
+                        refs = [i+1 for i, f in enumerate(proof.lines) if str(f["formula"]) in map(str, comb)]
+                        proof.add_line(new_formula, rule_name, refs)
             
-            # Si aucune nouvelle formule n'a été démontrée, la preuve échoue
-            if not nouvelles_formules:
+            # If no new formula has been demonstrated, the proof fails
+            if not new_formulas:
                 return None
             
-            # Ajouter les nouvelles formules à l'ensemble des formules démontrées
-            formules_demontrees.update(nouvelles_formules)
+            # Add new formulas to the set of demonstrated formulas
+            demonstrated_formulas.update(new_formulas)
         
-        # Si le nombre maximum d'étapes est atteint, la preuve échoue
+        # If the maximum number of steps is reached, the proof fails
         return None
 
 
-class ResolutionMethode:
-    """Implémentation de la méthode de résolution pour la logique propositionnelle."""
+class ResolutionMethod:
+    """Implementation of the resolution method for propositional logic."""
     
     @staticmethod
-    def to_cnf(formule):
-        """Convertit une formule en forme normale conjonctive (CNF)."""
-        # Cette méthode serait implémentée pour chaque type de formule
-        # Pour simplifier, nous supposons que la formule est déjà en CNF
-        return formule
+    def to_cnf(formula):
+        """Converts a formula to conjunctive normal form (CNF)."""
+        # This method would be implemented for each formula type
+        # For simplicity, we assume the formula is already in CNF
+        return formula
     
     @staticmethod
-    def clauses_from_cnf(formule_cnf):
-        """Extrait les clauses d'une formule en CNF."""
-        # Une clause est un ensemble de littéraux (variables ou leurs négations)
-        # Pour simplifier, nous représentons chaque clause comme un ensemble de chaînes
-        return [{"p"}, {"q"}, {"r"}]  # Exemple simplifié
+    def clauses_from_cnf(cnf_formula):
+        """Extracts clauses from a CNF formula."""
+        # A clause is a set of literals (variables or their negations)
+        # For simplicity, we represent each clause as a set of strings
+        return [{"p"}, {"q"}, {"r"}]  # Simplified example
     
     @staticmethod
-    def resolution(clauses1, clauses2):
-        """Applique la règle de résolution aux ensembles de clauses."""
-        resultats = set()
+    def resolve(clauses1, clauses2):
+        """Applies the resolution rule to sets of clauses."""
+        results = set()
         
         for c1 in clauses1:
             for c2 in clauses2:
-                # Chercher un littéral dans c1 dont la négation est dans c2
+                # Look for a literal in c1 whose negation is in c2
                 for lit in c1:
-                    # Le littéral complémentaire serait la négation de lit
+                    # The complementary literal would be the negation of lit
                     lit_comp = lit[1:] if lit.startswith("¬") else "¬" + lit
                     
                     if lit_comp in c2:
-                        # Créer une nouvelle clause en résolvant c1 et c2
-                        resolvant = (c1 - {lit}) | (c2 - {lit_comp})
+                        # Create a new clause by resolving c1 and c2
+                        resolvent = (c1 - {lit}) | (c2 - {lit_comp})
                         
-                        # Si le résolvant est la clause vide, la formule est insatisfaisable
-                        if not resolvant:
-                            return False  # Contradiction trouvée
+                        # If the resolvent is the empty clause, the formula is unsatisfiable
+                        if not resolvent:
+                            return False  # Contradiction found
                         
-                        resultats.add(frozenset(resolvant))
+                        results.add(frozenset(resolvent))
         
-        return resultats
+        return results
     
     @staticmethod
-    def prouver_par_resolution(hypotheses, conclusion, max_etapes=100):
+    def prove_by_resolution(hypotheses, conclusion, max_steps=100):
         """
-        Prouve une conclusion à partir d'hypothèses en utilisant la méthode de résolution.
-        Retourne True si la preuve réussit, False sinon.
+        Proves a conclusion from hypotheses using the resolution method.
+        Returns True if the proof succeeds, False otherwise.
         """
-        # Convertir les hypothèses et la négation de la conclusion en CNF
+        # Convert hypotheses and the negation of the conclusion to CNF
         clauses = set()
         
         for hyp in hypotheses:
-            hyp_cnf = ResolutionMethode.to_cnf(hyp)
-            clauses_hyp = ResolutionMethode.clauses_from_cnf(hyp_cnf)
-            clauses.update(frozenset(c) for c in clauses_hyp)
+            hyp_cnf = ResolutionMethod.to_cnf(hyp)
+            hyp_clauses = ResolutionMethod.clauses_from_cnf(hyp_cnf)
+            clauses.update(frozenset(c) for c in hyp_clauses)
         
-        # Ajouter la négation de la conclusion
-        neg_conclusion = None  # Ceci serait la négation de la conclusion
-        neg_conclusion_cnf = ResolutionMethode.to_cnf(neg_conclusion)
-        clauses_neg = ResolutionMethode.clauses_from_cnf(neg_conclusion_cnf)
-        clauses.update(frozenset(c) for c in clauses_neg)
+        # Add the negation of the conclusion
+        neg_conclusion = None  # This would be the negation of the conclusion
+        neg_conclusion_cnf = ResolutionMethod.to_cnf(neg_conclusion)
+        neg_clauses = ResolutionMethod.clauses_from_cnf(neg_conclusion_cnf)
+        clauses.update(frozenset(c) for c in neg_clauses)
         
-        # Appliquer la résolution jusqu'à trouver une contradiction ou atteindre le maximum d'étapes
-        for _ in range(max_etapes):
-            nouvelles_clauses = set()
+        # Apply resolution until a contradiction is found or maximum steps are reached
+        for _ in range(max_steps):
+            new_clauses = set()
             
-            # Appliquer la résolution à toutes les paires de clauses
+            # Apply resolution to all pairs of clauses
             for c1, c2 in itertools.combinations(clauses, 2):
-                resolvants = ResolutionMethode.resolution({c1}, {c2})
+                resolvents = ResolutionMethod.resolve({c1}, {c2})
                 
-                if resolvants is False:
-                    # Contradiction trouvée, la preuve réussit
+                if resolvents is False:
+                    # Contradiction found, the proof succeeds
                     return True
                 
-                nouvelles_clauses.update(resolvants)
+                new_clauses.update(resolvents)
             
-            # Si aucune nouvelle clause n'a été générée, la preuve échoue
-            if nouvelles_clauses.issubset(clauses):
+            # If no new clause was generated, the proof fails
+            if new_clauses.issubset(clauses):
                 break
             
-            clauses.update(nouvelles_clauses)
+            clauses.update(new_clauses)
         
-        # Si aucune contradiction n'a été trouvée, la preuve échoue
+        # If no contradiction was found, the proof fails
         return False
 
 
-class TableauxMethode:
-    """Implémentation de la méthode des tableaux sémantiques pour la logique propositionnelle."""
+class TableauxMethod:
+    """Implementation of the semantic tableaux method for propositional logic."""
     
-    class Noeud:
-        """Représente un nœud dans un tableau sémantique."""
+    class Node:
+        """Represents a node in a semantic tableau."""
         
-        def __init__(self, formule, signe=True, parent=None):
-            self.formule = formule  # La formule associée au nœud
-            self.signe = signe  # True pour affirmation, False pour négation
-            self.parent = parent  # Nœud parent
-            self.enfants = []  # Nœuds enfants
-            self.est_ferme = False  # Indique si la branche est fermée
+        def __init__(self, formula, sign=True, parent=None):
+            self.formula = formula  # The formula associated with the node
+            self.sign = sign  # True for affirmation, False for negation
+            self.parent = parent  # Parent node
+            self.children = []  # Child nodes
+            self.is_closed = False  # Indicates if the branch is closed
         
-        def ajouter_enfant(self, formule, signe=True):
-            """Ajoute un enfant au nœud."""
-            enfant = TableauxMethode.Noeud(formule, signe, self)
-            self.enfants.append(enfant)
-            return enfant
+        def add_child(self, formula, sign=True):
+            """Adds a child to the node."""
+            child = TableauxMethod.Node(formula, sign, self)
+            self.children.append(child)
+            return child
         
-        def est_feuille(self):
-            """Indique si le nœud est une feuille."""
-            return not self.enfants
+        def is_leaf(self):
+            """Indicates if the node is a leaf."""
+            return not self.children
         
         def __str__(self):
-            signe_str = "" if self.signe else "¬"
-            return f"{signe_str}{self.formule}"
+            sign_str = "" if self.sign else "¬"
+            return f"{sign_str}{self.formula}"
     
     @staticmethod
-    def decomposer(noeud):
-        """Décompose un nœud selon les règles des tableaux sémantiques."""
-        formule = noeud.formule
-        signe = noeud.signe
+    def decompose(node):
+        """Decomposes a node according to semantic tableau rules."""
+        formula = node.formula
+        sign = node.sign
         
-        # Décomposition selon le type de formule et son signe
-        if isinstance(formule, NonModale) or isinstance(formule, NonTemporelle):
-            # Règle de négation
-            noeud.ajouter_enfant(formule.formule, not signe)
+        # Decomposition according to formula type and its sign
+        if isinstance(formula, ModalNot) or isinstance(formula, TemporalNot):
+            # Negation rule
+            node.add_child(formula.formula, not sign)
         
-        elif isinstance(formule, EtModale) or isinstance(formule, EtTemporelle):
-            if signe:
-                # Règle de conjonction affirmée (règle α)
-                noeud.ajouter_enfant(formule.gauche, True)
-                noeud.ajouter_enfant(formule.droite, True)
+        elif isinstance(formula, ModalAnd) or isinstance(formula, TemporalAnd):
+            if sign:
+                # Affirmed conjunction rule (α rule)
+                node.add_child(formula.left, True)
+                node.add_child(formula.right, True)
             else:
-                # Règle de conjonction niée (règle β)
-                enfant1 = noeud.ajouter_enfant(formule.gauche, False)
-                enfant2 = noeud.ajouter_enfant(formule.droite, False)
-                enfant1.est_branche = True
-                enfant2.est_branche = True
+                # Denied conjunction rule (β rule)
+                child1 = node.add_child(formula.left, False)
+                child2 = node.add_child(formula.right, False)
+                child1.is_branch = True # This attribute is not used elsewhere, seems like a placeholder
+                child2.is_branch = True
         
-        elif isinstance(formule, OuModale) or isinstance(formule, OuTemporelle):
-            if signe:
-                # Règle de disjonction affirmée (règle β)
-                enfant1 = noeud.ajouter_enfant(formule.gauche, True)
-                enfant2 = noeud.ajouter_enfant(formule.droite, True)
-                enfant1.est_branche = True
-                enfant2.est_branche = True
+        elif isinstance(formula, ModalOr) or isinstance(formula, TemporalOr):
+            if sign:
+                # Affirmed disjunction rule (β rule)
+                child1 = node.add_child(formula.left, True)
+                child2 = node.add_child(formula.right, True)
+                child1.is_branch = True
+                child2.is_branch = True
             else:
-                # Règle de disjonction niée (règle α)
-                noeud.ajouter_enfant(formule.gauche, False)
-                noeud.ajouter_enfant(formule.droite, False)
+                # Denied disjunction rule (α rule)
+                node.add_child(formula.left, False)
+                node.add_child(formula.right, False)
         
-        elif isinstance(formule, ImplicationModale) or isinstance(formule, ImplicationTemporelle):
-            if signe:
-                # Règle d'implication affirmée (règle β)
-                enfant1 = noeud.ajouter_enfant(formule.antecedent, False)
-                enfant2 = noeud.ajouter_enfant(formule.consequent, True)
-                enfant1.est_branche = True
-                enfant2.est_branche = True
+        elif isinstance(formula, ModalImplication) or isinstance(formula, TemporalImplication):
+            if sign:
+                # Affirmed implication rule (β rule)
+                child1 = node.add_child(formula.antecedent, False)
+                child2 = node.add_child(formula.consequent, True)
+                child1.is_branch = True
+                child2.is_branch = True
             else:
-                # Règle d'implication niée (règle α)
-                noeud.ajouter_enfant(formule.antecedent, True)
-                noeud.ajouter_enfant(formule.consequent, False)
+                # Denied implication rule (α rule)
+                node.add_child(formula.antecedent, True)
+                node.add_child(formula.consequent, False)
         
-        # D'autres règles seraient ajoutées pour les autres types de formules
+        # Other rules would be added for other formula types
         
-        return noeud.enfants
+        return node.children
     
     @staticmethod
-    def est_contradictoire(chemin):
-        """Vérifie si un chemin contient une contradiction."""
-        # Un chemin est contradictoire s'il contient une formule et sa négation
-        for i, noeud1 in enumerate(chemin):
-            for noeud2 in chemin[i+1:]:
-                if str(noeud1.formule) == str(noeud2.formule) and noeud1.signe != noeud2.signe:
+    def is_contradictory(path):
+        """Checks if a path contains a contradiction."""
+        # A path is contradictory if it contains a formula and its negation
+        for i, node1 in enumerate(path):
+            for node2 in path[i+1:]:
+                if str(node1.formula) == str(node2.formula) and node1.sign != node2.sign:
                     return True
         
         return False
     
     @staticmethod
-    def construire_tableau(formules, signes=None):
+    def build_tableau(formulas, signs=None):
         """
-        Construit un tableau sémantique pour un ensemble de formules.
-        formules: liste de formules
-        signes: liste de signes (True pour affirmation, False pour négation)
+        Constructs a semantic tableau for a set of formulas.
+        formulas: list of formulas
+        signs: list of signs (True for affirmation, False for negation)
         """
-        if signes is None:
-            signes = [True] * len(formules)
+        if signs is None:
+            signs = [True] * len(formulas)
         
-        # Créer le nœud racine
-        racine = TableauxMethode.Noeud(None)
+        # Create root node
+        root = TableauxMethod.Node(None)
         
-        # Ajouter les formules initiales
-        noeuds = []
-        for formule, signe in zip(formules, signes):
-            noeud = racine.ajouter_enfant(formule, signe)
-            noeuds.append(noeud)
+        # Add initial formulas
+        nodes = []
+        for formula, sign in zip(formulas, signs):
+            node = root.add_child(formula, sign)
+            nodes.append(node)
         
-        # Développer le tableau
-        TableauxMethode.developper_tableau(noeuds)
+        # Develop the tableau
+        TableauxMethod._develop_tableau(nodes) # Changed method name to be internal
         
-        return racine
+        return root
     
     @staticmethod
-    def developper_tableau(noeuds, visite=None):
+    def _develop_tableau(nodes, visited=None): # Changed method name to be internal
         """
-        Développe le tableau sémantique à partir des nœuds donnés.
-        noeuds: liste de nœuds à développer
-        visite: ensemble des formules déjà visitées
+        Develops the semantic tableau from the given nodes.
+        nodes: list of nodes to develop
+        visited: set of already visited formulas
         """
-        if visite is None:
-            visite = set()
+        if visited is None:
+            visited = set()
         
-        # Pour chaque nœud
-        for noeud in noeuds:
-            # Si la formule a déjà été visitée ou si le nœud est atomique, passer
-            formule_str = str(noeud)
-            if formule_str in visite or (isinstance(noeud.formule, PropositionModale) or isinstance(noeud.formule, PropositionTemporelle)):
+        # For each node
+        for node in nodes:
+            # If the formula has already been visited or if the node is atomic, skip
+            formula_str = str(node)
+            if formula_str in visited or (isinstance(node.formula, ModalProposition) or isinstance(node.formula, TemporalProposition)):
                 continue
             
-            visite.add(formule_str)
+            visited.add(formula_str)
             
-            # Décomposer le nœud
-            enfants = TableauxMethode.decomposer(noeud)
+            # Decompose the node
+            children = TableauxMethod.decompose(node)
             
-            # Vérifier si le chemin est contradictoire
-            chemin = []
-            n = noeud
+            # Check if the path is contradictory
+            path = []
+            n = node
             while n is not None:
-                chemin.append(n)
+                path.append(n)
                 n = n.parent
             
-            if TableauxMethode.est_contradictoire(chemin):
-                noeud.est_ferme = True
+            if TableauxMethod.is_contradictory(path):
+                node.is_closed = True
                 continue
             
-            # Développer récursivement les enfants
-            TableauxMethode.developper_tableau(enfants, visite)
+            # Recursively develop children
+            TableauxMethod._develop_tableau(children, visited)
     
     @staticmethod
-    def est_ferme(racine):
-        """Vérifie si le tableau est fermé (toutes les branches sont fermées)."""
-        # Un tableau est fermé si toutes ses branches sont fermées
+    def is_closed(root):
+        """Checks if the tableau is closed (all branches are closed)."""
+        # A tableau is closed if all its branches are closed
         
-        def parcourir(noeud):
-            if noeud.est_ferme:
+        def traverse(node):
+            if node.is_closed:
                 return True
             
-            if noeud.est_feuille():
-                # Vérifier si le chemin est contradictoire
-                chemin = []
-                n = noeud
+            if node.is_leaf():
+                # Check if the path is contradictory
+                path = []
+                n = node
                 while n is not None:
-                    chemin.append(n)
+                    path.append(n)
                     n = n.parent
                 
-                return TableauxMethode.est_contradictoire(chemin)
+                return TableauxMethod.is_contradictory(path)
             
-            return all(parcourir(enfant) for enfant in noeud.enfants)
+            return all(traverse(child) for child in node.children)
         
-        return parcourir(racine)
+        return traverse(root)
     
     @staticmethod
-    def prouver_par_tableaux(hypotheses, conclusion):
+    def prove_by_tableaux(hypotheses, conclusion):
         """
-        Prouve une conclusion à partir d'hypothèses en utilisant la méthode des tableaux.
-        Retourne True si la preuve réussit, False sinon.
+        Proves a conclusion from hypotheses using the tableaux method.
+        Returns True if the proof succeeds, False otherwise.
         """
-        # Pour prouver hypothèses ⊢ conclusion, on vérifie si hypothèses ∧ ¬conclusion est insatisfaisable
-        # Si le tableau est fermé, la preuve réussit
+        # To prove hypotheses ⊢ conclusion, we check if hypotheses ∧ ¬conclusion is unsatisfiable
+        # If the tableau is closed, the proof succeeds
         
-        formules = list(hypotheses)
-        signes = [True] * len(formules)
+        formulas = list(hypotheses)
+        signs = [True] * len(formulas)
         
-        # Ajouter la négation de la conclusion
-        if isinstance(conclusion, FormuleModale):
-            neg_conclusion = NonModale(conclusion)
+        # Add the negation of the conclusion
+        if isinstance(conclusion, ModalFormula):
+            neg_conclusion = ModalNot(conclusion)
         else:
-            neg_conclusion = NonTemporelle(conclusion)
+            neg_conclusion = TemporalNot(conclusion) # Assuming it's temporal if not modal.
         
-        formules.append(neg_conclusion)
-        signes.append(True)
+        formulas.append(neg_conclusion)
+        signs.append(True)
         
-        # Construire le tableau
-        racine = TableauxMethode.construire_tableau(formules, signes)
+        # Construct the tableau
+        root = TableauxMethod.build_tableau(formulas, signs)
         
-        # Vérifier si le tableau est fermé
-        return TableauxMethode.est_ferme(racine)
+        # Check if the tableau is closed
+        return TableauxMethod.is_closed(root)
 
 
 ##########################################
-# PARTIE 3: RAISONNEMENT AVEC CONTRAINTES MULTIPLES
+# PART 3: REASONING WITH MULTIPLE CONSTRAINTS
 ##########################################
 
-class Contrainte(ABC):
-    """Classe abstraite pour représenter une contrainte."""
+class Constraint(ABC):
+    """Abstract class to represent a constraint."""
     
     @abstractmethod
-    def est_satisfaite(self, solution):
-        """Vérifie si la contrainte est satisfaite par la solution."""
+    def is_satisfied(self, solution):
+        """Checks if the constraint is satisfied by the solution."""
         pass
     
     @abstractmethod
     def __str__(self):
-        """Représentation textuelle de la contrainte."""
+        """Textual representation of the constraint."""
         pass
 
 
-class ContrainteUnaire(Contrainte):
-    """Contrainte portant sur une seule variable."""
+class UnaryConstraint(Constraint):
+    """Constraint on a single variable."""
     
-    def __init__(self, variable, fonction_contrainte):
+    def __init__(self, variable, constraint_function):
         self.variable = variable
-        self.fonction_contrainte = fonction_contrainte
+        self.constraint_function = constraint_function
     
-    def est_satisfaite(self, solution):
-        """Vérifie si la contrainte est satisfaite par la solution."""
+    def is_satisfied(self, solution):
+        """Checks if the constraint is satisfied by the solution."""
         if self.variable not in solution:
-            return True  # La contrainte ne s'applique pas si la variable n'est pas dans la solution
+            return True  # The constraint does not apply if the variable is not in the solution
         
-        return self.fonction_contrainte(solution[self.variable])
+        return self.constraint_function(solution[self.variable])
     
     def __str__(self):
-        return f"Contrainte({self.variable})"
+        return f"Constraint({self.variable})"
 
 
-class ContrainteBinaire(Contrainte):
-    """Contrainte portant sur deux variables."""
+class BinaryConstraint(Constraint):
+    """Constraint on two variables."""
     
-    def __init__(self, variable1, variable2, fonction_contrainte):
+    def __init__(self, variable1, variable2, constraint_function):
         self.variable1 = variable1
         self.variable2 = variable2
-        self.fonction_contrainte = fonction_contrainte
+        self.constraint_function = constraint_function
     
-    def est_satisfaite(self, solution):
-        """Vérifie si la contrainte est satisfaite par la solution."""
+    def is_satisfied(self, solution):
+        """Checks if the constraint is satisfied by the solution."""
         if self.variable1 not in solution or self.variable2 not in solution:
-            return True  # La contrainte ne s'applique pas si l'une des variables n'est pas dans la solution
+            return True  # The constraint does not apply if one of the variables is not in the solution
         
-        return self.fonction_contrainte(solution[self.variable1], solution[self.variable2])
+        return self.constraint_function(solution[self.variable1], solution[self.variable2])
     
     def __str__(self):
-        return f"Contrainte({self.variable1}, {self.variable2})"
+        return f"Constraint({self.variable1}, {self.variable2})"
 
 
-class ContrainteNaire(Contrainte):
-    """Contrainte portant sur plusieurs variables."""
+class NaryConstraint(Constraint):
+    """Constraint on multiple variables."""
     
-    def __init__(self, variables, fonction_contrainte):
+    def __init__(self, variables, constraint_function):
         self.variables = variables
-        self.fonction_contrainte = fonction_contrainte
+        self.constraint_function = constraint_function
     
-    def est_satisfaite(self, solution):
-        """Vérifie si la contrainte est satisfaite par la solution."""
+    def is_satisfied(self, solution):
+        """Checks if the constraint is satisfied by the solution."""
         if not all(v in solution for v in self.variables):
-            return True  # La contrainte ne s'applique pas si toutes les variables ne sont pas dans la solution
+            return True  # The constraint does not apply if all variables are not in the solution
         
-        return self.fonction_contrainte(*[solution[v] for v in self.variables])
+        return self.constraint_function(*[solution[v] for v in self.variables])
     
     def __str__(self):
-        return f"Contrainte({', '.join(self.variables)})"
+        return f"Constraint({', '.join(self.variables)})"
 
 
-class ProblemeContraintes:
-    """Représente un problème de satisfaction de contraintes."""
+class ConstraintProblem:
+    """Represents a constraint satisfaction problem."""
     
     def __init__(self):
         self.variables = set()
-        self.domaines = {}
-        self.contraintes = []
+        self.domains = {}
+        self.constraints = []
     
-    def ajouter_variable(self, variable, domaine):
-        """Ajoute une variable avec son domaine de valeurs possibles."""
+    def add_variable(self, variable, domain):
+        """Adds a variable with its domain of possible values."""
         self.variables.add(variable)
-        self.domaines[variable] = list(domaine)
+        self.domains[variable] = list(domain)
         return self
     
-    def ajouter_contrainte(self, contrainte):
-        """Ajoute une contrainte au problème."""
-        self.contraintes.append(contrainte)
+    def add_constraint(self, constraint):
+        """Adds a constraint to the problem."""
+        self.constraints.append(constraint)
         return self
     
-    def est_solution_valide(self, solution):
-        """Vérifie si une solution satisfait toutes les contraintes."""
-        return all(c.est_satisfaite(solution) for c in self.contraintes)
+    def is_valid_solution(self, solution):
+        """Checks if a solution satisfies all constraints."""
+        return all(c.is_satisfied(solution) for c in self.constraints)
     
-    def resoudre_backtracking(self):
-        """Résout le problème en utilisant l'algorithme de backtracking."""
+    def solve_backtracking(self):
+        """Solves the problem using the backtracking algorithm."""
         solution = {}
         return self._backtracking(solution)
     
     def _backtracking(self, solution):
-        """Algorithme de backtracking récursif."""
-        # Si toutes les variables ont une valeur, vérifier si la solution est valide
+        """Recursive backtracking algorithm."""
+        # If all variables have a value, check if the solution is valid
         if len(solution) == len(self.variables):
-            if self.est_solution_valide(solution):
+            if self.is_valid_solution(solution):
                 return solution
             return None
         
-        # Choisir une variable non assignée
-        var = next(iter(self.variables - set(solution.keys())))
+        # Choose an unassigned variable
+        # Ensure we pick a variable not already in solution.keys()
+        unassigned_vars = self.variables - set(solution.keys())
+        if not unassigned_vars: # All variables assigned but not a valid solution. Should not happen if `is_valid_solution` is checked correctly.
+            return None 
+        var = next(iter(unassigned_vars))
         
-        # Essayer chaque valeur du domaine
-        for val in self.domaines[var]:
-            # Vérifier si l'affectation est consistante avec les contraintes
+        # Try each value in the domain
+        for val in self.domains[var]:
+            # Check if the assignment is consistent with the constraints
             solution[var] = val
-            if self.est_solution_valide(solution):
-                # Continuer le backtracking
-                resultat = self._backtracking(solution)
-                if resultat is not None:
-                    return resultat
+            if self.is_valid_solution(solution): # This check is usually done incrementally for efficiency
+                # Continue backtracking
+                result = self._backtracking(solution)
+                if result is not None:
+                    return result
             
-            # Si on arrive ici, l'affectation n'a pas marché, on retire la variable
+            # If we get here, the assignment did not work, remove the variable
             del solution[var]
         
-        # Aucune solution trouvée
+        # No solution found
         return None
     
-    def resoudre_ac3(self):
-        """Résout le problème en utilisant l'algorithme AC-3 (Arc Consistency)."""
-        # Réduire les domaines en utilisant AC-3
-        domaines = self.domaines.copy()
+    def solve_ac3(self):
+        """Solves the problem using the AC-3 (Arc Consistency) algorithm."""
+        # Reduce domains using AC-3
+        domains = {var: list(dom) for var, dom in self.domains.items()} # Create a mutable copy
         
-        if not self._ac3(domaines):
-            return None  # Pas de solution
+        if not self._ac3(domains):
+            return None  # No solution
         
-        # Utiliser le backtracking avec les domaines réduits
+        # Use backtracking with reduced domains
         solution = {}
-        return self._backtracking_avec_domaines(solution, domaines)
+        return self._backtracking_with_domains(solution, domains)
     
-    def _ac3(self, domaines):
-        """Algorithme AC-3 pour la consistance d'arc."""
-        # Initialiser la file d'arcs (paires de variables liées par une contrainte)
+    def _ac3(self, domains):
+        """AC-3 algorithm for arc consistency."""
+        # Initialize the queue of arcs (pairs of variables linked by a constraint)
         arcs = []
         
-        for c in self.contraintes:
-            if isinstance(c, ContrainteBinaire):
+        for c in self.constraints:
+            if isinstance(c, BinaryConstraint):
                 arcs.append((c.variable1, c.variable2))
                 arcs.append((c.variable2, c.variable1))
         
-        # Tant qu'il reste des arcs à traiter
+        # While there are still arcs to process
         while arcs:
             x, y = arcs.pop(0)
             
-            if self._reviser(domaines, x, y):
-                if not domaines[x]:
-                    return False  # Domaine vide, pas de solution
+            if self._revise(domains, x, y):
+                if not domains[x]:
+                    return False  # Empty domain, no solution
                 
-                # Ajouter tous les arcs (z, x) où z est voisin de x mais différent de y
-                for c in self.contraintes:
-                    if isinstance(c, ContrainteBinaire):
-                        if c.variable1 == x and c.variable2 != y:
-                            arcs.append((c.variable2, x))
-                        elif c.variable2 == x and c.variable1 != y:
-                            arcs.append((c.variable1, x))
+                # Add all arcs (z, x) where z is a neighbor of x but different from y
+                for c_prime in self.constraints:
+                    if isinstance(c_prime, BinaryConstraint):
+                        if c_prime.variable1 == x and c_prime.variable2 != y:
+                            arcs.append((c_prime.variable2, x))
+                        elif c_prime.variable2 == x and c_prime.variable1 != y:
+                            arcs.append((c_prime.variable1, x))
         
         return True
     
-    def _reviser(self, domaines, x, y):
-        """Révise le domaine de x en fonction de y."""
-        revise = False
+    def _revise(self, domains, x, y):
+        """Revises the domain of x based on y."""
+        revised = False
         
-        for vx in list(domaines[x]):
-            # Vérifier s'il existe une valeur vy dans le domaine de y telle que (vx, vy) satisfait la contrainte
-            if not any(self._est_consistant({x: vx, y: vy}) for vy in domaines[y]):
-                domaines[x].remove(vx)
-                revise = True
+        for vx in list(domains[x]): # Iterate over a copy to allow modification
+            # Check if there exists a value vy in the domain of y such that (vx, vy) satisfies the constraint
+            # This check needs to consider all binary constraints involving x and y
+            
+            found_support = False
+            for vy in domains[y]:
+                temp_solution = {x: vx, y: vy}
+                
+                # Check all binary constraints that involve both x and y
+                all_constraints_satisfied_for_pair = True
+                for c in self.constraints:
+                    if isinstance(c, BinaryConstraint) and ((c.variable1 == x and c.variable2 == y) or (c.variable1 == y and c.variable2 == x)):
+                        if not c.is_satisfied(temp_solution):
+                            all_constraints_satisfied_for_pair = False
+                            break
+                
+                if all_constraints_satisfied_for_pair:
+                    found_support = True
+                    break
+            
+            if not found_support:
+                domains[x].remove(vx)
+                revised = True
         
-        return revise
+        return revised
     
-    def _est_consistant(self, solution_partielle):
-        """Vérifie si une solution partielle est consistante avec les contraintes."""
-        return all(c.est_satisfaite(solution_partielle) for c in self.contraintes)
+    def _is_consistent_partial(self, partial_solution): # Renamed for clarity as it's partial
+        """Checks if a partial solution is consistent with the constraints."""
+        # Only checks constraints where all involved variables are in the partial_solution
+        for c in self.constraints:
+            involved_vars = []
+            if isinstance(c, UnaryConstraint):
+                involved_vars = [c.variable]
+            elif isinstance(c, BinaryConstraint):
+                involved_vars = [c.variable1, c.variable2]
+            elif isinstance(c, NaryConstraint):
+                involved_vars = c.variables
+            
+            if all(v in partial_solution for v in involved_vars):
+                if not c.is_satisfied(partial_solution):
+                    return False
+        return True
     
-    def _backtracking_avec_domaines(self, solution, domaines):
-        """Algorithme de backtracking avec domaines réduits."""
-        # Si toutes les variables ont une valeur, vérifier si la solution est valide
+    def _backtracking_with_domains(self, solution, domains):
+        """Backtracking algorithm with reduced domains."""
+        # If all variables have a value, check if the solution is valid
         if len(solution) == len(self.variables):
-            if self.est_solution_valide(solution):
+            # Final check with all constraints
+            if self.is_valid_solution(solution): 
                 return solution
             return None
         
-        # Choisir une variable non assignée
-        var = next(iter(self.variables - set(solution.keys())))
+        # Choose an unassigned variable
+        unassigned_vars = self.variables - set(solution.keys())
+        if not unassigned_vars:
+            return None
+        var = next(iter(unassigned_vars))
         
-        # Essayer chaque valeur du domaine
-        for val in domaines[var]:
-            # Vérifier si l'affectation est consistante avec les contraintes
+        # Try each value in the domain
+        for val in domains[var]: # Use the reduced domains
+            # Check if the assignment is consistent with the constraints
             solution[var] = val
-            if self.est_solution_valide(solution):
-                # Continuer le backtracking
-                resultat = self._backtracking_avec_domaines(solution, domaines)
-                if resultat is not None:
-                    return resultat
+            if self._is_consistent_partial(solution): # Use partial consistency check
+                # Continue backtracking
+                result = self._backtracking_with_domains(solution, domains)
+                if result is not None:
+                    return result
             
-            # Si on arrive ici, l'affectation n'a pas marché, on retire la variable
+            # If we get here, we remove the variable to try another value
             del solution[var]
         
-        # Aucune solution trouvée
+        # No solution found
         return None
 
 
-class Optimisation:
-    """Classe pour les problèmes d'optimisation."""
+class Optimization:
+    """Class for optimization problems."""
     
-    class TypeOptimisation(Enum):
-        MINIMISATION = 1
-        MAXIMISATION = 2
+    class OptimizationType(Enum):
+        MINIMIZATION = 1
+        MAXIMIZATION = 2
     
-    def __init__(self, probleme: ProblemeContraintes, fonction_objectif, type_optimisation=TypeOptimisation.MINIMISATION):
-        self.probleme = probleme
-        self.fonction_objectif = fonction_objectif
-        self.type_optimisation = type_optimisation
+    def __init__(self, problem: ConstraintProblem, objective_function, opt_type=OptimizationType.MINIMIZATION):
+        self.problem = problem
+        self.objective_function = objective_function
+        self.opt_type = opt_type
     
-    def resoudre(self):
-        """Résout le problème d'optimisation."""
-        # Trouver toutes les solutions valides
-        solutions = self._trouver_solutions()
+    def solve(self):
+        """Solves the optimization problem."""
+        # Find all valid solutions
+        solutions = self._find_all_solutions()
         
         if not solutions:
             return None
         
-        # Trouver la meilleure solution selon la fonction objectif
-        if self.type_optimisation == self.TypeOptimisation.MINIMISATION:
-            return min(solutions, key=lambda s: self.fonction_objectif(s))
+        # Find the best solution according to the objective function
+        if self.opt_type == self.OptimizationType.MINIMIZATION:
+            return min(solutions, key=lambda s: self.objective_function(s))
         else:
-            return max(solutions, key=lambda s: self.fonction_objectif(s))
+            return max(solutions, key=lambda s: self.objective_function(s))
     
-    def _trouver_solutions(self):
-        """Trouve toutes les solutions valides du problème."""
+    def _find_all_solutions(self):
+        """Finds all valid solutions to the problem."""
         solutions = []
         
         def backtracking(solution):
-            # Si toutes les variables ont une valeur, vérifier si la solution est valide
-            if len(solution) == len(self.probleme.variables):
-                if self.probleme.est_solution_valide(solution):
+            # If all variables have a value, check if the solution is valid
+            if len(solution) == len(self.problem.variables):
+                if self.problem.is_valid_solution(solution):
                     solutions.append(solution.copy())
                 return
             
-            # Choisir une variable non assignée
-            var = next(iter(self.probleme.variables - set(solution.keys())))
+            # Choose an unassigned variable
+            unassigned_vars = self.problem.variables - set(solution.keys())
+            if not unassigned_vars:
+                return # All variables assigned, no more to choose
+            var = next(iter(unassigned_vars))
             
-            # Essayer chaque valeur du domaine
-            for val in self.probleme.domaines[var]:
-                # Vérifier si l'affectation est consistante avec les contraintes
+            # Try each value in the domain
+            for val in self.problem.domains[var]:
+                # Check if the assignment is consistent with the constraints
                 solution[var] = val
-                if self.probleme.est_solution_valide(solution):
-                    # Continuer le backtracking
+                # Here we call is_valid_solution, but for optimization,
+                # it might be more efficient to use a partial check
+                # or ensure consistency as part of backtracking_with_domains if AC3 is used.
+                # For _find_all_solutions which is a basic exhaustive search, is_valid_solution is okay.
+                if self.problem._is_consistent_partial(solution): # Use internal partial check for efficiency
+                    # Continue backtracking
                     backtracking(solution)
                 
-                # Si on arrive ici, on retire la variable pour essayer une autre valeur
+                # If we get here, we remove the variable to try another value
                 del solution[var]
         
-        # Lancer le backtracking
+        # Start backtracking
         backtracking({})
         return solutions
 
 
-class ProgrammationLogique:
-    """Classe pour la programmation logique (style Prolog)."""
+class LogicProgramming:
+    """Class for logic programming (Prolog style)."""
     
     def __init__(self):
-        self.faits = set()
-        self.regles = []
+        self.facts = set()
+        self.rules = []
     
-    def ajouter_fait(self, predicat, *arguments):
-        """Ajoute un fait à la base de connaissances."""
-        self.faits.add((predicat, arguments))
+    def add_fact(self, predicate, *arguments):
+        """Adds a fact to the knowledge base."""
+        self.facts.add((predicate, arguments))
         return self
     
-    def ajouter_regle(self, tete, corps):
+    def add_rule(self, head, body):
         """
-        Ajoute une règle à la base de connaissances.
-        tete: tuple (predicat, arguments) représentant la tête de la règle
-        corps: liste de tuples (predicat, arguments) représentant le corps de la règle
+        Adds a rule to the knowledge base.
+        head: tuple (predicate, arguments) representing the head of the rule
+        body: list of tuples (predicate, arguments) representing the body of the rule
         """
-        self.regles.append((tete, corps))
+        self.rules.append((head, body))
         return self
     
-    def requete(self, predicat, *arguments):
-        """Effectue une requête et retourne les substitutions qui la satisfont."""
-        but = (predicat, arguments)
-        return self._resoudre([but], {})
+    def query(self, predicate, *arguments):
+        """Performs a query and returns the substitutions that satisfy it."""
+        goal = (predicate, arguments)
+        return self._resolve([goal], {})
     
-    def _resoudre(self, buts, substitution):
+    def _resolve(self, goals, substitution):
         """
-        Résout une liste de buts en utilisant la résolution SLD.
-        buts: liste de buts à résoudre
-        substitution: dictionnaire de substitutions courantes
+        Resolves a list of goals using SLD resolution.
+        goals: list of goals to resolve
+        substitution: dictionary of current substitutions
         """
-        if not buts:
+        if not goals:
             return [substitution]
         
-        # Prendre le premier but
-        but_courant = buts[0]
-        predicat, arguments = but_courant
+        # Take the first goal
+        current_goal = goals[0]
+        predicate, arguments = current_goal
         
-        # Essayer de résoudre le but courant
-        resultats = []
+        # Try to resolve the current goal
+        results = []
         
-        # Essayer les faits
-        for fait in self.faits:
-            fait_predicat, fait_arguments = fait
+        # Try facts
+        for fact in self.facts:
+            fact_predicate, fact_arguments = fact
             
-            if fait_predicat == predicat and len(fait_arguments) == len(arguments):
-                # Tenter d'unifier le but avec le fait
-                nouvelle_substitution = self._unifier(arguments, fait_arguments, substitution.copy())
+            if fact_predicate == predicate and len(fact_arguments) == len(arguments):
+                # Attempt to unify the goal with the fact
+                new_substitution = self._unify(arguments, fact_arguments, substitution.copy())
                 
-                if nouvelle_substitution is not None:
-                    # Continuer avec les buts restants
-                    resultats.extend(self._resoudre(buts[1:], nouvelle_substitution))
+                if new_substitution is not None:
+                    # Continue with remaining goals
+                    results.extend(self._resolve(goals[1:], new_substitution))
         
-        # Essayer les règles
-        for regle in self.regles:
-            tete, corps = regle
-            tete_predicat, tete_arguments = tete
+        # Try rules
+        for rule in self.rules:
+            head, body = rule
+            head_predicate, head_arguments = head
             
-            if tete_predicat == predicat and len(tete_arguments) == len(arguments):
-                # Tenter d'unifier le but avec la tête de la règle
-                nouvelle_substitution = self._unifier(arguments, tete_arguments, substitution.copy())
+            if head_predicate == predicate and len(head_arguments) == len(arguments):
+                # Attempt to unify the goal with the head of the rule
+                new_substitution = self._unify(arguments, head_arguments, substitution.copy())
                 
-                if nouvelle_substitution is not None:
-                    # Ajouter les buts du corps au début de la liste de buts
-                    nouveaux_buts = corps + buts[1:]
-                    resultats.extend(self._resoudre(nouveaux_buts, nouvelle_substitution))
+                if new_substitution is not None:
+                    # Add the body's goals to the beginning of the goal list
+                    new_goals = body + goals[1:]
+                    results.extend(self._resolve(new_goals, new_substitution))
         
-        return resultats
+        return results
     
-    def _unifier(self, termes1, termes2, substitution):
+    def _unify(self, terms1, terms2, substitution):
         """
-        Unifie deux listes de termes et met à jour la substitution.
-        Retourne la substitution mise à jour ou None si l'unification échoue.
+        Unifies two lists of terms and updates the substitution.
+        Returns the updated substitution or None if unification fails.
         """
-        if len(termes1) != len(termes2):
+        if len(terms1) != len(terms2):
             return None
         
-        for t1, t2 in zip(termes1, termes2):
-            # Si t1 est une variable
+        for t1, t2 in zip(terms1, terms2):
+            # If t1 is a variable
             if isinstance(t1, str) and t1.startswith("?"):
                 if t1 in substitution:
-                    # La variable est déjà liée, vérifier la consistance
+                    # The variable is already bound, check consistency
                     if substitution[t1] != t2:
                         return None
                 else:
-                    # Lier la variable à t2
+                    # Bind the variable to t2
                     substitution[t1] = t2
             
-            # Si t2 est une variable
+            # If t2 is a variable
             elif isinstance(t2, str) and t2.startswith("?"):
                 if t2 in substitution:
-                    # La variable est déjà liée, vérifier la consistance
+                    # The variable is already bound, check consistency
                     if substitution[t2] != t1:
                         return None
                 else:
-                    # Lier la variable à t1
+                    # Bind the variable to t1
                     substitution[t2] = t1
             
-            # Si t1 et t2 sont des constantes
+            # If t1 and t2 are constants
             elif t1 != t2:
                 return None
         
@@ -2538,1024 +2588,1026 @@ class ProgrammationLogique:
 
 
 ##########################################
-# PARTIE 4: LOGIQUE DE PREMIER ET SECOND ORDRE
+# PART 4: FIRST AND SECOND ORDER LOGIC
 ##########################################
 
-class TermeLogique(ABC):
-    """Classe abstraite pour les termes logiques."""
+class LogicalTerm(ABC):
+    """Abstract class for logical terms."""
     
     @abstractmethod
-    def substituer(self, substitution):
-        """Applique une substitution au terme."""
+    def substitute(self, substitution):
+        """Applies a substitution to the term."""
         pass
     
     @abstractmethod
-    def variables(self):
-        """Retourne l'ensemble des variables libres du terme."""
+    def free_variables(self):
+        """Returns the set of free variables of the term."""
         pass
     
     @abstractmethod
     def __str__(self):
-        """Représentation textuelle du terme."""
+        """Textual representation of the term."""
         pass
 
 
-class Variable(TermeLogique):
-    """Représente une variable logique."""
+class Variable(LogicalTerm):
+    """Represents a logical variable."""
     
-    def __init__(self, nom):
-        self.nom = nom
+    def __init__(self, name):
+        self.name = name
     
-    def substituer(self, substitution):
-        """Applique une substitution à la variable."""
-        if self.nom in substitution:
-            return substitution[self.nom]
+    def substitute(self, substitution):
+        """Applies a substitution to the variable."""
+        if self.name in substitution:
+            return substitution[self.name]
         return self
     
-    def variables(self):
-        """Retourne l'ensemble des variables libres."""
-        return {self.nom}
+    def free_variables(self):
+        """Returns the set of free variables."""
+        return {self.name}
     
     def __str__(self):
-        return self.nom
+        return self.name
     
-    def __eq__(self, autre):
-        if isinstance(autre, Variable):
-            return self.nom == autre.nom
+    def __eq__(self, other):
+        if isinstance(other, Variable):
+            return self.name == other.name
         return False
     
     def __hash__(self):
-        return hash(self.nom)
+        return hash(self.name)
 
 
-class Constante(TermeLogique):
-    """Représente une constante logique."""
+class Constant(LogicalTerm):
+    """Represents a logical constant."""
     
-    def __init__(self, valeur):
-        self.valeur = valeur
+    def __init__(self, value):
+        self.value = value
     
-    def substituer(self, substitution):
-        """Applique une substitution à la constante (ne fait rien)."""
+    def substitute(self, substitution):
+        """Applies a substitution to the constant (does nothing)."""
         return self
     
-    def variables(self):
-        """Retourne l'ensemble des variables libres (vide pour une constante)."""
+    def free_variables(self):
+        """Returns the set of free variables (empty for a constant)."""
         return set()
     
     def __str__(self):
-        return str(self.valeur)
+        return str(self.value)
     
-    def __eq__(self, autre):
-        if isinstance(autre, Constante):
-            return self.valeur == autre.valeur
+    def __eq__(self, other):
+        if isinstance(other, Constant):
+            return self.value == other.value
         return False
     
-    def __hash__(self):
-        return hash(self.valeur)
+    def __hash__(self(self):
+        return hash(self.value)
 
 
-class Fonction(TermeLogique):
-    """Représente une fonction logique."""
+class Function(LogicalTerm):
+    """Represents a logical function."""
     
-    def __init__(self, nom, arguments):
-        self.nom = nom
+    def __init__(self, name, arguments):
+        self.name = name
         self.arguments = arguments
     
-    def substituer(self, substitution):
-        """Applique une substitution à la fonction."""
-        return Fonction(self.nom, [arg.substituer(substitution) for arg in self.arguments])
+    def substitute(self, substitution):
+        """Applies a substitution to the function."""
+        return Function(self.name, [arg.substitute(substitution) for arg in self.arguments])
     
-    def variables(self):
-        """Retourne l'ensemble des variables libres."""
-        return set().union(*[arg.variables() for arg in self.arguments])
+    def free_variables(self):
+        """Returns the set of free variables."""
+        return set().union(*[arg.free_variables() for arg in self.arguments])
     
     def __str__(self):
         args_str = ", ".join(map(str, self.arguments))
-        return f"{self.nom}({args_str})"
+        return f"{self.name}({args_str})"
     
-    def __eq__(self, autre):
-        if isinstance(autre, Fonction):
-            return self.nom == autre.nom and self.arguments == autre.arguments
+    def __eq__(self, other):
+        if isinstance(other, Function):
+            return self.name == other.name and self.arguments == other.arguments
         return False
     
     def __hash__(self):
-        return hash((self.nom, tuple(self.arguments)))
+        return hash((self.name, tuple(self.arguments)))
 
 
-class FormulePremierOrdre(Formule):
-    """Classe de base pour les formules de logique du premier ordre."""
+class FirstOrderFormula(Formula):
+    """Base class for first-order logic formulas."""
     
     @abstractmethod
-    def substituer(self, substitution):
-        """Applique une substitution à la formule."""
+    def substitute(self, substitution):
+        """Applies a substitution to the formula."""
         pass
     
     @abstractmethod
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres de la formule."""
+    def free_variables(self):
+        """Returns the set of free variables of the formula."""
         pass
 
 
-class Predicat(FormulePremierOrdre):
-    """Représente un prédicat logique."""
+class Predicate(FirstOrderFormula):
+    """Represents a logical predicate."""
     
-    def __init__(self, nom, arguments):
-        self.nom = nom
+    def __init__(self, name, arguments):
+        self.name = name
         self.arguments = arguments
     
-    def evaluer(self, interpretation):
-        """Évalue le prédicat dans une interprétation donnée."""
-        # Dans une interprétation du premier ordre, un prédicat est évalué
-        # en vérifiant si le tuple d'éléments est dans l'extension du prédicat
-        if self.nom not in interpretation:
+    def evaluate(self, interpretation):
+        """Evaluates the predicate in a given interpretation."""
+        # In a first-order interpretation, a predicate is evaluated
+        # by checking if the tuple of elements is in the predicate's extension
+        if self.name not in interpretation:
             return False
         
-        # Évaluer les arguments
-        valeurs = []
+        # Evaluate arguments
+        values = []
         for arg in self.arguments:
             if isinstance(arg, Variable):
-                if arg.nom not in interpretation:
+                if arg.name not in interpretation:
                     return False
-                valeurs.append(interpretation[arg.nom])
-            elif isinstance(arg, Constante):
-                valeurs.append(arg.valeur)
-            elif isinstance(arg, Fonction):
-                # Pour simplifier, nous ne traitons pas l'évaluation des fonctions
+                values.append(interpretation[arg.name])
+            elif isinstance(arg, Constant):
+                values.append(arg.value)
+            elif isinstance(arg, Function):
+                # For simplicity, we do not handle function evaluation
                 return False
         
-        # Vérifier si le tuple est dans l'extension du prédicat
-        return tuple(valeurs) in interpretation[self.nom]
+        # Check if the tuple is in the predicate's extension
+        return tuple(values) in interpretation[self.name]
     
-    def substituer(self, substitution):
-        """Applique une substitution au prédicat."""
-        return Predicat(self.nom, [arg.substituer(substitution) for arg in self.arguments])
+    def substitute(self, substitution):
+        """Applies a substitution to the predicate."""
+        return Predicate(self.name, [arg.substitute(substitution) for arg in self.arguments])
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres du prédicat."""
-        return set().union(*[arg.variables() for arg in self.arguments])
+    def free_variables(self):
+        """Returns the set of free variables of the predicate."""
+        return set().union(*[arg.free_variables() for arg in self.arguments])
     
     def __str__(self):
         args_str = ", ".join(map(str, self.arguments))
-        return f"{self.nom}({args_str})"
+        return f"{self.name}({args_str})"
     
-    def __eq__(self, autre):
-        if isinstance(autre, Predicat):
-            return self.nom == autre.nom and self.arguments == autre.arguments
+    def __eq__(self, other):
+        if isinstance(other, Predicate):
+            return self.name == other.name and self.arguments == other.arguments
         return False
     
     def __hash__(self):
-        return hash((self.nom, tuple(self.arguments)))
+        return hash((self.name, tuple(self.arguments)))
 
 
-class NonPremierOrdre(FormulePremierOrdre):
-    """Négation en logique du premier ordre."""
+class FirstOrderNot(FirstOrderFormula):
+    """Negation in first-order logic."""
     
-    def __init__(self, formule):
-        self.formule = formule
+    def __init__(self, formula):
+        self.formula = formula
     
-    def evaluer(self, interpretation):
-        """Évalue la négation dans une interprétation donnée."""
-        return not self.formule.evaluer(interpretation)
+    def evaluate(self, interpretation):
+        """Evaluates the negation in a given interpretation."""
+        return not self.formula.evaluate(interpretation)
     
-    def substituer(self, substitution):
-        """Applique une substitution à la négation."""
-        return NonPremierOrdre(self.formule.substituer(substitution))
+    def substitute(self, substitution):
+        """Applies a substitution to the negation."""
+        return FirstOrderNot(self.formula.substitute(substitution))
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres de la négation."""
-        return self.formule.variables_libres()
+    def free_variables(self):
+        """Returns the set of free variables of the negation."""
+        return self.formula.free_variables()
     
     def __str__(self):
-        return f"¬{self.formule}"
+        return f"¬{self.formula}"
     
-    def __eq__(self, autre):
-        if isinstance(autre, NonPremierOrdre):
-            return self.formule == autre.formule
+    def __eq__(self, other):
+        if isinstance(other, FirstOrderNot):
+            return self.formula == other.formula
         return False
     
     def __hash__(self):
-        return hash(("non", self.formule))
+        return hash(("not", self.formula))
 
 
-class EtPremierOrdre(FormulePremierOrdre):
-    """Conjonction en logique du premier ordre."""
+class FirstOrderAnd(FirstOrderFormula):
+    """Conjunction in first-order logic."""
     
-    def __init__(self, gauche, droite):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
     
-    def evaluer(self, interpretation):
-        """Évalue la conjonction dans une interprétation donnée."""
-        return self.gauche.evaluer(interpretation) and self.droite.evaluer(interpretation)
+    def evaluate(self, interpretation):
+        """Evaluates the conjunction in a given interpretation."""
+        return self.left.evaluate(interpretation) and self.right.evaluate(interpretation)
     
-    def substituer(self, substitution):
-        """Applique une substitution à la conjonction."""
-        return EtPremierOrdre(self.gauche.substituer(substitution), self.droite.substituer(substitution))
+    def substitute(self, substitution):
+        """Applies a substitution to the conjunction."""
+        return FirstOrderAnd(self.left.substitute(substitution), self.right.substitute(substitution))
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres de la conjonction."""
-        return self.gauche.variables_libres() | self.droite.variables_libres()
+    def free_variables(self):
+        """Returns the set of free variables of the conjunction."""
+        return self.left.free_variables() | self.right.free_variables()
     
     def __str__(self):
-        return f"({self.gauche} ∧ {self.droite})"
+        return f"({self.left} ∧ {self.right})"
     
-    def __eq__(self, autre):
-        if isinstance(autre, EtPremierOrdre):
-            return self.gauche == autre.gauche and self.droite == autre.droite
+    def __eq__(self, other):
+        if isinstance(other, FirstOrderAnd):
+            return self.left == other.left and self.right == other.right
         return False
     
     def __hash__(self):
-        return hash(("et", self.gauche, self.droite))
+        return hash(("and", self.left, self.right))
 
 
-class OuPremierOrdre(FormulePremierOrdre):
-    """Disjonction en logique du premier ordre."""
+class FirstOrderOr(FirstOrderFormula):
+    """Disjunction in first-order logic."""
     
-    def __init__(self, gauche, droite):
-        self.gauche = gauche
-        self.droite = droite
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
     
-    def evaluer(self, interpretation):
-        """Évalue la disjonction dans une interprétation donnée."""
-        return self.gauche.evaluer(interpretation) or self.droite.evaluer(interpretation)
+    def evaluate(self, interpretation):
+        """Evaluates the disjunction in a given interpretation."""
+        return self.left.evaluate(interpretation) or self.right.evaluate(interpretation)
     
-    def substituer(self, substitution):
-        """Applique une substitution à la disjonction."""
-        return OuPremierOrdre(self.gauche.substituer(substitution), self.droite.substituer(substitution))
+    def substitute(self, substitution):
+        """Applies a substitution to the disjunction."""
+        return FirstOrderOr(self.left.substitute(substitution), self.right.substitute(substitution))
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres de la disjonction."""
-        return self.gauche.variables_libres() | self.droite.variables_libres()
+    def free_variables(self):
+        """Returns the set of free variables of the disjunction."""
+        return self.left.free_variables() | self.right.free_variables()
     
     def __str__(self):
-        return f"({self.gauche} ∨ {self.droite})"
+        return f"({self.left} ∨ {self.right})"
     
-    def __eq__(self, autre):
-        if isinstance(autre, OuPremierOrdre):
-            return self.gauche == autre.gauche and self.droite == autre.droite
+    def __eq__(self, other):
+        if isinstance(other, FirstOrderOr):
+            return self.left == other.left and self.right == other.right
         return False
     
     def __hash__(self):
-        return hash(("ou", self.gauche, self.droite))
+        return hash(("or", self.left, self.right))
 
 
-class ImplicationPremierOrdre(FormulePremierOrdre):
-    """Implication en logique du premier ordre."""
+class FirstOrderImplication(FirstOrderFormula):
+    """Implication in first-order logic."""
     
     def __init__(self, antecedent, consequent):
         self.antecedent = antecedent
         self.consequent = consequent
     
-    def evaluer(self, interpretation):
-        """Évalue l'implication dans une interprétation donnée."""
-        return not self.antecedent.evaluer(interpretation) or self.consequent.evaluer(interpretation)
+    def evaluate(self, interpretation):
+        """Evaluates the implication in a given interpretation."""
+        return not self.antecedent.evaluate(interpretation) or self.consequent.evaluate(interpretation)
     
-    def substituer(self, substitution):
-        """Applique une substitution à l'implication."""
-        return ImplicationPremierOrdre(self.antecedent.substituer(substitution), self.consequent.substituer(substitution))
+    def substitute(self, substitution):
+        """Applies a substitution to the implication."""
+        return FirstOrderImplication(self.antecedent.substitute(substitution), self.consequent.substitute(substitution))
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres de l'implication."""
-        return self.antecedent.variables_libres() | self.consequent.variables_libres()
+    def free_variables(self):
+        """Returns the set of free variables of the implication."""
+        return self.antecedent.free_variables() | self.consequent.free_variables()
     
     def __str__(self):
         return f"({self.antecedent} → {self.consequent})"
     
-    def __eq__(self, autre):
-        if isinstance(autre, ImplicationPremierOrdre):
-            return self.antecedent == autre.antecedent and self.consequent == autre.consequent
+    def __eq__(self, other):
+        if isinstance(other, FirstOrderImplication):
+            return self.antecedent == other.antecedent and self.consequent == other.consequent
         return False
     
     def __hash__(self):
-        return hash(("implique", self.antecedent, self.consequent))
+        return hash(("implies", self.antecedent, self.consequent))
 
 
-class QuantificateurUniversel(FormulePremierOrdre):
-    """Quantificateur universel en logique du premier ordre."""
+class UniversalQuantifier(FirstOrderFormula):
+    """Universal quantifier in first-order logic."""
     
-    def __init__(self, variable, formule):
+    def __init__(self, variable, formula):
         self.variable = variable
-        self.formule = formule
+        self.formula = formula
     
-    def evaluer(self, interpretation, domaine):
+    def evaluate(self, interpretation, domain):
         """
-        Évalue le quantificateur universel dans une interprétation donnée.
-        domaine: ensemble des valeurs possibles pour les variables
+        Evaluates the universal quantifier in a given interpretation.
+        domain: set of possible values for variables
         """
-        # Pour tout élément du domaine, la formule doit être vraie
-        for valeur in domaine:
-            # Créer une nouvelle interprétation avec la variable liée à la valeur
-            nouvelle_interpretation = interpretation.copy()
-            nouvelle_interpretation[self.variable.nom] = valeur
+        # For every element in the domain, the formula must be true
+        for value in domain:
+            # Create a new interpretation with the variable bound to the value
+            new_interpretation = interpretation.copy()
+            new_interpretation[self.variable.name] = value
             
-            if not self.formule.evaluer(nouvelle_interpretation):
+            if not self.formula.evaluate(new_interpretation):
                 return False
         
         return True
     
-    def substituer(self, substitution):
-        """Applique une substitution au quantificateur universel."""
-        # Éviter la capture de variable
-        nouvelle_substitution = substitution.copy()
-        if self.variable.nom in nouvelle_substitution:
-            del nouvelle_substitution[self.variable.nom]
+    def substitute(self, substitution):
+        """Applies a substitution to the universal quantifier."""
+        # Avoid variable capture
+        new_substitution = substitution.copy()
+        if self.variable.name in new_substitution:
+            del new_substitution[self.variable.name]
         
-        return QuantificateurUniversel(self.variable, self.formule.substituer(nouvelle_substitution))
+        return UniversalQuantifier(self.variable, self.formula.substitute(new_substitution))
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres du quantificateur universel."""
-        # La variable quantifiée n'est pas libre
-        return self.formule.variables_libres() - {self.variable.nom}
+    def free_variables(self):
+        """Returns the set of free variables of the universal quantifier."""
+        # The quantified variable is not free
+        return self.formula.free_variables() - {self.variable.name}
     
     def __str__(self):
-        return f"∀{self.variable}.{self.formule}"
+        return f"∀{self.variable}.{self.formula}"
     
-    def __eq__(self, autre):
-        if isinstance(autre, QuantificateurUniversel):
-            return self.variable == autre.variable and self.formule == autre.formule
+    def __eq__(self, other):
+        if isinstance(other, UniversalQuantifier):
+            return self.variable == other.variable and self.formula == other.formula
         return False
     
     def __hash__(self):
-        return hash(("pour_tout", self.variable, self.formule))
+        return hash(("for_all", self.variable, self.formula))
 
 
-class QuantificateurExistentiel(FormulePremierOrdre):
-    """Quantificateur existentiel en logique du premier ordre."""
+class ExistentialQuantifier(FirstOrderFormula):
+    """Existential quantifier in first-order logic."""
     
-    def __init__(self, variable, formule):
+    def __init__(self, variable, formula):
         self.variable = variable
-        self.formule = formule
+        self.formula = formula
     
-    def evaluer(self, interpretation, domaine):
+    def evaluate(self, interpretation, domain):
         """
-        Évalue le quantificateur existentiel dans une interprétation donnée.
-        domaine: ensemble des valeurs possibles pour les variables
+        Evaluates the existential quantifier in a given interpretation.
+        domain: set of possible values for variables
         """
-        # Il doit exister au moins un élément du domaine pour lequel la formule est vraie
-        for valeur in domaine:
-            # Créer une nouvelle interprétation avec la variable liée à la valeur
-            nouvelle_interpretation = interpretation.copy()
-            nouvelle_interpretation[self.variable.nom] = valeur
+        # There must exist at least one element in the domain for which the formula is true
+        for value in domain:
+            # Create a new interpretation with the variable bound to the value
+            new_interpretation = interpretation.copy()
+            new_interpretation[self.variable.name] = value
             
-            if self.formule.evaluer(nouvelle_interpretation):
+            if self.formula.evaluate(new_interpretation):
                 return True
         
         return False
     
-    def substituer(self, substitution):
-        """Applique une substitution au quantificateur existentiel."""
-        # Éviter la capture de variable
-        nouvelle_substitution = substitution.copy()
-        if self.variable.nom in nouvelle_substitution:
-            del nouvelle_substitution[self.variable.nom]
+    def substitute(self, substitution):
+        """Applies a substitution to the existential quantifier."""
+        # Avoid variable capture
+        new_substitution = substitution.copy()
+        if self.variable.name in new_substitution:
+            del new_substitution[self.variable.name]
         
-        return QuantificateurExistentiel(self.variable, self.formule.substituer(nouvelle_substitution))
+        return ExistentialQuantifier(self.variable, self.formula.substitute(new_substitution))
     
-    def variables_libres(self):
-        """Retourne l'ensemble des variables libres du quantificateur existentiel."""
-        # La variable quantifiée n'est pas libre
-        return self.formule.variables_libres() - {self.variable.nom}
+    def free_variables(self):
+        """Returns the set of free variables of the existential quantifier."""
+        # The quantified variable is not free
+        return self.formula.free_variables() - {self.variable.name}
     
     def __str__(self):
-        return f"∃{self.variable}.{self.formule}"
+        return f"∃{self.variable}.{self.formula}"
     
-    def __eq__(self, autre):
-        if isinstance(autre, QuantificateurExistentiel):
-            return self.variable == autre.variable and self.formule == autre.formule
+    def __eq__(self, other):
+        if isinstance(other, ExistentialQuantifier):
+            return self.variable == other.variable and self.formula == other.formula
         return False
     
     def __hash__(self):
-        return hash(("existe", self.variable, self.formule))
+        return hash(("exists", self.variable, self.formula))
 
 
-class LogiqueSecondOrdre:
-    """Logique du second ordre avec quantification sur les prédicats et les fonctions."""
+class SecondOrderLogic:
+    """Second-order logic with quantification over predicates and functions."""
     
-    class QuantificateurPredicat(FormulePremierOrdre):
-        """Quantificateur sur les prédicats (logique du second ordre)."""
+    class PredicateQuantifier(FirstOrderFormula):
+        """Quantifier over predicates (second-order logic)."""
         
-        def __init__(self, nom_predicat, arite, formule, universel=True):
-            self.nom_predicat = nom_predicat
-            self.arite = arite  # Nombre d'arguments du prédicat
-            self.formule = formule
-            self.universel = universel  # True pour ∀, False pour ∃
+        def __init__(self, predicate_name, arity, formula, universal=True):
+            self.predicate_name = predicate_name
+            self.arity = arity  # Predicate arity
+            self.formula = formula
+            self.universal = universal  # True for ∀, False for ∃
         
-        def evaluer(self, interpretation, domaine):
+        def evaluate(self, interpretation, domain):
             """
-            Évalue le quantificateur de prédicat dans une interprétation donnée.
-            domaine: ensemble des valeurs possibles pour les variables
+            Evaluates the predicate quantifier in a given interpretation.
+            domain: set of possible values for variables
             """
-            # Générer toutes les extensions possibles pour le prédicat
-            extensions = self._generer_extensions_predicat(domaine)
+            # Generate all possible extensions for the predicate
+            extensions = self._generate_predicate_extensions(domain)
             
-            if self.universel:
-                # Pour tout prédicat, la formule doit être vraie
+            if self.universal:
+                # For any predicate, the formula must be true
                 for extension in extensions:
-                    nouvelle_interpretation = interpretation.copy()
-                    nouvelle_interpretation[self.nom_predicat] = extension
+                    new_interpretation = interpretation.copy()
+                    new_interpretation[self.predicate_name] = extension
                     
-                    if not self.formule.evaluer(nouvelle_interpretation):
+                    if not self.formula.evaluate(new_interpretation):
                         return False
                 return True
             else:
-                # Il doit exister au moins un prédicat pour lequel la formule est vraie
+                # There must exist at least one predicate for which the formula is true
                 for extension in extensions:
-                    nouvelle_interpretation = interpretation.copy()
-                    nouvelle_interpretation[self.nom_predicat] = extension
+                    new_interpretation = interpretation.copy()
+                    new_interpretation[self.predicate_name] = extension
                     
-                    if self.formule.evaluer(nouvelle_interpretation):
+                    if self.formula.evaluate(new_interpretation):
                         return True
                 return False
         
-        def _generer_extensions_predicat(self, domaine):
-            """Génère toutes les extensions possibles pour le prédicat."""
-            # Pour simplifier, nous limitons à un petit nombre d'extensions
-            # Dans une implémentation complète, on générerait toutes les combinaisons possibles
+        def _generate_predicate_extensions(self, domain):
+            """Generates all possible extensions for the predicate."""
+            # For simplicity, we limit to a small number of extensions
+            # In a full implementation, all possible combinations would be generated
             extensions = []
             
-            # Générer toutes les combinaisons de tuples de longueur arite
-            tuples = list(itertools.product(domaine, repeat=self.arite))
+            # Generate all combinations of tuples of length arity
+            tuples = list(itertools.product(domain, repeat=self.arity))
             
-            # Générer toutes les sous-collections de ces tuples
+            # Generate all sub-collections of these tuples
             for i in range(len(tuples) + 1):
                 for combo in itertools.combinations(tuples, i):
                     extensions.append(set(combo))
             
-            return extensions[:10]  # Limiter pour des raisons de performance
+            return extensions[:10]  # Limit for performance reasons
         
-        def substituer(self, substitution):
-            """Applique une substitution au quantificateur de prédicat."""
-            return LogiqueSecondOrdre.QuantificateurPredicat(
-                self.nom_predicat,
-                self.arite,
-                self.formule.substituer(substitution),
-                self.universel
+        def substitute(self, substitution):
+            """Applies a substitution to the predicate quantifier."""
+            return SecondOrderLogic.PredicateQuantifier(
+                self.predicate_name,
+                self.arity,
+                self.formula.substitute(substitution),
+                self.universal
             )
         
-        def variables_libres(self):
-            """Retourne l'ensemble des variables libres du quantificateur de prédicat."""
-            # Le nom du prédicat est lié par le quantificateur
-            return self.formule.variables_libres()
+        def free_variables(self):
+            """Returns the set of free variables of the predicate quantifier."""
+            # The predicate name is bound by the quantifier
+            return self.formula.free_variables()
         
         def __str__(self):
-            quantificateur = "∀" if self.universel else "∃"
-            return f"{quantificateur}{self.nom_predicat}^{self.arite}.{self.formule}"
+            quantifier = "∀" if self.universal else "∃"
+            return f"{quantifier}{self.predicate_name}^{self.arity}.{self.formula}"
         
-        def __eq__(self, autre):
-            if isinstance(autre, LogiqueSecondOrdre.QuantificateurPredicat):
-                return (self.nom_predicat == autre.nom_predicat and
-                        self.arite == autre.arite and
-                        self.formule == autre.formule and
-                        self.universel == autre.universel)
+        def __eq__(self, other):
+            if isinstance(other, SecondOrderLogic.PredicateQuantifier):
+                return (self.predicate_name == other.predicate_name and
+                        self.arity == other.arity and
+                        self.formula == other.formula and
+                        self.universal == other.universal)
             return False
         
         def __hash__(self):
-            return hash(("quantificateur_predicat", self.nom_predicat, self.arite, self.formule, self.universel))
+            return hash(("predicate_quantifier", self.predicate_name, self.arity, self.formula, self.universal))
     
-    class QuantificateurFonction(FormulePremierOrdre):
-        """Quantificateur sur les fonctions (logique du second ordre)."""
+    class FunctionQuantifier(FirstOrderFormula):
+        """Quantifier over functions (second-order logic)."""
         
-        def __init__(self, nom_fonction, arite, formule, universel=True):
-            self.nom_fonction = nom_fonction
-            self.arite = arite  # Nombre d'arguments de la fonction
-            self.formule = formule
-            self.universel = universel  # True pour ∀, False pour ∃
+        def __init__(self, function_name, arity, formula, universal=True):
+            self.function_name = function_name
+            self.arity = arity  # Function arity
+            self.formula = formula
+            self.universal = universal  # True for ∀, False for ∃
         
-        def evaluer(self, interpretation, domaine):
+        def evaluate(self, interpretation, domain):
             """
-            Évalue le quantificateur de fonction dans une interprétation donnée.
-            domaine: ensemble des valeurs possibles pour les variables
+            Evaluates the function quantifier in a given interpretation.
+            domain: set of possible values for variables
             """
-            # Générer toutes les fonctions possibles
-            fonctions = self._generer_fonctions(domaine)
+            # Generate all possible functions
+            functions = self._generate_functions(domain)
             
-            if self.universel:
-                # Pour toute fonction, la formule doit être vraie
-                for fonction in fonctions:
-                    nouvelle_interpretation = interpretation.copy()
-                    nouvelle_interpretation[self.nom_fonction] = fonction
+            if self.universal:
+                # For any function, the formula must be true
+                for function in functions:
+                    new_interpretation = interpretation.copy()
+                    new_interpretation[self.function_name] = function
                     
-                    if not self.formule.evaluer(nouvelle_interpretation):
+                    if not self.formula.evaluate(new_interpretation):
                         return False
                 return True
             else:
-                # Il doit exister au moins une fonction pour laquelle la formule est vraie
-                for fonction in fonctions:
-                    nouvelle_interpretation = interpretation.copy()
-                    nouvelle_interpretation[self.nom_fonction] = fonction
+                # There must exist at least one function for which the formula is true
+                for function in functions:
+                    new_interpretation = interpretation.copy()
+                    new_interpretation[self.function_name] = function
                     
-                    if self.formule.evaluer(nouvelle_interpretation):
+                    if self.formula.evaluate(new_interpretation):
                         return True
                 return False
         
-        def _generer_fonctions(self, domaine):
-            """Génère toutes les fonctions possibles avec le domaine donné."""
-            # Pour simplifier, nous limitons à un petit nombre de fonctions
-            fonctions = []
+        def _generate_functions(self, domain):
+            """Generates all possible functions with the given domain."""
+            # For simplicity, we limit to a small number of functions
+            functions = []
             
-            # Générer tous les tuples d'arguments possibles
-            arguments = list(itertools.product(domaine, repeat=self.arite))
+            # Generate all possible argument tuples
+            arguments = list(itertools.product(domain, repeat=self.arity))
             
-            # Générer quelques fonctions aléatoires
+            # Generate some random functions
             for _ in range(5):
-                fonction = {}
+                function = {}
                 for args in arguments:
-                    fonction[args] = random.choice(list(domaine))
-                fonctions.append(fonction)
+                    function[args] = random.choice(list(domain))
+                functions.append(function)
             
-            return fonctions
+            return functions
         
-        def substituer(self, substitution):
-            """Applique une substitution au quantificateur de fonction."""
-            return LogiqueSecondOrdre.QuantificateurFonction(
-                self.nom_fonction,
-                self.arite,
-                self.formule.substituer(substitution),
-                self.universel
+        def substitute(self, substitution):
+            """Applies a substitution to the function quantifier."""
+            return SecondOrderLogic.FunctionQuantifier(
+                self.function_name,
+                self.arity,
+                self.formula.substitute(substitution),
+                self.universal
             )
         
-        def variables_libres(self):
-            """Retourne l'ensemble des variables libres du quantificateur de fonction."""
-            # Le nom de la fonction est lié par le quantificateur
-            return self.formule.variables_libres()
+        def free_variables(self):
+            """Returns the set of free variables of the function quantifier."""
+            # The function name is bound by the quantifier
+            return self.formula.free_variables()
         
         def __str__(self):
-            quantificateur = "∀" if self.universel else "∃"
-            return f"{quantificateur}{self.nom_fonction}^{self.arite}.{self.formule}"
+            quantifier = "∀" if self.universal else "∃"
+            return f"{quantifier}{self.function_name}^{self.arity}.{self.formula}"
         
-        def __eq__(self, autre):
-            if isinstance(autre, LogiqueSecondOrdre.QuantificateurFonction):
-                return (self.nom_fonction == autre.nom_fonction and
-                        self.arite == autre.arite and
-                        self.formule == autre.formule and
-                        self.universel == autre.universel)
+        def __eq__(self, other):
+            if isinstance(other, SecondOrderLogic.FunctionQuantifier):
+                return (self.function_name == other.function_name and
+                        self.arity == other.arity and
+                        self.formula == other.formula and
+                        self.universal == other.universal)
             return False
         
         def __hash__(self):
-            return hash(("quantificateur_fonction", self.nom_fonction, self.arite, self.formule, self.universel))
+            return hash(("function_quantifier", self.function_name, self.arity, self.formula, self.universal))
 
 
-class VerificateurModeleLogiquePremierOrdre:
-    """Vérificateur de modèle pour la logique du premier ordre."""
+class FirstOrderModelChecker:
+    """Model checker for first-order logic."""
     
     @staticmethod
-    def verifier(formule, interpretation, domaine):
-        """Vérifie si une formule est vraie dans une interprétation donnée."""
-        if isinstance(formule, QuantificateurUniversel) or isinstance(formule, QuantificateurExistentiel):
-            return formule.evaluer(interpretation, domaine)
+    def check(formula, interpretation, domain):
+        """Checks if a formula is true in a given interpretation."""
+        if isinstance(formula, UniversalQuantifier) or isinstance(formula, ExistentialQuantifier):
+            return formula.evaluate(interpretation, domain)
         else:
-            return formule.evaluer(interpretation)
+            return formula.evaluate(interpretation)
     
     @staticmethod
-    def est_satisfaisable(formule, domaine):
-        """Vérifie si une formule est satisfaisable dans un domaine donné."""
-        # Générer toutes les interprétations possibles
-        interpretations = VerificateurModeleLogiquePremierOrdre._generer_interpretations(formule, domaine)
+    def is_satisfiable(formula, domain):
+        """Checks if a formula is satisfiable in a given domain."""
+        # Generate all possible interpretations
+        interpretations = FirstOrderModelChecker._generate_interpretations(formula, domain)
         
         for interpretation in interpretations:
-            if VerificateurModeleLogiquePremierOrdre.verifier(formule, interpretation, domaine):
+            if FirstOrderModelChecker.check(formula, interpretation, domain):
                 return True
         
         return False
     
     @staticmethod
-    def est_valide(formule, domaine):
-        """Vérifie si une formule est valide dans un domaine donné."""
-        # Une formule est valide si sa négation n'est pas satisfaisable
-        negation = NonPremierOrdre(formule)
-        return not VerificateurModeleLogiquePremierOrdre.est_satisfaisable(negation, domaine)
+    def is_valid(formula, domain):
+        """Checks if a formula is valid in a given domain."""
+        # A formula is valid if its negation is unsatisfiable
+        negation = FirstOrderNot(formula)
+        return not FirstOrderModelChecker.is_satisfiable(negation, domain)
     
     @staticmethod
-    def _generer_interpretations(formule, domaine):
-        """Génère toutes les interprétations possibles pour une formule dans un domaine."""
-        # Pour simplifier, nous générons un nombre limité d'interprétations
+    def _generate_interpretations(formula, domain):
+        """Generates all possible interpretations for a formula in a domain."""
+        # For simplicity, we generate a limited number of interpretations
         interpretations = []
         
-        # Extraire les prédicats de la formule
-        predicats = VerificateurModeleLogiquePremierOrdre._extraire_predicats(formule)
+        # Extract predicates from the formula
+        predicates = FirstOrderModelChecker._extract_predicates(formula)
         
-        # Générer quelques interprétations aléatoires
+        # Generate some random interpretations
         for _ in range(10):
             interpretation = {}
             
-            for nom, arite in predicats:
-                # Générer une extension aléatoire pour chaque prédicat
+            for name, arity in predicates:
+                # Generate a random extension for each predicate
                 extension = set()
-                tuples = list(itertools.product(domaine, repeat=arite))
+                tuples = list(itertools.product(domain, repeat=arity))
                 
-                # Ajouter aléatoirement des tuples à l'extension
+                # Randomly add tuples to the extension
                 for tup in tuples:
                     if random.random() > 0.5:
                         extension.add(tup)
                 
-                interpretation[nom] = extension
+                interpretation[name] = extension
             
             interpretations.append(interpretation)
         
         return interpretations
     
     @staticmethod
-    def _extraire_predicats(formule):
-        """Extrait les prédicats d'une formule."""
-        predicats = set()
+    def _extract_predicates(formula):
+        """Extracts predicates from a formula."""
+        predicates = set()
         
-        def parcourir(f):
-            if isinstance(f, Predicat):
-                predicats.add((f.nom, len(f.arguments)))
-            elif isinstance(f, NonPremierOrdre):
-                parcourir(f.formule)
-            elif isinstance(f, EtPremierOrdre) or isinstance(f, OuPremierOrdre) or isinstance(f, ImplicationPremierOrdre):
-                parcourir(f.gauche)
-                parcourir(f.droite)
-            elif isinstance(f, QuantificateurUniversel) or isinstance(f, QuantificateurExistentiel):
-                parcourir(f.formule)
+        def traverse(f):
+            if isinstance(f, Predicate):
+                predicates.add((f.name, len(f.arguments)))
+            elif isinstance(f, FirstOrderNot):
+                traverse(f.formula)
+            elif isinstance(f, FirstOrderAnd) or isinstance(f, FirstOrderOr) or isinstance(f, FirstOrderImplication):
+                traverse(f.left)
+                traverse(f.right)
+            elif isinstance(f, UniversalQuantifier) or isinstance(f, ExistentialQuantifier):
+                traverse(f.formula)
+            elif isinstance(f, SecondOrderLogic.PredicateQuantifier) or isinstance(f, SecondOrderLogic.FunctionQuantifier): # Added for second order
+                traverse(f.formula)
         
-        parcourir(formule)
-        return predicats
+        traverse(formula)
+        return predicates
 
 
 ##########################################
-# PARTIE 5: GESTION DES PARADOXES ET CONTRADICTIONS
+# PART 5: PARADOX AND CONTRADICTION MANAGEMENT
 ##########################################
 
-class Paradoxe:
-    """Classe pour la gestion des paradoxes logiques."""
+class Paradox:
+    """Class for managing logical paradoxes."""
     
-    def __init__(self, nom, description):
-        self.nom = nom
+    def __init__(self, name, description):
+        self.name = name
         self.description = description
     
     def __str__(self):
-        return f"Paradoxe: {self.nom}\nDescription: {self.description}"
+        return f"Paradox: {self.name}\nDescription: {self.description}"
 
 
-class ParadoxeRussell(Paradoxe):
-    """Paradoxe de Russell: l'ensemble de tous les ensembles qui ne se contiennent pas eux-mêmes."""
+class RussellParadox(Paradox):
+    """Russell's Paradox: the set of all sets that do not contain themselves."""
     
     def __init__(self):
         super().__init__(
-            "Paradoxe de Russell",
-            "Si R est l'ensemble de tous les ensembles qui ne se contiennent pas eux-mêmes, "
-            "alors R se contient-il lui-même ? Si R se contient lui-même, alors il ne devrait "
-            "pas se contenir lui-même. Si R ne se contient pas lui-même, alors il devrait se "
-            "contenir lui-même."
+            "Russell's Paradox",
+            "If R is the set of all sets that do not contain themselves, "
+            "then does R contain itself? If R contains itself, then it should "
+            "not contain itself. If R does not contain itself, then it should "
+            "contain itself."
         )
     
-    def formaliser(self):
-        """Formalise le paradoxe en logique du premier ordre."""
-        # Définir R = {x | x ∉ x}
-        # Puis poser la question: R ∈ R ?
+    def formalize(self):
+        """Formalizes the paradox in first-order logic."""
+        # Define R = {x | x ∉ x}
+        # Then ask the question: R ∈ R ?
         
-        # Ceci est une simplification, car en réalité, nous aurions besoin
-        # de la théorie des ensembles pour formaliser complètement ce paradoxe
+        # This is a simplification, because in reality, we would need
+        # set theory to fully formalize this paradox
         x = Variable("x")
         R = Variable("R")
-        appartient = lambda a, b: Predicat("appartient", [a, b])
+        belongs_to = lambda a, b: Predicate("belongs_to", [a, b])
         
-        # Définition de R
-        definition_R = QuantificateurUniversel(
+        # Definition of R
+        definition_R = UniversalQuantifier(
             x,
-            ImplicationPremierOrdre(
-                appartient(x, R),
-                NonPremierOrdre(appartient(x, x))
+            FirstOrderImplication(
+                belongs_to(x, R),
+                FirstOrderNot(belongs_to(x, x))
             )
         )
         
         # Question: R ∈ R ?
-        question = appartient(R, R)
+        question = belongs_to(R, R)
         
         return definition_R, question
     
-    def analyser(self):
-        """Analyse le paradoxe et explique pourquoi il est problématique."""
+    def analyze(self):
+        """Analyzes the paradox and explains why it is problematic."""
         return (
-            "Si R ∈ R, alors par définition de R, R ∉ R, ce qui est contradictoire.\n"
-            "Si R ∉ R, alors par définition de R, R ∈ R, ce qui est aussi contradictoire.\n"
-            "Cette contradiction montre les limites de la théorie naïve des ensembles et "
-            "a conduit à l'élaboration de la théorie des types et de la théorie axiomatique "
-            "des ensembles (comme ZFC) pour éviter de tels paradoxes."
+            "If R ∈ R, then by definition of R, R ∉ R, which is contradictory.\n"
+            "If R ∉ R, then by definition of R, R ∈ R, which is also contradictory.\n"
+            "This contradiction shows the limitations of naive set theory and "
+            "led to the development of type theory and axiomatic set theory "
+            "(like ZFC) to avoid such paradoxes."
         )
 
 
-class ParadoxeMenteur(Paradoxe):
-    """Paradoxe du menteur: 'Cette phrase est fausse'."""
+class LiarParadox(Paradox):
+    """Liar Paradox: 'This sentence is false'."""
     
     def __init__(self):
         super().__init__(
-            "Paradoxe du Menteur",
-            "Considérons la phrase: 'Cette phrase est fausse'. Si elle est vraie, "
-            "alors elle est fausse. Si elle est fausse, alors elle est vraie."
+            "Liar Paradox",
+            "Consider the sentence: 'This sentence is false'. If it is true, "
+            "then it is false. If it is false, then it is true."
         )
     
-    def formaliser(self):
-        """Tente de formaliser le paradoxe en logique modale."""
-        # Dans la logique standard, il est difficile de formaliser ce paradoxe
-        # car il implique une auto-référence
-        p = PropositionModale("p")
+    def formalize(self):
+        """Attempts to formalize the paradox in modal logic."""
+        # In standard logic, it is difficult to formalize this paradox
+        # because it involves self-reference
+        p = ModalProposition("p")
         
-        # p ↔ ¬p (p est équivalent à non-p)
-        equivalence = EtModale(
-            ImplicationModale(p, NonModale(p)),
-            ImplicationModale(NonModale(p), p)
+        # p ↔ ¬p (p is equivalent to non-p)
+        equivalence = ModalAnd(
+            ModalImplication(p, ModalNot(p)),
+            ModalImplication(ModalNot(p), p)
         )
         
         return equivalence
     
-    def analyser(self):
-        """Analyse le paradoxe et explique pourquoi il est problématique."""
+    def analyze(self):
+        """Analyzes the paradox and explains why it is problematic."""
         return (
-            "Le paradoxe du menteur implique une auto-référence qui ne peut pas être "
-            "facilement formalisée dans la logique classique. Des théories comme la "
-            "théorie des types de Tarski ou la logique paraconsistante ont été développées "
-            "pour traiter ce type de paradoxe.\n\n"
-            "Tarski a proposé une hiérarchie des langages où le prédicat de vérité pour "
-            "un langage ne peut être défini que dans un métalangage. Cela évite l'auto-référence "
-            "qui conduit au paradoxe."
+            "The Liar Paradox involves self-reference that cannot be "
+            "easily formalized in classical logic. Theories such as "
+            "Tarski's type theory or paraconsistent logic have been developed "
+            "to address this type of paradox.\n\n"
+            "Tarski proposed a hierarchy of languages where the truth predicate for "
+            "a language can only be defined in a metalanguage. This avoids the self-reference "
+            "that leads to the paradox."
         )
 
 
-class SystemeLogiqueDialetheique:
-    """Système logique dialethéique qui tolère certaines contradictions."""
+class DialetheicLogicSystem:
+    """Dialetheic logic system that tolerates certain contradictions."""
     
     def __init__(self):
-        self.faits = {}  # Dictionnaire de faits avec leur valeur de vérité
+        self.facts = {}  # Dictionary of facts with their truth value
     
-    def ajouter_fait(self, fait, valeur):
+    def add_fact(self, fact, value):
         """
-        Ajoute un fait avec sa valeur de vérité.
-        valeur: peut être True, False, ou "contradictoire"
+        Adds a fact with its truth value.
+        value: can be True, False, or "contradictory"
         """
-        self.faits[str(fait)] = valeur
+        self.facts[str(fact)] = value
         return self
     
-    def evaluer(self, formule):
-        """Évalue une formule dans le système dialethéique."""
-        if isinstance(formule, PropositionModale) or isinstance(formule, PropositionTemporelle) or isinstance(formule, Predicat):
-            # Proposition atomique
-            fait_str = str(formule)
-            if fait_str in self.faits:
-                return self.faits[fait_str]
-            return False  # Par défaut, les faits inconnus sont faux
+    def evaluate(self, formula):
+        """Evaluates a formula in the dialetheic system."""
+        if isinstance(formula, ModalProposition) or isinstance(formula, TemporalProposition) or isinstance(formula, Predicate):
+            # Atomic proposition
+            fact_str = str(formula)
+            if fact_str in self.facts:
+                return self.facts[fact_str]
+            return False  # By default, unknown facts are false
         
-        elif isinstance(formule, NonModale) or isinstance(formule, NonTemporelle) or isinstance(formule, NonPremierOrdre):
-            # Négation
-            valeur_interne = self.evaluer(formule.formule)
+        elif isinstance(formula, ModalNot) or isinstance(formula, TemporalNot) or isinstance(formula, FirstOrderNot):
+            # Negation
+            internal_value = self.evaluate(formula.formula)
             
-            if valeur_interne == "contradictoire":
-                return "contradictoire"
-            elif valeur_interne is True:
+            if internal_value == "contradictory":
+                return "contradictory"
+            elif internal_value is True:
                 return False
             else:
                 return True
         
-        elif isinstance(formule, EtModale) or isinstance(formule, EtTemporelle) or isinstance(formule, EtPremierOrdre):
-            # Conjonction
-            valeur_gauche = self.evaluer(formule.gauche)
-            valeur_droite = self.evaluer(formule.droite)
+        elif isinstance(formula, ModalAnd) or isinstance(formula, TemporalAnd) or isinstance(formula, FirstOrderAnd):
+            # Conjunction
+            left_value = self.evaluate(formula.left)
+            right_value = self.evaluate(formula.right)
             
-            if valeur_gauche == "contradictoire" or valeur_droite == "contradictoire":
-                return "contradictoire"
-            elif valeur_gauche is True and valeur_droite is True:
+            if left_value == "contradictory" or right_value == "contradictory":
+                return "contradictory"
+            elif left_value is True and right_value is True:
                 return True
             else:
                 return False
         
-        elif isinstance(formule, OuModale) or isinstance(formule, OuTemporelle) or isinstance(formule, OuPremierOrdre):
-            # Disjonction
-            valeur_gauche = self.evaluer(formule.gauche)
-            valeur_droite = self.evaluer(formule.droite)
+        elif isinstance(formula, ModalOr) or isinstance(formula, TemporalOr) or isinstance(formula, FirstOrderOr):
+            # Disjunction
+            left_value = self.evaluate(formula.left)
+            right_value = self.evaluate(formula.right)
             
-            if valeur_gauche == "contradictoire" or valeur_droite == "contradictoire":
-                return "contradictoire"
-            elif valeur_gauche is True or valeur_droite is True:
+            if left_value == "contradictory" or right_value == "contradictory":
+                return "contradictory"
+            elif left_value is True or right_value is True:
                 return True
             else:
                 return False
         
-        elif isinstance(formule, ImplicationModale) or isinstance(formule, ImplicationTemporelle) or isinstance(formule, ImplicationPremierOrdre):
+        elif isinstance(formula, ModalImplication) or isinstance(formula, TemporalImplication) or isinstance(formula, FirstOrderImplication):
             # Implication
-            valeur_antecedent = self.evaluer(formule.antecedent)
-            valeur_consequent = self.evaluer(formule.consequent)
+            antecedent_value = self.evaluate(formula.antecedent)
+            consequent_value = self.evaluate(formula.consequent)
             
-            if valeur_antecedent == "contradictoire" or valeur_consequent == "contradictoire":
-                return "contradictoire"
-            elif valeur_antecedent is False or valeur_consequent is True:
+            if antecedent_value == "contradictory" or consequent_value == "contradictory":
+                return "contradictory"
+            elif antecedent_value is False or consequent_value is True:
                 return True
             else:
                 return False
         
-        # D'autres cas pourraient être ajoutés pour d'autres types de formules
+        # Other cases could be added for other formula types
         
         return False
     
-    def est_coherent(self):
-        """Vérifie si le système est cohérent (pas de contradictions explicites)."""
-        for fait, valeur in self.faits.items():
-            if valeur == "contradictoire":
+    def is_coherent(self):
+        """Checks if the system is consistent (no explicit contradictions)."""
+        for fact, value in self.facts.items():
+            if value == "contradictory":
                 return False
             
-            # Vérifier si la négation du fait existe et a une valeur incompatible
-            for autre_fait, autre_valeur in self.faits.items():
-                if autre_fait.startswith("¬") and autre_fait[1:] == fait:
-                    if valeur is True and autre_valeur is True:
+            # Check if the negation of the fact exists and has an incompatible value
+            for other_fact, other_value in self.facts.items():
+                if other_fact.startswith("¬") and other_fact[1:] == fact:
+                    if value is True and other_value is True:
                         return False
-                    if valeur is False and autre_valeur is False:
+                    if value is False and other_value is False:
                         return False
         
         return True
     
-    def identifier_contradictions(self):
-        """Identifie les contradictions explicites dans le système."""
+    def identify_contradictions(self):
+        """Identifies explicit contradictions in the system."""
         contradictions = []
         
-        for fait, valeur in self.faits.items():
-            if valeur == "contradictoire":
-                contradictions.append(fait)
+        for fact, value in self.facts.items():
+            if value == "contradictory":
+                contradictions.append(fact)
                 continue
             
-            # Vérifier si la négation du fait existe et a une valeur incompatible
-            for autre_fait, autre_valeur in self.faits.items():
-                if autre_fait.startswith("¬") and autre_fait[1:] == fait:
-                    if valeur is True and autre_valeur is True:
-                        contradictions.append(f"{fait} et {autre_fait}")
-                    if valeur is False and autre_valeur is False:
-                        contradictions.append(f"{fait} et {autre_fait}")
+            # Check if the negation of the fact exists and has an incompatible value
+            for other_fact, other_value in self.facts.items():
+                if other_fact.startswith("¬") and other_fact[1:] == fact:
+                    if value is True and other_value is True:
+                        contradictions.append(f"{fact} and {other_fact}")
+                    if value is False and other_value is False:
+                        contradictions.append(f"{fact} and {other_fact}")
         
         return contradictions
     
-    def resoudre_contradiction(self, fait, nouvelle_valeur):
-        """Résout une contradiction en modifiant la valeur d'un fait."""
-        if fait in self.faits:
-            self.faits[fait] = nouvelle_valeur
+    def resolve_contradiction(self, fact, new_value):
+        """Resolves a contradiction by modifying the value of a fact."""
+        if fact in self.facts:
+            self.facts[fact] = new_value
         return self
 
 
-class LogiqueParaconsistante:
-    """Implémentation d'une logique paraconsistante qui tolère les contradictions sans trivialisation."""
+class ParaconsistentLogic:
+    """Implementation of a paraconsistent logic that tolerates contradictions without trivialization."""
     
-    class ValeurParaconsistante(Enum):
-        VRAI = 1
-        FAUX = 2
-        CONTRADICTOIRE = 3
-        INCONNU = 4
+    class ParaconsistentValue(Enum):
+        TRUE = 1
+        FALSE = 2
+        CONTRADICTORY = 3
+        UNKNOWN = 4
     
     def __init__(self):
-        self.valeurs = {}  # Dictionnaire des valeurs de vérité des propositions
+        self.values = {}  # Dictionary of truth values for propositions
     
-    def definir_valeur(self, proposition, valeur):
-        """Définit la valeur de vérité d'une proposition."""
-        self.valeurs[str(proposition)] = valeur
+    def set_value(self, proposition, value):
+        """Defines the truth value of a proposition."""
+        self.values[str(proposition)] = value
         return self
     
-    def evaluer(self, formule):
-        """Évalue une formule en logique paraconsistante."""
-        if isinstance(formule, PropositionModale) or isinstance(formule, PropositionTemporelle) or isinstance(formule, Predicat):
-            # Proposition atomique
-            prop_str = str(formule)
-            if prop_str in self.valeurs:
-                return self.valeurs[prop_str]
-            return self.ValeurParaconsistante.INCONNU
+    def evaluate(self, formula):
+        """Evaluates a formula in paraconsistent logic."""
+        if isinstance(formula, ModalProposition) or isinstance(formula, TemporalProposition) or isinstance(formula, Predicate):
+            # Atomic proposition
+            prop_str = str(formula)
+            if prop_str in self.values:
+                return self.values[prop_str]
+            return self.ParaconsistentValue.UNKNOWN
         
-        elif isinstance(formule, NonModale) or isinstance(formule, NonTemporelle) or isinstance(formule, NonPremierOrdre):
-            # Négation
-            valeur_interne = self.evaluer(formule.formule)
+        elif isinstance(formula, ModalNot) or isinstance(formula, TemporalNot) or isinstance(formula, FirstOrderNot):
+            # Negation
+            internal_value = self.evaluate(formula.formula)
             
-            if valeur_interne == self.ValeurParaconsistante.VRAI:
-                return self.ValeurParaconsistante.FAUX
-            elif valeur_interne == self.ValeurParaconsistante.FAUX:
-                return self.ValeurParaconsistante.VRAI
-            elif valeur_interne == self.ValeurParaconsistante.CONTRADICTOIRE:
-                return self.ValeurParaconsistante.CONTRADICTOIRE
-            else:  # INCONNU
-                return self.ValeurParaconsistante.INCONNU
+            if internal_value == self.ParaconsistentValue.TRUE:
+                return self.ParaconsistentValue.FALSE
+            elif internal_value == self.ParaconsistentValue.FALSE:
+                return self.ParaconsistentValue.TRUE
+            elif internal_value == self.ParaconsistentValue.CONTRADICTORY:
+                return self.ParaconsistentValue.CONTRADICTORY
+            else:  # UNKNOWN
+                return self.ParaconsistentValue.UNKNOWN
         
-        elif isinstance(formule, EtModale) or isinstance(formule, EtTemporelle) or isinstance(formule, EtPremierOrdre):
-            # Conjonction
-            valeur_gauche = self.evaluer(formule.gauche)
-            valeur_droite = self.evaluer(formule.droite)
+        elif isinstance(formula, ModalAnd) or isinstance(formula, TemporalAnd) or isinstance(formula, FirstOrderAnd):
+            # Conjunction
+            left_value = self.evaluate(formula.left)
+            right_value = self.evaluate(formula.right)
             
-            # Table de vérité pour la conjonction paraconsistante
-            if valeur_gauche == self.ValeurParaconsistante.FAUX or valeur_droite == self.ValeurParaconsistante.FAUX:
-                return self.ValeurParaconsistante.FAUX
-            elif valeur_gauche == self.ValeurParaconsistante.CONTRADICTOIRE or valeur_droite == self.ValeurParaconsistante.CONTRADICTOIRE:
-                return self.ValeurParaconsistante.CONTRADICTOIRE
-            elif valeur_gauche == self.ValeurParaconsistante.INCONNU or valeur_droite == self.ValeurParaconsistante.INCONNU:
-                return self.ValeurParaconsistante.INCONNU
-            else:  # Les deux sont VRAI
-                return self.ValeurParaconsistante.VRAI
+            # Truth table for paraconsistent conjunction
+            if left_value == self.ParaconsistentValue.FALSE or right_value == self.ParaconsistentValue.FALSE:
+                return self.ParaconsistentValue.FALSE
+            elif left_value == self.ParaconsistentValue.CONTRADICTORY or right_value == self.ParaconsistentValue.CONTRADICTORY:
+                return self.ParaconsistentValue.CONTRADICTORY
+            elif left_value == self.ParaconsistentValue.UNKNOWN or right_value == self.ParaconsistentValue.UNKNOWN:
+                return self.ParaconsistentValue.UNKNOWN
+            else:  # Both are TRUE
+                return self.ParaconsistentValue.TRUE
         
-        elif isinstance(formule, OuModale) or isinstance(formule, OuTemporelle) or isinstance(formule, OuPremierOrdre):
-            # Disjonction
-            valeur_gauche = self.evaluer(formule.gauche)
-            valeur_droite = self.evaluer(formule.droite)
+        elif isinstance(formula, ModalOr) or isinstance(formula, TemporalOr) or isinstance(formula, FirstOrderOr):
+            # Disjunction
+            left_value = self.evaluate(formula.left)
+            right_value = self.evaluate(formula.right)
             
-            # Table de vérité pour la disjonction paraconsistante
-            if valeur_gauche == self.ValeurParaconsistante.VRAI or valeur_droite == self.ValeurParaconsistante.VRAI:
-                return self.ValeurParaconsistante.VRAI
-            elif valeur_gauche == self.ValeurParaconsistante.CONTRADICTOIRE or valeur_droite == self.ValeurParaconsistante.CONTRADICTOIRE:
-                return self.ValeurParaconsistante.CONTRADICTOIRE
-            elif valeur_gauche == self.ValeurParaconsistante.INCONNU or valeur_droite == self.ValeurParaconsistante.INCONNU:
-                return self.ValeurParaconsistante.INCONNU
-            else:  # Les deux sont FAUX
-                return self.ValeurParaconsistante.FAUX
+            # Truth table for paraconsistent disjunction
+            if left_value == self.ParaconsistentValue.TRUE or right_value == self.ParaconsistentValue.TRUE:
+                return self.ParaconsistentValue.TRUE
+            elif left_value == self.ParaconsistentValue.CONTRADICTORY or right_value == self.ParaconsistentValue.CONTRADICTORY:
+                return self.ParaconsistentValue.CONTRADICTORY
+            elif left_value == self.ParaconsistentValue.UNKNOWN or right_value == self.ParaconsistentValue.UNKNOWN:
+                return self.ParaconsistentValue.UNKNOWN
+            else:  # Both are FALSE
+                return self.ParaconsistentValue.FALSE
         
-        elif isinstance(formule, ImplicationModale) or isinstance(formule, ImplicationTemporelle) or isinstance(formule, ImplicationPremierOrdre):
+        elif isinstance(formula, ModalImplication) or isinstance(formula, TemporalImplication) or isinstance(formula, FirstOrderImplication):
             # Implication
-            valeur_antecedent = self.evaluer(formule.antecedent)
-            valeur_consequent = self.evaluer(formule.consequent)
+            antecedent_value = self.evaluate(formula.antecedent)
+            consequent_value = self.evaluate(formula.consequent)
             
-            # Table de vérité pour l'implication paraconsistante
-            if valeur_antecedent == self.ValeurParaconsistante.FAUX:
-                return self.ValeurParaconsistante.VRAI
-            elif valeur_consequent == self.ValeurParaconsistante.VRAI:
-                return self.ValeurParaconsistante.VRAI
-            elif valeur_antecedent == self.ValeurParaconsistante.CONTRADICTOIRE or valeur_consequent == self.ValeurParaconsistante.CONTRADICTOIRE:
-                return self.ValeurParaconsistante.CONTRADICTOIRE
-            elif valeur_antecedent == self.ValeurParaconsistante.INCONNU or valeur_consequent == self.ValeurParaconsistante.INCONNU:
-                return self.ValeurParaconsistante.INCONNU
-            else:  # antecedent=VRAI et consequent=FAUX
-                return self.ValeurParaconsistante.FAUX
+            # Truth table for paraconsistent implication
+            if antecedent_value == self.ParaconsistentValue.FALSE:
+                return self.ParaconsistentValue.TRUE
+            elif consequent_value == self.ParaconsistentValue.TRUE:
+                return self.ParaconsistentValue.TRUE
+            elif antecedent_value == self.ParaconsistentValue.CONTRADICTORY or consequent_value == self.ParaconsistentValue.CONTRADICTORY:
+                return self.ParaconsistentValue.CONTRADICTORY
+            elif antecedent_value == self.ParaconsistentValue.UNKNOWN or consequent_value == self.ParaconsistentValue.UNKNOWN:
+                return self.ParaconsistentValue.UNKNOWN
+            else:  # antecedent=TRUE and consequent=FALSE
+                return self.ParaconsistentValue.FALSE
         
-        # D'autres cas pour d'autres types de formules
+        # Other cases for other formula types
         
-        return self.ValeurParaconsistante.INCONNU
+        return self.ParaconsistentValue.UNKNOWN
     
-    def est_valide(self, formule):
-        """Vérifie si une formule est valide en logique paraconsistante."""
-        return self.evaluer(formule) == self.ValeurParaconsistante.VRAI
+    def is_valid(self, formula):
+        """Checks if a formula is valid in paraconsistent logic."""
+        return self.evaluate(formula) == self.ParaconsistentValue.TRUE
     
-    def est_contradictoire(self, formule):
-        """Vérifie si une formule est contradictoire en logique paraconsistante."""
-        return self.evaluer(formule) == self.ValeurParaconsistante.CONTRADICTOIRE
+    def is_contradictory(self, formula):
+        """Checks if a formula is contradictory in paraconsistent logic."""
+        return self.evaluate(formula) == self.ParaconsistentValue.CONTRADICTORY
 
 
-class TheorieDeLaRevision:
-    """Implémentation de la théorie de la révision des croyances."""
+class BeliefRevisionTheory:
+    """Implementation of belief revision theory."""
     
     def __init__(self):
-        self.croyances = set()  # Ensemble des croyances actuelles
+        self.beliefs = set()  # Set of current beliefs
     
-    def ajouter_croyance(self, croyance):
-        """Ajoute une croyance à l'ensemble des croyances."""
-        self.croyances.add(str(croyance))
+    def add_belief(self, belief):
+        """Adds a belief to the set of beliefs."""
+        self.beliefs.add(str(belief))
         return self
     
-    def reviser(self, nouvelle_croyance):
+    def revise(self, new_belief):
         """
-        Révise l'ensemble des croyances avec une nouvelle croyance.
-        La révision consiste à incorporer la nouvelle croyance tout en
-        préservant la cohérence de l'ensemble.
+        Revises the set of beliefs with a new belief.
+        Revision consists of incorporating the new belief while
+        preserving the consistency of the set.
         """
-        # Pour simplifier, nous implémentons une version naïve de la révision
-        # où l'on supprime les croyances contradictoires avec la nouvelle croyance
+        # For simplicity, we implement a naive version of revision
+        # where beliefs contradictory to the new belief are removed
         
-        # Vérifier si la nouvelle croyance est compatible avec les croyances existantes
-        croyances_incompatibles = set()
-        for croyance in self.croyances:
-            if self._sont_contradictoires(croyance, str(nouvelle_croyance)):
-                croyances_incompatibles.add(croyance)
+        # Check if the new belief is compatible with existing beliefs
+        incompatible_beliefs = set()
+        for belief in self.beliefs:
+            if self._are_contradictory(belief, str(new_belief)): # Changed method name
+                incompatible_beliefs.add(belief)
         
-        # Supprimer les croyances incompatibles
-        self.croyances -= croyances_incompatibles
+        # Remove incompatible beliefs
+        self.beliefs -= incompatible_beliefs
         
-        # Ajouter la nouvelle croyance
-        self.croyances.add(str(nouvelle_croyance))
-        
-        return self
-    
-    def contracter(self, croyance_a_retirer):
-        """
-        Contracte l'ensemble des croyances en retirant une croyance.
-        La contraction consiste à retirer une croyance sans ajouter de nouvelles informations.
-        """
-        # Retirer la croyance
-        if str(croyance_a_retirer) in self.croyances:
-            self.croyances.remove(str(croyance_a_retirer))
+        # Add the new belief
+        self.beliefs.add(str(new_belief))
         
         return self
     
-    def _sont_contradictoires(self, croyance1, croyance2):
-        """Vérifie si deux croyances sont contradictoires."""
-        # Pour simplifier, nous considérons que deux croyances sont contradictoires
-        # si l'une est la négation de l'autre
-        return (croyance1.startswith("¬") and croyance1[1:] == croyance2) or (croyance2.startswith("¬") and croyance2[1:] == croyance1)
+    def contract(self, belief_to_remove):
+        """
+        Contracts the set of beliefs by removing a belief.
+        Contraction consists of removing a belief without adding new information.
+        """
+        # Remove the belief
+        if str(belief_to_remove) in self.beliefs:
+            self.beliefs.remove(str(belief_to_remove))
+        
+        return self
     
-    def est_coherent(self):
-        """Vérifie si l'ensemble des croyances est cohérent."""
-        for c1 in self.croyances:
-            for c2 in self.croyances:
-                if self._sont_contradictoires(c1, c2):
+    def _are_contradictory(self, belief1, belief2): # Changed method name
+        """Checks if two beliefs are contradictory."""
+        # For simplicity, we consider two beliefs contradictory
+        # if one is the negation of the other
+        return (belief1.startswith("¬") and belief1[1:] == belief2) or (belief2.startswith("¬") and belief2[1:] == belief1)
+    
+    def is_consistent(self):
+        """Checks if the set of beliefs is consistent."""
+        for c1 in self.beliefs:
+            for c2 in self.beliefs:
+                if self._are_contradictory(c1, c2):
                     return False
         return True
     
     def __str__(self):
-        return "Croyances: {" + ", ".join(self.croyances) + "}"
+        return "Beliefs: {" + ", ".join(self.beliefs) + "}"
 
 
-def end_method():
-    """Méthode finale pour marquer la fin du module."""
-    print("Module de Logique Formelle Avancée et Non-Classique chargé avec succès.")
+def end_module(): # Renamed function
+    """Final method to mark the end of the module."""
+    print("Advanced and Non-Classical Formal Logic Module loaded successfully.")
     return True
 
-# Fin du module
-end_method()
+# End of module
+end_module()
