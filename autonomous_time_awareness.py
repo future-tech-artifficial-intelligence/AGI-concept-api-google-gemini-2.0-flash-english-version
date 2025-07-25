@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class AutonomousTimeAwareness:
     """
-    Class to manage the autonomous time awareness of the AI.
+    Class to manage the autonomous time awareness of the artificial intelligence API GOOGLE GEMINI 2.0 FLASH.
     """
     
     def __init__(self, default_timezone: str = "Europe/Paris"):
