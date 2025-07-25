@@ -7,12 +7,12 @@ import direct_file_access as dfa
 
 class AILearningSystem:
     """**System allowing artificial intelligence API GOOGLE GEMINI 2.0 FLASH to learn autonomously from project files.**
-This system uses direct file access to enhance the capabilities of artificial intelligence API GOOGLE GEMINI 2.0 FLASH; 
-thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0 FLASH can learn autonomously by conducting searches. 
+This system uses direct file access to enhance the capabilities of artificial intelligence API GOOGLE GEMINI 2.0 FLASH;
+thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0 FLASH can learn autonomously by conducting searches.
     """
-    
+
     def __init__(self):
-        """Initialise le système d'apprentissage autonome."""
+        """Initializes the autonomous learning system."""
         self.base_path = Path(os.getcwd())
         self.learning_memory_file = self.base_path / "ai_learning_memory.json"
         self.learning_memory = self._load_learning_memory()
@@ -24,9 +24,9 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
             "configuration": 3,
             "project_structure": 3
         }
-        
+
     def _load_learning_memory(self) -> Dict[str, Any]:
-        """Charge la mémoire d'apprentissage."""
+        """Loads the learning memory."""
         if self.learning_memory_file.exists():
             try:
                 with open(self.learning_memory_file, 'r', encoding='utf-8') as f:
@@ -34,9 +34,9 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
             except json.JSONDecodeError:
                 return self._create_default_memory()
         return self._create_default_memory()
-    
+
     def _create_default_memory(self) -> Dict[str, Any]:
-        """Crée une structure de mémoire d'apprentissage par défaut."""
+        """Creates a default learning memory structure."""
         return {
             "learned_files": {},
             "knowledge_areas": {
@@ -50,73 +50,73 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
             "learning_sessions": [],
             "last_learning_time": 0
         }
-    
+
     def _save_learning_memory(self) -> None:
-        """Sauvegarde la mémoire d'apprentissage."""
+        """Saves the learning memory."""
         with open(self.learning_memory_file, 'w', encoding='utf-8') as f:
             json.dump(self.learning_memory, f, indent=2)
-    
+
     def classify_file_content(self, file_path: str, content: str) -> List[str]:
         """
-        Classifie le contenu d'un fichier dans différentes catégories de connaissances.
-        
+        Classifies the content of a file into different knowledge categories.
+
         Args:
-            file_path: Chemin du fichier
-            content: Contenu du fichier
-            
+            file_path: File path
+            content: File content
+
         Returns:
-            Liste des catégories de connaissances associées au fichier
+            List of knowledge categories associated with the file
         """
         categories = []
         file_ext = Path(file_path).suffix.lower()
-        
-        # Classification basée sur l'extension
+
+        # Classification based on extension
         if file_ext in ['.py', '.js', '.cpp', '.java', '.go']:
             categories.append("code_examples")
-            
-            # Analyse plus détaillée du contenu
+
+            # More detailed content analysis
             if "class " in content and "def " in content:
                 categories.append("data_structures")
-            
-            if any(algo in content.lower() for algo in ["sort", "search", "algorithm", "optimize", 
+
+            if any(algo in content.lower() for algo in ["sort", "search", "algorithm", "optimize",
                                                        "recursive", "iteration"]):
                 categories.append("algorithms")
-        
-        # Fichiers de documentation
+
+        # Documentation files
         if file_ext in ['.md', '.rst', '.txt'] or "readme" in file_path.lower():
             categories.append("documentation")
-            
-        # Fichiers de configuration
+
+        # Configuration files
         if file_ext in ['.json', '.yml', '.yaml', '.ini', '.cfg', '.conf', '.toml']:
             categories.append("configuration")
-            
-        # Détection de la structure du projet
+
+        # Project structure detection
         if any(term in file_path.lower() for term in ["setup", "main", "init", "config", "structure"]):
             categories.append("project_structure")
-            
+
         return categories
-    
+
     def learn_from_file(self, file_path: str) -> Dict[str, Any]:
         """
-        Apprend à partir du contenu d'un fichier.
-        
+        Learns from the content of a file.
+
         Args:
-            file_path: Chemin du fichier à apprendre
+            file_path: Path of the file to learn from
             
         Returns:
-            Résultats de l'apprentissage
+            Learning results
         """
         content = dfa.read_file_content(file_path)
-        if content.startswith("Erreur:"):
+        if content.startswith("Error:"): # Translated "Erreur:" to "Error:"
             return {"success": False, "message": content}
-        
-        # Classifier le contenu
+
+        # Classify content
         categories = self.classify_file_content(file_path, content)
-        
-        # Analyser et mémoriser le contenu
+
+        # Analyze and memorize content
         insights = self._extract_insights(file_path, content, categories)
-        
-        # Mettre à jour la mémoire d'apprentissage
+
+        # Update learning memory
         if file_path not in self.learning_memory["learned_files"]:
             self.learning_memory["learned_files"][file_path] = {
                 "categories": categories,
@@ -129,33 +129,33 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
             self.learning_memory["learned_files"][file_path]["last_learned"] = time.time()
             self.learning_memory["learned_files"][file_path]["learn_count"] += 1
             self.learning_memory["learned_files"][file_path]["insights"] = insights
-        
-        # Mettre à jour les domaines de connaissances
+
+        # Update knowledge areas
         for category in categories:
             if category in self.learning_memory["knowledge_areas"]:
                 if file_path not in self.learning_memory["knowledge_areas"][category]:
                     self.learning_memory["knowledge_areas"][category].append(file_path)
-        
+
         self._save_learning_memory()
-        
+
         return {
             "success": True,
             "file_path": file_path,
             "categories": categories,
             "insights": insights
         }
-    
+
     def _extract_insights(self, file_path: str, content: str, categories: List[str]) -> Dict[str, Any]:
         """
-        Extrait des informations pertinentes du contenu d'un fichier.
-        
+        Extracts relevant information from a file's content.
+
         Args:
-            file_path: Chemin du fichier
-            content: Contenu du fichier
-            categories: Catégories associées au fichier
-            
+            file_path: File path
+            content: File content
+            categories: Categories associated with the file
+
         Returns:
-            Informations extraites
+            Extracted insights
         """
         insights = {
             "summary": "",
@@ -163,13 +163,13 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
             "code_patterns": [],
             "dependencies": []
         }
-        
-        # Générer un résumé en fonction du type de fichier
+
+        # Generate a summary based on file type
         file_size = len(content)
         file_ext = Path(file_path).suffix.lower()
         lines = content.split('\n')
-        
-        # Résumé simple basé sur les premières lignes non vides
+
+        # Simple summary based on the first non-empty lines
         summary_lines = []
         for line in lines[:20]:
             stripped = line.strip()
@@ -177,15 +177,15 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
                 summary_lines.append(stripped)
                 if len(summary_lines) >= 3:
                     break
-                    
+
         insights["summary"] = " ".join(summary_lines)
-        
-        # Identifier les concepts clés
+
+        # Identify key concepts
         key_concepts = set()
-        
-        # Pour les fichiers Python
+
+        # For Python files
         if file_ext == '.py':
-            # Identifier les classes et fonctions
+            # Identify classes and functions
             for line in lines:
                 if line.strip().startswith("def "):
                     fn_name = line.strip()[4:].split('(')[0]
@@ -193,16 +193,16 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
                 elif line.strip().startswith("class "):
                     class_name = line.strip()[6:].split('(')[0].split(':')[0]
                     key_concepts.add(f"class:{class_name}")
-            
-            # Identifier les imports
+
+            # Identify imports
             for line in lines:
                 if line.strip().startswith("import ") or line.strip().startswith("from "):
                     module = line.strip().split()[1]
                     insights["dependencies"].append(module)
-        
-        insights["key_concepts"] = list(key_concepts)[:10]  # Limiter à 10 concepts
-        
-        # Identifier des patterns de code courants
+
+        insights["key_concepts"] = list(key_concepts)[:10]  # Limit to 10 concepts
+
+        # Identify common code patterns
         if "code_examples" in categories:
             if "if __name__ == \"__main__\":" in content:
                 insights["code_patterns"].append("main_guard")
@@ -214,81 +214,81 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
                 insights["code_patterns"].append("function_with_return")
             if "with " in content:
                 insights["code_patterns"].append("context_manager")
-        
+
         return insights
-    
+
     def execute_learning_session(self, focus_area: Optional[str] = None, max_files: int = 5) -> Dict[str, Any]:
         """
-        Exécute une session d'apprentissage autonome.
-        
+        Executes an autonomous learning session.
+
         Args:
-            focus_area: Domaine de connaissances à privilégier
-            max_files: Nombre maximum de fichiers à analyser
-            
+            focus_area: Knowledge area to prioritize
+            max_files: Maximum number of files to analyze
+
         Returns:
-            Résultats de la session d'apprentissage
+            Learning session results
         """
         session_start = time.time()
         files = dfa.scan_project_files()
-        
-        # Filtrer les fichiers déjà appris récemment (moins de 24h)
+
+        # Filter recently learned files (less than 24h)
         recent_cutoff = time.time() - (24 * 3600)
         learned_recently = {
             file_path for file_path, info in self.learning_memory["learned_files"].items()
             if info["last_learned"] > recent_cutoff
         }
-        
+
         candidate_files = [file for file in files if file not in learned_recently]
-        
-        # Si un domaine de focus est spécifié, privilégier les fichiers de ce domaine
+
+        # If a focus area is specified, prioritize files from that area
         if focus_area and focus_area in self.learning_memory["knowledge_areas"]:
-            # Compléter avec des fichiers du domaine de focus s'ils n'ont pas été appris récemment
+            # Supplement with files from the focus area if they haven't been learned recently
             focus_files = [
                 file for file in self.learning_memory["knowledge_areas"][focus_area]
                 if file not in learned_recently and file in files
             ]
-            
-            # Ajouter d'autres fichiers pour atteindre max_files
+
+            # Add other files to reach max_files
             if len(focus_files) < max_files:
                 remaining_files = [file for file in candidate_files if file not in focus_files]
                 focus_files.extend(remaining_files[:max_files - len(focus_files)])
-                
+
             files_to_learn = focus_files[:max_files]
         else:
-            # Sélectionner des fichiers à apprendre
+            # Select files to learn
             files_to_learn = candidate_files[:max_files]
-        
-        # Apprendre de chaque fichier
+
+        # Learn from each file
         learning_results = []
         for file_path in files_to_learn:
             result = self.learn_from_file(file_path)
             learning_results.append(result)
-        
-        # Enregistrer la session d'apprentissage
+
+        # Record the learning session
         session = {
             "timestamp": session_start,
             "duration": time.time() - session_start,
             "focus_area": focus_area,
             "files_learned": [result["file_path"] for result in learning_results if result["success"]],
-            "insights_gained": sum(len(result.get("insights", {}).get("key_concepts", [])) 
+            "insights_gained": sum(len(result.get("insights", {}).get("key_concepts", []))
                                   for result in learning_results if result["success"])
         }
-        
+
         self.learning_memory["learning_sessions"].append(session)
         self.learning_memory["last_learning_time"] = time.time()
         self._save_learning_memory()
-        
+
         return {
             "session": session,
             "results": learning_results
         }
-    
+
     def get_knowledge_summary(self) -> Dict[str, Any]:
         """
-        Génère un résumé des connaissances acquises par l'IA.
-        
+        Generates a summary of the knowledge acquired by the AI.
+
         Returns:
-            Résumé des connaissances
+            Knowledge summary
         """
         summary = {
             "files_learned": len(self.learning_memory["learned_files"]),
@@ -297,12 +297,12 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
             "total_sessions": len(self.learning_memory["learning_sessions"]),
             "top_insights": []
         }
-        
-        # Résumer les domaines de connaissances
+
+        # Summarize knowledge areas
         for area, files in self.learning_memory["knowledge_areas"].items():
             summary["knowledge_areas"][area] = len(files)
-            
-        # Identifier les concepts clés les plus fréquents
+
+        # Identify the most frequent key concepts
         concept_frequency = {}
         for file_info in self.learning_memory["learned_files"].values():
             if "insights" in file_info and "key_concepts" in file_info["insights"]:
@@ -311,67 +311,67 @@ thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0
                         concept_frequency[concept] += 1
                     else:
                         concept_frequency[concept] = 1
-        
-        # Trier les concepts par fréquence
+
+        # Sort concepts by frequency
         sorted_concepts = sorted(concept_frequency.items(), key=lambda x: x[1], reverse=True)
-        summary["top_insights"] = sorted_concepts[:10]  # Top 10 des concepts
-        
+        summary["top_insights"] = sorted_concepts[:10]  # Top 10 concepts
+
         return summary
-    
+
     def suggest_learning_focus(self) -> str:
         """
-        Suggère un domaine de connaissances à privilégier pour la prochaine session.
-        
+        Suggests a knowledge area to prioritize for the next session.
+
         Returns:
-            Domaine de connaissances recommandé
+            Recommended knowledge area
         """
-        # Analyser la distribution des connaissances
+        # Analyze knowledge distribution
         area_counts = {area: len(files) for area, files in self.learning_memory["knowledge_areas"].items()}
-        
-        # Calculer un score pour chaque domaine basé sur la priorité et le nombre de fichiers appris
+
+        # Calculate a score for each area based on priority and number of files learned
         scores = {}
         for area, priority in self.learning_priorities.items():
             count = area_counts.get(area, 0)
-            # Formule: plus la priorité est élevée et moins il y a de fichiers, plus le score est élevé
+            # Formula: higher priority and fewer files lead to a higher score
             scores[area] = priority * (1 + 1/(count + 1))
-        
-        # Identifier le domaine avec le score le plus élevé
+
+        # Identify the area with the highest score
         if scores:
             return max(scores.items(), key=lambda x: x[1])[0]
         else:
-            return "code_examples"  # Valeur par défaut
+            return "code_examples"  # Default value
 
-# Interface principale pour l'IA
+# Main interface for the AI
 ai_learning = AILearningSystem()
 
 def start_learning_session(focus_area=None, max_files=5):
-    """Démarre une session d'apprentissage autonome."""
+    """Starts an autonomous learning session."""
     return ai_learning.execute_learning_session(focus_area, max_files)
 
 def learn_specific_file(file_path):
-    """Apprend à partir d'un fichier spécifique."""
+    """Learns from a specific file."""
     return ai_learning.learn_from_file(file_path)
 
 def get_learning_summary():
-    """Obtient un résumé des connaissances acquises."""
+    """Gets a summary of acquired knowledge."""
     return ai_learning.get_knowledge_summary()
 
 def get_suggested_focus():
-    """Suggère un domaine de connaissances à privilégier."""
+    """Suggests a knowledge area to prioritize."""
     return ai_learning.suggest_learning_focus()
 
 if __name__ == "__main__":
-    # Test du système d'apprentissage
-    print("Démarrage d'une session d'apprentissage autonome...")
+    # Test the learning system
+    print("Starting an autonomous learning session...")
     session = start_learning_session(max_files=3)
-    
-    print(f"Session terminée. {len(session['results'])} fichiers analysés.")
-    
-    print("\nRésumé des connaissances:")
+
+    print(f"Session completed. {len(session['results'])} files analyzed.")
+
+    print("\nKnowledge summary:")
     summary = get_learning_summary()
-    print(f"Fichiers appris: {summary['files_learned']}")
-    print("Domaines de connaissances:")
+    print(f"Files learned: {summary['files_learned']}")
+    print("Knowledge areas:")
     for area, count in summary['knowledge_areas'].items():
-        print(f"- {area}: {count} fichiers")
-        
-    print(f"\nDomaine de focus recommandé: {get_suggested_focus()}")
+        print(f"- {area}: {count} files")
+
+    print(f"\nRecommended focus area: {get_suggested_focus()}")
