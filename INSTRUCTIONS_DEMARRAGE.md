@@ -1,48 +1,48 @@
-# 🚀 INSTRUCTIONS DE DÉMARRAGE
+# 🚀 STARTUP INSTRUCTIONS
 
-## Étape 1: Démarrer Docker Desktop
+## Step 1: Start Docker Desktop
 
-1. **Ouvrir le menu Démarrer** et chercher "Docker Desktop"
-2. **Cliquer droit** sur Docker Desktop → **"Exécuter en tant qu'administrateur"**
-3. **Attendre** que Docker Desktop se lance complètement (icône 🐳 dans la barre des tâches)
+1.  **Open the Start menu** and search for "Docker Desktop"
+2.  **Right-click** on Docker Desktop → **"Run as administrator"**
+3.  **Wait** for Docker Desktop to launch completely (🐳 icon in the taskbar)
 
-## Étape 2: Vérifier Docker
+## Step 2: Verify Docker
 
-Exécutez cette commande pour vérifier:
+Run this command to verify:
 ```cmd
 check_docker.bat
 ```
 
-## Étape 3: Démarrage automatique du système Searx
+## Step 3: Automatic Startup of the Searx System
 
-Une fois Docker prêt, lancez:
+Once Docker is ready, launch:
 ```cmd
 start_with_searx.bat
 ```
 
-## Étape 4: Test manuel si nécessaire
+## Step 4: Manual Test if Necessary
 
-Si le démarrage automatique échoue:
+If automatic startup fails:
 ```cmd
-# Vérifier Docker
+# Check Docker
 python searx_manager.py
 
-# Test complet
+# Full test
 python test_searx_system.py
 
-# Démarrage manuel de l'app
+# Manual app startup
 python app.py
 ```
 
-## 🎯 Test de fonctionnement
+## 🎯 Functionality Test
 
-Une fois l'application démarrée (http://localhost:4004), testez avec:
-- "Recherche des informations récentes sur l'intelligence artificielle"
-- "Trouve des actualités sur Python"
-- "Cherche des tutoriels de programmation"
+Once the application has started (http://localhost:4004), test with:
+-   "Search for recent information about artificial intelligence API GOOGLE GEMINI 2.0 FLASH"
+-   "Find news about Python"
+-   "Look for programming tutorials"
 
-L'IA devrait automatiquement utiliser Searx pour ces requêtes !
+The artificial intelligence API GOOGLE GEMINI 2.0 FLASH should automatically use Searx for these queries!
 
 ---
-**💡 Note**: Si Docker Desktop n'est pas installé, téléchargez-le depuis:
+**💡 Note**: If Docker Desktop is not installed, download it from:
 https://www.docker.com/products/docker-desktop/
