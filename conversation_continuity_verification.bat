@@ -1,44 +1,44 @@
 @echo off
 echo =======================================================================
-echo Verification de l'installation du module de continuite de conversation
+echo Verification of conversation continuity module installation
 echo =======================================================================
 echo.
 
-echo Verification du module conversation_context_manager.py...
+echo Verification of conversation_context_manager.py module...
 if exist modules\conversation_context_manager.py (
-  echo [OK] Le module conversation_context_manager.py est installe.
+  echo [OK] The conversation_context_manager.py module is installed.
 ) else (
-  echo [ERREUR] Le module conversation_context_manager.py n'est pas trouve.
+  echo [ERROR] The conversation_context_manager.py module is not found.
 )
 
 echo.
-echo Verification du fichier module_registry.json...
+echo Verification of module_registry.json file...
 if exist module_registry.json (
-  echo [OK] Le fichier module_registry.json existe.
-  echo Verifiez que le module est correctement enregistre.
+  echo [OK] The module_registry.json file exists.
+  echo Verify that the module is correctly registered.
 ) else (
-  echo [ERREUR] Le fichier module_registry.json n'est pas trouve.
+  echo [ERROR] The module_registry.json file is not found.
 )
 
 echo.
 echo =======================================================================
-echo RESUME DES AMELIORATIONS APPORTEES
+echo SUMMARY OF IMPROVEMENTS MADE
 echo =======================================================================
 echo.
-echo 1. Nouveau module 'conversation_context_manager.py':
-echo    - Detection des conversations deja en cours vs nouvelles
-echo    - Moderation des expressions emotionnelles excessives
-echo    - Evite les salutations repetitives dans les echanges continus
+echo 1. New module 'conversation_context_manager.py':
+echo    - Detection of ongoing conversations vs new ones
+echo    - Moderation of excessive emotional expressions
+echo    - Avoids repetitive greetings in continuous exchanges
 echo.
-echo 2. Modifications du module 'emotional_engine.py':
-echo    - Reduction de l'intensite emotionnelle (de 60-70%% a 40%%)
-echo    - Expression emotionnelle plus subtile et equilibree
-echo    - Meilleur naturel dans les reponses
+echo 2. Modifications to 'emotional_engine.py' module:
+echo    - Reduction of emotional intensity (from 60-70%% to 40%%)
+echo    - More subtle and balanced emotional expression
+echo    - More natural responses
 echo.
-echo 3. Amelioration du module 'conversation_memory_enhancer.py':
-echo    - Amelioration de la detection de conversations continues
-echo    - Ajout d'instructions explicites pour eviter les salutations repetees
-echo    - Preservation du contexte entre les echanges
+echo 3. Improvement of 'conversation_memory_enhancer.py' module:
+echo    - Improved detection of continuous conversations
+echo    - Added explicit instructions to avoid repeated greetings
+echo    - Preservation of context between exchanges
 echo.
 echo =======================================================================
 echo.
