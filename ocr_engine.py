@@ -7,52 +7,53 @@ from datetime import datetime
 import re
 from typing import Dict, Any, List, Tuple, Optional
 
-# Configuration de Tesseract OCR (chemin vers l'exécutable Tesseract)
-# À modifier selon l'installation sur votre système
+# Tesseract OCR configuration allows artificial intelligence API GOOGLE GEMINI 2.0 FLASH to
+# better analyze ancient manuscripts in Latin, for example, or documents requiring high precision like old historical documents (path to Tesseract executable)
+# To be modified according to your system installation
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 class OCRProcessor:
-    """Classe pour gérer le traitement OCR des images"""
+    """Class to manage OCR processing of images"""
     
-    def __init__(self, language: str = 'fra'):
+    def __init__(self, language: str = 'eng'): # Changed default language to English for consistency
         """
-        Initialise le processeur OCR
+        Initializes the OCR processor
         
         Args:
-            language (str): Code de langue pour Tesseract (fra=français, eng=anglais)
+            language (str): Language code for Tesseract (fra=French, eng=English)
         """
         self.language = language
         self.supported_formats = ['.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.gif']
     
     def _check_image_format(self, image_path: str) -> bool:
-        """Vérifie si le format de l'image est supporté"""
+        """Checks if the image format is supported"""
         _, ext = os.path.splitext(image_path.lower())
         return ext in self.supported_formats
     
     def _preprocess_image(self, image: np.ndarray) -> np.ndarray:
         """
-        Prétraitement de l'image pour améliorer la précision de l'OCR
+        Image preprocessing to improve OCR accuracy
         
         Args:
-            image: Image au format numpy array
+            image: Image in numpy array format
             
         Returns:
-            Image prétraitée
+            Preprocessed image
         """
-        # Conversion en niveaux de gris si l'image est en couleur
+        # Convert to grayscale if the image is in color
         if len(image.shape) == 3:
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         else:
             gray = image
             
-        # Appliquer un seuillage adaptatif pour améliorer le contraste
+        # Apply adaptive thresholding to improve contrast
         # thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
         #                              cv2.THRESH_BINARY, 11, 2)
         
-        # Réduction du bruit
+        # Noise reduction
         denoised = cv2.fastNlMeansDenoising(gray, None, 10, 7, 21)
         
-        # Amélioration des bords
+        # Edge enhancement
         kernel = np.ones((1, 1), np.uint8)
         dilated = cv2.dilate(denoised, kernel, iterations=1)
         eroded = cv2.erode(dilated, kernel, iterations=1)
@@ -61,13 +62,13 @@ class OCRProcessor:
     
     def extract_text_from_image(self, image_path: str) -> Dict[str, Any]:
         """
-        Extrait le texte d'une image en utilisant OCR
+        Extracts text from an image using OCR
         
         Args:
-            image_path: Chemin vers l'image
+            image_path: Path to the image
             
         Returns:
-            Dictionnaire contenant le texte extrait et les métadonnées
+            Dictionary containing the extracted text and metadata
         """
         result = {
             "success": False,
@@ -79,71 +80,71 @@ class OCRProcessor:
         }
         
         try:
-            # Vérifier le format de l'image
+            # Check image format
             if not self._check_image_format(image_path):
-                result["error"] = f"Format d'image non supporté. Formats acceptés: {', '.join(self.supported_formats)}"
+                result["error"] = f"Unsupported image format. Accepted formats: {', '.join(self.supported_formats)}"
                 return result
                 
-            # Vérifier si le fichier existe
+            # Check if the file exists
             if not os.path.exists(image_path):
-                result["error"] = "Le fichier image n'existe pas"
+                result["error"] = "The image file does not exist"
                 return result
                 
-            # Charger l'image avec OpenCV
+            # Load image with OpenCV
             image = cv2.imread(image_path)
             if image is None:
-                result["error"] = "Impossible de charger l'image"
+                result["error"] = "Unable to load image"
                 return result
                 
-            # Prétraiter l'image
+            # Preprocess the image
             processed_image = self._preprocess_image(image)
             
-            # Effectuer l'OCR
+            # Perform OCR
             ocr_data = pytesseract.image_to_data(
                 processed_image, 
                 lang=self.language,
                 output_type=pytesseract.Output.DICT
             )
             
-            # Extraire le texte et les scores de confiance
+            # Extract text and confidence scores
             text_parts = []
             total_confidence = 0
             word_count = 0
             
             for i in range(len(ocr_data["text"])):
-                if int(ocr_data["conf"][i]) > 0:  # Ignorer les entrées avec confiance nulle
+                if int(ocr_data["conf"][i]) > 0:  # Ignore entries with zero confidence
                     word = ocr_data["text"][i].strip()
                     if word:
                         text_parts.append(word)
                         total_confidence += int(ocr_data["conf"][i])
                         word_count += 1
             
-            # Assembler le texte complet
+            # Assemble full text
             full_text = " ".join(text_parts)
             
-            # Calculer la confiance moyenne
+            # Calculate average confidence
             avg_confidence = total_confidence / word_count if word_count > 0 else 0
             
-            # Préparer le résultat
+            # Prepare the result
             result["success"] = True
             result["text"] = full_text
             result["confidence"] = avg_confidence
             result["word_count"] = word_count
             
         except Exception as e:
-            result["error"] = f"Erreur lors de l'OCR: {str(e)}"
+            result["error"] = f"Error during OCR: {str(e)}"
             
         return result
     
     def analyze_text_content(self, ocr_result: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Analyse le contenu du texte extrait pour en tirer des informations structurées
+        Analyzes the extracted text content to derive structured information
         
         Args:
-            ocr_result: Résultat de l'extraction OCR
+            ocr_result: OCR extraction result
             
         Returns:
-            Dictionnaire avec l'analyse du contenu
+            Dictionary with content analysis
         """
         analysis = {
             "type": "unknown",
@@ -157,47 +158,47 @@ class OCRProcessor:
             
         text = ocr_result["text"]
         
-        # Détection du type de document
-        if re.search(r'facture|reçu|paiement|total', text, re.IGNORECASE):
-            analysis["type"] = "document_financier"
+        # Document type detection
+        if re.search(r'invoice|receipt|payment|total', text, re.IGNORECASE):
+            analysis["type"] = "financial_document"
             
-            # Extraction de montants
-            amounts = re.findall(r'\d+[,\.]\d+\s*€|\d+[,\.]\d+\s*EUR|\d+\s*€|\d+\s*EUR', text)
+            # Amount extraction
+            amounts = re.findall(r'\d+[,\.]\d+\s*€|\d+[,\.]\d+\s*EUR|\d+\s*€|\d+\s*EUR|\$\s*\d+[,\.]\d+|\d+[,\.]\d+\s*\$', text)
             if amounts:
-                analysis["key_information"]["montants"] = amounts
+                analysis["key_information"]["amounts"] = amounts
                 
-            # Extraction de dates
-            dates = re.findall(r'\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{1,2}\s(?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s\d{4}', text)
+            # Date extraction
+            dates = re.findall(r'\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{1,2}\s(?:January|February|March|April|May|June|July|August|September|October|November|December)\s\d{4}', text, re.IGNORECASE)
             if dates:
                 analysis["key_information"]["dates"] = dates
                 
-        elif re.search(r'carte d\'identité|passeport|permis|conduire', text, re.IGNORECASE):
-            analysis["type"] = "document_identité"
+        elif re.search(r'identity card|passport|driver\'s license|driving', text, re.IGNORECASE):
+            analysis["type"] = "identity_document"
             
-            # Extraction de noms
-            names = re.findall(r'nom\s*:\s*([^\n\r]+)|prénom\s*:\s*([^\n\r]+)', text, re.IGNORECASE)
+            # Name extraction
+            names = re.findall(r'name\s*:\s*([^\n\r]+)|first name\s*:\s*([^\n\r]+)', text, re.IGNORECASE)
             if names:
-                analysis["key_information"]["noms"] = [n[0] or n[1] for n in names if n[0] or n[1]]
+                analysis["key_information"]["names"] = [n[0] or n[1] for n in names if n[0] or n[1]]
                 
-        elif re.search(r'article|nouvelles|journal|reportage', text, re.IGNORECASE):
+        elif re.search(r'article|news|journal|report', text, re.IGNORECASE):
             analysis["type"] = "article"
             
-            # Extraire un titre potentiel (première ligne)
+            # Extract a potential title (first line)
             lines = text.split('\n')
             if lines and len(lines[0]) > 5:
-                analysis["key_information"]["titre"] = lines[0]
+                analysis["key_information"]["title"] = lines[0]
                 
-        # Extraction de mots-clés (mots qui apparaissent fréquemment)
+        # Keyword extraction (frequently appearing words)
         words = re.findall(r'\b\w{4,}\b', text.lower())
         word_freq = {}
         for word in words:
             word_freq[word] = word_freq.get(word, 0) + 1
             
-        # Obtenir les top 5 mots les plus fréquents comme mots-clés
+        # Get the top 5 most frequent words as keywords
         sorted_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
         analysis["keywords"] = [word for word, _ in sorted_words[:5]]
         
-        # Générer un résumé simple (premiers 100 caractères ou première phrase)
+        # Generate a simple summary (first 100 characters or first sentence)
         first_sentence = re.split(r'[.!?]', text)[0].strip()
         analysis["summary"] = first_sentence[:100] + ("..." if len(first_sentence) > 100 else "")
         
@@ -205,37 +206,37 @@ class OCRProcessor:
 
 def process_image_request(request_text: str) -> Tuple[bool, Optional[str]]:
     """
-    Analyse une demande utilisateur pour détecter s'il s'agit d'une demande d'OCR
+    Analyzes a user request to detect if it is an OCR request
     
     Args:
-        request_text: Texte de la demande de l'utilisateur
+        request_text: User request text
         
     Returns:
-        (is_ocr_request, image_path): Indique si c'est une requête OCR et le chemin de l'image
+        (is_ocr_request, image_path): Indicates if it's an OCR request and the image path
     """
-    # Motifs pour détecter une demande d'OCR
+    # Patterns to detect an OCR request
     ocr_patterns = [
-        r'analyse[rz]?\s+cette\s+image',
-        r'analyse[rz]?\s+l[\'e]\s*image',
-        r'extraire\s+(?:du|le)\s+texte\s+(?:de|depuis|dans)\s+(?:cette|l[\'e])\s+image',
-        r'OCR\s+(?:sur|de|pour)\s+(?:cette|l[\'e])\s+image',
-        r'lis\s+(?:cette|l[\'e])\s+image',
-        r'que\s+(?:dit|contient)\s+(?:cette|l[\'e])\s+image',
-        r'texte\s+(?:dans|sur|de)\s+(?:cette|l[\'e])\s+image'
+        r'analyze\s+this\s+image',
+        r'analyze\s+the\s+image',
+        r'extract\s+(?:text)\s+(?:from|in)\s+(?:this|the)\s+image',
+        r'OCR\s+(?:on|for)\s+(?:this|the)\s+image',
+        r'read\s+(?:this|the)\s+image',
+        r'what\s+(?:does|is|says)\s+(?:this|the)\s+image\s+(?:say|contain)',
+        r'text\s+(?:in|on|from)\s+(?:this|the)\s+image'
     ]
     
-    # Motifs pour extraire le chemin de l'image
+    # Patterns to extract the image path
     path_patterns = [
-        r'(?:image|photo|fichier|document)\s+(?:à|a|dans|de|:)\s+[\'"]?([^\'"\s]+\.(jpg|jpeg|png|bmp|tiff|gif))[\'"]?',
+        r'(?:image|photo|file|document)\s+(?:at|in|of|:)\s+[\'"]?([^\'"\s]+\.(jpg|jpeg|png|bmp|tiff|gif))[\'"]?',
         r'[\'"]([^\'"\s]+\.(jpg|jpeg|png|bmp|tiff|gif))[\'"]',
         r'([a-zA-Z]:\\[^\\/:*?"<>|\r\n]+\.(jpg|jpeg|png|bmp|tiff|gif))',
         r'(/[^\\/:*?"<>|\r\n]+\.(jpg|jpeg|png|bmp|tiff|gif))'
     ]
     
-    # Vérifier si la demande correspond à une demande d'OCR
+    # Check if the request matches an OCR request
     is_ocr_request = any(re.search(pattern, request_text, re.IGNORECASE) for pattern in ocr_patterns)
     
-    # Si c'est une demande d'OCR, essayer d'extraire le chemin de l'image
+    # If it's an OCR request, try to extract the image path
     image_path = None
     if is_ocr_request:
         for pattern in path_patterns:
