@@ -1,38 +1,38 @@
-# Améliorations pour l'Analyse d'Images Astronomiques
+**Improvements for Astronomical Image Analysis**
 
-## Problèmes identifiés
+## Identified Issues
 
-1. **Descriptions répétitives** : L'IA commence systématiquement ses analyses d'images astronomiques par "L'image montre une carte du ciel nocturne avec plusieurs constellations..." sans tenir compte des spécificités de chaque image.
+1.  **Repetitive descriptions**: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH systematically begins its astronomical image analyses with "The image shows a map of the night sky with several constellations..." without considering the specificities of each image.
 
-2. **Manque de variété** : Les descriptions des cartes célestes sont trop similaires d'une image à l'autre, ce qui rend les conversations monotones.
+2.  **Lack of variety**: Descriptions of celestial maps are too similar from one image to another, which makes conversations monotonous.
 
-3. **Ignorance du contexte de la question** : L'IA donne une description générale au lieu de se focaliser sur l'élément spécifique mentionné dans la question de l'utilisateur.
+3.  **Ignorance of question context**: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH provides a general description instead of focusing on the specific element mentioned in the user's question.
 
-## Solutions implémentées
+## Implemented Solutions
 
-### 1. Module `gemini_api.py`
+### 1. `gemini_api.py` Module
 
-- Ajout d'instructions spécifiques pour les images astronomiques dans le prompt système
-- Instructions pour éviter les formulations répétitives
-- Directives pour se concentrer sur les éléments spécifiques et uniques de chaque image
-- Exigence d'adapter la réponse à la question posée
+*   Added specific instructions for astronomical images to the system prompt.
+*   Instructions to avoid repetitive phrasing.
+*   Directives to focus on specific and unique elements of each image.
+*   Requirement to adapt the response to the question asked.
 
 ```python
-IMAGES ASTRONOMIQUES: Pour les images de cartes célestes, constellations ou ciel nocturne:
-1. ÉVITE ABSOLUMENT les formulations répétitives du type "L'image montre une carte du ciel nocturne avec plusieurs constellations..."
-2. Concentre-toi sur les ÉLÉMENTS SPÉCIFIQUES de CETTE image particulière (constellations précises, planètes, position de la lune, etc.)
-3. Adapte ta réponse à la QUESTION POSÉE plutôt que de faire une description générique
-4. Mentionne les caractéristiques uniques ou intéressantes de l'image (alignements particuliers, phénomènes visibles, etc.)
-5. Utilise tes connaissances en astronomie pour donner des explications pertinentes et variées
+ASTRO IMAGES: For images of celestial maps, constellations, or the night sky:
+1. ABSOLUTELY AVOID repetitive phrasing such as "The image shows a map of the night sky with several constellations..."
+2. Focus on the SPECIFIC ELEMENTS of THIS particular image (precise constellations, planets, moon position, etc.)
+3. Adapt your response to the QUESTION ASKED rather than providing a generic description
+4. Mention the unique or interesting characteristics of the image (particular alignments, visible phenomena, etc.)
+5. Use your astronomical knowledge to provide relevant and varied explanations
 ```
 
-### 2. Module `conversation_context_manager.py`
+### 2. `conversation_context_manager.py` Module
 
-- Ajout de patterns de détection spécifiques pour les réponses d'analyse d'images astronomiques
-- Amélioration de la fonction `detect_image_analysis` pour mieux identifier les contenus astronomiques
+*   Added specific detection patterns for astronomical image analysis responses.
+*   Improved the `detect_image_analysis` function to better identify astronomical content.
 
 ```python
-# Mots-clés spécifiques aux images astronomiques
+# Keywords specific to astronomical images
 astro_keywords = [
     r"(?i)(constellation[s]? (de|du|des))",
     r"(?i)(carte (du|céleste|du ciel))",
@@ -43,13 +43,13 @@ astro_keywords = [
 ]
 ```
 
-### 3. Module `emotional_engine.py`
+### 3. `emotional_engine.py` Module
 
-- Amélioration de la fonction `is_image_analysis_request` pour mieux détecter les requêtes d'analyse d'images basées sur le contexte
-- Ajout de mots-clés pour identifier les demandes d'analyse d'image
+*   Improved the `is_image_analysis_request` function to better detect image analysis requests based on context.
+*   Added keywords to identify image analysis requests.
 
 ```python
-# Vérifier les mots-clés dans la requête qui suggèrent l'analyse d'une image
+# Check for keywords in the request that suggest image analysis
 if 'message' in request_data and isinstance(request_data['message'], str):
     image_request_keywords = [
         r"(?i)(analyse[r]? (cette|l'|l'|une|des|la) image)",
@@ -60,16 +60,16 @@ if 'message' in request_data and isinstance(request_data['message'], str):
     ]
 ```
 
-## Résultats attendus
+## Expected Results
 
-- Les analyses d'images astronomiques seront désormais plus variées et personnalisées
-- L'IA se concentrera sur les éléments spécifiques mentionnés dans la question de l'utilisateur
-- Chaque image recevra une analyse unique adaptée à son contenu réel
-- Les conversations seront plus naturelles et interactives
+*   Astronomical image analyses will now be more varied and personalized.
+*   The artificial intelligence API GOOGLE GEMINI 2.0 FLASH will focus on specific elements mentioned in the user's question.
+*   Each image will receive a unique analysis adapted to its actual content.
+*   Conversations will be more natural and interactive.
 
 ## Tests
 
-Pour vérifier que les modifications sont efficaces:
-1. Présenter plusieurs images astronomiques différentes à l'IA
-2. Vérifier que les descriptions ne sont pas répétitives
-3. Poser des questions spécifiques sur certains éléments pour tester si l'IA adapte sa réponse
+To verify that the modifications are effective:
+1.  Present several different astronomical images to the artificial intelligence API GOOGLE GEMINI 2.0 FLASH.
+2.  Verify that the descriptions are not repetitive.
+3.  Ask specific questions about certain elements to test if the artificial intelligence API GOOGLE GEMINI 2.0 FLASH adapts its response.
