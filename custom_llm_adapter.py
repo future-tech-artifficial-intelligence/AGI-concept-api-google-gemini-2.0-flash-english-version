@@ -1,6 +1,6 @@
 """
-Implémentation de l'interface AIApiInterface pour un LLM personnalisé.
-Ce module permet d'intégrer un LLM personnalisé défini par l'utilisateur via une API.
+**Implementation of the AIApiInterface for a Custom LLM.**
+This module allows integrating a user-defined custom LLM via an API.
 """
 import requests
 import json
