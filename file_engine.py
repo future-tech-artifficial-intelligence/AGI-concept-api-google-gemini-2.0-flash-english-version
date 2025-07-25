@@ -9,19 +9,19 @@ import sqlite3
 from datetime import datetime, timedelta
 import json
 
-# Bibliothèques pour l'extraction de texte
+# Libraries for text extraction
 import PyPDF2
-# Correction de l'importation du module python-docx
+# Correction of python-docx module import
 try:
-    import docx  # Le nom du module importé est 'docx', pas 'python_docx'
+    import docx  # The imported module name is 'docx', not 'python_docx'
 except ImportError:
-    # Fallback si le module n'est pas disponible
+    # Fallback if the module is not available
     docx = None
 import csv
 try:
     import pandas as pd
 except ImportError:
-    # Fallback si pandas n'est pas disponible
+    # Fallback if pandas is not available
     pd = None
 import chardet
 
@@ -34,17 +34,17 @@ ALLOWED_EXTENSIONS = {
     'pdf', 'doc', 'docx', 'txt', 'csv', 'xls', 'xlsx',
     'json', 'html', 'xml', 'md', 'rtf'
 }
-FILE_RETENTION_DAYS = 7  # Durée de conservation des fichiers
+FILE_RETENTION_DAYS = 7  # File retention duration
 
-# Créer le dossier d'upload s'il n'existe pas
+# Create the upload folder if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def init_file_db():
-    """Initialise la table de fichiers dans la base de données"""
+    """Initializes the files table in the database"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
-    # Création de la table de fichiers
+
+    # Creation of the files table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS uploaded_files (
         id INTEGER PRIMARY KEY,
@@ -62,35 +62,35 @@ def init_file_db():
         FOREIGN KEY (user_id) REFERENCES users (id)
     )
     ''')
-    
+
     conn.commit()
     conn.close()
 
 def allowed_file(filename: str) -> bool:
-    """Vérifie si l'extension du fichier est autorisée"""
+    """Checks if the file extension is allowed"""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def generate_safe_filename(original_filename: str) -> str:
-    """Génère un nom de fichier sécurisé et unique"""
-    # Prendre l'extension du fichier original
+    """Generates a safe and unique filename"""
+    # Get the original file extension
     if '.' in original_filename:
         ext = original_filename.rsplit('.', 1)[1].lower()
     else:
         ext = ''
-    
-    # Générer un identifiant unique
+
+    # Generate a unique identifier
     unique_id = str(uuid.uuid4())
-    
-    # Créer le nouveau nom de fichier
+
+    # Create the new filename
     if ext:
         return f"{unique_id}.{ext}"
     else:
         return unique_id
 
 def get_file_type(file_path: str) -> str:
-    """Détermine le type de fichier en fonction de l'extension"""
+    """Determines the file type based on the extension"""
     ext = os.path.splitext(file_path)[1].lower()
-    
+
     file_types = {
         '.pdf': 'PDF',
         '.doc': 'Word',
@@ -105,11 +105,11 @@ def get_file_type(file_path: str) -> str:
         '.md': 'Markdown',
         '.rtf': 'Rich Text'
     }
-    
+
     return file_types.get(ext, 'Unknown')
 
 def extract_text_from_pdf(file_path: str) -> str:
-    """Extrait le texte d'un fichier PDF"""
+    """Extracts text from a PDF file"""
     text = ""
     try:
         with open(file_path, 'rb') as file:
@@ -117,54 +117,54 @@ def extract_text_from_pdf(file_path: str) -> str:
             for page_num in range(len(pdf_reader.pages)):
                 text += pdf_reader.pages[page_num].extract_text() + "\n"
     except Exception as e:
-        text = f"Erreur lors de l'extraction du texte du PDF: {str(e)}"
-    
+        text = f"Error extracting text from PDF: {str(e)}"
+
     return text
 
 def extract_text_from_docx(file_path: str) -> str:
-    """Extrait le texte d'un fichier Word (docx)"""
+    """Extracts text from a Word file (docx)"""
     text = ""
     try:
         if docx is not None:
-            # Utiliser le module docx s'il est disponible
+            # Use the docx module if available
             doc = docx.Document(file_path)
             for para in doc.paragraphs:
                 text += para.text + "\n"
         else:
-            # Message alternatif si le module n'est pas disponible
-            text = "Contenu du document Word (extraction indisponible). Pour analyser ce document, installez python-docx avec la commande 'pip install python-docx'."
+            # Alternative message if the module is not available
+            text = "Word document content (extraction unavailable). To analyze this document, install python-docx with the command 'pip install python-docx'."
     except Exception as e:
-        text = f"Erreur lors de l'extraction du texte du document Word: {str(e)}"
-    
+        text = f"Error extracting text from Word document: {str(e)}"
+
     return text
 
 def extract_text_from_txt(file_path: str) -> str:
-    """Extrait le texte d'un fichier texte, avec détection de l'encodage"""
+    """Extracts text from a text file, with encoding detection"""
     try:
-        # Détecter l'encodage du fichier
+        # Detect file encoding
         with open(file_path, 'rb') as file:
             raw_data = file.read()
             result = chardet.detect(raw_data)
             encoding = result['encoding'] if result['encoding'] else 'utf-8'
-        
-        # Lire le fichier avec l'encodage détecté
+
+        # Read the file with the detected encoding
         with open(file_path, 'r', encoding=encoding, errors='replace') as file:
             text = file.read()
-        
+
         return text
     except Exception as e:
-        return f"Erreur lors de l'extraction du texte: {str(e)}"
+        return f"Error extracting text: {str(e)}"
 
 def extract_text_from_csv(file_path: str) -> str:
-    """Extrait le texte d'un fichier CSV"""
+    """Extracs text from a CSV file"""
     try:
-        # Détecter l'encodage
+        # Detect encoding
         with open(file_path, 'rb') as file:
-            raw_data = file.read(4096)  # Lire un échantillon pour la détection
+            raw_data = file.read(4096)  # Read a sample for detection
             result = chardet.detect(raw_data)
             encoding = result['encoding'] if result['encoding'] else 'utf-8'
-        
-        # Essayer de déterminer le délimiteur
+
+        # Try to determine the delimiter
         sniffer = csv.Sniffer()
         with open(file_path, 'r', encoding=encoding, errors='replace') as file:
             sample = file.read(4096)
@@ -172,58 +172,60 @@ def extract_text_from_csv(file_path: str) -> str:
                 dialect = sniffer.sniff(sample)
                 delimiter = dialect.delimiter
             except:
-                delimiter = ','  # Par défaut, utiliser une virgule
-        
-        # Lire le CSV
+                delimiter = ','  # Default to a comma
+
+        # Read the CSV
         text = ""
         with open(file_path, 'r', encoding=encoding, errors='replace') as file:
             reader = csv.reader(file, delimiter=delimiter)
             for row in reader:
                 text += " | ".join(row) + "\n"
-        
-        # Pour les fichiers volumineux, limiter le texte extrait
+
+        # For large files, limit extracted text
         if len(text) > 50000:
-            text = text[:50000] + "...\n[Contenu tronqué pour raisons de taille]"
-            
+            text = text[:50000] + "...\n[Content truncated for size reasons]"
+
         return text
     except Exception as e:
-        return f"Erreur lors de l'extraction du texte CSV: {str(e)}"
+        return f"Error extracting CSV text: {str(e)}"
 
 def extract_text_from_excel(file_path: str) -> str:
-    """Extrait le texte d'un fichier Excel"""
+    """Extracts text from an Excel file"""
     try:
         if pd is not None:
-            # Utiliser pandas s'il est disponible
+            # Use pandas if available
             df_dict = pd.read_excel(file_path, sheet_name=None)
             text = ""
-            
+
             for sheet_name, df in df_dict.items():
-                text += f"Feuille: {sheet_name}\n"
+                text += f"Sheet: {sheet_name}\n"
                 sheet_text = df.to_string(index=False)
-                
-                # Pour les grands tableaux, limiter la taille
+
+                # For large tables, limit size
                 if len(sheet_text) > 25000:
-                    sheet_text = sheet_text[:25000] + "...\n[Contenu de la feuille tronqué]"
-                    
+                    sheet_text = sheet_text[:25000] + "...\n[Sheet content truncated]"
+
                 text += sheet_text + "\n\n"
-                
-            # Limiter la taille totale
+
+            # Limit total size
             if len(text) > 50000:
-                text = text[:50000] + "...\n[Contenu global tronqué]"
+                text = text[:50000] + "...\n[Overall content truncated]"
         else:
-            text = "Contenu du fichier Excel (extraction indisponible). Pour analyser ce document, installez pandas et openpyxl avec la commande 'pip install pandas openpyxl'."
-        
+            text = "Excel file content (extraction unavailable). To analyze this document, install pandas and openpyxl with the command 'pip install pandas openpyxl'."
+
         return text
     except Exception as e:
-        return f"Erreur lors de l'extraction du texte Excel: {str(e)}"
+        text = f"Error extracting Excel text: {str(e)}"
+
+    return text
 
 def extract_text_from_file(file_path: str) -> str:
     """
-    Extrait le texte d'un fichier en fonction de son type
+    Extracts text from a file based on its type
     """
     file_extension = os.path.splitext(file_path)[1].lower()
-    
-    # Dispatch vers la fonction d'extraction appropriée
+
+    # Dispatch to the appropriate extraction function
     if file_extension == '.pdf':
         return extract_text_from_pdf(file_path)
     elif file_extension == '.docx':
@@ -235,62 +237,62 @@ def extract_text_from_file(file_path: str) -> str:
     elif file_extension in ['.xls', '.xlsx']:
         return extract_text_from_excel(file_path)
     else:
-        return f"Type de fichier non pris en charge pour l'extraction de texte: {file_extension}"
+        return f"File type not supported for text extraction: {file_extension}"
 
 def generate_content_summary(text: str, max_length: int = 500) -> str:
     """
-    Génère un résumé du contenu du fichier
+    Generates a summary of the file content
     """
     if not text or len(text.strip()) == 0:
-        return "Aucun contenu textuel détecté."
-    
-    # Prendre les premières lignes non vides
+        return "No textual content detected."
+
+    # Take the first non-empty lines
     lines = [line.strip() for line in text.split('\n') if line.strip()]
     summary = ""
-    
+
     for line in lines:
         if len(summary) + len(line) <= max_length:
             summary += line + "\n"
         else:
             remaining = max_length - len(summary)
-            if remaining > 3:  # Au moins assez pour "..."
+            if remaining > 3:  # At least enough for "..."
                 summary += line[:remaining-3] + "..."
             break
-            
-    return summary or "Contenu non analysable."
+
+    return summary or "Unanalyzable content."
 
 def store_file(user_id: int, file, original_filename: str) -> Dict:
     """
-    Stocke un fichier téléchargé et l'enregistre en base de données
+    Stores an uploaded file and saves it to the database
     """
-    # Générer un nom de fichier sûr
+    # Generate a safe filename
     stored_filename = generate_safe_filename(original_filename)
     file_path = os.path.join(UPLOAD_FOLDER, stored_filename)
-    
-    # Sauvegarder le fichier
+
+    # Save the file
     file.save(file_path)
-    
-    # Obtenir la taille du fichier
+
+    # Get file size
     file_size = os.path.getsize(file_path)
-    
-    # Déterminer le type de fichier
+
+    # Determine file type
     file_type = get_file_type(original_filename)
-    
-    # Extraire le texte
+
+    # Extract text
     extracted_text = extract_text_from_file(file_path)
-    
-    # Générer un résumé du contenu
+
+    # Generate content summary
     content_summary = generate_content_summary(extracted_text)
-    
-    # Calculer la date d'expiration
+
+    # Calculate expiration date
     expiry_date = (datetime.now() + timedelta(days=FILE_RETENTION_DAYS)).strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Stocker les informations dans la base de données
+
+    # Store information in the database
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
+
     cursor.execute('''
-    INSERT INTO uploaded_files 
+    INSERT INTO uploaded_files
     (user_id, original_filename, stored_filename, file_path, file_type, file_size, content_summary, extracted_text, expiry_date)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
@@ -304,12 +306,12 @@ def store_file(user_id: int, file, original_filename: str) -> Dict:
         extracted_text,
         expiry_date
     ))
-    
+
     file_id = cursor.lastrowid
     conn.commit()
     conn.close()
-    
-    # Renvoyer les informations du fichier
+
+    # Return file information
     return {
         'id': file_id,
         'original_filename': original_filename,
@@ -320,30 +322,30 @@ def store_file(user_id: int, file, original_filename: str) -> Dict:
 
 def get_file_info(file_id: int) -> Optional[Dict]:
     """
-    Récupère les informations d'un fichier
+    Retrieves file information
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
+
     cursor.execute('''
-    SELECT id, user_id, original_filename, file_path, file_type, file_size, 
+    SELECT id, user_id, original_filename, file_path, file_type, file_size,
            content_summary, extracted_text, upload_date, expiry_date
-    FROM uploaded_files 
+    FROM uploaded_files
     WHERE id = ?
     ''', (file_id,))
-    
+
     file_info = cursor.fetchone()
-    
+
     if file_info:
-        # Mettre à jour la date de dernier accès
+        # Update last accessed date
         cursor.execute('''
-        UPDATE uploaded_files 
+        UPDATE uploaded_files
         SET last_accessed = CURRENT_TIMESTAMP
         WHERE id = ?
         ''', (file_id,))
         conn.commit()
-        
-        # Formater les informations
+
+        # Format information
         info = {
             'id': file_info[0],
             'user_id': file_info[1],
@@ -358,27 +360,27 @@ def get_file_info(file_id: int) -> Optional[Dict]:
         }
         conn.close()
         return info
-    
+
     conn.close()
     return None
 
 def get_user_files(user_id: int) -> List[Dict]:
     """
-    Récupère la liste des fichiers d'un utilisateur
+    Retrieves the list of files for a user
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
+
     cursor.execute('''
     SELECT id, original_filename, file_type, file_size, content_summary, upload_date
-    FROM uploaded_files 
+    FROM uploaded_files
     WHERE user_id = ?
     ORDER BY upload_date DESC
     ''', (user_id,))
-    
+
     files = cursor.fetchall()
     conn.close()
-    
+
     file_list = []
     for file in files:
         file_list.append({
@@ -389,45 +391,45 @@ def get_user_files(user_id: int) -> List[Dict]:
             'content_summary': file[4],
             'upload_date': file[5]
         })
-    
+
     return file_list
 
 def cleanup_expired_files():
     """
-    Nettoie les fichiers expirés
+    Cleans up expired files
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
-    # Trouver les fichiers expirés
+
+    # Find expired files
     cursor.execute('''
     SELECT id, file_path
-    FROM uploaded_files 
+    FROM uploaded_files
     WHERE expiry_date < CURRENT_TIMESTAMP
     ''')
-    
+
     expired_files = cursor.fetchall()
-    
+
     for file_id, file_path in expired_files:
-        # Supprimer le fichier
+        # Delete the file
         try:
             if os.path.exists(file_path):
                 os.remove(file_path)
         except Exception as e:
-            print(f"Erreur lors de la suppression du fichier {file_path}: {e}")
-        
-        # Supprimer l'entrée de la base de données
+            print(f"Error deleting file {file_path}: {e}")
+
+        # Delete the entry from the database
         cursor.execute('''
-        DELETE FROM uploaded_files 
+        DELETE FROM uploaded_files
         WHERE id = ?
         ''', (file_id,))
-    
+
     conn.commit()
     conn.close()
 
 def get_file_extension_icon(file_type: str) -> str:
     """
-    Renvoie l'icône Font Awesome correspondant au type de fichier
+    Returns the Font Awesome icon corresponding to the file type
     """
     icons = {
         'PDF': 'fa-file-pdf',
@@ -441,16 +443,16 @@ def get_file_extension_icon(file_type: str) -> str:
         'Markdown': 'fa-file-alt',
         'Rich Text': 'fa-file-alt'
     }
-    
+
     return icons.get(file_type, 'fa-file')
 
 def format_file_size(size_bytes: int) -> str:
     """
-    Formate la taille d'un fichier en KB, MB, etc.
+    Formats file size in KB, MB, etc.
     """
     if size_bytes < 1024:
-        return f"{size_bytes} octets"
+        return f"{size_bytes} bytes"
     elif size_bytes < 1024 * 1024:
-        return f"{size_bytes / 1024:.1f} Ko"
+        return f"{size_bytes / 1024:.1f} KB"
     else:
-        return f"{size_bytes / (1024 * 1024):.1f} Mo"
+        return f"{size_bytes / (1024 * 1024):.1f} MB"
