@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script de Maintenance - Système de Navigation Interactive Gemini
-Valide, maintient et optimise le système complet
+Maintenance Script - Google Gemini 2.0 Flash AI Interactive Navigation System
+Validates, maintains, and optimizes the complete system
 """
 
 import os
@@ -15,7 +15,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -27,7 +27,7 @@ logging.basicConfig(
 logger = logging.getLogger('InteractiveNavigationMaintenance')
 
 class InteractiveNavigationMaintainer:
-    """Système de maintenance pour la navigation interactive"""
+    """Maintenance system for interactive navigation"""
     
     def __init__(self):
         self.project_root = Path(__file__).parent
@@ -36,7 +36,7 @@ class InteractiveNavigationMaintainer:
         self.fixes_applied = []
         self.start_time = datetime.now()
         
-        # Fichiers critiques du système
+        # Critical system files
         self.critical_files = [
             'interactive_web_navigator.py',
             'gemini_interactive_adapter.py',
@@ -46,7 +46,7 @@ class InteractiveNavigationMaintainer:
             'GUIDE_NAVIGATION_INTERACTIVE.md'
         ]
         
-        # Dépendances requises
+        # Required dependencies
         self.required_packages = [
             'google-generativeai',
             'selenium',
@@ -59,10 +59,10 @@ class InteractiveNavigationMaintainer:
             'flask-cors'
         ]
         
-        logger.info("🔧 Système de maintenance initialisé")
+        logger.info("🔧 Maintenance system initialized")
         
     def log_action(self, action: str, status: str, details: str = ""):
-        """Enregistre une action de maintenance"""
+        """Logs a maintenance action"""
         entry = {
             'timestamp': datetime.now().isoformat(),
             'action': action,
@@ -80,8 +80,8 @@ class InteractiveNavigationMaintainer:
             logger.error(f"❌ {action}: {details}")
             
     def check_file_integrity(self) -> bool:
-        """Vérifie l'intégrité des fichiers critiques"""
-        self.log_action("INTEGRITY_CHECK", "INFO", "Vérification de l'intégrité des fichiers")
+        """Checks the integrity of critical files"""
+        self.log_action("INTEGRITY_CHECK", "INFO", "Checking file integrity")
         
         all_files_ok = True
         
@@ -89,54 +89,54 @@ class InteractiveNavigationMaintainer:
             full_path = self.project_root / file_path
             
             if not full_path.exists():
-                self.log_action("FILE_MISSING", "ERROR", f"Fichier manquant: {file_path}")
-                self.issues_found.append(f"Fichier manquant: {file_path}")
+                self.log_action("FILE_MISSING", "ERROR", f"Missing file: {file_path}")
+                self.issues_found.append(f"Missing file: {file_path}")
                 all_files_ok = False
                 continue
                 
-            # Vérification de la taille (fichier non vide)
+            # Check size (non-empty file)
             if full_path.stat().st_size == 0:
-                self.log_action("FILE_EMPTY", "ERROR", f"Fichier vide: {file_path}")
-                self.issues_found.append(f"Fichier vide: {file_path}")
+                self.log_action("FILE_EMPTY", "ERROR", f"Empty file: {file_path}")
+                self.issues_found.append(f"Empty file: {file_path}")
                 all_files_ok = False
                 continue
                 
-            # Vérification de la syntaxe Python
+            # Check Python syntax
             if file_path.endswith('.py'):
                 try:
                     with open(full_path, 'r', encoding='utf-8') as f:
                         compile(f.read(), file_path, 'exec')
-                    self.log_action("SYNTAX_CHECK", "SUCCESS", f"Syntaxe valide: {file_path}")
+                    self.log_action("SYNTAX_CHECK", "SUCCESS", f"Valid syntax: {file_path}")
                 except SyntaxError as e:
-                    self.log_action("SYNTAX_ERROR", "ERROR", f"Erreur syntaxe {file_path}: {e}")
-                    self.issues_found.append(f"Erreur syntaxe {file_path}: {e}")
+                    self.log_action("SYNTAX_ERROR", "ERROR", f"Syntax error {file_path}: {e}")
+                    self.issues_found.append(f"Syntax error {file_path}: {e}")
                     all_files_ok = False
                     
         return all_files_ok
         
     def check_dependencies(self) -> bool:
-        """Vérifie les dépendances Python"""
-        self.log_action("DEPENDENCY_CHECK", "INFO", "Vérification des dépendances")
+        """Checks Python dependencies"""
+        self.log_action("DEPENDENCY_CHECK", "INFO", "Checking dependencies")
         
         missing_packages = []
         
         for package in self.required_packages:
             try:
                 __import__(package.replace('-', '_'))
-                self.log_action("PACKAGE_OK", "SUCCESS", f"Package disponible: {package}")
+                self.log_action("PACKAGE_OK", "SUCCESS", f"Package available: {package}")
             except ImportError:
-                self.log_action("PACKAGE_MISSING", "WARNING", f"Package manquant: {package}")
+                self.log_action("PACKAGE_MISSING", "WARNING", f"Missing package: {package}")
                 missing_packages.append(package)
                 
         if missing_packages:
-            self.issues_found.append(f"Packages manquants: {', '.join(missing_packages)}")
+            self.issues_found.append(f"Missing packages: {', '.join(missing_packages)}")
             return False
             
         return True
         
     def check_configuration(self) -> bool:
-        """Vérifie les fichiers de configuration"""
-        self.log_action("CONFIG_CHECK", "INFO", "Vérification de la configuration")
+        """Checks configuration files"""
+        self.log_action("CONFIG_CHECK", "INFO", "Checking configuration")
         
         config_files = [
             '.env',
@@ -150,60 +150,60 @@ class InteractiveNavigationMaintainer:
             config_path = self.project_root / config_file
             
             if not config_path.exists():
-                self.log_action("CONFIG_MISSING", "WARNING", f"Configuration manquante: {config_file}")
+                self.log_action("CONFIG_MISSING", "WARNING", f"Missing configuration: {config_file}")
                 continue
                 
-            # Vérification spécifique selon le type
+            # Specific verification based on type
             if config_file.endswith('.json'):
                 try:
                     with open(config_path, 'r', encoding='utf-8') as f:
                         json.load(f)
-                    self.log_action("CONFIG_VALID", "SUCCESS", f"Configuration valide: {config_file}")
+                    self.log_action("CONFIG_VALID", "SUCCESS", f"Valid configuration: {config_file}")
                 except json.JSONDecodeError as e:
-                    self.log_action("CONFIG_INVALID", "ERROR", f"JSON invalide {config_file}: {e}")
-                    self.issues_found.append(f"JSON invalide {config_file}: {e}")
+                    self.log_action("CONFIG_INVALID", "ERROR", f"Invalid JSON {config_file}: {e}")
+                    self.issues_found.append(f"Invalid JSON {config_file}: {e}")
                     config_ok = False
                     
             elif config_file == '.env':
-                # Vérification de la clé API
+                # API key verification
                 with open(config_path, 'r', encoding='utf-8') as f:
                     env_content = f.read()
                     
                 if 'GEMINI_API_KEY' not in env_content:
-                    self.log_action("API_KEY_MISSING", "WARNING", "Clé API Gemini non configurée")
-                elif 'votre_cle_api_ici' in env_content:
-                    self.log_action("API_KEY_PLACEHOLDER", "WARNING", "Clé API Gemini non modifiée")
+                    self.log_action("API_KEY_MISSING", "WARNING", "Google Gemini 2.0 Flash AI API Key not configured")
+                elif 'your_api_key_here' in env_content: # Assuming placeholder text
+                    self.log_action("API_KEY_PLACEHOLDER", "WARNING", "Google Gemini 2.0 Flash AI API Key not changed")
                 else:
-                    self.log_action("API_KEY_OK", "SUCCESS", "Clé API Gemini configurée")
+                    self.log_action("API_KEY_OK", "SUCCESS", "Google Gemini 2.0 Flash AI API Key configured")
                     
         return config_ok
         
     def check_disk_space(self) -> bool:
-        """Vérifie l'espace disque disponible"""
-        self.log_action("DISK_CHECK", "INFO", "Vérification de l'espace disque")
+        """Checks available disk space"""
+        self.log_action("DISK_CHECK", "INFO", "Checking disk space")
         
         try:
             disk_usage = shutil.disk_usage(self.project_root)
             free_space_mb = disk_usage.free / (1024 * 1024)
             
-            if free_space_mb < 100:  # Moins de 100 MB
-                self.log_action("DISK_LOW", "ERROR", f"Espace disque faible: {free_space_mb:.1f} MB")
-                self.issues_found.append(f"Espace disque insuffisant: {free_space_mb:.1f} MB")
+            if free_space_mb < 100:  # Less than 100 MB
+                self.log_action("DISK_LOW", "ERROR", f"Low disk space: {free_space_mb:.1f} MB")
+                self.issues_found.append(f"Insufficient disk space: {free_space_mb:.1f} MB")
                 return False
-            elif free_space_mb < 500:  # Moins de 500 MB
-                self.log_action("DISK_WARNING", "WARNING", f"Espace disque limité: {free_space_mb:.1f} MB")
+            elif free_space_mb < 500:  # Less than 500 MB
+                self.log_action("DISK_WARNING", "WARNING", f"Limited disk space: {free_space_mb:.1f} MB")
             else:
-                self.log_action("DISK_OK", "SUCCESS", f"Espace disque suffisant: {free_space_mb:.1f} MB")
+                self.log_action("DISK_OK", "SUCCESS", f"Sufficient disk space: {free_space_mb:.1f} MB")
                 
             return True
             
         except Exception as e:
-            self.log_action("DISK_ERROR", "ERROR", f"Erreur vérification disque: {e}")
+            self.log_action("DISK_ERROR", "ERROR", f"Disk check error: {e}")
             return False
             
     def clean_temporary_files(self) -> bool:
-        """Nettoie les fichiers temporaires"""
-        self.log_action("CLEANUP", "INFO", "Nettoyage des fichiers temporaires")
+        """Cleans temporary files"""
+        self.log_action("CLEANUP", "INFO", "Cleaning temporary files")
         
         temp_patterns = [
             '**/*.pyc',
@@ -226,16 +226,16 @@ class InteractiveNavigationMaintainer:
                         shutil.rmtree(file_path)
                         cleaned_count += 1
                 except Exception as e:
-                    self.log_action("CLEANUP_ERROR", "WARNING", f"Erreur nettoyage {file_path}: {e}")
+                    self.log_action("CLEANUP_ERROR", "WARNING", f"Error cleaning {file_path}: {e}")
                     
-        self.log_action("CLEANUP_COMPLETE", "SUCCESS", f"Nettoyage terminé: {cleaned_count} éléments supprimés")
-        self.fixes_applied.append(f"Nettoyage: {cleaned_count} fichiers temporaires supprimés")
+        self.log_action("CLEANUP_COMPLETE", "SUCCESS", f"Cleanup complete: {cleaned_count} items removed")
+        self.fixes_applied.append(f"Cleanup: {cleaned_count} temporary files removed")
         
         return True
         
     def optimize_imports(self) -> bool:
-        """Optimise les imports Python"""
-        self.log_action("IMPORT_OPTIMIZATION", "INFO", "Optimisation des imports")
+        """Optimizes Python imports"""
+        self.log_action("IMPORT_OPTIMIZATION", "INFO", "Optimizing imports")
         
         python_files = list(self.project_root.glob('*.py'))
         optimized_count = 0
@@ -248,27 +248,27 @@ class InteractiveNavigationMaintainer:
                 with open(py_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                     
-                # Vérification des imports inutilisés (basique)
+                # Check for unused imports (basic)
                 lines = content.split('\n')
                 import_lines = [line for line in lines if line.strip().startswith('import ') or line.strip().startswith('from ')]
                 
-                if len(import_lines) > 20:  # Beaucoup d'imports
-                    self.log_action("MANY_IMPORTS", "WARNING", f"Beaucoup d'imports dans {py_file.name}: {len(import_lines)}")
+                if len(import_lines) > 20:  # Many imports
+                    self.log_action("MANY_IMPORTS", "WARNING", f"Many imports in {py_file.name}: {len(import_lines)}")
                     
                 optimized_count += 1
                 
             except Exception as e:
-                self.log_action("IMPORT_ERROR", "WARNING", f"Erreur analyse imports {py_file.name}: {e}")
+                self.log_action("IMPORT_ERROR", "WARNING", f"Error analyzing imports {py_file.name}: {e}")
                 
-        self.log_action("IMPORT_OPTIMIZATION_COMPLETE", "SUCCESS", f"Analyse de {optimized_count} fichiers Python")
+        self.log_action("IMPORT_OPTIMIZATION_COMPLETE", "SUCCESS", f"Analysis of {optimized_count} Python files")
         return True
         
     def update_documentation(self) -> bool:
-        """Met à jour la documentation"""
-        self.log_action("DOC_UPDATE", "INFO", "Mise à jour de la documentation")
+        """Updates documentation"""
+        self.log_action("DOC_UPDATE", "INFO", "Updating documentation")
         
         try:
-            # Génération d'un rapport de maintenance
+            # Generate a maintenance report
             maintenance_report = {
                 "last_maintenance": datetime.now().isoformat(),
                 "critical_files_status": "OK" if all(
@@ -280,24 +280,24 @@ class InteractiveNavigationMaintainer:
                 "maintenance_log": self.maintenance_log
             }
             
-            # Sauvegarde du rapport
+            # Save the report
             report_file = self.project_root / f"maintenance_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
             with open(report_file, 'w', encoding='utf-8') as f:
                 json.dump(maintenance_report, f, indent=2, ensure_ascii=False)
                 
-            self.log_action("DOC_SAVED", "SUCCESS", f"Rapport sauvegardé: {report_file.name}")
+            self.log_action("DOC_SAVED", "SUCCESS", f"Report saved: {report_file.name}")
             return True
             
         except Exception as e:
-            self.log_action("DOC_ERROR", "ERROR", f"Erreur sauvegarde documentation: {e}")
+            self.log_action("DOC_ERROR", "ERROR", f"Error saving documentation: {e}")
             return False
             
     def run_quick_tests(self) -> bool:
-        """Exécute des tests rapides"""
-        self.log_action("QUICK_TESTS", "INFO", "Exécution de tests rapides")
+        """Executes quick tests"""
+        self.log_action("QUICK_TESTS", "INFO", "Executing quick tests")
         
         try:
-            # Test d'import des modules principaux
+            # Import test of main modules
             test_imports = [
                 'interactive_web_navigator',
                 'gemini_interactive_adapter',
@@ -307,19 +307,19 @@ class InteractiveNavigationMaintainer:
             for module in test_imports:
                 try:
                     __import__(module)
-                    self.log_action("IMPORT_TEST", "SUCCESS", f"Import réussi: {module}")
+                    self.log_action("IMPORT_TEST", "SUCCESS", f"Import successful: {module}")
                 except ImportError as e:
-                    self.log_action("IMPORT_TEST", "ERROR", f"Import échoué {module}: {e}")
-                    self.issues_found.append(f"Import échoué: {module}")
+                    self.log_action("IMPORT_TEST", "ERROR", f"Import failed {module}: {e}")
+                    self.issues_found.append(f"Import failed: {module}")
                     
             return True
             
         except Exception as e:
-            self.log_action("QUICK_TESTS_ERROR", "ERROR", f"Erreur tests rapides: {e}")
+            self.log_action("QUICK_TESTS_ERROR", "ERROR", f"Quick tests error: {e}")
             return False
             
     def generate_health_report(self) -> Dict:
-        """Génère un rapport de santé du système"""
+        """Generates a system health report"""
         end_time = datetime.now()
         duration = (end_time - self.start_time).total_seconds()
         
@@ -352,72 +352,72 @@ class InteractiveNavigationMaintainer:
         return report
         
     def generate_recommendations(self) -> List[str]:
-        """Génère des recommandations d'amélioration"""
+        """Generates improvement recommendations"""
         recommendations = []
         
         if len(self.issues_found) > 5:
-            recommendations.append("Résoudre les problèmes critiques avant utilisation")
+            recommendations.append("Resolve critical issues before use")
             
         if any("PACKAGE_MISSING" in issue for issue in self.issues_found):
-            recommendations.append("Installer les dépendances manquantes avec pip install -r requirements.txt")
+            recommendations.append("Install missing dependencies with pip install -r requirements.txt")
             
         if any("API_KEY" in issue for issue in self.issues_found):
-            recommendations.append("Configurer la clé API Gemini dans le fichier .env")
+            recommendations.append("Configure the Google Gemini 2.0 Flash AI API Key in the .env file")
             
         if not recommendations:
-            recommendations.append("Système en bon état, maintenance régulière recommandée")
+            recommendations.append("System in good condition, regular maintenance recommended")
             
         return recommendations
         
     def run_full_maintenance(self) -> Dict:
-        """Exécute la maintenance complète"""
-        self.log_action("MAINTENANCE_START", "INFO", "Début de la maintenance complète")
+        """Executes full maintenance"""
+        self.log_action("MAINTENANCE_START", "INFO", "Starting full maintenance")
         
         maintenance_tasks = [
-            ("Vérification intégrité", self.check_file_integrity),
-            ("Vérification dépendances", self.check_dependencies),
-            ("Vérification configuration", self.check_configuration),
-            ("Vérification espace disque", self.check_disk_space),
-            ("Nettoyage fichiers temporaires", self.clean_temporary_files),
-            ("Optimisation imports", self.optimize_imports),
-            ("Tests rapides", self.run_quick_tests),
-            ("Mise à jour documentation", self.update_documentation)
+            ("Integrity check", self.check_file_integrity),
+            ("Dependency check", self.check_dependencies),
+            ("Configuration check", self.check_configuration),
+            ("Disk space check", self.check_disk_space),
+            ("Temporary file cleanup", self.clean_temporary_files),
+            ("Import optimization", self.optimize_imports),
+            ("Quick tests", self.run_quick_tests),
+            ("Documentation update", self.update_documentation)
         ]
         
         for task_name, task_func in maintenance_tasks:
             try:
-                self.log_action("TASK_START", "INFO", f"Début: {task_name}")
+                self.log_action("TASK_START", "INFO", f"Starting: {task_name}")
                 success = task_func()
                 
                 if success:
-                    self.log_action("TASK_SUCCESS", "SUCCESS", f"Terminé: {task_name}")
+                    self.log_action("TASK_SUCCESS", "SUCCESS", f"Completed: {task_name}")
                 else:
-                    self.log_action("TASK_PARTIAL", "WARNING", f"Partiellement réussi: {task_name}")
+                    self.log_action("TASK_PARTIAL", "WARNING", f"Partially successful: {task_name}")
                     
             except Exception as e:
-                self.log_action("TASK_ERROR", "ERROR", f"Erreur {task_name}: {e}")
+                self.log_action("TASK_ERROR", "ERROR", f"Error {task_name}: {e}")
                 
-        # Génération du rapport final
+        # Generate final report
         health_report = self.generate_health_report()
         
         self.log_action("MAINTENANCE_COMPLETE", "SUCCESS", 
-                       f"Maintenance terminée - Score de santé: {health_report['maintenance_summary']['health_score']}")
+                       f"Maintenance complete - Health score: {health_report['maintenance_summary']['health_score']}")
         
         return health_report
 
 def display_health_report(report: Dict):
-    """Affiche le rapport de santé"""
+    """Displays the health report"""
     print("\n" + "=" * 80)
-    print("🏥 RAPPORT DE SANTÉ DU SYSTÈME - NAVIGATION INTERACTIVE GEMINI")
+    print("🏥 SYSTEM HEALTH REPORT - GOOGLE GEMINI 2.0 FLASH AI INTERACTIVE NAVIGATION")
     print("=" * 80)
     
     summary = report["maintenance_summary"]
     
-    print(f"\n⏱️ DURÉE DE MAINTENANCE: {summary['duration_seconds']}s")
-    print(f"🎯 SCORE DE SANTÉ: {summary['health_score']}/100")
-    print(f"📊 STATUT: {summary['status']}")
+    print(f"\n⏱️ MAINTENANCE DURATION: {summary['duration_seconds']}s")
+    print(f"🎯 HEALTH SCORE: {summary['health_score']}/100")
+    print(f"📊 STATUS: {summary['status']}")
     
-    # Icônes de statut
+    # Status icons
     status_icons = {
         "HEALTHY": "🟢",
         "NEEDS_ATTENTION": "🟡", 
@@ -426,77 +426,77 @@ def display_health_report(report: Dict):
     
     print(f"{status_icons.get(summary['status'], '⚪')} {summary['status']}")
     
-    # Détails des fichiers
+    # File details
     files_info = report["critical_files"]
-    print(f"\n📁 FICHIERS CRITIQUES:")
+    print(f"\n📁 CRITICAL FILES:")
     print(f"   • Total: {files_info['total']}")
-    print(f"   • Présents: {files_info['present']} ✅")
-    print(f"   • Manquants: {len(files_info['missing'])} ❌")
+    print(f"   • Present: {files_info['present']} ✅")
+    print(f"   • Missing: {len(files_info['missing'])} ❌")
     
     if files_info['missing']:
-        print("   📋 Fichiers manquants:")
+        print("   📋 Missing files:")
         for missing_file in files_info['missing']:
             print(f"      - {missing_file}")
     
-    # Problèmes trouvés
+    # Issues found
     if report["issues_detail"]:
-        print(f"\n⚠️ PROBLÈMES DÉTECTÉS ({len(report['issues_detail'])}):")
+        print(f"\n⚠️ DETECTED ISSUES ({len(report['issues_detail'])}):")
         for i, issue in enumerate(report["issues_detail"], 1):
             print(f"   {i}. {issue}")
     
-    # Corrections appliquées
+    # Fixes applied
     if report["fixes_detail"]:
-        print(f"\n🔧 CORRECTIONS APPLIQUÉES ({len(report['fixes_detail'])}):")
+        print(f"\n🔧 FIXES APPLIED ({len(report['fixes_detail'])}):")
         for i, fix in enumerate(report["fixes_detail"], 1):
             print(f"   {i}. {fix}")
     
-    # Recommandations
+    # Recommendations
     if report["recommendations"]:
-        print(f"\n💡 RECOMMANDATIONS:")
+        print(f"\n💡 RECOMMENDATIONS:")
         for i, rec in enumerate(report["recommendations"], 1):
             print(f"   {i}. {rec}")
     
-    # Évaluation finale
+    # Final evaluation
     if summary['health_score'] >= 90:
-        print(f"\n🎉 EXCELLENT - Système en parfait état")
+        print(f"\n🎉 EXCELLENT - System in perfect condition")
     elif summary['health_score'] >= 70:
-        print(f"\n👍 BON - Système fonctionnel avec améliorations mineures possibles")
+        print(f"\n👍 GOOD - System functional with minor possible improvements")
     elif summary['health_score'] >= 50:
-        print(f"\n⚠️ ATTENTION - Système nécessite des corrections")
+        print(f"\n⚠️ ATTENTION - System needs fixes")
     else:
-        print(f"\n🚨 CRITIQUE - Interventions urgentes requises")
+        print(f"\n🚨 CRITICAL - Urgent interventions required")
     
     print("\n" + "=" * 80)
 
 def main():
-    """Point d'entrée principal"""
-    print("🔧 MAINTENANCE SYSTÈME - NAVIGATION INTERACTIVE GEMINI")
-    print("🎯 Validation, nettoyage et optimisation automatiques")
+    """Main entry point"""
+    print("🔧 SYSTEM MAINTENANCE - GOOGLE GEMINI 2.0 FLASH AI INTERACTIVE NAVIGATION")
+    print("🎯 Automatic validation, cleanup, and optimization")
     
     maintainer = InteractiveNavigationMaintainer()
     
     try:
-        # Exécution complète de la maintenance
+        # Full maintenance execution
         health_report = maintainer.run_full_maintenance()
         
-        # Affichage du rapport
+        # Display report
         display_health_report(health_report)
         
-        # Sauvegarde du rapport
+        # Save report
         report_file = f"health_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(health_report, f, indent=2, ensure_ascii=False)
-        print(f"\n💾 Rapport complet sauvegardé: {report_file}")
+        print(f"\n💾 Full report saved: {report_file}")
         
-        # Code de retour basé sur la santé
+        # Return code based on health
         health_score = health_report["maintenance_summary"]["health_score"]
         return health_score >= 50
         
     except KeyboardInterrupt:
-        print("\n\n⏹️ Maintenance interrompue par l'utilisateur")
+        print("\n\n⏹️ Maintenance interrupted by user")
         return False
     except Exception as e:
-        logger.error(f"💥 Erreur critique lors de la maintenance: {e}")
+        logger.error(f"💥 Critical error during maintenance: {e}")
         return False
 
 if __name__ == "__main__":
