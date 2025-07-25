@@ -12,7 +12,7 @@ import emotional_engine as emotions
 MODULE_METADATA = {
     "enabled": True,
     "priority": 50,
-    "description": "Reflective awareness module to simulate emotional consciousness",
+    "description": "Reflective awareness module to emotional consciousness",
     "version": "1.0.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
