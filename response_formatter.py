@@ -1,61 +1,61 @@
 """
-Module pour améliorer la structure et la présentation des réponses textuelles de Gemini.
-Ce module assure que les réponses sont bien structurées, avec des paragraphes espacés
-et formatés correctement.
+Module to improve the structure and presentation of artificial intelligence API GOOGLE GEMINI 2.0 FLASH's text responses.
+This module ensures that responses are well-structured, with properly spaced
+and correctly formatted paragraphs.
 """
 
 import re
 import logging
 import random
 
-# Configuration du logger
+# Logger Configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def remove_markdown_symbols(text):
     """
-    Supprime les symboles markdown (* et **) du texte.
+    Removes markdown symbols (* and **) from the text.
     
     Args:
-        text: Le texte à nettoyer
+        text: The text to clean
         
     Returns:
-        Le texte sans symboles markdown
+        The text without markdown symbols
     """
     if not text:
         return text
     
-    # Supprimer les symboles ** (gras)
+    # Remove ** (bold) symbols
     text = re.sub(r'\*\*(.*?)\*\*', r'\1', text)
     
-    # Supprimer les symboles * (italique)
+    # Remove * (italic) symbols
     text = re.sub(r'\*(.*?)\*', r'\1', text)
     
-    # Supprimer les * isolés qui pourraient rester
+    # Remove isolated * that might remain
     text = re.sub(r'\*+', '', text)
     
     return text
 
 def remove_ending_periods(text):
     """
-    Supprime les points en fin de phrase.
+    Removes periods at the end of sentences.
     
     Args:
-        text: Le texte à nettoyer
+        text: The text to clean
         
     Returns:
-        Le texte sans points finaux
+        The text without ending periods
     """
     if not text:
         return text
     
-    # Diviser en paragraphes
+    # Split into paragraphs
     paragraphs = text.split('\n\n')
     cleaned_paragraphs = []
     
     for paragraph in paragraphs:
         if paragraph.strip():
-            # Supprimer les points en fin de paragraphe
+            # Remove periods at the end of the paragraph
             paragraph = paragraph.rstrip()
             while paragraph.endswith('.'):
                 paragraph = paragraph[:-1].rstrip()
@@ -65,28 +65,28 @@ def remove_ending_periods(text):
 
 def format_response(text):
     """
-    Améliore la structure d'une réponse textuelle.
+    Improves the structure of a text response.
     
     Args:
-        text: Le texte à formater
+        text: The text to format
         
     Returns:
-        Le texte formaté avec une meilleure structure
+        The formatted text with better structure
     """
     if not text:
         return text
     
-    # 1. Supprimer les symboles markdown et les points finaux AVANT tout formatage
+    # 1. Remove markdown symbols and ending periods BEFORE any formatting
     text = remove_markdown_symbols(text)
     text = remove_ending_periods(text)
     
-    # 2. Nettoyer les sauts de ligne superflus
+    # 2. Clean up superfluous newlines
     text = re.sub(r'\n{3,}', '\n\n', text)
     
-    # 2. Diviser en paragraphes
+    # 2. Split into paragraphs
     paragraphs = text.split('\n\n')
     
-    # Si tout le texte est sur une seule ligne, essayer de le diviser en paragraphes logiques
+    # If the entire text is on a single line, try to split it into logical paragraphs
     if len(paragraphs) <= 1 and len(text) > 200:
         sentences = re.split(r'(?<=[.!?])\s+', text)
         new_paragraphs = []
@@ -95,82 +95,82 @@ def format_response(text):
         for i, sentence in enumerate(sentences):
             current_paragraph.append(sentence)
             
-            # Créer un nouveau paragraphe après 3-4 phrases ou si c'est une phrase longue
+            # Create a new paragraph after 3-4 sentences or if it's a long sentence
             if (len(current_paragraph) >= 3 and i < len(sentences) - 1) or len(sentence) > 150:
                 new_paragraphs.append(' '.join(current_paragraph))
                 current_paragraph = []
         
-        # Ajouter le dernier paragraphe s'il reste des phrases
+        # Add the last paragraph if there are remaining sentences
         if current_paragraph:
             new_paragraphs.append(' '.join(current_paragraph))
         
         paragraphs = new_paragraphs
     
-    # 3. Améliorer les paragraphes individuellement
+    # 3. Improve paragraphs individually
     improved_paragraphs = []
     
-    # Mots de liaison pour introduire les paragraphes
+    # Linking words to introduce paragraphs
     transitions = [
-        "Tout d'abord,", "Par ailleurs,", "En outre,", "De plus,", 
-        "Par ailleurs,", "Ensuite,", "D'autre part,", "Également,",
-        "En effet,", "En ce qui concerne"
+        "First,", "Furthermore,", "Moreover,", "In addition,", 
+        "Next,", "On the other hand,", "Also,",
+        "Indeed,", "Regarding"
     ]
     
-    # Phrases de conclusion possibles
+    # Possible concluding phrases
     conclusion_phrases = [
-        "En conclusion,", "Pour résumer,", "En somme,", "En définitive,",
-        "Pour conclure,", "En résumé,", "Au final,", "En bref,"
+        "In conclusion,", "To summarize,", "In short,", "Ultimately,",
+        "To conclude,", "In summary,", "In the end,", "In brief,"
     ]
     
     for i, paragraph in enumerate(paragraphs):
         paragraph = paragraph.strip()
         
-        # Passer les paragraphes vides
+        # Skip empty paragraphs
         if not paragraph:
             continue
             
-        # Pour les listes à puces, les conserver telles quelles
+        # For bulleted lists, keep them as is
         if re.match(r'^[-*•] ', paragraph):
             improved_paragraphs.append(paragraph)
             continue
             
-        # Ajouter des transitions appropriées pour les paragraphes du milieu
+        # Add appropriate transitions for middle paragraphs
         if i > 0 and i < len(paragraphs) - 1 and len(paragraphs) > 2:
-            # Vérifier si le paragraphe ne commence pas déjà par une transition
+            # Check if the paragraph does not already start with a transition
             if not any(paragraph.startswith(trans) for trans in transitions + conclusion_phrases):
-                if random.random() < 0.6:  # 60% de chance d'ajouter une transition
+                if random.random() < 0.6:  # 60% chance to add a transition
                     paragraph = f"{random.choice(transitions)} {paragraph}"
         
-        # Ajouter une conclusion pour le dernier paragraphe
+        # Add a conclusion for the last paragraph
         if i == len(paragraphs) - 1 and len(paragraphs) > 1 and len(paragraph) > 50:
-            # Vérifier si le paragraphe ne commence pas déjà par une phrase de conclusion
+            # Check if the paragraph does not already start with a concluding phrase
             if not any(paragraph.startswith(concl) for concl in conclusion_phrases):
-                if random.random() < 0.7:  # 70% de chance d'ajouter une conclusion
+                if random.random() < 0.7:  # 70% chance to add a conclusion
                     paragraph = f"{random.choice(conclusion_phrases)} {paragraph}"
         
         improved_paragraphs.append(paragraph)
     
-    # 4. Rejoindre les paragraphes avec un double saut de ligne
+    # 4. Join paragraphs with a double newline
     formatted_text = '\n\n'.join(improved_paragraphs)
     
-    # 5. Ajouter des sauts de ligne avant et après les listes
+    # 5. Add newlines before and after lists
     formatted_text = re.sub(r'([.!?])\s*\n([-*•])', r'\1\n\n\2', formatted_text)
     
-    # 6. Améliorer la structure des phrases trop longues
+    # 6. Improve the structure of overly long sentences
     sentences = re.split(r'(?<=[.!?])\s+', formatted_text)
     improved_sentences = []
     
     for sentence in sentences:
-        # Ajouter des virgules dans les phrases très longues sans ponctuation
+        # Add commas in very long sentences without punctuation
         if len(sentence) > 180 and sentence.count(',') < 2:
-            parts = re.split(r'\s+(?:et|ou|car|donc|mais|ainsi|puis|comme)\s+', sentence)
+            parts = re.split(r'\s+(?:and|or|because|therefore|but|thus|then|as)\s+', sentence, flags=re.IGNORECASE)
             if len(parts) > 1:
                 improved_sentence = ""
                 for i, part in enumerate(parts):
                     if i < len(parts) - 1:
-                        connector = re.search(r'\s+(et|ou|car|donc|mais|ainsi|puis|comme)\s+', sentence[len(improved_sentence):])
-                        if connector:
-                            improved_sentence += part + ", " + connector.group(0).strip() + " "
+                        connector_match = re.search(r'\s+(and|or|because|therefore|but|thus|then|as)\s+', sentence[len(improved_sentence):], flags=re.IGNORECASE)
+                        if connector_match:
+                            improved_sentence += part + ", " + connector_match.group(0).strip() + " "
                         else:
                             improved_sentence += part + " "
                     else:
@@ -181,16 +181,16 @@ def format_response(text):
     
     formatted_text = ' '.join(improved_sentences)
     
-    # 7. Finalement, s'assurer qu'il y a deux sauts de ligne entre les paragraphes
+    # 7. Finally, ensure there are two newlines between paragraphs
     formatted_text = re.sub(r'\n{3,}', '\n\n', formatted_text)
     
     return formatted_text
 
 if __name__ == "__main__":
     # Test
-    sample_text = "L'intelligence artificielle est un domaine fascinant qui évolue rapidement. Les modèles comme Gemini utilisent des réseaux de neurones profonds pour comprendre et générer du langage naturel. Ces modèles sont entraînés sur d'énormes quantités de données textuelles provenant d'Internet. Ils apprennent ainsi les patterns et structures du langage humain. Les applications sont nombreuses : assistance virtuelle, génération de contenu, traduction automatique, et bien plus encore. La recherche continue d'avancer avec des architectures toujours plus performantes."
+    sample_text = "Artificial intelligence is a fascinating field that is evolving rapidly. Models like artificial intelligence API GOOGLE GEMINI 2.0 FLASH use deep neural networks to understand and generate natural language. These models are trained on enormous amounts of text data from the Internet. They thus learn the patterns and structures of human language. The applications are numerous: virtual assistance, content generation, machine translation, and much more. Research continues to advance with increasingly powerful architectures."
     
-    print("=== TEXTE ORIGINAL ===")
+    print("=== ORIGINAL TEXT ===")
     print(sample_text)
-    print("\n=== TEXTE FORMATÉ ===")
+    print("\n=== FORMATTED TEXT ===")
     print(format_response(sample_text))
