@@ -1,68 +1,68 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Script simple pour voir les utilisateurs de la base de données
+Simple script to view database users
 """
 
 import sqlite3
 import os
-from tabulate import tabulate  # Ajout de tabulate pour un meilleur affichage
+from tabulate import tabulate  # Added tabulate for better display
 
 def show_users():
-    """Affiche tous les utilisateurs"""
+    """Displays all users"""
     db_path = 'gemini_chat.db'
     
     if not os.path.exists(db_path):
-        print("Base de données non trouvée")
+        print("Database not found")
         return
     
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
         
-        # Vérifier si la table users existe
+        # Check if the users table exists
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
         if not cursor.fetchone():
-            print("La table 'users' n'existe pas dans la base de données.")
+            print("The 'users' table does not exist in the database.")
             return
             
         cursor.execute("SELECT id, username, email, created_at FROM users ORDER BY id")
         users = cursor.fetchall()
         
         if not users:
-            print("Aucun utilisateur trouvé")
+            print("No users found")
             return
         
-        print("\n=== LISTE DES UTILISATEURS ===")
+        print("\n=== USER LIST ===")
         
-        # Utilisation de tabulate pour un affichage en tableau
-        headers = ["ID", "Nom d'utilisateur", "Email", "Date de création"]
+        # Using tabulate for table display
+        headers = ["ID", "Username", "Email", "Creation Date"]
         print(tabulate(users, headers=headers, tablefmt="grid"))
         
-        print(f"\nTotal: {len(users)} utilisateur(s)")
+        print(f"\nTotal: {len(users)} user(s)")
         
     except sqlite3.Error as e:
-        print(f"Erreur SQLite: {e}")
+        print(f"SQLite error: {e}")
     except Exception as e:
-        print(f"Erreur inattendue: {e}")
+        print(f"Unexpected error: {e}")
     finally:
         if 'conn' in locals() and conn:
             conn.close()
-            print("Connexion à la base de données fermée")
+            print("Database connection closed")
 
 if __name__ == "__main__":
     try:
-        # Vérifier si tabulate est installé
+        # Check if tabulate is installed
         import tabulate
     except ImportError:
-        print("Le module 'tabulate' est nécessaire. Installation...")
+        print("The 'tabulate' module is required. Installing...")
         import subprocess
         try:
             subprocess.check_call(["pip", "install", "tabulate"])
-            print("Module 'tabulate' installé avec succès!")
+            print("Module 'tabulate' installed successfully!")
         except Exception as e:
-            print(f"Impossible d'installer le module 'tabulate': {e}")
-            print("Utilisez la commande: pip install tabulate")
-            print("Affichage en mode simple...")
+            print(f"Could not install 'tabulate' module: {e}")
+            print("Use the command: pip install tabulate")
+            print("Displaying in simple mode...")
             
     show_users()
