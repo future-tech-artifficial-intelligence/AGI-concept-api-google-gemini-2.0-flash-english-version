@@ -1,7 +1,7 @@
 """
-Module de conscience temporelle pour Gemini
-Ce module permet à l'IA de répondre intelligemment aux requêtes liées au temps,
-sans introduire des références temporelles dans chaque réponse.
+Temporal Awareness Module for Gemini
+This module enables artificial intelligence GOOGLE GEMINI 2.0 FLASH API to intelligently respond to time-related queries,
+without introducing temporal references into every response.
 """
 
 import logging
@@ -10,58 +10,58 @@ from typing import Dict, Any, Optional
 
 from time_engine import get_current_datetime, format_datetime, is_time_request
 
-# Métadonnées du module
+# Module Metadata
 MODULE_METADATA = {
     "enabled": True,
-    "priority": 40,  # Priorité moyenne
-    "description": "Gère la conscience temporelle et les références à l'heure/date",
+    "priority": 40,  # Medium priority
+    "description": "Manages temporal awareness and time/date references",
     "version": "1.0.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
 }
 
-# Configuration du logger
+# Logger configuration
 logger = logging.getLogger(__name__)
 
 def generate_time_response(timezone: str = "Europe/Paris") -> str:
     """
-    Génère une réponse concernant l'heure et la date actuelles
+    Generates a response concerning the current time and date
     
     Args:
-        timezone: Le fuseau horaire à utiliser
+        timezone: The timezone to use
         
     Returns:
-        Une réponse contenant l'heure et la date
+        A response containing the time and date
     """
     current_time = get_current_datetime(timezone)
-    time_str = format_datetime(current_time, "heure")
-    date_str = format_datetime(current_time, "complet")
+    time_str = format_datetime(current_time, "time") # Changed "heure" to "time"
+    date_str = format_datetime(current_time, "full") # Changed "complet" to "full"
     
-    return f"Il est actuellement {time_str} le {date_str} dans le fuseau horaire {timezone}."
+    return f"It is currently {time_str} on {date_str} in the {timezone} timezone." # Adjusted sentence structure
 
 def extract_timezone(text: str, default_timezone: str = "Europe/Paris") -> str:
     """
-    Extrait le fuseau horaire mentionné dans le texte, si présent
+    Extracts the timezone mentioned in the text, if present
     
     Args:
-        text: Le texte à analyser
-        default_timezone: Le fuseau horaire par défaut
+        text: The text to analyze
+        default_timezone: The default timezone
         
     Returns:
-        Le fuseau horaire extrait ou celui par défaut
+        The extracted timezone or the default one
     """
-    # Liste de fuseaux horaires courants et leurs synonymes
+    # List of common timezones and their synonyms
     timezone_patterns = {
-        "Europe/Paris": ["france", "paris", "français", "française"],
-        "America/New_York": ["new york", "états-unis", "etats-unis", "usa", "amérique"],
-        "Asia/Tokyo": ["japon", "tokyo"],
-        "Europe/London": ["londres", "angleterre", "royaume-uni", "uk"],
-        # Ajouter d'autres fuseaux horaires selon les besoins
+        "Europe/Paris": ["france", "paris", "french"], # Adjusted "français/française" to "french"
+        "America/New_York": ["new york", "united states", "usa", "america"], # Adjusted "états-unis/etats-unis" to "united states"
+        "Asia/Tokyo": ["japan", "tokyo"], # Adjusted "japon" to "japan"
+        "Europe/London": ["london", "england", "united kingdom", "uk"], # Adjusted "londres", "angleterre", "royaume-uni"
+        # Add other timezones as needed
     }
     
     text_lower = text.lower()
     
-    # Chercher des mentions de fuseaux horaires
+    # Look for timezone mentions
     for timezone, patterns in timezone_patterns.items():
         if any(pattern in text_lower for pattern in patterns):
             return timezone
@@ -70,51 +70,51 @@ def extract_timezone(text: str, default_timezone: str = "Europe/Paris") -> str:
 
 def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
     """
-    Traite les requêtes et réponses pour gérer les références temporelles
+    Processes requests and responses to manage temporal references
     
     Args:
-        data: Les données à traiter
-        hook: Le hook appelé (process_request ou process_response)
+        data: The data to process
+        hook: The hook called (process_request or process_response)
         
     Returns:
-        Les données modifiées
+        The modified data
     """
     try:
-        # Traitement des requêtes
+        # Request processing
         if hook == "process_request" and "text" in data:
             user_input = data["text"]
             
-            # Vérifier si c'est une demande de temps (et seulement une demande explicite)
+            # Check if it's a time request (and only an explicit request)
             if is_time_request(user_input):
-                # Marquer cette requête comme une demande de temps
+                # Mark this request as a time request
                 data["is_time_request"] = True
                 
-                # Extraire le fuseau horaire si mentionné
+                # Extract the timezone if mentioned
                 timezone = extract_timezone(user_input)
                 data["requested_timezone"] = timezone
                 
-                logger.info(f"Demande de temps détectée, fuseau horaire: {timezone}")
+                logger.info(f"Time request detected, timezone: {timezone}")
             else:
-                # S'assurer qu'on ne traite pas cela comme une demande de temps
+                # Ensure this is not treated as a time request
                 data["is_time_request"] = False
             
             return data
         
-        # Traitement des réponses
+        # Response processing
         elif hook == "process_response":
-            # Uniquement si c'était une demande explicite de temps, générer une réponse appropriée
+            # Only if it was an explicit time request, generate an appropriate response
             if data.get("is_time_request", False) and "text" in data:
                 timezone = data.get("requested_timezone", "Europe/Paris")
                 time_response = generate_time_response(timezone)
                 
-                # Remplacer complètement la réponse pour les demandes directes d'heure/date
+                # Completely replace the response for direct time/date requests
                 data["text"] = time_response
-                logger.info(f"Réponse temporelle générée pour le fuseau horaire: {timezone}")
+                logger.info(f"Temporal response generated for timezone: {timezone}")
             
             return data
         
         return data
     
     except Exception as e:
-        logger.error(f"Erreur dans le module de conscience temporelle: {str(e)}")
+        logger.error(f"Error in temporal awareness module: {str(e)}")
         return data
