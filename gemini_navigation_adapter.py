@@ -1,6 +1,6 @@
 """
-Intégration du Système de Navigation Web Avancé avec l'Adapter Gemini
-Ce module connecte le nouveau système de navigation avec l'adapter Gemini existant
+Advanced Web Navigation System Integration with the Google Gemini 2.0 Flash AI Adapter
+This module connects the new navigation system with the existing Google Gemini 2.0 Flash AI adapter.
 """
 
 import logging
@@ -18,21 +18,21 @@ from gemini_web_integration import (
 )
 from advanced_web_navigator import extract_website_content, navigate_website_deep
 
-# Configuration du logging
+# Logging configuration
 logger = logging.getLogger('GeminiAdapterIntegration')
 
 class GeminiWebNavigationAdapter:
-    """Adaptateur pour intégrer la navigation web avec l'API Gemini existante"""
+    """Adapter to integrate web navigation with the existing Google Gemini 2.0 Flash AI API"""
     
     def __init__(self, gemini_api_instance=None):
         self.gemini_api = gemini_api_instance
         self.navigation_enabled = True
-        self.max_content_length = 8000  # Limite pour Gemini
+        self.max_content_length = 8000  # Limit for Gemini
         
-        # Initialiser l'intégration web
+        # Initialize web integration
         initialize_gemini_web_integration()
         
-        # Compteurs et statistiques
+        # Counters and statistics
         self.navigation_stats = {
             'total_requests': 0,
             'successful_navigations': 0,
@@ -40,42 +40,42 @@ class GeminiWebNavigationAdapter:
             'searches_performed': 0
         }
         
-        logger.info("🔗 Adaptateur Gemini-Navigation initialisé")
+        logger.info("🔗 Google Gemini 2.0 Flash AI Navigation Adapter initialized")
     
     def detect_navigation_request(self, prompt: str) -> Dict[str, Any]:
         """
-        Détecte si le prompt nécessite une navigation web avancée
+        Detects if the prompt requires advanced web navigation
         
         Args:
-            prompt: Le prompt de l'utilisateur
+            prompt: The user's prompt
             
         Returns:
-            Dict contenant le type de navigation et les paramètres
+            Dict containing the navigation type and parameters
         """
         prompt_lower = prompt.lower()
         
-        # Mots-clés pour navigation profonde
+        # Keywords for deep navigation
         deep_navigation_keywords = [
-            'explore le site', 'navigue dans', 'parcours le site', 'visite toutes les pages',
-            'analyse complète du site', 'navigation profonde', 'explore en détail'
+            'explore the site', 'navigate through', 'browse the site', 'visit all pages',
+            'full site analysis', 'deep navigation', 'explore in detail'
         ]
         
-        # Mots-clés pour extraction spécifique
+        # Keywords for specific extraction
         extraction_keywords = [
-            'extrait le contenu de', 'analyse cette page', 'récupère les informations de',
-            'contenu de cette url', 'détails de la page'
+            'extract content from', 'analyze this page', 'retrieve information from',
+            'content of this url', 'page details'
         ]
         
-        # Mots-clés pour recherche et navigation
+        # Keywords for search and navigation
         search_navigation_keywords = [
-            'recherche et navigue', 'trouve et explore', 'cherche et analyse',
-            'recherche détaillée', 'information complète sur'
+            'search and navigate', 'find and explore', 'search and analyze',
+            'detailed search', 'complete information on'
         ]
         
-        # Mots-clés pour parcours utilisateur
+        # Keywords for user journey
         user_journey_keywords = [
-            'parcours utilisateur', 'expérience utilisateur', 'navigation utilisateur',
-            'comme un utilisateur', 'simule un achat', 'processus d\'achat'
+            'user journey', 'user experience', 'user navigation',
+            'as a user', 'simulate a purchase', 'purchase process'
         ]
         
         detection_result = {
@@ -85,7 +85,7 @@ class GeminiWebNavigationAdapter:
             'extracted_params': {}
         }
         
-        # Détecter le type de navigation
+        # Detect navigation type
         if any(keyword in prompt_lower for keyword in deep_navigation_keywords):
             detection_result.update({
                 'requires_navigation': True,
@@ -93,7 +93,7 @@ class GeminiWebNavigationAdapter:
                 'confidence': 0.9
             })
             
-            # Extraire l'URL si présente
+            # Extract URL if present
             url_match = self._extract_url_from_prompt(prompt)
             if url_match:
                 detection_result['extracted_params']['start_url'] = url_match
@@ -134,7 +134,7 @@ class GeminiWebNavigationAdapter:
             if intent:
                 detection_result['extracted_params']['user_intent'] = intent
         
-        # Détecter les requêtes de recherche web générales qui pourraient bénéficier de navigation
+        # Detect general web search requests that could benefit from navigation
         elif self._is_general_web_search(prompt):
             detection_result.update({
                 'requires_navigation': True,
@@ -148,39 +148,39 @@ class GeminiWebNavigationAdapter:
     def handle_navigation_request(self, prompt: str, user_id: int = 1, 
                                 session_id: str = None) -> Dict[str, Any]:
         """
-        Traite une requête de navigation web
+        Handles a web navigation request
         
         Args:
-            prompt: Le prompt de l'utilisateur
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
+            prompt: The user's prompt
+            user_id: User ID
+            session_id: Session ID
             
         Returns:
-            Résultat de la navigation formaté pour Gemini
+            Navigation result formatted for Google Gemini 2.0 Flash AI
         """
         if not self.navigation_enabled:
             return {
                 'success': False,
-                'error': 'Navigation web désactivée',
+                'error': 'Web navigation disabled',
                 'fallback_required': True
             }
         
         self.navigation_stats['total_requests'] += 1
         
         try:
-            # Détecter le type de navigation
+            # Detect navigation type
             detection = self.detect_navigation_request(prompt)
             
             if not detection['requires_navigation']:
                 return {
                     'success': False,
-                    'error': 'Navigation non détectée',
+                    'error': 'Navigation not detected',
                     'fallback_required': True
                 }
             
-            logger.info(f"🎯 Navigation détectée: {detection['navigation_type']} (confiance: {detection['confidence']})")
+            logger.info(f"🎯 Navigation detected: {detection['navigation_type']} (confidence: {detection['confidence']})")
             
-            # Traiter selon le type de navigation
+            # Process according to navigation type
             if detection['navigation_type'] == 'search_and_navigate':
                 result = self._handle_search_and_navigate(detection, prompt, user_id)
                 
@@ -196,27 +196,27 @@ class GeminiWebNavigationAdapter:
             else:
                 return {
                     'success': False,
-                    'error': f'Type de navigation non pris en charge: {detection["navigation_type"]}',
+                    'error': f'Unsupported navigation type: {detection["navigation_type"]}',
                     'fallback_required': True
                 }
             
-            # Formater pour Gemini
+            # Format for Google Gemini 2.0 Flash AI
             if result.get('success', False):
                 self.navigation_stats['successful_navigations'] += 1
                 gemini_response = self._format_for_gemini(result, detection['navigation_type'], prompt)
                 
-                logger.info(f"✅ Navigation réussie: {detection['navigation_type']}")
+                logger.info(f"✅ Navigation successful: {detection['navigation_type']}")
                 return gemini_response
             else:
-                logger.warning(f"⚠️ Navigation échouée: {result.get('error', 'Erreur inconnue')}")
+                logger.warning(f"⚠️ Navigation failed: {result.get('error', 'Unknown error')}")
                 return {
                     'success': False,
-                    'error': result.get('error', 'Erreur de navigation'),
+                    'error': result.get('error', 'Navigation error'),
                     'fallback_required': True
                 }
                 
         except Exception as e:
-            logger.error(f"❌ Erreur lors de la navigation: {str(e)}")
+            logger.error(f"❌ Error during navigation: {str(e)}")
             return {
                 'success': False,
                 'error': str(e),
@@ -224,11 +224,11 @@ class GeminiWebNavigationAdapter:
             }
     
     def _handle_search_and_navigate(self, detection: Dict, prompt: str, user_id: int) -> Dict[str, Any]:
-        """Traite une requête de recherche et navigation"""
+        """Handles a search and navigate request"""
         query = detection['extracted_params'].get('query', prompt)
-        user_context = f"User {user_id} - Recherche avancée"
+        user_context = f"User {user_id} - Advanced Search"
         
-        logger.info(f"🔍 Recherche et navigation: {query}")
+        logger.info(f"🔍 Searching and navigating: {query}")
         
         result = search_web_for_gemini(query, user_context)
         self.navigation_stats['searches_performed'] += 1
@@ -236,18 +236,18 @@ class GeminiWebNavigationAdapter:
         return result
     
     def _handle_content_extraction(self, detection: Dict, prompt: str) -> Dict[str, Any]:
-        """Traite une requête d'extraction de contenu"""
+        """Handles a content extraction request"""
         url = detection['extracted_params'].get('url')
         
         if not url:
             return {
                 'success': False,
-                'error': 'URL non trouvée dans le prompt'
+                'error': 'URL not found in prompt'
             }
         
-        logger.info(f"🎯 Extraction de contenu: {url}")
+        logger.info(f"🎯 Content extraction: {url}")
         
-        # Déterminer les exigences d'extraction basées sur le prompt
+        # Determine extraction requirements based on the prompt
         requirements = self._determine_extraction_requirements(prompt)
         
         result = extract_content_for_gemini(url, requirements)
@@ -256,24 +256,24 @@ class GeminiWebNavigationAdapter:
         return result
     
     def _handle_deep_navigation(self, detection: Dict, prompt: str) -> Dict[str, Any]:
-        """Traite une requête de navigation profonde"""
+        """Handles a deep navigation request"""
         start_url = detection['extracted_params'].get('start_url')
         
         if not start_url:
             return {
                 'success': False,
-                'error': 'URL de départ non trouvée dans le prompt'
+                'error': 'Starting URL not found in prompt'
             }
         
-        logger.info(f"🚀 Navigation profonde: {start_url}")
+        logger.info(f"🚀 Deep navigation: {start_url}")
         
-        # Paramètres par défaut ou extraits du prompt
-        max_depth = self._extract_number_from_prompt(prompt, 'profondeur', 3)
+        # Default parameters or extracted from the prompt
+        max_depth = self._extract_number_from_prompt(prompt, 'depth', 3)
         max_pages = self._extract_number_from_prompt(prompt, 'pages', 10)
         
         nav_path = navigate_website_deep(start_url, max_depth, max_pages)
         
-        # Convertir en format compatible
+        # Convert to compatible format
         result = {
             'success': True,
             'navigation_summary': {
@@ -297,26 +297,26 @@ class GeminiWebNavigationAdapter:
         return result
     
     def _handle_user_journey(self, detection: Dict, prompt: str) -> Dict[str, Any]:
-        """Traite une requête de parcours utilisateur"""
+        """Handles a user journey request"""
         start_url = detection['extracted_params'].get('start_url')
         user_intent = detection['extracted_params'].get('user_intent', 'explore')
         
         if not start_url:
             return {
                 'success': False,
-                'error': 'URL de départ non trouvée dans le prompt'
+                'error': 'Starting URL not found in prompt'
             }
         
-        logger.info(f"👤 Parcours utilisateur: {user_intent} depuis {start_url}")
+        logger.info(f"👤 User journey: {user_intent} from {start_url}")
         
         result = simulate_user_journey(start_url, user_intent)
         return result
     
     def _format_for_gemini(self, result: Dict[str, Any], navigation_type: str, 
                           original_prompt: str) -> Dict[str, Any]:
-        """Formate le résultat pour l'API Gemini"""
+        """Formats the result for the Google Gemini 2.0 Flash AI API"""
         
-        # Créer un résumé adapté au type de navigation
+        # Create a summary adapted to the navigation type
         if navigation_type == 'search_and_navigate':
             summary = self._create_search_summary(result)
             
@@ -330,9 +330,9 @@ class GeminiWebNavigationAdapter:
             summary = self._create_journey_summary(result)
             
         else:
-            summary = "Navigation web effectuée avec succès."
+            summary = "Web navigation successfully performed."
         
-        # Préparer le contenu pour Gemini
+        # Prepare content for Google Gemini 2.0 Flash AI
         gemini_content = {
             'web_navigation_summary': summary,
             'navigation_type': navigation_type,
@@ -341,7 +341,7 @@ class GeminiWebNavigationAdapter:
             'timestamp': datetime.now().isoformat()
         }
         
-        # Ajouter des détails spécifiques selon le type
+        # Add specific details based on type
         if navigation_type == 'search_and_navigate' and 'best_content' in result:
             gemini_content['key_findings'] = [
                 f"📄 {content['title']}: {content['summary'][:200]}..."
@@ -368,62 +368,62 @@ class GeminiWebNavigationAdapter:
         }
     
     def _create_search_summary(self, result: Dict[str, Any]) -> str:
-        """Crée un résumé de recherche pour Gemini"""
+        """Creates a search summary for Google Gemini 2.0 Flash AI"""
         if not result.get('success', False):
-            return "❌ La recherche web n'a pas abouti."
+            return "❌ Web search failed."
         
         search_summary = result.get('search_summary', {})
         sites_navigated = search_summary.get('sites_navigated', 0)
         pages_visited = search_summary.get('total_pages_visited', 0)
         
-        summary = f"🌐 **Recherche web effectuée avec succès !**\n\n"
-        summary += f"J'ai navigué sur {sites_navigated} sites web et analysé {pages_visited} pages.\n\n"
+        summary = f"🌐 **Web search successfully performed!**\n\n"
+        summary += f"I navigated {sites_navigated} websites and analyzed {pages_visited} pages.\n\n"
         
         if 'content_synthesis' in result:
-            summary += f"**Synthèse des informations trouvées :**\n{result['content_synthesis']}\n\n"
+            summary += f"**Synthesis of information found:**\n{result['content_synthesis']}\n\n"
         
         if 'aggregated_keywords' in result and result['aggregated_keywords']:
             keywords = ', '.join(result['aggregated_keywords'][:10])
-            summary += f"**Mots-clés identifiés :** {keywords}\n\n"
+            summary += f"**Identified keywords:** {keywords}\n\n"
         
-        summary += "Les informations détaillées ont été intégrées dans ma base de connaissances."
+        summary += "Detailed information has been integrated into my knowledge base."
         
         return summary
     
     def _create_extraction_summary(self, result: Dict[str, Any]) -> str:
-        """Crée un résumé d'extraction pour Gemini"""
+        """Creates an extraction summary for Google Gemini 2.0 Flash AI"""
         if not result.get('success', False):
-            return f"❌ Impossible d'extraire le contenu de l'URL : {result.get('error', 'Erreur inconnue')}"
+            return f"❌ Failed to extract content from URL: {result.get('error', 'Unknown error')}"
         
-        summary = f"📄 **Contenu extrait avec succès !**\n\n"
-        summary += f"**Titre :** {result.get('title', 'Non spécifié')}\n"
-        summary += f"**URL :** {result.get('url', 'Non spécifiée')}\n"
-        summary += f"**Langue :** {result.get('language', 'Non détectée')}\n"
-        summary += f"**Score de qualité :** {result.get('content_quality_score', 0):.1f}/10\n\n"
+        summary = f"📄 **Content successfully extracted!**\n\n"
+        summary += f"**Title:** {result.get('title', 'Not specified')}\n"
+        summary += f"**URL:** {result.get('url', 'Not specified')}\n"
+        summary += f"**Language:** {result.get('language', 'Not detected')}\n"
+        summary += f"**Quality Score:** {result.get('content_quality_score', 0):.1f}/10\n\n"
         
         if 'summary' in result:
-            summary += f"**Résumé :**\n{result['summary']}\n\n"
+            summary += f"**Summary:**\n{result['summary']}\n\n"
         
         if 'keywords' in result and result['keywords']:
             keywords = ', '.join(result['keywords'][:8])
-            summary += f"**Mots-clés :** {keywords}\n\n"
+            summary += f"**Keywords:** {keywords}\n\n"
         
         return summary
     
     def _create_navigation_summary(self, result: Dict[str, Any]) -> str:
-        """Crée un résumé de navigation pour Gemini"""
+        """Creates a navigation summary for Google Gemini 2.0 Flash AI"""
         if not result.get('success', False):
-            return "❌ La navigation profonde a échoué."
+            return "❌ Deep navigation failed."
         
         nav_summary = result.get('navigation_summary', {})
         pages_visited = nav_summary.get('pages_visited', 0)
         depth = nav_summary.get('navigation_depth', 0)
         
-        summary = f"🚀 **Navigation profonde effectuée !**\n\n"
-        summary += f"J'ai exploré {pages_visited} pages avec une profondeur de navigation de {depth} niveaux.\n\n"
+        summary = f"🚀 **Deep navigation performed!**\n\n"
+        summary += f"I explored {pages_visited} pages with a navigation depth of {depth} levels.\n\n"
         
         if 'visited_pages' in result and result['visited_pages']:
-            summary += "**Pages les plus pertinentes :**\n"
+            summary += "**Most relevant pages:**\n"
             top_pages = sorted(result['visited_pages'], 
                              key=lambda x: x['content_quality_score'], reverse=True)[:3]
             
@@ -434,55 +434,55 @@ class GeminiWebNavigationAdapter:
         return summary
     
     def _create_journey_summary(self, result: Dict[str, Any]) -> str:
-        """Crée un résumé de parcours utilisateur pour Gemini"""
+        """Creates a user journey summary for Google Gemini 2.0 Flash AI"""
         if not result.get('success', False):
-            return f"❌ Simulation du parcours utilisateur échouée : {result.get('error', 'Erreur inconnue')}"
+            return f"❌ User journey simulation failed: {result.get('error', 'Unknown error')}"
         
         pages_visited = result.get('pages_visited', 0)
         user_intent = result.get('user_intent', 'explore')
         
         intent_names = {
-            'buy': 'achat',
-            'learn': 'apprentissage',
+            'buy': 'purchase',
+            'learn': 'learning',
             'contact': 'contact',
             'explore': 'exploration'
         }
         
         intent_text = intent_names.get(user_intent, user_intent)
         
-        summary = f"👤 **Parcours utilisateur simulé avec succès !**\n\n"
-        summary += f"J'ai simulé un parcours d'**{intent_text}** sur {pages_visited} pages.\n\n"
+        summary = f"👤 **User journey successfully simulated!**\n\n"
+        summary += f"I simulated a **{intent_text}** journey across {pages_visited} pages.\n\n"
         
         if 'journey_analysis' in result:
             analysis = result['journey_analysis']
             satisfaction = analysis.get('intent_satisfaction', 0) * 100
-            summary += f"**Satisfaction de l'intention :** {satisfaction:.1f}%\n\n"
+            summary += f"**Intent Satisfaction:** {satisfaction:.1f}%\n\n"
         
         if 'key_pages' in result and result['key_pages']:
-            summary += "**Pages clés identifiées :**\n"
+            summary += "**Key pages identified:**\n"
             for i, page in enumerate(result['key_pages'][:3], 1):
                 summary += f"{i}. **{page['title']}**\n"
                 summary += f"   📄 {page['summary'][:100]}...\n\n"
         
         return summary
     
-    # Méthodes utilitaires
+    # Utility methods
     def _extract_url_from_prompt(self, prompt: str) -> Optional[str]:
-        """Extrait une URL du prompt"""
+        """Extracts a URL from the prompt"""
         import re
         url_pattern = r'https?://[^\s<>"{\|}\\^`\[\]]+'
         urls = re.findall(url_pattern, prompt)
         return urls[0] if urls else None
     
     def _extract_search_query_from_prompt(self, prompt: str) -> Optional[str]:
-        """Extrait une requête de recherche du prompt"""
-        # Patterns pour extraire la requête
+        """Extracts a search query from the prompt"""
+        # Patterns to extract the query
         patterns = [
-            r'recherche\s+(?:et\s+navigue\s+)?["\']([^"\']+)["\']',
-            r'cherche\s+(?:et\s+analyse\s+)?["\']([^"\']+)["\']',
-            r'trouve\s+(?:et\s+explore\s+)?["\']([^"\']+)["\']',
-            r'recherche\s+(?:et\s+navigue\s+)?(?:sur\s+)?(.+?)(?:\s+et\s|$)',
-            r'cherche\s+(?:et\s+analyse\s+)?(?:sur\s+)?(.+?)(?:\s+et\s|$)'
+            r'search\s+(?:and\s+navigate\s+)?["\']([^"\']+)["\']',
+            r'find\s+(?:and\s+explore\s+)?["\']([^"\']+)["\']',
+            r'analyze\s+(?:and\s+examine\s+)?["\']([^"\']+)["\']',
+            r'search\s+(?:and\s+navigate\s+)?(?:on\s+)?(.+?)(?:\s+and\s|$)',
+            r'find\s+(?:and\s+explore\s+)?(?:on\s+)?(.+?)(?:\s+and\s|$)'
         ]
         
         import re
@@ -494,25 +494,25 @@ class GeminiWebNavigationAdapter:
         return None
     
     def _extract_user_intent_from_prompt(self, prompt: str) -> str:
-        """Extrait l'intention utilisateur du prompt"""
+        """Extracts the user intent from the prompt"""
         prompt_lower = prompt.lower()
         
-        if any(word in prompt_lower for word in ['acheter', 'achat', 'commander', 'prix']):
+        if any(word in prompt_lower for word in ['buy', 'purchase', 'order', 'price']):
             return 'buy'
-        elif any(word in prompt_lower for word in ['apprendre', 'formation', 'cours', 'tutoriel']):
+        elif any(word in prompt_lower for word in ['learn', 'training', 'course', 'tutorial']):
             return 'learn'
-        elif any(word in prompt_lower for word in ['contact', 'contacter', 'support', 'aide']):
+        elif any(word in prompt_lower for word in ['contact', 'support', 'help']):
             return 'contact'
         else:
             return 'explore'
     
     def _extract_number_from_prompt(self, prompt: str, context: str, default: int) -> int:
-        """Extrait un nombre du prompt selon le contexte"""
+        """Extracts a number from the prompt based on context"""
         import re
         
-        # Patterns pour différents contextes
-        if context == 'profondeur':
-            patterns = [r'profondeur\s+(?:de\s+)?(\d+)', r'(\d+)\s+niveaux?']
+        # Patterns for different contexts
+        if context == 'depth':
+            patterns = [r'depth\s+(?:of\s+)?(\d+)', r'(\d+)\s+levels?']
         elif context == 'pages':
             patterns = [r'(\d+)\s+pages?', r'maximum\s+(\d+)\s+pages?']
         else:
@@ -529,49 +529,49 @@ class GeminiWebNavigationAdapter:
         return default
     
     def _determine_extraction_requirements(self, prompt: str) -> List[str]:
-        """Détermine les exigences d'extraction basées sur le prompt"""
+        """Determines extraction requirements based on the prompt"""
         prompt_lower = prompt.lower()
-        requirements = ['summary']  # Toujours inclure le résumé
+        requirements = ['summary']  # Always include the summary
         
-        if any(word in prompt_lower for word in ['détail', 'complet', 'tout', 'entier']):
+        if any(word in prompt_lower for word in ['detail', 'complete', 'all', 'entire']):
             requirements.extend(['details', 'structure'])
         
-        if any(word in prompt_lower for word in ['liens', 'link', 'url']):
+        if any(word in prompt_lower for word in ['links', 'link', 'url']):
             requirements.append('links')
         
         if any(word in prompt_lower for word in ['images', 'photos', 'illustrations']):
             requirements.append('images')
         
-        if any(word in prompt_lower for word in ['navigation', 'menu', 'naviguer']):
+        if any(word in prompt_lower for word in ['navigation', 'menu', 'navigate']):
             requirements.append('navigation')
         
-        if any(word in prompt_lower for word in ['métadonnées', 'metadata', 'propriétés']):
+        if any(word in prompt_lower for word in ['metadata', 'properties']):
             requirements.append('metadata')
         
-        return list(set(requirements))  # Supprimer les doublons
+        return list(set(requirements))  # Remove duplicates
     
     def _is_general_web_search(self, prompt: str) -> bool:
-        """Détermine si c'est une recherche web générale qui pourrait bénéficier de navigation"""
+        """Determines if it's a general web search that could benefit from navigation"""
         prompt_lower = prompt.lower()
         
-        # Mots-clés indiquant une recherche d'information
+        # Keywords indicating an information search
         search_indicators = [
-            'qu\'est-ce que', 'comment', 'pourquoi', 'où trouver', 'information sur',
-            'explication de', 'définition de', 'guide pour', 'tutoriel sur'
+            'what is', 'how to', 'why', 'where to find', 'information about',
+            'explanation of', 'definition of', 'guide for', 'tutorial on'
         ]
         
-        # Vérifier si c'est une question ou demande d'information
+        # Check if it's a question or information request
         if any(indicator in prompt_lower for indicator in search_indicators):
             return True
         
-        # Vérifier si c'est une requête qui se termine par une question
+        # Check if it's a query that ends with a question mark
         if prompt.strip().endswith('?'):
             return True
         
         return False
     
     def get_navigation_stats(self) -> Dict[str, Any]:
-        """Récupère les statistiques de navigation"""
+        """Retrieves navigation statistics"""
         return {
             'navigation_stats': self.navigation_stats.copy(),
             'navigation_enabled': self.navigation_enabled,
@@ -579,57 +579,57 @@ class GeminiWebNavigationAdapter:
         }
     
     def enable_navigation(self):
-        """Active la navigation web"""
+        """Enables web navigation"""
         self.navigation_enabled = True
-        logger.info("🟢 Navigation web activée")
+        logger.info("🟢 Web navigation enabled")
     
     def disable_navigation(self):
-        """Désactive la navigation web"""
+        """Disables web navigation"""
         self.navigation_enabled = False
-        logger.info("🔴 Navigation web désactivée")
+        logger.info("🔴 Web navigation disabled")
 
-# Instance globale
+# Global instance
 gemini_navigation_adapter = None
 
 def initialize_gemini_navigation_adapter(gemini_api_instance=None):
-    """Initialise l'adaptateur de navigation Gemini"""
+    """Initializes the Google Gemini 2.0 Flash AI navigation adapter"""
     global gemini_navigation_adapter
     gemini_navigation_adapter = GeminiWebNavigationAdapter(gemini_api_instance)
-    logger.info("🔗 Adaptateur Gemini-Navigation initialisé")
+    logger.info("🔗 Google Gemini 2.0 Flash AI Navigation Adapter initialized")
 
 def handle_gemini_navigation_request(prompt: str, user_id: int = 1, session_id: str = None) -> Dict[str, Any]:
-    """Interface publique pour les requêtes de navigation Gemini"""
+    """Public interface for Google Gemini 2.0 Flash AI navigation requests"""
     if not gemini_navigation_adapter:
         initialize_gemini_navigation_adapter()
     
     return gemini_navigation_adapter.handle_navigation_request(prompt, user_id, session_id)
 
 def detect_navigation_need(prompt: str) -> Dict[str, Any]:
-    """Interface publique pour la détection de navigation"""
+    """Public interface for navigation detection"""
     if not gemini_navigation_adapter:
         initialize_gemini_navigation_adapter()
     
     return gemini_navigation_adapter.detect_navigation_request(prompt)
 
 if __name__ == "__main__":
-    print("=== Test de l'Adaptateur Gemini-Navigation ===")
+    print("=== Google Gemini 2.0 Flash AI Navigation Adapter Test ===")
     
-    # Initialiser
+    # Initialize
     initialize_gemini_navigation_adapter()
     
-    # Tests de détection
+    # Detection tests
     test_prompts = [
-        "Recherche et navigue sur l'intelligence artificielle",
-        "Extrait le contenu de https://example.com",
-        "Explore le site https://wikipedia.org en profondeur",
-        "Simule un parcours d'achat sur https://shop.example.com",
-        "Qu'est-ce que l'apprentissage automatique ?"
+        "Search and navigate artificial intelligence",
+        "Extract content from https://example.com",
+        "Explore the site https://wikipedia.org in depth",
+        "Simulate a purchase journey on https://shop.example.com",
+        "What is machine learning?"
     ]
     
-    print("🧪 Tests de détection de navigation:")
+    print("🧪 Navigation detection tests:")
     for prompt in test_prompts:
         detection = detect_navigation_need(prompt)
         print(f"  📝 '{prompt}'")
-        print(f"     → Type: {detection['navigation_type']}, Confiance: {detection['confidence']}")
-        print(f"     → Paramètres: {detection['extracted_params']}")
+        print(f"     → Type: {detection['navigation_type']}, Confidence: {detection['confidence']}")
+        print(f"     → Parameters: {detection['extracted_params']}")
         print()
