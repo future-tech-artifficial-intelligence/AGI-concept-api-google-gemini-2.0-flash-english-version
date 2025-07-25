@@ -1,13 +1,13 @@
 """
-Module template pour démontrer comment créer un module compatible avec le système.
-Ce module fournit un exemple qu'on peut copier pour créer de nouveaux modules.
+Module template to demonstrate how to create a module compatible with the system.
+This module provides an example that can be copied to create new modules.
 """
 
-# Métadonnées du module
+# Module metadata
 MODULE_METADATA = {
     "enabled": True,
     "priority": 100,
-    "description": "Module template d'exemple",
+    "description": "Example module template",
     "version": "0.1.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
@@ -15,49 +15,49 @@ MODULE_METADATA = {
 
 def process(data: dict, hook: str) -> dict:
     """
-    Fonction principale appelée par le gestionnaire de modules.
+    Main function called by the module manager.
     
     Args:
-        data: Les données à traiter (structure dépendant du hook)
-        hook: Le hook qui est appelé (ex: 'process_request', 'process_response')
+        data: The data to process (structure depending on the hook)
+        hook: The hook being called (e.g., 'process_request', 'process_response')
         
     Returns:
-        Les données éventuellement modifiées
+        The potentially modified data
     """
-    # Ici, nous ne faisons rien, c'est juste un exemple
-    print(f"Module template appelé avec le hook: {hook}")
+    # Here, we do nothing, it's just an example
+    print(f"Module template called with hook: {hook}")
     return data
 
-# Vous pouvez également définir des handlers spécifiques pour chaque hook
+# You can also define specific handlers for each hook
 def handle_process_request(data):
-    """Handler spécifique pour le hook process_request"""
+    """Specific handler for the process_request hook"""
     return data
 
 def handle_process_response(data):
-    """Handler spécifique pour le hook process_response"""
+    """Specific handler for the process_response hook"""
     return data
 
-# Autres fonctions/classes utiles...
+# Other useful functions/classes...
 def utility_function():
-    """Une fonction utilitaire quelconque"""
+    """Any utility function"""
     return "Utility function called"
 
-# Exemple de classe compatible avec le système
+# Example of a class compatible with the system
 class ModuleTemplateProcessor:
-    """Classe qui implémente le traitement pour ce module"""
+    """Class that implements processing for this module"""
     
     def __init__(self):
-        """Initialisation"""
+        """Initialization"""
         self.config = {"some_setting": True}
     
     def process(self, data, hook):
         """
-        Méthode de traitement principal (alternative à la fonction process)
-        Cette méthode sera utilisée si la fonction process n'est pas définie au niveau du module
+        Main processing method (alternative to the process function)
+        This method will be used if the process function is not defined at the module level
         """
         print(f"Class-based process called for hook: {hook}")
         return data
     
     def handle_process_request(self, data):
-        """Handler spécifique pour le hook process_request"""
+        """Specific handler for the process_request hook"""
         return data
