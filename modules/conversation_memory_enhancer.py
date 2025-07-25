@@ -20,7 +20,7 @@ logger = logging.getLogger("conversation_memory_enhancer")
 MODULE_METADATA = {
     "enabled": True,
     "priority": 60,  # High priority to be executed among the first
-    "description": "Enhances AI conversation memory",
+    "description": "Enhances artificial intelligence   API GOOGLE GEMINI 2.0 FLASH conversation memory",
     "version": "1.0.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
