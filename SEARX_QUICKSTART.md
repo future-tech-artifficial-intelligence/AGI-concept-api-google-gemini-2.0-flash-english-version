@@ -1,52 +1,52 @@
-# 🚀 Guide de démarrage rapide - Système Searx
+# 🚀 Quick Start Guide - Searx System
 
-## Démarrage en 5 minutes
+## Get Started in 5 Minutes
 
-### 📋 Prérequis
-- [ ] Docker Desktop installé et démarré
-- [ ] Python 3.8+ disponible
-- [ ] Port 8080 libre
+### 📋 Prerequisites
+- [ ] Docker Desktop installed and running
+- [ ] Python 3.8+ available
+- [ ] Port 8080 free
 
-### 🎯 Étapes rapides
+### 🎯 Quick Steps
 
-1. **Démarrage automatique** (recommandé)
-   ```cmd
-   start_with_searx.bat
-   ```
+1.  **Automatic startup** (recommended)
+    ```cmd
+    start_with_searx.bat
+    ```
 
-2. **Vérification**
-   - ✅ Interface IA: http://localhost:4004
-   - ✅ Interface Searx: http://localhost:8080
+2.  **Verification**
+    -   ✅ artificial intelligence API GOOGLE GEMINI 2.0 FLASH Interface: http://localhost:4004
+    -   ✅ Searx Interface: http://localhost:8080
 
-### 🧪 Test rapide
+### 🧪 Quick Test
 
-Tapez dans l'interface IA :
+Type into the artificial intelligence API GOOGLE GEMINI 2.0 FLASH interface:
 ```
-"Recherche des informations sur Python"
+"Search for information on Python"
 ```
 
-L'IA devrait automatiquement utiliser Searx pour la recherche !
+The artificial intelligence API GOOGLE GEMINI 2.0 FLASH should automatically use Searx for the search!
 
-## ⚡ Commandes utiles
+## ⚡ Useful Commands
 
 ```cmd
-# Test du système
+# System test
 python test_searx_system.py
 
-# Redémarrage Searx
+# Restart Searx
 docker-compose -f docker-compose.searx.yml restart
 
-# Arrêt complet
+# Full shutdown
 docker-compose -f docker-compose.searx.yml down
 ```
 
-## 🆘 Problèmes fréquents
+## 🆘 Frequent Problems
 
-| Problème | Solution |
-|----------|----------|
-| Docker non démarré | Lancer Docker Desktop |
-| Port 8080 occupé | `netstat -ano \| findstr :8080` |
-| Pas de résultats | Vérifier internet + logs |
+| Problem            | Solution               |
+|--------------------|------------------------|
+| Docker not started | Launch Docker Desktop  |
+| Port 8080 occupied | `netstat -ano \| findstr :8080` |
+| No results         | Check internet + logs  |
 
 ---
-**💡 Astuce**: Utilisez `start_with_searx.bat` pour un démarrage entièrement automatisé !
+**💡 Tip**: Use `start_with_searx.bat` for a fully automated startup!
