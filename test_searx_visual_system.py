@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script de test pour le système de capture visuelle Searx
+Test script for the Searx visual capture system
 """
 
 import logging
@@ -8,7 +8,7 @@ import time
 import sys
 import os
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -16,39 +16,39 @@ logging.basicConfig(
 logger = logging.getLogger('searx_visual_test')
 
 def test_dependencies():
-    """Test des dépendances nécessaires"""
-    logger.info("🔍 Test 1: Vérification des dépendances...")
+    """Tests necessary dependencies"""
+    logger.info("🔍 Test 1: Checking dependencies...")
     
     missing_deps = []
     
     try:
         import selenium
-        logger.info("✅ Selenium disponible")
+        logger.info("✅ Selenium available")
     except ImportError:
         missing_deps.append("selenium")
     
     try:
         from PIL import Image
-        logger.info("✅ Pillow disponible")
+        logger.info("✅ Pillow available")
     except ImportError:
         missing_deps.append("Pillow")
     
     try:
         import requests
-        logger.info("✅ Requests disponible")
+        logger.info("✅ Requests available")
     except ImportError:
         missing_deps.append("requests")
     
     if missing_deps:
-        logger.error(f"❌ Dépendances manquantes: {', '.join(missing_deps)}")
+        logger.error(f"❌ Missing dependencies: {', '.join(missing_deps)}")
         return False
     
-    logger.info("✅ Toutes les dépendances sont disponibles")
+    logger.info("✅ All dependencies are available")
     return True
 
 def test_webdriver_initialization():
-    """Test de l'initialisation du WebDriver"""
-    logger.info("🔍 Test 2: Initialisation du WebDriver...")
+    """Tests WebDriver initialization"""
+    logger.info("🔍 Test 2: Initializing WebDriver...")
     
     try:
         from searx_visual_capture import SearxVisualCapture
@@ -56,20 +56,20 @@ def test_webdriver_initialization():
         capture = SearxVisualCapture()
         
         if capture._initialize_webdriver():
-            logger.info("✅ WebDriver initialisé avec succès")
+            logger.info("✅ WebDriver initialized successfully")
             capture.close()
             return True
         else:
-            logger.error("❌ Échec de l'initialisation du WebDriver")
+            logger.error("❌ WebDriver initialization failed")
             return False
             
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test WebDriver: {e}")
+        logger.error(f"❌ Error during WebDriver test: {e}")
         return False
 
 def test_searx_accessibility():
-    """Test de l'accessibilité de Searx"""
-    logger.info("🔍 Test 3: Accessibilité de Searx...")
+    """Tests Searx accessibility"""
+    logger.info("🔍 Test 3: Searx accessibility...")
     
     try:
         import requests
@@ -77,157 +77,157 @@ def test_searx_accessibility():
         response = requests.get("http://localhost:8080/", timeout=10)
         
         if response.status_code == 200:
-            logger.info("✅ Searx est accessible")
+            logger.info("✅ Searx is accessible")
             return True
         else:
-            logger.warning(f"⚠️ Searx répond avec le code: {response.status_code}")
+            logger.warning(f"⚠️ Searx responds with code: {response.status_code}")
             return False
             
     except requests.exceptions.RequestException as e:
-        logger.error(f"❌ Searx inaccessible: {e}")
-        logger.error("Assurez-vous que Searx est démarré avec: start_with_searx.bat")
+        logger.error(f"❌ Searx unreachable: {e}")
+        logger.error("Make sure Searx is started with: start_with_searx.bat")
         return False
 
 def test_visual_capture():
-    """Test de la capture visuelle"""
-    logger.info("🔍 Test 4: Capture visuelle...")
+    """Tests visual capture"""
+    logger.info("🔍 Test 4: Visual capture...")
     
     try:
         from searx_visual_capture import SearxVisualCapture
         
         capture = SearxVisualCapture()
         
-        # Test de capture simple
+        # Simple capture test
         result = capture.capture_search_results("test python", category="general")
         
         if result and result.get('success'):
-            logger.info(f"✅ Capture réussie: {result['screenshot_path']}")
+            logger.info(f"✅ Capture successful: {result['screenshot_path']}")
             
-            # Vérifier que le fichier existe
+            # Check if the file exists
             if os.path.exists(result['screenshot_path']):
-                logger.info("✅ Fichier de capture créé")
+                logger.info("✅ Capture file created")
                 
-                # Vérifier la taille du fichier
+                # Check file size
                 file_size = os.path.getsize(result['screenshot_path'])
-                logger.info(f"📄 Taille du fichier: {file_size} bytes")
+                logger.info(f"📄 File size: {file_size} bytes")
                 
-                if file_size > 1000:  # Au moins 1KB
-                    logger.info("✅ Fichier de capture valide")
+                if file_size > 1000:  # At least 1KB
+                    logger.info("✅ Valid capture file")
                     capture.close()
                     return True
                 else:
-                    logger.warning("⚠️ Fichier de capture trop petit")
+                    logger.warning("⚠️ Capture file too small")
             else:
-                logger.error("❌ Fichier de capture non créé")
+                logger.error("❌ Capture file not created")
         else:
-            logger.error(f"❌ Échec de la capture: {result.get('error', 'Erreur inconnue')}")
+            logger.error(f"❌ Capture failed: {result.get('error', 'Unknown error')}")
         
         capture.close()
         return False
         
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test de capture: {e}")
+        logger.error(f"❌ Error during capture test: {e}")
         return False
 
 def test_visual_annotation():
-    """Test des annotations visuelles"""
-    logger.info("🔍 Test 5: Annotations visuelles...")
+    """Tests visual annotations"""
+    logger.info("🔍 Test 5: Visual annotations...")
     
     try:
         from searx_visual_capture import SearxVisualCapture
         
         capture = SearxVisualCapture()
         
-        # Test de capture avec annotations
-        result = capture.capture_with_annotations("intelligence artificielle", category="general")
+        # Test capture with annotations
+        result = capture.capture_with_annotations("artificial intelligence", category="general")
         
         if result and result.get('success') and result.get('has_annotations'):
-            logger.info("✅ Capture avec annotations réussie")
+            logger.info("✅ Capture with annotations successful")
             
             if result.get('annotated_image'):
-                logger.info("✅ Image annotée générée (base64)")
+                logger.info("✅ Annotated image generated (base64)")
             
             capture.close()
             return True
         else:
-            logger.error("❌ Échec de la capture avec annotations")
+            logger.error("❌ Capture with annotations failed")
             capture.close()
             return False
             
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test d'annotation: {e}")
+        logger.error(f"❌ Error during annotation test: {e}")
         return False
 
 def test_integration_with_searx_interface():
-    """Test de l'intégration avec l'interface Searx"""
-    logger.info("🔍 Test 6: Intégration avec SearxInterface...")
+    """Tests integration with SearxInterface"""
+    logger.info("🔍 Test 6: Integration with SearxInterface...")
     
     try:
         from searx_interface import get_searx_interface
         
         searx = get_searx_interface()
         
-        # Test de recherche avec visuel
+        # Test search with visual
         if hasattr(searx, 'search_with_visual'):
-            result = searx.search_with_visual("test recherche", category="general", max_results=3)
+            result = searx.search_with_visual("test search", category="general", max_results=3)
             
             if result.get('has_visual'):
-                logger.info("✅ Recherche avec capture visuelle réussie")
+                logger.info("✅ Search with visual capture successful")
                 
-                # Test du résumé
+                # Test summary
                 summary = searx.get_visual_search_summary(result)
                 if summary and len(summary) > 100:
-                    logger.info("✅ Résumé visuel généré")
+                    logger.info("✅ Visual summary generated")
                     return True
                 else:
-                    logger.warning("⚠️ Résumé visuel trop court")
+                    logger.warning("⚠️ Visual summary too short")
             else:
-                logger.warning("⚠️ Pas de données visuelles dans le résultat")
+                logger.warning("⚠️ No visual data in result")
         else:
-            logger.error("❌ Méthode search_with_visual non disponible")
+            logger.error("❌ search_with_visual method not available")
             return False
             
     except Exception as e:
-        logger.error(f"❌ Erreur lors du test d'intégration: {e}")
+        logger.error(f"❌ Error during integration test: {e}")
         return False
 
 def test_cleanup():
-    """Test du nettoyage"""
-    logger.info("🔍 Test 7: Nettoyage...")
+    """Tests cleanup"""
+    logger.info("🔍 Test 7: Cleanup...")
     
     try:
         from searx_visual_capture import SearxVisualCapture
         
         capture = SearxVisualCapture()
-        capture.cleanup_old_screenshots(max_age_hours=0)  # Nettoyer tout
+        capture.cleanup_old_screenshots(max_age_hours=0)  # Clean up everything
         
-        # Vérifier le répertoire
+        # Check directory
         screenshots_dir = capture.screenshots_dir
         if os.path.exists(screenshots_dir):
             remaining_files = len([f for f in os.listdir(screenshots_dir) 
                                  if f.endswith('.png')])
-            logger.info(f"📁 Fichiers restants: {remaining_files}")
+            logger.info(f"📁 Remaining files: {remaining_files}")
         
-        logger.info("✅ Nettoyage terminé")
+        logger.info("✅ Cleanup complete")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Erreur lors du nettoyage: {e}")
+        logger.error(f"❌ Error during cleanup: {e}")
         return False
 
 def main():
-    """Exécute tous les tests"""
-    logger.info("🧪 TESTS DU SYSTÈME DE CAPTURE VISUELLE SEARX")
+    """Executes all tests"""
+    logger.info("🧪 SEARX VISUAL CAPTURE SYSTEM TESTS")
     logger.info("=" * 70)
     
     tests = [
-        ("Dépendances", test_dependencies),
+        ("Dependencies", test_dependencies),
         ("WebDriver", test_webdriver_initialization),
-        ("Accessibilité Searx", test_searx_accessibility),
-        ("Capture visuelle", test_visual_capture),
+        ("Searx Accessibility", test_searx_accessibility),
+        ("Visual Capture", test_visual_capture),
         ("Annotations", test_visual_annotation),
-        ("Intégration", test_integration_with_searx_interface),
-        ("Nettoyage", test_cleanup)
+        ("Integration", test_integration_with_searx_interface),
+        ("Cleanup", test_cleanup)
     ]
     
     results = []
@@ -239,44 +239,44 @@ def main():
             results.append((test_name, success))
             
             if success:
-                logger.info(f"✅ {test_name}: RÉUSSI")
+                logger.info(f"✅ {test_name}: SUCCESS")
             else:
-                logger.error(f"❌ {test_name}: ÉCHEC")
+                logger.error(f"❌ {test_name}: FAIL")
                 
         except Exception as e:
-            logger.error(f"💥 {test_name}: ERREUR - {e}")
+            logger.error(f"💥 {test_name}: ERROR - {e}")
             results.append((test_name, False))
         
-        # Pause entre les tests
+        # Pause between tests
         time.sleep(1)
     
-    # Résumé final
+    # Final summary
     logger.info("\n" + "=" * 70)
-    logger.info("📊 RÉSUMÉ DES TESTS")
+    logger.info("📊 TEST SUMMARY")
     logger.info("=" * 70)
     
     passed = sum(1 for _, success in results if success)
     total = len(results)
     
     for test_name, success in results:
-        status = "✅ RÉUSSI" if success else "❌ ÉCHEC"
+        status = "✅ SUCCESS" if success else "❌ FAIL"
         logger.info(f"{test_name:<25} {status}")
     
-    logger.info(f"\nRésultat global: {passed}/{total} tests réussis")
+    logger.info(f"\nOverall result: {passed}/{total} tests successful")
     
     if passed == total:
-        logger.info("🎉 Tous les tests sont passés ! Le système de capture visuelle est opérationnel.")
-        logger.info("\n💡 L'IA peut maintenant voir les résultats de recherche comme un humain !")
+        logger.info("🎉 All tests passed! The visual capture system is operational.")
+        logger.info("\n💡 The AI can now see search results like a human!")
         return True
     elif passed > total // 2:
-        logger.warning(f"⚠️ {passed} tests réussis sur {total}. Le système est partiellement fonctionnel.")
+        logger.warning(f"⚠️ {passed} tests successful out of {total}. The system is partially functional.")
         return True
     else:
-        logger.error("💥 Échec critique. Le système de capture visuelle ne fonctionne pas.")
-        logger.error("\n🔧 Solutions possibles:")
-        logger.error("1. Installer les dépendances: python install_searx_visual_deps.py")
-        logger.error("2. Démarrer Searx: start_with_searx.bat")
-        logger.error("3. Vérifier que Chrome ou Edge est installé")
+        logger.error("💥 Critical failure. The visual capture system is not working.")
+        logger.error("\n🔧 Possible solutions:")
+        logger.error("1. Install dependencies: python install_searx_visual_deps.py")
+        logger.error("2. Start Searx: start_with_searx.bat")
+        logger.error("3. Verify that Chrome or Edge is installed")
         return False
 
 if __name__ == "__main__":
@@ -284,8 +284,8 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        logger.info("\n⏹️ Tests interrompus par l'utilisateur")
+        logger.info("\n⏹️ Tests interrupted by user")
         sys.exit(1)
     except Exception as e:
-        logger.error(f"💥 Erreur fatale: {e}")
+        logger.error(f"💥 Fatal error: {e}")
         sys.exit(1)
