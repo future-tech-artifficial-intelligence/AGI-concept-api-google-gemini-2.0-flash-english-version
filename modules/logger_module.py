@@ -1,23 +1,23 @@
 """
-Module de journalisation pour identifier les problèmes dans le système de modules.
-Ce module enregistre les types de données entrantes et sortantes pour chaque module.
+Logging module to identify issues within the module system.
+This module logs incoming and outgoing data types for each module.
 """
 
 import logging
 import inspect
 from typing import Any, Dict
 
-# Métadonnées du module
+# Module metadata
 MODULE_METADATA = {
     "enabled": True,
-    "priority": 10,  # Priorité très élevée pour s'exécuter avant les autres modules
-    "description": "Module de journalisation des types de données",
+    "priority": 10,  # Very high priority to run before other modules
+    "description": "Data type logging module",
     "version": "0.1.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
 }
 
-# Configuration du logger spécifique
+# Specific logger configuration
 logger = logging.getLogger('module_debugger')
 logger.setLevel(logging.DEBUG)
 if not logger.handlers:
@@ -27,26 +27,26 @@ if not logger.handlers:
 
 def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
     """
-    Fonction principale qui journalise les types de données.
+    Main function that logs data types.
     """
-    # Journaliser le type des données d'entrée
-    logger.debug(f"[{hook}] Entrée: Type={type(data)}")
+    # Log the type of input data
+    logger.debug(f"[{hook}] Input: Type={type(data)}")
     
-    # Pour les dictionnaires, journaliser le type de chaque valeur
+    # For dictionaries, log the type of each value
     if isinstance(data, dict):
         for key, value in data.items():
-            logger.debug(f"[{hook}] Clé={key}, Type={type(value)}")
+            logger.debug(f"[{hook}] Key={key}, Type={type(value)}")
             
-            # Si la valeur est un dictionnaire, journaliser ses types également
+            # If the value is a dictionary, log its types as well
             if isinstance(value, dict):
                 for sub_key, sub_value in value.items():
-                    logger.debug(f"[{hook}] Sous-clé={key}.{sub_key}, Type={sub_value}")
+                    logger.debug(f"[{hook}] Sub-key={key}.{sub_key}, Type={sub_value}")
     
-    # Obtenir le nom du module appelant (qui sera exécuté après celui-ci)
+    # Get the name of the calling module (which will be executed after this one)
     caller_frame = inspect.currentframe().f_back
     if caller_frame:
         caller_module = caller_frame.f_globals.get('__name__')
-        logger.debug(f"[{hook}] Prochain module: {caller_module}")
+        logger.debug(f"[{hook}] Next module: {caller_module}")
     
-    # Ne pas modifier les données, juste les journaliser
+    # Do not modify the data, just log it
     return data
