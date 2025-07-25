@@ -1,5 +1,5 @@
 """
-Implementation of the AIApiInterface for the Google Gemini API.
+Implementation of the AIApiInterface for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH .
 """
 import requests
 import json
