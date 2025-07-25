@@ -1,6 +1,6 @@
 """
-Script de Test et Démonstration du Système de Navigation Web Avancé
-Ce script montre les capacités du système avec des exemples concrets
+**Advanced Web Navigation System Test and Demonstration Script**
+This script showcases the system's capabilities with concrete examples
 """
 
 import logging
