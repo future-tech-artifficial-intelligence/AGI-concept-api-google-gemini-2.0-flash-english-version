@@ -4,7 +4,7 @@
         "path": "modules\\memory_retrieval_enhancer.py",
         "enabled": true,
         "priority": 65,
-        "description": "Renforce les instructions de mémoire des conversations pour l'IA",
+        "description": "Strengthens conversation memory instructions for artificial intelligence API GOOGLE GEMINI 2.0 FLASH",
         "version": "1.0.0",
         "dependencies": ["conversation_memory_enhancer"],
         "hooks": [
@@ -19,7 +19,7 @@
         "path": "modules\\enhanced_reasoning.py",
         "enabled": true,
         "priority": 50,
-        "description": "Am\u00e9liore les capacit\u00e9s de raisonnement structur\u00e9 et de d\u00e9duction logique de Gemini",
+        "description": "Enhances Gemini's structured reasoning and logical deduction capabilities",
         "version": "0.1.0",
         "dependencies": [],
         "hooks": [
@@ -35,7 +35,7 @@
         "path": "modules\\conversation_context_manager.py",
         "enabled": true,
         "priority": 70,
-        "description": "Équilibre les expressions émotionnelles et améliore la continuité des conversations",
+        "description": "Balances emotional expressions and improves conversation continuity",
         "version": "1.0.0",
         "dependencies": [],
         "hooks": [
@@ -51,7 +51,7 @@
         "path": "modules\\logic_improvement.py",
         "enabled": true,
         "priority": 60,
-        "description": "Am\u00e9liore la coh\u00e9rence logique et la d\u00e9tection de contradictions dans les r\u00e9ponses de Gemini",
+        "description": "Improves logical consistency and contradiction detection in Gemini's responses",
         "version": "0.1.0",
         "dependencies": [],
         "hooks": [
@@ -99,7 +99,7 @@
         "path": "modules\\conscience_reflexive.py",
         "enabled": true,
         "priority": 100,
-        "description": "Module de conscience réflexive pour simuler une conscience émotionnelle",
+        "description": "Reflexive consciousness module to simulate emotional awareness",
         "version": "0.1",
         "dependencies": [],
         "hooks": [
@@ -131,7 +131,7 @@
         "path": "modules\\metacognition.py",
         "enabled": true,
         "priority": 100,
-        "description": "Module de métacognition permettant à l'IA de réfléchir sur ses propres processus",
+        "description": "Metacognition module allowing artificial intelligence API GOOGLE GEMINI 2.0 FLASH to reflect on its own processes",
         "version": "0.1",
         "dependencies": [],
         "hooks": [
@@ -147,7 +147,7 @@
         "path": "modules\\module_template.py",
         "enabled": true,
         "priority": 100,
-        "description": "Module template d'exemple",
+        "description": "Example module template",
         "version": "0.1.0",
         "dependencies": [],
         "hooks": [
@@ -192,7 +192,7 @@
         "path": "modules\\logger_module.py",
         "enabled": true,
         "priority": 10,
-        "description": "Module de journalisation des types de donn\u00e9es",
+        "description": "Data type logging module",
         "version": "0.1.0",
         "dependencies": [],
         "hooks": [
@@ -208,7 +208,7 @@
         "path": "modules\\type_corrector.py",
         "enabled": true,
         "priority": 1,
-        "description": "Module de sécurité qui protège contre les erreurs de type",
+        "description": "Security module that protects against type errors",
         "version": "0.2.0",
         "dependencies": [],
         "hooks": [
@@ -224,7 +224,7 @@
         "path": "modules\\conversation_memory_enhancer.py",
         "enabled": true,
         "priority": 60,
-        "description": "Am\u00e9liore la m\u00e9moire des conversations de l'IA",
+        "description": "Enhances the conversation memory of artificial intelligence API GOOGLE GEMINI 2.0 FLASH",
         "version": "1.0.0",
         "dependencies": [],
         "hooks": [
@@ -240,7 +240,7 @@
         "path": "modules\\text_formatter.py",
         "enabled": true,
         "priority": 100,
-        "description": "Améliore la structure et la présentation des réponses textuelles",
+        "description": "Improves the structure and presentation of textual responses",
         "version": "0.1",
         "dependencies": [],
         "hooks": [
@@ -256,7 +256,7 @@
         "path": "modules\\time_awareness_module.py",
         "enabled": true,
         "priority": 40,
-        "description": "Module permettant à Gemini de connaître l'heure et la date actuelles",
+        "description": "Module enabling Gemini to know the current time and date",
         "version": "1.0.0",
         "dependencies": [],
         "hooks": [
