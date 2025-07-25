@@ -1,6 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Test Complet du Système de Navigation Web Avancé avec l'API Gemini
-Ce script teste l'intégration complète et vérifie que tout fonctionne
+Comprehensive Test of the Advanced Web Navigation System with artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+This script tests the full integration and verifies that everything is working
 """
 
 import logging
@@ -11,12 +13,12 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger('GeminiWebNavigationTest')
+logger = logging.getLogger('GeminiWebNavigationTest') # Keeping original logger name as it's code
 
-class GeminiWebNavigationTester:
-    """Testeur complet pour le système de navigation web avec Gemini"""
+class GeminiWebNavigationTester: # Keeping original class name
+    """Comprehensive tester for the web navigation system with artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
     
     def __init__(self):
         self.test_results = {}
@@ -24,14 +26,14 @@ class GeminiWebNavigationTester:
         self.passed_tests = 0
         self.total_tests = 0
         
-        # Créer le répertoire de tests
+        # Create test directory
         self.test_dir = Path("test_results")
         self.test_dir.mkdir(exist_ok=True)
         
-        logger.info("🧪 Testeur Gemini-Navigation initialisé")
+        logger.info("🧪 artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Navigation Tester initialized")
     
     def log_test_result(self, test_name: str, success: bool, message: str = "", data: dict = None):
-        """Enregistre le résultat d'un test"""
+        """Logs the result of a test"""
         self.total_tests += 1
         if success:
             self.passed_tests += 1
@@ -48,15 +50,15 @@ class GeminiWebNavigationTester:
         }
     
     def test_module_imports(self):
-        """Test 1: Vérifier que tous les modules s'importent correctement"""
-        logger.info("🔧 Test 1: Import des modules")
+        """Test 1: Verify that all modules import correctly"""
+        logger.info("🔧 Test 1: Module Imports")
         
         modules_to_test = [
-            ('advanced_web_navigator', 'Navigateur Web Avancé'),
-            ('gemini_web_integration', 'Intégration Gemini-Web'),
-            ('gemini_navigation_adapter', 'Adaptateur Navigation Gemini'),
-            ('web_navigation_api', 'API REST Navigation Web'),
-            ('gemini_api_adapter', 'Adaptateur Gemini Original')
+            ('advanced_web_navigator', 'Advanced Web Navigator'),
+            ('gemini_web_integration', 'artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Web Integration'),
+            ('gemini_navigation_adapter', 'artificial intelligence API GOOGLE GEMINI 2.0 FLASH Navigation Adapter'),
+            ('web_navigation_api', 'Web Navigation REST API'),
+            ('gemini_api_adapter', 'Original artificial intelligence API GOOGLE GEMINI 2.0 FLASH Adapter')
         ]
         
         imported_modules = {}
@@ -66,88 +68,88 @@ class GeminiWebNavigationTester:
             try:
                 module = __import__(module_name)
                 imported_modules[module_name] = module
-                self.log_test_result(f"Import {display_name}", True, "Module importé avec succès")
+                self.log_test_result(f"Import {display_name}", True, "Module imported successfully")
             except ImportError as e:
-                self.log_test_result(f"Import {display_name}", False, f"Erreur d'import: {str(e)}")
+                self.log_test_result(f"Import {display_name}", False, f"Import error: {str(e)}")
                 all_success = False
             except Exception as e:
-                self.log_test_result(f"Import {display_name}", False, f"Erreur: {str(e)}")
+                self.log_test_result(f"Import {display_name}", False, f"Error: {str(e)}")
                 all_success = False
         
-        self.log_test_result("Import Global", all_success, 
-                           f"{len(imported_modules)}/{len(modules_to_test)} modules importés")
+        self.log_test_result("Global Import", all_success, 
+                           f"{len(imported_modules)}/{len(modules_to_test)} modules imported")
         
         return imported_modules
     
     def test_gemini_api_initialization(self):
-        """Test 2: Initialiser l'API Gemini et vérifier l'intégration"""
-        logger.info("🤖 Test 2: Initialisation API Gemini")
+        """Test 2: Initialize artificial intelligence API GOOGLE GEMINI 2.0 FLASH API and verify integration"""
+        logger.info("🤖 Test 2: artificial intelligence API GOOGLE GEMINI 2.0 FLASH API Initialization")
         
         try:
-            from gemini_api_adapter import GeminiAPI
-            from gemini_navigation_adapter import initialize_gemini_navigation_adapter
+            from gemini_api_adapter import GeminiAPI # Keeping original class name
+            from gemini_navigation_adapter import initialize_gemini_navigation_adapter # Keeping original function name
             
-            # Créer une instance Gemini
-            gemini_api = GeminiAPI()
-            self.log_test_result("Création Instance Gemini", True, "API Gemini créée")
+            # Create artificial intelligence API GOOGLE GEMINI 2.0 FLASH instance
+            gemini_api = GeminiAPI() # Keeping original class name
+            self.log_test_result("Create artificial intelligence API GOOGLE GEMINI 2.0 FLASH Instance", True, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API created")
             
-            # Initialiser l'adaptateur de navigation
-            initialize_gemini_navigation_adapter(gemini_api)
-            self.log_test_result("Initialisation Adaptateur Navigation", True, "Adaptateur initialisé")
+            # Initialize navigation adapter
+            initialize_gemini_navigation_adapter(gemini_api) # Keeping original function name
+            self.log_test_result("Initialize Navigation Adapter", True, "Adapter initialized")
             
-            # Vérifier que l'intégration est disponible
-            from gemini_navigation_adapter import gemini_navigation_adapter
-            if gemini_navigation_adapter:
-                self.log_test_result("Vérification Intégration", True, "Intégration active")
+            # Verify integration is available
+            from gemini_navigation_adapter import gemini_navigation_adapter # Keeping original variable name
+            if gemini_navigation_adapter: # Keeping original variable name
+                self.log_test_result("Integration Verification", True, "Integration active")
                 return gemini_api
             else:
-                self.log_test_result("Vérification Intégration", False, "Adaptateur non initialisé")
+                self.log_test_result("Integration Verification", False, "Adapter not initialized")
                 return None
                 
         except Exception as e:
-            self.log_test_result("Initialisation API Gemini", False, f"Erreur: {str(e)}")
+            self.log_test_result("artificial intelligence API GOOGLE GEMINI 2.0 FLASH API Initialization", False, f"Error: {str(e)}")
             return None
     
     def test_navigation_detection(self, gemini_api):
-        """Test 3: Tester la détection de navigation"""
-        logger.info("🔍 Test 3: Détection de Navigation")
+        """Test 3: Test Navigation Detection"""
+        logger.info("🔍 Test 3: Navigation Detection")
         
         if not gemini_api:
-            self.log_test_result("Test Détection", False, "API Gemini non disponible")
+            self.log_test_result("Test Detection", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API not available")
             return
         
         try:
-            from gemini_navigation_adapter import detect_navigation_need
+            from gemini_navigation_adapter import detect_navigation_need # Keeping original function name
             
-            # Tests de détection avec différents prompts
+            # Detection tests with different prompts
             test_cases = [
                 {
-                    'prompt': "Recherche et navigue sur l'intelligence artificielle",
+                    'prompt': "Search and navigate artificial intelligence",
                     'expected_navigation': True,
                     'expected_type': 'search_and_navigate'
                 },
                 {
-                    'prompt': "Extrait le contenu de https://example.com",
+                    'prompt': "Extract content from https://example.com",
                     'expected_navigation': True,
                     'expected_type': 'content_extraction'
                 },
                 {
-                    'prompt': "Explore le site https://wikipedia.org en profondeur",
+                    'prompt': "Explore the site https://wikipedia.org in depth",
                     'expected_navigation': True,
                     'expected_type': 'deep_navigation'
                 },
                 {
-                    'prompt': "Simule un parcours d'achat sur ce site",
+                    'prompt': "Simulate a shopping journey on this site",
                     'expected_navigation': True,
                     'expected_type': 'user_journey'
                 },
                 {
-                    'prompt': "Qu'est-ce que l'apprentissage automatique ?",
-                    'expected_navigation': True,  # Devrait être détecté comme recherche générale
+                    'prompt': "What is machine learning?",
+                    'expected_navigation': True,  # Should be detected as general search
                     'expected_type': 'search_and_navigate'
                 },
                 {
-                    'prompt': "Bonjour, comment allez-vous ?",
+                    'prompt': "Hello, how are you?",
                     'expected_navigation': False,
                     'expected_type': None
                 }
@@ -161,16 +163,16 @@ class GeminiWebNavigationTester:
                 expected_nav = test_case['expected_navigation']
                 expected_type = test_case['expected_type']
                 
-                detection = detect_navigation_need(prompt)
+                detection = detect_navigation_need(prompt) # Keeping original function name
                 
                 requires_nav = detection.get('requires_navigation', False)
                 nav_type = detection.get('navigation_type')
                 confidence = detection.get('confidence', 0)
                 
-                # Vérifier si la détection correspond aux attentes
+                # Check if detection matches expectations
                 detection_correct = (requires_nav == expected_nav)
                 if expected_nav and nav_type != expected_type:
-                    # Permettre une certaine flexibilité dans les types
+                    # Allow some flexibility in types
                     if not (expected_type == 'search_and_navigate' and nav_type == 'search_and_navigate'):
                         detection_correct = False
                 
@@ -194,26 +196,26 @@ class GeminiWebNavigationTester:
                 logger.info(f"  {status} '{prompt[:50]}...' → Nav: {requires_nav}, Type: {nav_type}, Conf: {confidence:.2f}")
             
             success_rate = (successful_detections / len(test_cases)) * 100
-            overall_success = success_rate >= 70  # Au moins 70% de réussite
+            overall_success = success_rate >= 70  # At least 70% success
             
-            self.log_test_result("Détection Navigation", overall_success, 
-                               f"Taux de réussite: {success_rate:.1f}% ({successful_detections}/{len(test_cases)})",
+            self.log_test_result("Navigation Detection", overall_success, 
+                               f"Success Rate: {success_rate:.1f}% ({successful_detections}/{len(test_cases)})",
                                {'results': detection_results, 'success_rate': success_rate})
             
             return detection_results
             
         except Exception as e:
-            self.log_test_result("Test Détection", False, f"Erreur: {str(e)}")
+            self.log_test_result("Test Detection", False, f"Error: {str(e)}")
             return None
     
     def test_web_extraction(self):
-        """Test 4: Tester l'extraction de contenu web"""
-        logger.info("🌐 Test 4: Extraction de Contenu Web")
+        """Test 4: Test Web Content Extraction"""
+        logger.info("🌐 Test 4: Web Content Extraction")
         
         try:
-            from advanced_web_navigator import extract_website_content
+            from advanced_web_navigator import extract_website_content # Keeping original function name
             
-            # URLs de test
+            # Test URLs
             test_urls = [
                 "https://httpbin.org/json",
                 "https://httpbin.org/html",
@@ -223,10 +225,10 @@ class GeminiWebNavigationTester:
             successful_extractions = 0
             
             for url in test_urls:
-                logger.info(f"  🔍 Test extraction: {url}")
+                logger.info(f"  🔍 Extraction test: {url}")
                 
                 start_time = time.time()
-                content = extract_website_content(url)
+                content = extract_website_content(url) # Keeping original function name
                 extraction_time = time.time() - start_time
                 
                 if content.success:
@@ -253,52 +255,52 @@ class GeminiWebNavigationTester:
                     'status': status
                 })
                 
-                logger.info(f"    {status} Temps: {extraction_time:.2f}s, "
-                          f"Contenu: {len(content.cleaned_text) if content.success else 0} chars, "
-                          f"Qualité: {content.content_quality_score if content.success else 0:.1f}")
+                logger.info(f"    {status} Time: {extraction_time:.2f}s, "
+                          f"Content: {len(content.cleaned_text) if content.success else 0} chars, "
+                          f"Quality: {content.content_quality_score if content.success else 0:.1f}")
                 
-                time.sleep(1)  # Délai entre les requêtes
+                time.sleep(1)  # Delay between requests
             
             success_rate = (successful_extractions / len(test_urls)) * 100
-            overall_success = success_rate >= 80  # Au moins 80% de réussite
+            overall_success = success_rate >= 80  # At least 80% success
             
-            self.log_test_result("Extraction Web", overall_success,
-                               f"Taux de réussite: {success_rate:.1f}% ({successful_extractions}/{len(test_urls)})",
+            self.log_test_result("Web Extraction", overall_success,
+                               f"Success Rate: {success_rate:.1f}% ({successful_extractions}/{len(test_urls)})",
                                {'results': extraction_results})
             
             return extraction_results
             
         except Exception as e:
-            self.log_test_result("Test Extraction Web", False, f"Erreur: {str(e)}")
+            self.log_test_result("Test Web Extraction", False, f"Error: {str(e)}")
             return None
     
     def test_gemini_integration_full(self, gemini_api):
-        """Test 5: Test complet d'intégration avec Gemini"""
-        logger.info("🚀 Test 5: Intégration Complète avec Gemini")
+        """Test 5: Full Integration Test with artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
+        logger.info("🚀 Test 5: Full Integration with artificial intelligence API GOOGLE GEMINI 2.0 FLASH")
         
         if not gemini_api:
-            self.log_test_result("Test Intégration Complète", False, "API Gemini non disponible")
+            self.log_test_result("Full Integration Test", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API not available")
             return
         
         try:
-            # Test de requêtes avec navigation
+            # Navigation-enabled query test
             test_prompts = [
-                "Recherche des informations sur l'intelligence artificielle",
-                "Qu'est-ce que Python ?",
-                "Extrait le contenu de https://httpbin.org/json"
+                "Search for information on artificial intelligence",
+                "What is Python?",
+                "Extract content from https://httpbin.org/json"
             ]
             
             integration_results = []
             successful_responses = 0
             
             for prompt in test_prompts:
-                logger.info(f"  🤖 Test Gemini: '{prompt}'")
+                logger.info(f"  🤖 artificial intelligence API GOOGLE GEMINI 2.0 FLASH Test: '{prompt}'")
                 
                 try:
                     start_time = time.time()
                     
-                    # Tester avec l'API Gemini modifiée (utilise la méthode fallback pour les tests)
-                    response = gemini_api._fallback_get_response(
+                    # Test with the modified artificial intelligence API GOOGLE GEMINI 2.0 FLASH API (uses fallback method for tests)
+                    response = gemini_api._fallback_get_response( # Keeping original method name
                         prompt=prompt,
                         user_id=1,
                         session_id="test_session"
@@ -306,16 +308,16 @@ class GeminiWebNavigationTester:
                     
                     processing_time = time.time() - start_time
                     
-                    # Vérifier la réponse
+                    # Check the response
                     if response and 'response' in response:
                         successful_responses += 1
                         status = "✅"
                         
-                        # Vérifier si la navigation a été utilisée
+                        # Check if navigation was used
                         response_text = response['response']
                         navigation_used = any(indicator in response_text.lower() for indicator in [
-                            'navigation web', 'recherche web', 'contenu extrait', 
-                            'sites web', 'pages visitées', 'navigation'
+                            'web navigation', 'web search', 'extracted content', 
+                            'websites', 'visited pages', 'navigation'
                         ])
                         
                         result_details = {
@@ -326,13 +328,13 @@ class GeminiWebNavigationTester:
                             'has_emotional_state': 'emotional_state' in response
                         }
                         
-                        logger.info(f"    ✅ Réponse reçue: {len(response_text)} chars, "
-                                  f"Navigation: {'Oui' if navigation_used else 'Non'}, "
-                                  f"Temps: {processing_time:.2f}s")
+                        logger.info(f"    ✅ Response received: {len(response_text)} chars, "
+                                  f"Navigation: {'Yes' if navigation_used else 'No'}, "
+                                  f"Time: {processing_time:.2f}s")
                     else:
                         status = "❌"
-                        result_details = {'error': 'Pas de réponse reçue'}
-                        logger.info(f"    ❌ Pas de réponse reçue")
+                        result_details = {'error': 'No response received'}
+                        logger.info(f"    ❌ No response received")
                     
                     integration_results.append({
                         'prompt': prompt,
@@ -342,7 +344,7 @@ class GeminiWebNavigationTester:
                     })
                     
                 except Exception as e:
-                    logger.error(f"    ❌ Erreur pour '{prompt}': {str(e)}")
+                    logger.error(f"    ❌ Error for '{prompt}': {str(e)}")
                     integration_results.append({
                         'prompt': prompt,
                         'success': False,
@@ -350,44 +352,44 @@ class GeminiWebNavigationTester:
                         'status': "❌"
                     })
                 
-                time.sleep(2)  # Délai entre les requêtes Gemini
+                time.sleep(2)  # Delay between artificial intelligence API GOOGLE GEMINI 2.0 FLASH requests
             
             success_rate = (successful_responses / len(test_prompts)) * 100
-            overall_success = success_rate >= 70  # Au moins 70% de réussite
+            overall_success = success_rate >= 70  # At least 70% success
             
-            self.log_test_result("Intégration Complète Gemini", overall_success,
-                               f"Taux de réussite: {success_rate:.1f}% ({successful_responses}/{len(test_prompts)})",
+            self.log_test_result("Full artificial intelligence API GOOGLE GEMINI 2.0 FLASH Integration", overall_success,
+                               f"Success Rate: {success_rate:.1f}% ({successful_responses}/{len(test_prompts)})",
                                {'results': integration_results})
             
             return integration_results
             
         except Exception as e:
-            self.log_test_result("Test Intégration Complète", False, f"Erreur: {str(e)}")
+            self.log_test_result("Full Integration Test", False, f"Error: {str(e)}")
             return None
     
     def test_api_endpoints(self):
-        """Test 6: Tester les endpoints de l'API REST"""
-        logger.info("🌐 Test 6: Endpoints API REST")
+        """Test 6: Test REST API Endpoints"""
+        logger.info("🌐 Test 6: REST API Endpoints")
         
         try:
-            from web_navigation_api import register_web_navigation_api, initialize_web_navigation_api
+            from web_navigation_api import register_web_navigation_api, initialize_web_navigation_api # Keeping original function names
             from flask import Flask
             
-            # Créer une app Flask de test
+            # Create a test Flask app
             app = Flask(__name__)
-            register_web_navigation_api(app)
-            initialize_web_navigation_api()
+            register_web_navigation_api(app) # Keeping original function name
+            initialize_web_navigation_api() # Keeping original function name
             
             endpoint_results = []
             successful_endpoints = 0
             
             with app.test_client() as client:
-                # Test des endpoints principaux
+                # Main endpoints test
                 endpoints_to_test = [
                     ('GET', '/api/web-navigation/health', None, 'Health Check'),
                     ('GET', '/api/web-navigation/docs', None, 'Documentation'),
-                    ('GET', '/api/web-navigation/stats', None, 'Statistiques'),
-                    ('POST', '/api/web-navigation/create-session', {'user_id': 'test_user'}, 'Création Session'),
+                    ('GET', '/api/web-navigation/stats', None, 'Statistics'),
+                    ('POST', '/api/web-navigation/create-session', {'user_id': 'test_user'}, 'Session Creation'),
                 ]
                 
                 for method, endpoint, data, description in endpoints_to_test:
@@ -437,7 +439,7 @@ class GeminiWebNavigationTester:
                         logger.info(f"    {status} {description}: HTTP {response.status_code}")
                         
                     except Exception as e:
-                        logger.error(f"    ❌ Erreur {description}: {str(e)}")
+                        logger.error(f"    ❌ Error {description}: {str(e)}")
                         endpoint_results.append({
                             'method': method,
                             'endpoint': endpoint,
@@ -448,26 +450,26 @@ class GeminiWebNavigationTester:
                         })
             
             success_rate = (successful_endpoints / len(endpoints_to_test)) * 100
-            overall_success = success_rate >= 75  # Au moins 75% de réussite
+            overall_success = success_rate >= 75  # At least 75% success
             
-            self.log_test_result("API REST Endpoints", overall_success,
-                               f"Taux de réussite: {success_rate:.1f}% ({successful_endpoints}/{len(endpoints_to_test)})",
+            self.log_test_result("REST API Endpoints", overall_success,
+                               f"Success Rate: {success_rate:.1f}% ({successful_endpoints}/{len(endpoints_to_test)})",
                                {'results': endpoint_results})
             
             return endpoint_results
             
         except Exception as e:
-            self.log_test_result("Test API Endpoints", False, f"Erreur: {str(e)}")
+            self.log_test_result("Test API Endpoints", False, f"Error: {str(e)}")
             return None
     
     def test_performance_benchmark(self):
-        """Test 7: Benchmark de performance"""
-        logger.info("⚡ Test 7: Benchmark de Performance")
+        """Test 7: Performance Benchmark"""
+        logger.info("⚡ Test 7: Performance Benchmark")
         
         try:
-            from advanced_web_navigator import extract_website_content
+            from advanced_web_navigator import extract_website_content # Keeping original function name
             
-            # Test avec plusieurs URLs pour mesurer les performances
+            # Test with multiple URLs to measure performance
             test_urls = [
                 "https://httpbin.org/json",
                 "https://httpbin.org/html",
@@ -478,7 +480,7 @@ class GeminiWebNavigationTester:
             total_time = 0
             successful_requests = 0
             
-            logger.info(f"  📊 Test de performance sur {len(test_urls)} URLs")
+            logger.info(f"  📊 Performance test on {len(test_urls)} URLs")
             
             overall_start = time.time()
             
@@ -486,7 +488,7 @@ class GeminiWebNavigationTester:
                 logger.info(f"  {i}/{len(test_urls)} Test: {url}")
                 
                 start_time = time.time()
-                content = extract_website_content(url)
+                content = extract_website_content(url) # Keeping original function name
                 end_time = time.time()
                 
                 request_time = end_time - start_time
@@ -515,13 +517,13 @@ class GeminiWebNavigationTester:
                     'status': status
                 })
                 
-                logger.info(f"    {status} Temps: {request_time:.2f}s")
+                logger.info(f"    {status} Time: {request_time:.2f}s")
                 
-                time.sleep(0.5)  # Petit délai entre les requêtes
+                time.sleep(0.5)  # Small delay between requests
             
             overall_time = time.time() - overall_start
             
-            # Calculer les métriques de performance
+            # Calculate performance metrics
             avg_time_per_request = total_time / len(test_urls)
             success_rate = (successful_requests / len(test_urls)) * 100
             
@@ -535,35 +537,35 @@ class GeminiWebNavigationTester:
                 'requests_per_second': len(test_urls) / overall_time if overall_time > 0 else 0
             }
             
-            # Critères de performance acceptables
+            # Acceptable performance criteria
             performance_ok = (
-                avg_time_per_request < 10.0 and  # Moins de 10s par requête
-                success_rate >= 70              # Au moins 70% de réussite
+                avg_time_per_request < 10.0 and  # Less than 10s per request
+                success_rate >= 70              # At least 70% success
             )
             
-            logger.info(f"  📈 Métriques de performance:")
-            logger.info(f"    - Temps moyen par requête: {avg_time_per_request:.2f}s")
-            logger.info(f"    - Taux de réussite: {success_rate:.1f}%")
-            logger.info(f"    - Requêtes par seconde: {performance_metrics['requests_per_second']:.2f}")
+            logger.info(f"  📈 Performance Metrics:")
+            logger.info(f"    - Average time per request: {avg_time_per_request:.2f}s")
+            logger.info(f"    - Success Rate: {success_rate:.1f}%")
+            logger.info(f"    - Requests per second: {performance_metrics['requests_per_second']:.2f}")
             
-            self.log_test_result("Benchmark Performance", performance_ok,
-                               f"Temps moyen: {avg_time_per_request:.2f}s, Réussite: {success_rate:.1f}%",
+            self.log_test_result("Performance Benchmark", performance_ok,
+                               f"Average time: {avg_time_per_request:.2f}s, Success: {success_rate:.1f}%",
                                {'metrics': performance_metrics, 'results': performance_results})
             
             return performance_metrics
             
         except Exception as e:
-            self.log_test_result("Test Performance", False, f"Erreur: {str(e)}")
+            self.log_test_result("Test Performance", False, f"Error: {str(e)}")
             return None
     
     def generate_test_report(self):
-        """Génère un rapport de test complet"""
-        logger.info("📋 Génération du rapport de test")
+        """Generates a comprehensive test report"""
+        logger.info("📋 Generating test report")
         
-        # Calculer les statistiques générales
+        # Calculate general statistics
         success_rate = (self.passed_tests / self.total_tests * 100) if self.total_tests > 0 else 0
         
-        # Créer le rapport
+        # Create the report
         report = {
             'test_summary': {
                 'timestamp': datetime.now().isoformat(),
@@ -577,77 +579,77 @@ class GeminiWebNavigationTester:
             'errors': self.errors
         }
         
-        # Sauvegarder le rapport JSON
+        # Save JSON report
         report_file = self.test_dir / f"gemini_web_navigation_test_report_{int(time.time())}.json"
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, ensure_ascii=False)
         
-        # Créer un rapport markdown lisible
+        # Create a readable markdown report
         md_report = self._create_markdown_report(report)
         md_file = self.test_dir / f"gemini_web_navigation_test_report_{int(time.time())}.md"
         with open(md_file, 'w', encoding='utf-8') as f:
             f.write(md_report)
         
-        logger.info(f"📄 Rapport sauvegardé: {report_file}")
-        logger.info(f"📄 Rapport markdown: {md_file}")
+        logger.info(f"📄 Report saved: {report_file}")
+        logger.info(f"📄 Markdown report: {md_file}")
         
         return report
     
     def _create_markdown_report(self, report):
-        """Crée un rapport markdown"""
+        """Creates a markdown report"""
         summary = report['test_summary']
         
-        md = f"""# Rapport de Test - Système Navigation Web Avancé avec Gemini
+        md = f"""# Test Report - Advanced Web Navigation System with artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## Résumé
-- **Date du test**: {summary['timestamp'][:19]}
-- **Tests totaux**: {summary['total_tests']}
-- **Tests réussis**: {summary['passed_tests']}
-- **Tests échoués**: {summary['failed_tests']}
-- **Taux de réussite**: {summary['success_rate']:.1f}%
-- **Statut global**: {summary['overall_status']}
+## Summary
+- **Test Date**: {summary['timestamp'][:19]}
+- **Total Tests**: {summary['total_tests']}
+- **Passed Tests**: {summary['passed_tests']}
+- **Failed Tests**: {summary['failed_tests']}
+- **Success Rate**: {summary['success_rate']:.1f}%
+- **Overall Status**: {summary['overall_status']}
 
-## Détail des Tests
+## Test Details
 
 """
         
         for test_name, result in report['test_results'].items():
-            status = "✅ RÉUSSI" if result['success'] else "❌ ÉCHOUÉ"
+            status = "✅ PASSED" if result['success'] else "❌ FAILED"
             md += f"### {test_name}\n"
-            md += f"**Statut**: {status}\n"
+            md += f"**Status**: {status}\n"
             md += f"**Message**: {result['message']}\n"
             
             if result.get('data'):
-                md += f"**Données**: Voir le fichier JSON pour les détails\n"
+                md += f"**Data**: See JSON file for details\n"
             
             md += "\n"
         
         if report['errors']:
-            md += "## Erreurs Rencontrées\n\n"
+            md += "## Errors Encountered\n\n"
             for error in report['errors']:
                 md += f"- {error}\n"
         
         md += f"""
-## Recommandations
+## Recommendations
 
-### Statut Global: {summary['overall_status']}
+### Overall Status: {summary['overall_status']}
 
 """
         
         if summary['success_rate'] >= 90:
-            md += "🎉 **EXCELLENT** - Le système fonctionne parfaitement avec Gemini !\n"
+            md += "🎉 **EXCELLENT** - The system works perfectly with artificial intelligence API GOOGLE GEMINI 2.0 FLASH!\n"
         elif summary['success_rate'] >= 70:
-            md += "👍 **BON** - Le système fonctionne bien avec quelques améliorations possibles.\n"
+            md += "👍 **GOOD** - The system works well with some possible improvements.\n"
         elif summary['success_rate'] >= 50:
-            md += "⚠️ **MOYEN** - Le système fonctionne partiellement, vérifications nécessaires.\n"
+            md += "⚠️ **AVERAGE** - The system works partially, checks needed.\n"
         else:
-            md += "🚨 **PROBLÈME** - Le système nécessite des corrections importantes.\n"
+            md += "🚨 **PROBLEM** - The system requires significant fixes.\n"
         
         return md
     
     def run_all_tests(self):
-        """Lance tous les tests"""
-        logger.info("🚀 DÉMARRAGE DES TESTS COMPLETS")
+        """Runs all tests"""
+        logger.info("🚀 STARTING COMPREHENSIVE TESTS")
         logger.info("=" * 60)
         
         start_time = time.time()
@@ -656,81 +658,81 @@ class GeminiWebNavigationTester:
             # Test 1: Imports
             imported_modules = self.test_module_imports()
             
-            # Test 2: Initialisation Gemini
+            # Test 2: artificial intelligence API GOOGLE GEMINI 2.0 FLASH Initialization
             gemini_api = self.test_gemini_api_initialization()
             
-            # Test 3: Détection de navigation
+            # Test 3: Navigation detection
             self.test_navigation_detection(gemini_api)
             
-            # Test 4: Extraction web
+            # Test 4: Web extraction
             self.test_web_extraction()
             
-            # Test 5: Intégration complète avec Gemini
+            # Test 5: Full integration with artificial intelligence API GOOGLE GEMINI 2.0 FLASH
             self.test_gemini_integration_full(gemini_api)
             
-            # Test 6: API REST
+            # Test 6: REST API
             self.test_api_endpoints()
             
             # Test 7: Performance
             self.test_performance_benchmark()
             
         except Exception as e:
-            logger.error(f"Erreur lors des tests: {str(e)}")
-            self.log_test_result("Exécution Globale", False, f"Erreur critique: {str(e)}")
+            logger.error(f"Error during tests: {str(e)}")
+            self.log_test_result("Global Execution", False, f"Critical error: {str(e)}")
         
         total_time = time.time() - start_time
         
-        # Générer le rapport
+        # Generate report
         report = self.generate_test_report()
         
-        # Afficher le résumé final
+        # Display final summary
         logger.info("=" * 60)
-        logger.info("🏁 TESTS TERMINÉS")
-        logger.info(f"⏱️ Temps total: {total_time:.2f}s")
-        logger.info(f"📊 Résultats: {self.passed_tests}/{self.total_tests} tests réussis ({report['test_summary']['success_rate']:.1f}%)")
+        logger.info("🏁 TESTS COMPLETED")
+        logger.info(f"⏱️ Total Time: {total_time:.2f}s")
+        logger.info(f"📊 Results: {self.passed_tests}/{self.total_tests} tests successful ({report['test_summary']['success_rate']:.1f}%)")
         
         if report['test_summary']['overall_status'] == 'PASSED':
-            logger.info("🎉 TOUS LES TESTS PRINCIPAUX SONT PASSÉS !")
-            logger.info("✅ Le système de navigation web fonctionne avec Gemini")
+            logger.info("🎉 ALL MAIN TESTS PASSED!")
+            logger.info("✅ The web navigation system works with artificial intelligence API GOOGLE GEMINI 2.0 FLASH")
         else:
-            logger.info("⚠️ Certains tests ont échoué")
-            logger.info("🔧 Vérifiez les erreurs dans le rapport de test")
+            logger.info("⚠️ Some tests failed")
+            logger.info("🔧 Check errors in the test report")
         
         logger.info("=" * 60)
         
         return report
 
 def main():
-    """Fonction principale"""
-    print("🧪 TEST COMPLET - Système Navigation Web Avancé avec Gemini")
+    """Main function"""
+    print("🧪 COMPREHENSIVE TEST - Advanced Web Navigation System with artificial intelligence API GOOGLE GEMINI 2.0 FLASH")
     print("=" * 70)
-    print(f"🕐 Démarré le: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"🕐 Started on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 70)
     
-    # Créer le testeur
+    # Create the tester
     tester = GeminiWebNavigationTester()
     
     try:
-        # Lancer tous les tests
+        # Run all tests
         report = tester.run_all_tests()
         
-        # Résultat final
+        # Final result
         if report['test_summary']['overall_status'] == 'PASSED':
-            print("\n🎊 SUCCÈS COMPLET !")
-            print("✅ Le système de navigation web fonctionne parfaitement avec Gemini")
-            print("🚀 Vous pouvez maintenant utiliser les nouvelles capacités de navigation")
+            print("\n🎊 FULL SUCCESS!")
+            print("✅ The web navigation system works perfectly with artificial intelligence API GOOGLE GEMINI 2.0 FLASH")
+            print("🚀 You can now use the new navigation capabilities")
             return True
         else:
-            print("\n⚠️ TESTS PARTIELLEMENT RÉUSSIS")
-            print("🔧 Certaines fonctionnalités nécessitent des ajustements")
-            print("📋 Consultez le rapport de test pour plus de détails")
+            print("\n⚠️ PARTIALLY SUCCESSFUL TESTS")
+            print("🔧 Some functionalities require adjustments")
+            print("📋 Consult the test report for more details")
             return False
             
     except KeyboardInterrupt:
-        print("\n⏹️ Tests interrompus par l'utilisateur")
+        print("\n⏹️ Tests interrupted by user")
         return False
     except Exception as e:
-        print(f"\n❌ Erreur critique lors des tests: {str(e)}")
+        print(f"\n❌ Critical error during tests: {str(e)}")
         return False
 
 if __name__ == "__main__":
