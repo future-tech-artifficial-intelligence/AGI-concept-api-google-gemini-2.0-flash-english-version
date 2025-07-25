@@ -1,7 +1,7 @@
 """
-Module d'amélioration de la récupération de mémoire pour Gemini.
-Ce module renforce la capacité de l'IA à se souvenir des conversations précédentes
-en augmentant les instructions explicites concernant la mémoire.
+Memory Retrieval Enhancement Module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH.
+This enhancement module strengthens the ability of artificial intelligence API GOOGLE GEMINI 2.0 FLASH to remember previous conversations
+by increasing explicit memory instructions.
 """
 
 import logging
@@ -11,34 +11,34 @@ from typing import Dict, Any, List, Optional, Union
 from memory_engine import MemoryEngine
 from modules.conversation_memory_enhancer import get_session_id_from_data, get_user_id_from_data
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("memory_retrieval_enhancer")
 
-# Métadonnées du module
+# Module metadata
 MODULE_METADATA = {
     "enabled": True,
-    "priority": 65,  # Priorité intermédiaire pour s'exécuter après conversation_memory_enhancer
-    "description": "Renforce les instructions de mémoire des conversations pour l'IA",
+    "priority": 65,  # Intermediate priority to run after conversation_memory_enhancer
+    "description": "Strengthens AI conversation memory instructions",
     "version": "1.0.0",
     "dependencies": ["conversation_memory_enhancer"],
     "hooks": ["process_request"]
 }
 
-# Instance globale du moteur de mémoire
+# Global instance of the memory engine
 memory_engine = MemoryEngine()
 
 def enhance_memory_instructions(data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Ajoute des instructions explicites pour que l'IA utilise la mémoire des conversations.
+    Adds explicit instructions for the AI to use conversation memory.
     
     Args:
-        data: Les données de la requête
+        data: The request data
     
     Returns:
-        Les données modifiées avec des instructions renforcées
+        Modified data with strengthened instructions
     """
-    # S'assurer que le contexte existe et est un dictionnaire
+    # Ensure context exists and is a dictionary
     if 'context' not in data:
         data['context'] = {}
     
@@ -50,10 +50,10 @@ def enhance_memory_instructions(data: Dict[str, Any]) -> Dict[str, Any]:
     session_id = get_session_id_from_data(data)
     
     if not user_id or not session_id:
-        logger.warning("Impossible d'ajouter les instructions de mémoire sans ID utilisateur ou session")
+        logger.warning("Unable to add memory instructions without user or session ID")
         return data
     
-    # Vérifier si des conversations existent déjà
+    # Check if conversations already exist
     recent_conversations = memory_engine.get_recent_conversations(
         user_id=user_id,
         session_id=session_id,
@@ -61,46 +61,46 @@ def enhance_memory_instructions(data: Dict[str, Any]) -> Dict[str, Any]:
         include_time_context=True
     )
     
-    # Vérifier si des souvenirs à long terme existent
+    # Check if long-term memories exist
     long_term_memories = memory_engine.get_long_term_memories(
         user_id=user_id,
         limit=3
     )
     
-    # Créer des instructions spécifiques pour la mémoire
+    # Create specific memory instructions
     memory_instructions = []
     
-    # S'il y a des conversations récentes, ajouter une instruction forte
+    # If there are recent conversations, add a strong instruction
     if recent_conversations:
         conversation_count = len(recent_conversations)
         memory_instructions.append(
-            f"INSTRUCTION CRITIQUE DE MÉMOIRE: Vous avez {conversation_count} conversations précédentes avec cet utilisateur. "
-            f"Votre capacité à vous référer à ces conversations est ESSENTIELLE. "
-            f"Utilisez TOUJOURS les éléments de conversation précédents dans vos réponses."
+            f"CRITICAL MEMORY INSTRUCTION: You have {conversation_count} previous conversations with this user. "
+            f"Your ability to refer to these conversations is ESSENTIAL. "
+            f"ALWAYS use previous conversation elements in your responses."
         )
         
-        # Ajouter des exemples spécifiques des conversations précédentes
+        # Add specific examples from previous conversations
         if conversation_count > 2:
             most_recent = recent_conversations[0]['content']
             memory_instructions.append(
-                f"Exemple de conversation récente: \"{most_recent[:100]}...\". "
-                f"Faites référence à ces informations lorsque c'est pertinent."
+                f"Example of recent conversation: \"{most_recent[:100]}...\". "
+                f"Refer to this information when relevant."
             )
     
-    # S'il y a des souvenirs à long terme, les mentionner explicitement
+    # If there are long-term memories, explicitly mention them
     if long_term_memories:
         memory_instructions.append(
-            f"Vous avez {len(long_term_memories)} informations importantes stockées sur cet utilisateur. "
-            f"Utilisez ces informations pour personnaliser vos réponses."
+            f"You have {len(long_term_memories)} important pieces of information stored about this user. "
+            f"Use this information to personalize your responses."
         )
     
-    # Ajouter une instruction générale sur la continuité de la conversation
+    # Add a general instruction about conversation continuity
     memory_instructions.append(
-        "IMPORTANT: Assurez-vous de maintenir une continuité conversationnelle naturelle. "
-        "Ne vous répétez pas, ne vous présentez pas à nouveau, et évitez les salutations si vous avez déjà parlé avec l'utilisateur."
+        "IMPORTANT: Ensure natural conversational continuity. "
+        "Do not repeat yourself, do not re-introduce yourself, and avoid greetings if you have already spoken with the user."
     )
     
-    # Ajouter les instructions au contexte
+    # Add instructions to the context
     if 'instructions' not in data['context']:
         data['context']['instructions'] = []
     
@@ -109,32 +109,32 @@ def enhance_memory_instructions(data: Dict[str, Any]) -> Dict[str, Any]:
     else:
         data['context']['instructions'] = memory_instructions
     
-    # Ajouter un indicateur explicite que les instructions de mémoire ont été améliorées
+    # Add an explicit indicator that memory instructions have been enhanced
     data['context']['memory_instructions_enhanced'] = True
     
-    logger.info(f"Instructions de mémoire améliorées pour l'utilisateur {user_id}")
+    logger.info(f"Memory instructions enhanced for user {user_id}")
     return data
 
 def enrich_system_prompt(data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Enrichit le prompt système avec des instructions de mémoire explicites.
+    Enriches the system prompt with explicit memory instructions.
     
     Args:
-        data: Les données de la requête
+        data: The request data
     
     Returns:
-        Les données modifiées
+        Modified data
     """
-    # Vérifier si les données contiennent un prompt système
+    # Check if data contains a system prompt
     if 'system_prompt' not in data and 'prompt' in data:
-        # On ne modifie pas le prompt utilisateur, on ajoute seulement des instructions
+        # We don't modify the user prompt, only add instructions
         return data
         
     user_id = get_user_id_from_data(data)
     if not user_id:
         return data
         
-    # Récupérer un résumé des conversations précédentes
+    # Retrieve a summary of previous conversations
     memory_context = memory_engine.get_memory_context(
         user_id=user_id,
         max_conversations=3,
@@ -142,47 +142,47 @@ def enrich_system_prompt(data: Dict[str, Any]) -> Dict[str, Any]:
         format_as_text=True
     )
     
-    # Créer une instruction de mémoire personnalisée
+    # Create a custom memory instruction
     memory_directive = """
-INSTRUCTION CRITIQUE DE MÉMOIRE: Tu as une mémoire persistante qui te permet de te souvenir des conversations précédentes. 
-Utilise TOUJOURS ces informations pour assurer la continuité de tes interactions. 
-Ne dis JAMAIS que tu ne te souviens pas des conversations précédentes.
+CRITICAL MEMORY INSTRUCTION: You have a persistent memory that allows you to remember previous conversations. 
+ALWAYS use this information to ensure the continuity of your interactions. 
+NEVER say you don't remember previous conversations.
     """
     
-    # Ajouter l'instruction au système prompt si présent
+    # Add the instruction to the system prompt if present
     if 'system_prompt' in data and data['system_prompt']:
         data['system_prompt'] = memory_directive + "\n\n" + data['system_prompt']
     
-    # Ajouter des métadonnées pour indiquer que le prompt a été enrichi
+    # Add metadata to indicate that the prompt has been enriched
     if 'metadata' not in data:
         data['metadata'] = {}
         
     data['metadata']['memory_prompt_enriched'] = True
     
-    logger.info(f"Prompt système enrichi avec des instructions de mémoire pour l'utilisateur {user_id}")
+    logger.info(f"System prompt enriched with memory instructions for user {user_id}")
     return data
 
 def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
     """
-    Fonction principale de traitement pour le gestionnaire de modules.
+    Main processing function for the module manager.
     
     Args:
-        data: Les données à traiter
-        hook: Le hook appelé (process_request)
+        data: The data to process
+        hook: The called hook (process_request)
         
     Returns:
-        Les données modifiées
+        Modified data
     """
     if not isinstance(data, dict):
-        logger.warning(f"Les données ne sont pas un dictionnaire: {type(data)}")
+        logger.warning(f"Data is not a dictionary: {type(data)}")
         return data
     
     try:
         if hook == "process_request":
-            # 1. Améliorer les instructions de mémoire
+            # 1. Enhance memory instructions
             data = enhance_memory_instructions(data)
             
-            # 2. Enrichir le prompt système avec des directives de mémoire
+            # 2. Enrich the system prompt with memory directives
             data = enrich_system_prompt(data)
             
             return data
@@ -190,5 +190,5 @@ def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
         return data
     
     except Exception as e:
-        logger.error(f"Erreur dans le module memory_retrieval_enhancer: {str(e)}", exc_info=True)
+        logger.error(f"Error in memory_retrieval_enhancer module: {str(e)}", exc_info=True)
         return data
