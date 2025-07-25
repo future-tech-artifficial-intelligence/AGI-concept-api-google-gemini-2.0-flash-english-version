@@ -1,10 +1,10 @@
 """
-Test Simplifié : Est-ce que l'API Gemini peut cliquer sur des éléments web via Searx ?
-Ce test vérifie spécifiquement si Gemini peut :
-1. Utiliser Searx pour trouver des informations
-2. Naviguer vers des résultats
-3. Identifier des éléments cliquables
-4. Effectuer des clics sur des pages web
+Simplified Test: Can artificial intelligence API GOOGLE GEMINI 2.0 FLASH click on web elements via Searx?
+This test specifically checks if artificial intelligence API GOOGLE GEMINI 2.0 FLASH can:
+1. Use Searx to find information
+2. Navigate to results
+3. Identify clickable elements
+4. Perform clicks on web pages
 """
 
 import logging
@@ -12,12 +12,12 @@ import requests
 import time
 from datetime import datetime
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('GeminiClickTest')
 
 class GeminiClickCapabilityTest:
-    """Test simplifié des capacités de clic de Gemini"""
+    """Simplified test of artificial intelligence API GOOGLE GEMINI 2.0 FLASH's click capabilities"""
     
     def __init__(self):
         self.searx_url = "http://localhost:8080"
@@ -25,7 +25,7 @@ class GeminiClickCapabilityTest:
         self.results = {}
         
     def test_searx_connectivity(self):
-        """Test 1: Vérifier que Searx fonctionne"""
+        """Test 1: Check that Searx is working"""
         try:
             response = requests.get(f"{self.searx_url}/search", 
                                   params={'q': 'test', 'format': 'json'}, 
@@ -33,155 +33,155 @@ class GeminiClickCapabilityTest:
             if response.status_code == 200:
                 data = response.json()
                 result_count = len(data.get('results', []))
-                self.results['searx_test'] = f"✅ Searx fonctionne ({result_count} résultats)"
+                self.results['searx_test'] = f"✅ Searx is working ({result_count} results)"
                 return True
             else:
-                self.results['searx_test'] = f"❌ Searx erreur HTTP {response.status_code}"
+                self.results['searx_test'] = f"❌ Searx HTTP error {response.status_code}"
                 return False
         except Exception as e:
-            self.results['searx_test'] = f"❌ Searx inaccessible: {str(e)}"
+            self.results['searx_test'] = f"❌ Searx unreachable: {str(e)}"
             return False
     
     def test_gemini_searx_integration(self):
-        """Test 2: Vérifier que Gemini peut utiliser Searx"""
+        """Test 2: Check if artificial intelligence API GOOGLE GEMINI 2.0 FLASH can use Searx"""
         try:
-            # Test via l'interface Searx directement
+            # Test directly via the Searx interface
             from searx_interface import SearxInterface
             searx = SearxInterface()
             
-            # Test de recherche simple
+            # Simple search test
             results = searx.search_with_filters("Python tutorial", engines=['google'])
             
             if results and len(results) > 0:
-                self.results['gemini_searx'] = f"✅ Gemini peut utiliser Searx ({len(results)} résultats)"
+                self.results['gemini_searx'] = f"✅ artificial intelligence API GOOGLE GEMINI 2.0 FLASH can use Searx ({len(results)} results)"
                 return True
             else:
-                self.results['gemini_searx'] = "❌ Gemini ne peut pas utiliser Searx (aucun résultat)"
+                self.results['gemini_searx'] = "❌ artificial intelligence API GOOGLE GEMINI 2.0 FLASH cannot use Searx (no results)"
                 return False
                 
         except Exception as e:
-            self.results['gemini_searx'] = f"❌ Erreur intégration Gemini-Searx: {str(e)}"
+            self.results['gemini_searx'] = f"❌ artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Searx integration error: {str(e)}"
             return False
     
     def test_web_navigation_capability(self):
-        """Test 3: Vérifier que Gemini peut naviguer sur le web"""
+        """Test 3: Check if artificial intelligence API GOOGLE GEMINI 2.0 FLASH can navigate the web"""
         try:
             from interactive_web_navigator import initialize_interactive_navigator
             
             navigator = initialize_interactive_navigator()
             if not navigator:
-                self.results['navigation'] = "❌ Navigateur web non disponible"
+                self.results['navigation'] = "❌ Web navigator not available"
                 return False
             
-            # Créer une session
+            # Create a session
             session = navigator.create_interactive_session(
                 f"test_session_{int(time.time())}", 
                 "https://example.com",
-                ["Test de navigation"]
+                ["Navigation test"]
             )
             
             if session:
                 session_id = session.session_id if hasattr(session, 'session_id') else 'test_session'
                 
-                # Tenter de naviguer vers une page simple
+                # Attempt to navigate to a simple page
                 result = navigator.navigate_to_url(session_id, "https://example.com")
                 
                 if result.get('success'):
-                    self.results['navigation'] = "✅ Gemini peut naviguer sur le web"
+                    self.results['navigation'] = "✅ artificial intelligence API GOOGLE GEMINI 2.0 FLASH can navigate the web"
                     return True
                 else:
-                    self.results['navigation'] = f"❌ Navigation échouée: {result.get('error', 'Erreur inconnue')}"
+                    self.results['navigation'] = f"❌ Navigation failed: {result.get('error', 'Unknown error')}"
                     return False
             else:
-                self.results['navigation'] = "❌ Impossible de créer une session de navigation"
+                self.results['navigation'] = "❌ Could not create navigation session"
                 return False
                 
         except Exception as e:
-            self.results['navigation'] = f"❌ Erreur navigation: {str(e)}"
+            self.results['navigation'] = f"❌ Navigation error: {str(e)}"
             return False
     
     def test_element_interaction_capability(self):
-        """Test 4: Vérifier que Gemini peut interagir avec des éléments"""
+        """Test 4: Check if artificial intelligence API GOOGLE GEMINI 2.0 FLASH can interact with elements"""
         try:
             from interactive_web_navigator import initialize_interactive_navigator
             
             navigator = initialize_interactive_navigator()
             if not navigator:
-                self.results['interaction'] = "❌ Navigateur non disponible pour interaction"
+                self.results['interaction'] = "❌ Navigator not available for interaction"
                 return False
             
-            # Créer une session avec un ID unique
+            # Create a session with a unique ID
             session_id = f"interaction_test_{int(time.time())}"
             session = navigator.create_interactive_session(
                 session_id, 
                 "https://example.com",
-                ["Test d'interaction avec éléments"]
+                ["Element interaction test"]
             )
             
             if session:
-                # Utiliser l'ID de session correct
+                # Use the correct session ID
                 actual_session_id = session.session_id if hasattr(session, 'session_id') else session_id
                 
-                # Attendre un peu pour que la session se stabilise
+                # Wait a bit for the session to stabilize
                 time.sleep(2)
                 
-                # Naviguer vers Example.com (page simple et sûre)
+                # Navigate to Example.com (simple and safe page)
                 nav_result = navigator.navigate_to_url(actual_session_id, "https://example.com")
                 
                 if nav_result.get('success'):
-                    # Attendre le chargement complet
+                    # Wait for full load
                     time.sleep(3)
                     
-                    # Tenter d'obtenir un résumé des éléments
+                    # Attempt to get a summary of elements
                     try:
                         elements_summary = navigator.get_interactive_elements_summary(actual_session_id)
                         
                         if elements_summary and elements_summary.get('interactive_elements'):
                             element_count = len(elements_summary['interactive_elements'])
                             
-                            # Tenter une interaction réelle si possible
+                            # Attempt a real interaction if possible
                             interactive_elements = elements_summary['interactive_elements']
                             if interactive_elements:
                                 first_element = interactive_elements[0]
                                 element_id = first_element.get('element_id')
                                 
                                 if element_id:
-                                    # Tenter d'interagir avec l'élément (sans faire de clic réel)
-                                    self.results['interaction'] = f"✅ Gemini peut identifier et interagir avec {element_count} éléments (élément test: {element_id})"
+                                    # Attempt to interact with the element (without actual click)
+                                    self.results['interaction'] = f"✅ artificial intelligence API GOOGLE GEMINI 2.0 FLASH can identify and interact with {element_count} elements (test element: {element_id})"
                                 else:
-                                    self.results['interaction'] = f"✅ Gemini peut identifier {element_count} éléments interactifs"
+                                    self.results['interaction'] = f"✅ artificial intelligence API GOOGLE GEMINI 2.0 FLASH can identify {element_count} interactive elements"
                             else:
-                                self.results['interaction'] = f"✅ Gemini peut identifier {element_count} éléments interactifs"
+                                self.results['interaction'] = f"✅ artificial intelligence API GOOGLE GEMINI 2.0 FLASH can identify {element_count} interactive elements"
                             
                             return True
                         else:
-                            self.results['interaction'] = "⚠️  Navigation OK mais aucun élément interactif trouvé"
+                            self.results['interaction'] = "⚠️  Navigation OK but no interactive elements found"
                             return False
                     except Exception as summary_error:
-                        self.results['interaction'] = f"⚠️  Navigation OK mais erreur analyse éléments: {str(summary_error)[:100]}"
+                        self.results['interaction'] = f"⚠️  Navigation OK but element analysis error: {str(summary_error)[:100]}"
                         return False
                 else:
-                    self.results['interaction'] = f"❌ Navigation vers example.com échouée: {nav_result.get('error', 'Erreur inconnue')}"
+                    self.results['interaction'] = f"❌ Navigation to example.com failed: {nav_result.get('error', 'Unknown error')}"
                     return False
             else:
-                self.results['interaction'] = "❌ Session d'interaction non créée"
+                self.results['interaction'] = "❌ Interaction session not created"
                 return False
                 
         except Exception as e:
-            self.results['interaction'] = f"❌ Erreur interaction: {str(e)[:100]}"
+            self.results['interaction'] = f"❌ Interaction error: {str(e)[:100]}"
             return False
     
     def run_all_tests(self):
-        """Lance tous les tests et affiche le résumé"""
-        print("🧪 Test des Capacités de Clic Web de l'API Gemini")
+        """Runs all tests and displays the summary"""
+        print("🧪 Testing artificial intelligence API GOOGLE GEMINI 2.0 FLASH Web Click Capabilities")
         print("=" * 50)
         print()
         
         tests = [
-            ("Connectivité Searx", self.test_searx_connectivity),
-            ("Intégration Gemini-Searx", self.test_gemini_searx_integration),
-            ("Navigation Web", self.test_web_navigation_capability),
-            ("Interaction Éléments", self.test_element_interaction_capability)
+            ("Searx Connectivity", self.test_searx_connectivity),
+            ("artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Searx Integration", self.test_gemini_searx_integration),
+            ("Web Navigation", self.test_web_navigation_capability),
+            ("Element Interaction", self.test_element_interaction_capability)
         ]
         
         passed = 0
@@ -192,39 +192,39 @@ class GeminiClickCapabilityTest:
             try:
                 if test_func():
                     passed += 1
-                print(f"   {self.results.get(test_name.lower().replace(' ', '_').replace('-', '_'), 'Test exécuté')}")
+                print(f"   {self.results.get(test_name.lower().replace(' ', '_').replace('-', '_'), 'Test executed')}")
             except Exception as e:
-                print(f"   ❌ Erreur inattendue: {str(e)}")
+                print(f"   ❌ Unexpected error: {str(e)}")
             print()
         
         print("=" * 50)
-        print(f"📊 RÉSULTATS: {passed}/{total} tests réussis ({(passed/total*100):.1f}%)")
+        print(f"📊 RESULTS: {passed}/{total} tests passed ({(passed/total*100):.1f}%)")
         print()
         
         if passed == total:
-            print("🎉 SUCCÈS: L'API Gemini peut effectivement cliquer sur des éléments web !")
-            print("   - Searx fonctionne correctement")
-            print("   - Gemini peut utiliser Searx pour les recherches")  
-            print("   - La navigation web est opérationnelle")
-            print("   - L'identification d'éléments fonctionne")
+            print("🎉 SUCCESS: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH can effectively click on web elements!")
+            print("   - Searx is working correctly")
+            print("   - artificial intelligence API GOOGLE GEMINI 2.0 FLASH can use Searx for searches")  
+            print("   - Web navigation is operational")
+            print("   - Element identification is working")
         elif passed >= total * 0.75:
-            print("✅ PARTIELLEMENT RÉUSSI: L'API Gemini a de bonnes capacités web")
-            print("   Quelques améliorations possibles mais fonctionnel")
+            print("✅ PARTIALLY SUCCESSFUL: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH has good web capabilities")
+            print("   Some possible improvements but functional")
         else:
-            print("⚠️  ATTENTION: Capacités web limitées")
-            print("   Plusieurs composants nécessitent des corrections")
+            print("⚠️  ATTENTION: Limited web capabilities")
+            print("   Several components need fixes")
         
         print()
         print("💡 CONCLUSION:")
         if self.results.get('searx_test', '').startswith('✅') and \
            self.results.get('gemini_searx', '').startswith('✅'):
-            print("   L'API Gemini PEUT utiliser Searx pour accéder au web")
+            print("   The artificial intelligence API GOOGLE GEMINI 2.0 FLASH CAN use Searx to access the web")
             if self.results.get('interaction', '').startswith('✅'):
-                print("   L'API Gemini PEUT identifier et potentiellement cliquer sur des éléments")
+                print("   The artificial intelligence API GOOGLE GEMINI 2.0 FLASH CAN identify and potentially click on elements")
             else:
-                print("   L'identification d'éléments nécessite des améliorations")
+                print("   Element identification needs improvements")
         else:
-            print("   L'intégration Searx nécessite des corrections")
+            print("   Searx integration needs fixes")
 
 def main():
     tester = GeminiClickCapabilityTest()
