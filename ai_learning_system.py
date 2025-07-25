@@ -7,7 +7,8 @@ import direct_file_access as dfa
 
 class AILearningSystem:
     """**System allowing artificial intelligence API GOOGLE GEMINI 2.0 FLASH to learn autonomously from project files.**
-This system uses direct file access to enhance the capabilities of artificial intelligence API GOOGLE GEMINI 2.0 FLASH; thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0 FLASH can learn autonomously by conducting searches. 
+This system uses direct file access to enhance the capabilities of artificial intelligence API GOOGLE GEMINI 2.0 FLASH; 
+thanks to the Searx search engine, artificial intelligence API GOOGLE GEMINI 2.0 FLASH can learn autonomously by conducting searches. 
     """
     
     def __init__(self):
