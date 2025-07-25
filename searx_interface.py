@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Module d'interface Searx pour l'IA
-Permet des recherches autonomes avec parsing HTML
+Searx Interface Module for artificial intelligence   API GOOGLE GEMINI 2.0 FLASH
+Enables autonomous searches with HTML parsing
 """
 
 import requests
@@ -17,7 +17,7 @@ logger = logging.getLogger('SearxInterface')
 
 @dataclass
 class SearchResult:
-    """Résultat de recherche structuré"""
+    """Structured search result"""
     title: str
     url: str
     content: str
@@ -26,7 +26,7 @@ class SearchResult:
     metadata: Dict[str, Any] = None
 
 class SearxInterface:
-    """Interface pour communiquer avec Searx"""
+    """Interface for communicating with Searx"""
     
     def __init__(self, searx_url: str = "http://localhost:8080"):
         self.searx_url = searx_url.rstrip('/')
@@ -34,10 +34,10 @@ class SearxInterface:
         self.session.headers.update({
             'User-Agent': 'AI-SearchBot/1.0',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'fr,en;q=0.5',
+            'Accept-Language': 'en,fr;q=0.5', # Changed to prioritize English
             'Connection': 'keep-alive'
         })
-        # Configuration plus robuste pour les timeouts
+        # More robust timeout configuration
         self.session.mount('http://', requests.adapters.HTTPAdapter(
             max_retries=requests.adapters.Retry(
                 total=2,
@@ -49,158 +49,158 @@ class SearxInterface:
         ))
         self.is_running = False
         
-        # Intégration du gestionnaire de ports intelligent
+        # Smart port manager integration
         self.port_manager = None
         self._init_port_manager()
         
-        # Intégration du gestionnaire de ports intelligent
+        # Smart port manager integration
         self.port_manager = None
         self._init_port_manager()
         
-        # Intégration du système de capture visuelle
+        # Visual capture system integration
         self.visual_capture = None
         self._init_visual_capture()
         
     def _init_port_manager(self):
-        """Initialise le gestionnaire de ports intelligent"""
+        """Initializes the smart port manager"""
         try:
             from port_manager import PortManager
             self.port_manager = PortManager()
             
-            # Vérifier si une URL Searx est déjà configurée
+            # Check if a Searx URL is already configured
             current_url = self.port_manager.get_current_searx_url()
             if current_url:
                 self.searx_url = current_url
-                logger.info(f"✅ URL Searx détectée: {current_url}")
+                logger.info(f"✅ Searx URL detected: {current_url}")
             
-            logger.info("✅ Gestionnaire de ports intelligent initialisé")
+            logger.info("✅ Smart port manager initialized")
         except ImportError:
-            logger.warning("⚠️ Module gestionnaire de ports non disponible")
+            logger.warning("⚠️ Port manager module not available")
         except Exception as e:
-            logger.error(f"❌ Erreur initialisation gestionnaire de ports: {e}")
+            logger.error(f"❌ Error initializing port manager: {e}")
         
     def _init_visual_capture(self):
-        """Initialise le système de capture visuelle"""
+        """Initializes the visual capture system"""
         try:
             from searx_visual_capture import SearxVisualCapture
             self.visual_capture = SearxVisualCapture(self.searx_url)
-            logger.info("✅ Système de capture visuelle initialisé")
+            logger.info("✅ Visual capture system initialized")
         except ImportError:
-            logger.warning("⚠️ Module de capture visuelle non disponible")
+            logger.warning("⚠️ Visual capture module not available")
         except Exception as e:
-            logger.error(f"❌ Erreur initialisation capture visuelle: {e}")
+            logger.error(f"❌ Error initializing visual capture: {e}")
         
     def start_searx(self) -> bool:
-        """Démarre le conteneur Searx avec gestion intelligente des ports"""
+        """Starts the Searx container with smart port management"""
         try:
             if self.port_manager:
-                # Utiliser le gestionnaire intelligent de ports
-                logger.info("🚀 Démarrage intelligent de Searx...")
+                # Use the smart port manager
+                logger.info("🚀 Smart Searx startup...")
                 success, url = self.port_manager.start_searx_smart()
                 
                 if success:
                     self.searx_url = url
                     self.is_running = True
-                    logger.info(f"✅ Searx démarré sur: {url}")
+                    logger.info(f"✅ Searx started on: {url}")
                     
-                    # Mettre à jour le système de capture visuelle
+                    # Update the visual capture system
                     if self.visual_capture:
                         self.visual_capture.searx_url = url
                     
                     return True
                 else:
-                    logger.error("❌ Échec démarrage intelligent de Searx")
+                    logger.error("❌ Smart Searx startup failed")
                     return False
             else:
-                # Méthode de démarrage classique (fallback)
+                # Classic startup method (fallback)
                 return self._start_searx_classic()
                 
         except Exception as e:
-            logger.error(f"❌ Erreur lors du démarrage de Searx: {e}")
+            logger.error(f"❌ Error during Searx startup: {e}")
             return False
     
     def _start_searx_classic(self) -> bool:
-        """Méthode de démarrage classique (fallback)"""
+        """Classic startup method (fallback)"""
         try:
             import subprocess
-            logger.info("Démarrage de Searx avec Docker (méthode classique)...")
+            logger.info("Starting Searx with Docker (classic method)...")
             
-            # Vérifier si Docker est disponible
+            # Check if Docker is available
             result = subprocess.run(['docker', '--version'], capture_output=True, text=True)
             if result.returncode != 0:
-                logger.error("Docker n'est pas disponible")
+                logger.error("Docker is not available")
                 return False
             
-            # Démarrer le conteneur Searx
+            # Start the Searx container
             result = subprocess.run([
                 'docker-compose', '-f', 'docker-compose.searx.yml', 'up', '-d'
             ], capture_output=True, text=True, cwd='.')
             
             if result.returncode == 0:
-                logger.info("Searx démarré avec succès")
-                # Attendre que le service soit prêt
+                logger.info("Searx started successfully")
+                # Wait for the service to be ready
                 time.sleep(10)
                 return self.check_health()
             else:
-                logger.error(f"Erreur lors du démarrage de Searx: {result.stderr}")
+                logger.error(f"Error during Searx startup: {result.stderr}")
                 return False
                 
         except Exception as e:
-            logger.error(f"Erreur lors du démarrage de Searx: {e}")
+            logger.error(f"Error during Searx startup: {e}")
             return False
     
     def check_health(self) -> bool:
-        """Vérifie si Searx est accessible avec timeouts progressifs"""
-        timeouts = [5, 10, 15]  # Timeouts progressifs
+        """Checks if Searx is accessible with progressive timeouts"""
+        timeouts = [5, 10, 15]  # Progressive timeouts
         
         for timeout in timeouts:
             try:
-                logger.debug(f"Test de connexion Searx avec timeout {timeout}s...")
+                logger.debug(f"Searx connection test with timeout {timeout}s...")
                 response = self.session.get(f"{self.searx_url}/", timeout=timeout)
                 self.is_running = response.status_code == 200
                 
                 if self.is_running:
-                    logger.info("Searx est opérationnel")
+                    logger.info("Searx is operational")
                     return True
                 else:
-                    logger.warning(f"Searx répond avec le code: {response.status_code}")
+                    logger.warning(f"Searx responds with code: {response.status_code}")
                     
             except requests.exceptions.ReadTimeout:
-                logger.warning(f"Timeout de lecture ({timeout}s) - Searx peut être en cours de démarrage...")
+                logger.warning(f"Read timeout ({timeout}s) - Searx might be starting up...")
                 continue
             except requests.exceptions.ConnectTimeout:
-                logger.warning(f"Timeout de connexion ({timeout}s) - Searx n'est pas encore prêt...")
+                logger.warning(f"Connection timeout ({timeout}s) - Searx is not yet ready...")
                 continue
             except requests.exceptions.ConnectionError:
-                logger.warning("Searx n'est pas accessible - le service n'est peut-être pas démarré")
+                logger.warning("Searx is not accessible - the service might not be started")
                 break
             except Exception as e:
-                logger.error(f"Erreur lors de la vérification de Searx: {e}")
+                logger.error(f"Error checking Searx health: {e}")
                 break
         
         self.is_running = False
         return False
     
     def search(self, query: str, category: str = "general", 
-               language: str = "fr", max_results: int = 10, 
+               language: str = "en", max_results: int = 10, # Changed default language to 'en'
                retry_count: int = 2) -> List[SearchResult]:
-        """Effectue une recherche et parse les résultats HTML avec retry automatique"""
+        """Performs a search and parses HTML results with automatic retry"""
         
         for attempt in range(retry_count + 1):
             try:
                 if not self.is_running and not self.check_health():
                     if attempt == 0:
-                        logger.warning("Searx n'est pas disponible, tentative de démarrage...")
+                        logger.warning("Searx is not available, attempting to start...")
                         if self.start_searx():
-                            time.sleep(5)  # Attendre que Searx soit prêt
+                            time.sleep(5)  # Wait for Searx to be ready
                         else:
-                            logger.error("Impossible de démarrer Searx")
+                            logger.error("Unable to start Searx")
                             return []
                     else:
-                        logger.error("Searx n'est toujours pas disponible après tentative de démarrage")
+                        logger.error("Searx is still not available after startup attempt")
                         return []
                 
-                # Paramètres de recherche
+                # Search parameters
                 params = {
                     'q': query,
                     'category_general': '1' if category == 'general' else '0',
@@ -211,9 +211,9 @@ class SearxInterface:
                     'pageno': '1'
                 }
                 
-                logger.info(f"Recherche Searx: '{query}' (catégorie: {category}){f' - Tentative {attempt + 1}' if attempt > 0 else ''}")
+                logger.info(f"Searx search: '{query}' (category: {category}){f' - Attempt {attempt + 1}' if attempt > 0 else ''}")
                 
-                # Effectuer la recherche avec timeout adaptatif
+                # Perform search with adaptive timeout
                 response = self.session.post(
                     f"{self.searx_url}/search",
                     data=params,
@@ -221,44 +221,44 @@ class SearxInterface:
                 )
                 
                 if response.status_code != 200:
-                    logger.error(f"Erreur de recherche: {response.status_code}")
+                    logger.error(f"Search error: {response.status_code}")
                     if attempt < retry_count:
-                        logger.info(f"Nouvelle tentative dans 2 secondes...")
+                        logger.info(f"Retrying in 2 seconds...")
                         time.sleep(2)
                         continue
                     return []
                 
-                # Parser les résultats HTML
+                # Parse HTML results
                 results = self._parse_html_results(response.text, max_results)
                 if results:
                     return results
                 elif attempt < retry_count:
-                    logger.warning("Aucun résultat trouvé, nouvelle tentative...")
+                    logger.warning("No results found, retrying...")
                     time.sleep(1)
                     continue
                 else:
                     return []
                     
             except requests.exceptions.ReadTimeout:
-                logger.error(f"Timeout de lecture lors de la recherche Searx (tentative {attempt + 1}/{retry_count + 1})")
+                logger.error(f"Read timeout during Searx search (attempt {attempt + 1}/{retry_count + 1})")
                 if attempt < retry_count:
                     time.sleep(3)
                     continue
                 return []
             except requests.exceptions.ConnectTimeout:
-                logger.error(f"Timeout de connexion lors de la recherche Searx (tentative {attempt + 1}/{retry_count + 1})")
+                logger.error(f"Connection timeout during Searx search (attempt {attempt + 1}/{retry_count + 1})")
                 if attempt < retry_count:
                     time.sleep(3)
                     continue
                 return []
             except requests.exceptions.ConnectionError:
-                logger.error(f"Impossible de se connecter à Searx pour la recherche (tentative {attempt + 1}/{retry_count + 1})")
+                logger.error(f"Unable to connect to Searx for search (attempt {attempt + 1}/{retry_count + 1})")
                 if attempt < retry_count:
                     time.sleep(5)
                     continue
                 return []
             except Exception as e:
-                logger.error(f"Erreur lors de la recherche (tentative {attempt + 1}/{retry_count + 1}): {e}")
+                logger.error(f"Error during search (attempt {attempt + 1}/{retry_count + 1}): {e}")
                 if attempt < retry_count:
                     time.sleep(2)
                     continue
@@ -267,44 +267,44 @@ class SearxInterface:
         return []
     
     def _parse_html_results(self, html_content: str, max_results: int) -> List[SearchResult]:
-        """Parse les résultats HTML de Searx"""
+        """Parses Searx HTML results"""
         results = []
         
         try:
             soup = BeautifulSoup(html_content, 'html.parser')
             
-            # Trouver tous les résultats
+            # Find all results
             result_divs = soup.find_all('article', class_='result')
             
             for i, result_div in enumerate(result_divs[:max_results]):
                 try:
-                    # Extraire le titre
+                    # Extract title
                     title_elem = result_div.find('h3')
-                    title = title_elem.get_text(strip=True) if title_elem else "Sans titre"
+                    title = title_elem.get_text(strip=True) if title_elem else "No title"
                     
-                    # Extraire l'URL
+                    # Extract URL
                     link_elem = result_div.find('a')
                     url = link_elem.get('href', '') if link_elem else ''
                     
-                    # Nettoyer et récupérer la vraie URL pour les vidéos
+                    # Clean and retrieve the real URL for videos
                     if url:
                         url = self._clean_video_url(url, title)
                     
-                    # Extraire le contenu/description
+                    # Extract content/description
                     content_elem = result_div.find('p', class_='content')
                     content = content_elem.get_text(strip=True) if content_elem else ''
                     
-                    # Extraire le moteur de recherche utilisé
+                    # Extract used search engine
                     engine_elem = result_div.find('span', class_='engine')
                     engine = engine_elem.get_text(strip=True) if engine_elem else 'unknown'
                     
-                    # Créer le résultat
+                    # Create the result
                     search_result = SearchResult(
                         title=title,
                         url=url,
                         content=content,
                         engine=engine,
-                        score=1.0 - (i * 0.1),  # Score décroissant
+                        score=1.0 - (i * 0.1),  # Decreasing score
                         metadata={
                             'position': i + 1,
                             'html_snippet': str(result_div)[:500]
@@ -314,53 +314,53 @@ class SearxInterface:
                     results.append(search_result)
                     
                 except Exception as e:
-                    logger.warning(f"Erreur lors du parsing d'un résultat: {e}")
+                    logger.warning(f"Error parsing a result: {e}")
                     continue
             
-            logger.info(f"Parsed {len(results)} résultats de recherche")
+            logger.info(f"Parsed {len(results)} search results")
             return results
             
         except Exception as e:
-            logger.error(f"Erreur lors du parsing HTML: {e}")
+            logger.error(f"Error parsing HTML: {e}")
             return []
 
     def _clean_video_url(self, url: str, title: str) -> str:
-        """Nettoie et récupère la vraie URL pour les vidéos"""
+        """Cleans and retrieves the real URL for videos"""
         try:
-            # Si l'URL contient des 'x', essayer de récupérer la vraie URL
+            # If the URL contains 'x', try to retrieve the real URL
             if 'xxxxxxxxxx' in url or 'xxx' in url:
-                # Pour YouTube, essayer de retrouver l'ID depuis le titre ou d'autres sources
+                # For YouTube, try to find the ID from the title or other sources
                 if 'youtube.com' in url or 'youtu.be' in url:
-                    # Essayer de trouver un pattern d'ID YouTube dans l'URL originale
-                    # Si on ne peut pas, on génère une URL de recherche YouTube
+                    # Try to find a YouTube ID pattern in the original URL
+                    # If not possible, generate a YouTube search URL
                     search_query = urllib.parse.quote(title)
                     return f"https://www.youtube.com/results?search_query={search_query}"
                 
-                # Pour Vimeo
+                # For Vimeo
                 elif 'vimeo.com' in url:
                     search_query = urllib.parse.quote(title)
                     return f"https://vimeo.com/search?q={search_query}"
                 
-                # Pour Dailymotion
+                # For Dailymotion
                 elif 'dailymotion.com' in url:
                     search_query = urllib.parse.quote(title)
                     return f"https://www.dailymotion.com/search/{search_query}"
                 
-                # Pour d'autres plateformes, retourner une URL de recherche générale
+                # For other platforms, return a general search URL
                 else:
-                    logger.warning(f"URL vidéo masquée détectée: {url}")
-                    return f"[URL vidéo masquée - Titre: {title}]"
+                    logger.warning(f"Masked video URL detected: {url}")
+                    return f"[Masked video URL - Title: {title}]"
             
-            # Si l'URL semble correcte, la retourner telle quelle
+            # If the URL seems correct, return it as is
             return url
             
         except Exception as e:
-            logger.error(f"Erreur lors du nettoyage de l'URL: {e}")
+            logger.error(f"Error cleaning the URL: {e}")
             return url
     
     def search_with_filters(self, query: str, engines: List[str] = None,
                            time_range: str = None, safe_search: int = 0) -> List[SearchResult]:
-        """Recherche avancée avec filtres"""
+        """Advanced search with filters"""
         
         try:
             params = {
@@ -369,12 +369,12 @@ class SearxInterface:
                 'safesearch': str(safe_search)
             }
             
-            # Ajouter les moteurs spécifiques
+            # Add specific engines
             if engines:
                 for engine in engines:
                     params[f'engine_{engine}'] = '1'
             
-            # Ajouter la plage de temps
+            # Add time range
             if time_range:
                 params['time_range'] = time_range
             
@@ -387,28 +387,28 @@ class SearxInterface:
             if response.status_code == 200:
                 return self._parse_html_results(response.text, 20)
             else:
-                logger.error(f"Erreur de recherche avancée: {response.status_code}")
+                logger.error(f"Advanced search error: {response.status_code}")
                 return []
                 
         except Exception as e:
-            logger.error(f"Erreur lors de la recherche avancée: {e}")
+            logger.error(f"Error during advanced search: {e}")
             return []
     
     def search_with_visual(self, query: str, category: str = "general", 
-                          language: str = "fr", max_results: int = 10) -> Dict[str, Any]:
-        """Effectue une recherche avec capture visuelle pour l'IA"""
+                          language: str = "en", max_results: int = 10) -> Dict[str, Any]: # Changed default language to 'en'
+        """Performs a search with visual capture for AI"""
         
-        # Recherche textuelle classique
+        # Classic text search
         text_results = self.search(query, category, language, max_results)
         
-        # Capture visuelle si disponible
+        # Visual capture if available
         visual_data = None
         if self.visual_capture:
             try:
                 visual_data = self.visual_capture.capture_with_annotations(query, category)
-                logger.info("✅ Capture visuelle réussie")
+                logger.info("✅ Visual capture successful")
             except Exception as e:
-                logger.error(f"❌ Erreur capture visuelle: {e}")
+                logger.error(f"❌ Visual capture error: {e}")
         
         return {
             'query': query,
@@ -420,38 +420,39 @@ class SearxInterface:
         }
     
     def get_visual_search_summary(self, search_result: Dict[str, Any]) -> str:
-        """Génère un résumé pour l'IA incluant les données visuelles"""
+        """Generates a summary for AI including visual data"""
         
-        summary = f"""🔍 **Recherche Searx avec analyse visuelle**
+        summary = f"""🔍 **Searx Search with Visual Analysis**
 
-**Requête**: {search_result['query']}
-**Catégorie**: {search_result['category']}
+**Query**: {search_result['query']}
+**Category**: {search_result['category']}
 
 """
         
-        # Résultats textuels
+        # Textual results
         if search_result.get('text_results'):
-            summary += f"**Résultats textuels trouvés**: {len(search_result['text_results'])}\n\n"
+            summary += f"**Textual results found**: {len(search_result['text_results'])}\n\n"
             
             for i, result in enumerate(search_result['text_results'][:3], 1):
                 summary += f"**{i}. {result.title}**\n"
                 summary += f"Source: {result.engine}\n"
                 summary += f"URL: {result.url}\n"
-                summary += f"Contenu: {result.content[:200]}{'...' if len(result.content) > 200 else ''}\n\n"
+                summary += f"Content: {result.content[:200]}{'...' if len(result.content) > 200 else ''}\n\n"
         
-        # Données visuelles
+        # Visual data
         if search_result.get('has_visual'):
             visual_data = search_result['visual_data']
-            summary += "**📸 Analyse visuelle disponible**\n"
-            summary += f"Capture d'écran: {visual_data.get('screenshot_path', 'N/A')}\n"
+            summary += "**📸 Visual Analysis Available**\n"
+            summary += f"Screenshot: {visual_data.get('screenshot_path', 'N/A')}\n"
             
             if visual_data.get('page_text_context'):
-                summary += f"\n**Contexte visuel extrait**:\n{visual_data['page_text_context'][:300]}...\n"
+                summary += f"\n**Extracted visual context**:\n{visual_data['page_text_context'][:300]}...\n"
         else:
-            summary += "**⚠️ Analyse visuelle non disponible**\n"
-        
+            summary += "**⚠️ Visual Analysis Not Available**\n"
+        return summary # Added missing return statement
+    
     def get_suggestions(self, query: str) -> List[str]:
-        """Obtient des suggestions de recherche"""
+        """Gets search suggestions"""
         try:
             params = {
                 'q': query,
@@ -471,46 +472,46 @@ class SearxInterface:
                 return []
                 
         except Exception as e:
-            logger.warning(f"Impossible d'obtenir les suggestions: {e}")
+            logger.warning(f"Unable to get suggestions: {e}")
             return []
     
     def cleanup_visual_data(self):
-        """Nettoie les données visuelles anciennes"""
+        """Cleans old visual data"""
         if self.visual_capture:
             try:
                 self.visual_capture.cleanup_old_screenshots()
             except Exception as e:
-                logger.error(f"Erreur nettoyage visuel: {e}")
+                logger.error(f"Visual cleanup error: {e}")
     
     def close_visual_capture(self):
-        """Ferme le système de capture visuelle"""
+        """Closes the visual capture system"""
         if self.visual_capture:
             try:
                 self.visual_capture.close()
-                logger.info("Système de capture visuelle fermé")
+                logger.info("Visual capture system closed")
             except Exception as e:
-                logger.error(f"Erreur fermeture capture: {e}")
+                logger.error(f"Capture close error: {e}")
     
     def stop_searx(self) -> bool:
-        """Arrête le conteneur Searx"""
+        """Stops the Searx container"""
         try:
             if self.port_manager:
-                # Utiliser le gestionnaire intelligent pour arrêter
+                # Use the smart manager to stop
                 success = self.port_manager.stop_all_searx_containers()
                 if success:
                     self.is_running = False
-                    logger.info("✅ Searx arrêté via gestionnaire intelligent")
+                    logger.info("✅ Searx stopped via smart manager")
                 return success
             else:
-                # Méthode classique
+                # Classic method
                 return self._stop_searx_classic()
                 
         except Exception as e:
-            logger.error(f"Erreur lors de l'arrêt de Searx: {e}")
+            logger.error(f"Error during Searx shutdown: {e}")
             return False
     
     def _stop_searx_classic(self) -> bool:
-        """Arrête Searx avec la méthode classique"""
+        """Stops Searx with the classic method"""
         try:
             import subprocess
             
@@ -519,37 +520,37 @@ class SearxInterface:
             ], capture_output=True, text=True, cwd='.')
             
             if result.returncode == 0:
-                logger.info("Searx arrêté avec succès")
+                logger.info("Searx stopped successfully")
                 self.is_running = False
                 return True
             else:
-                logger.error(f"Erreur lors de l'arrêt de Searx: {result.stderr}")
+                logger.error(f"Error during Searx shutdown: {result.stderr}")
                 return False
                 
         except Exception as e:
-            logger.error(f"Erreur lors de l'arrêt de Searx: {e}")
+            logger.error(f"Error during Searx shutdown: {e}")
             return False
 
-# Instance globale
+# Global instance
 searx_interface = SearxInterface()
 
 def get_searx_interface() -> SearxInterface:
-    """Retourne l'instance de l'interface Searx"""
+    """Returns the Searx interface instance"""
     return searx_interface
 
 if __name__ == "__main__":
-    # Test du module
+    # Module test
     searx = SearxInterface()
     
     if searx.start_searx():
-        # Test de recherche
-        results = searx.search("intelligence artificielle", max_results=5)
+        # Search test
+        results = searx.search("artificial intelligence", max_results=5)
         
-        print(f"Trouvé {len(results)} résultats:")
+        print(f"Found {len(results)} results:")
         for i, result in enumerate(results, 1):
             print(f"\n{i}. {result.title}")
             print(f"   URL: {result.url}")
-            print(f"   Moteur: {result.engine}")
-            print(f"   Contenu: {result.content[:100]}...")
+            print(f"   Engine: {result.engine}")
+            print(f"   Content: {result.content[:100]}...")
     else:
-        print("Impossible de démarrer Searx")
+        print("Unable to start Searx")
