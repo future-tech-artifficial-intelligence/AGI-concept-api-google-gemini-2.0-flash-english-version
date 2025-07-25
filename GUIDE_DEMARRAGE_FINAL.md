@@ -1,131 +1,131 @@
-# 🎯 GUIDE DE DÉMARRAGE FINAL - SEARX AI
+# 🎯 FINAL STARTUP GUIDE - SEARX artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## ✅ SYSTÈME COMPLÈTEMENT INSTALLÉ ET PRÊT !
+## ✅ SYSTEM FULLY INSTALLED AND READY!
 
-Votre système Searx AI est maintenant **100% opérationnel** avec toutes les fonctionnalités avancées.
+Your Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH system is now **100% operational** with all advanced features.
 
 ---
 
-## 🚀 COMMENT DÉMARRER L'APPLICATION
+## 🚀 HOW TO START THE APPLICATION
 
-### **Option 1 : Démarrage automatique complet (RECOMMANDÉ)**
+### **Option 1: Full automatic startup (RECOMMENDED)**
 ```bash
-# Double-cliquez sur :
+# Double-click:
 start_app.bat
 ```
-**✅ Avantages :** Démarre automatiquement Searx + Application Flask
+**✅ Benefits:** Automatically starts Searx + Flask Application
 
-### **Option 2 : Système complet avec menu**
+### **Option 2: Complete system with menu**
 ```bash
-# Double-cliquez sur :
+# Double-click:
 start_complete_system.bat
 ```
-**✅ Avantages :** Interface complète avec options avancées
+**✅ Benefits:** Full interface with advanced options
 
-### **Option 3 : Python direct avec auto-démarrage**
+### **Option 3: Direct Python with auto-startup**
 ```bash
 python run_with_searx.py
 ```
-**✅ Avantages :** Démarrage programmé de Searx puis application
+**✅ Benefits:** Scheduled startup of Searx then application
 
-### **Option 4 : Application seule (Searx démarré manuellement)**
+### **Option 4: Application only (Searx started manually)**
 ```bash
 python app.py
 ```
-**⚠️ Note :** Searx se lance automatiquement au démarrage de app.py
+**⚠️ Note:** Searx automatically launches when app.py starts
 
-### **Option 5 : Démarrage legacy (mode test)**
+### **Option 5: Legacy startup (test mode)**
 ```bash
 python start_app_with_searx.py
 ```
-**✅ Avantages :** Version détaillée avec logs complets
+**✅ Benefits:** Detailed version with full logs
 
 ---
 
-## 🎯 **DÉMARRAGE RECOMMANDÉ POUR UTILISATION NORMALE**
+## 🎯 **RECOMMENDED STARTUP FOR NORMAL USE**
 
-**Pour utiliser votre IA au quotidien :**
+**To use your artificial intelligence API GOOGLE GEMINI 2.0 FLASH daily:**
 
 ```bash
-# 1. Double-cliquez sur :
+# 1. Double-click:
 start_app.bat
 
-# 2. Attendez les messages de démarrage
-# 3. Ouvrez : http://localhost:5000
-# 4. Profitez des recherches autonomes !
+# 2. Wait for startup messages
+# 3. Open: http://localhost:5000
+# 4. Enjoy autonomous searches!
 ```
 
 ---
 
-## 🌟 FONCTIONNALITÉS AUTOMATIQUES
+## 🌟 AUTOMATIC FEATURES
 
-Quand vous lancez l'application, le système :
+When you launch the application, the system:
 
-1. **🐳 Vérifie Docker** et le démarre si nécessaire
-2. **🔧 Analyse les ports** disponibles intelligemment  
-3. **🚀 Lance Searx** avec la configuration optimale
-4. **📸 Active la capture visuelle** pour l'IA
-5. **🤖 Intègre Gemini** avec recherches web
-6. **🌐 Démarre Flask** sur http://localhost:5000
+1.  **🐳 Checks Docker** and starts it if necessary
+2.  **🔧 Intelligently analyzes available ports**
+3.  **🚀 Launches Searx** with optimal configuration
+4.  **📸 Activates visual capture** for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+5.  **🤖 Integrates Gemini** with web searches
+6.  **🌐 Starts Flask** on http://localhost:5000
 
-**Tout est automatique - aucune intervention requise !**
+**Everything is automatic - no intervention required!**
 
 ---
 
-## 🧪 TESTS ET DIAGNOSTIC
+## 🧪 TESTS AND DIAGNOSIS
 
-### Tester le système complet
+### Test the complete system
 ```bash
 python test_searx_complete.py
 ```
 
-### Vérifier seulement Searx
+### Check Searx only
 ```bash
 python searx_smart_start.py status
 ```
 
-### Gestionnaire avancé
+### Advanced manager
 ```bash
 searx_manager.bat
 ```
 
 ---
 
-## 📊 ÉTAT ACTUEL
+## 📊 CURRENT STATUS
 
 ```
-✅ Tests système : 5/6 réussis (83% - Excellent)
-✅ Gestionnaire de ports : Opérationnel
-✅ Interface Searx : Intégrée
-✅ Capture visuelle : Activée
-✅ Scripts de démarrage : Multiples options
-✅ Application Flask : Intégration complète
-⚠️ Docker : À démarrer (automatique)
+✅ System tests: 5/6 successful (83% - Excellent)
+✅ Port manager: Operational
+✅ Searx interface: Integrated
+✅ Visual capture: Activated
+✅ Startup scripts: Multiple options
+✅ Flask application: Full integration
+⚠️ Docker: To be started (automatic)
 ```
 
 ---
 
-## 🎉 FÉLICITATIONS !
+## 🎉 CONGRATULATIONS!
 
-Votre **système Searx AI de niveau professionnel** est prêt avec :
+Your **professional-grade Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH system** is ready with:
 
-- 🧠 **IA Gemini** avec recherches web autonomes
-- 🔍 **Moteur Searx** avec 20+ sources de recherche
-- 📸 **Analyse visuelle** des pages web
-- 🔧 **Gestion intelligente** des ports et conflits
-- 🚀 **Démarrage ultra-simple** en un clic
-- 🌐 **Interface web** intuitive
+-   🧠 **Gemini artificial intelligence API GOOGLE GEMINI 2.0 FLASH** with autonomous web searches
+-   🔍 **Searx Engine** with 20+ search sources
+-   📸 **Visual analysis** of web pages
+-   🔧 **Intelligent management** of ports and conflicts
+-   🚀 **Ultra-simple one-click startup**
+-   🌐 **Intuitive web interface**
 
-**Votre IA peut maintenant voir et rechercher sur le web comme un humain !** 🎯
+**Your artificial intelligence API GOOGLE GEMINI 2.0 FLASH can now see and search the web like a human!** 🎯
 
 ---
 
-## 💡 UTILISATION QUOTIDIENNE
+## 💡 DAILY USE
 
-1. **Lancez** : `start_app.bat`
-2. **Ouvrez** : http://localhost:5000  
-3. **Chattez** avec votre IA
-4. **Demandez** des recherches : *"Recherche les dernières actualités sur l'IA"*
-5. **L'IA** effectue automatiquement des recherches visuelles et vous donne des résultats enrichis !
+1.  **Launch**: `start_app.bat`
+2.  **Open**: http://localhost:5000
+3.  **Chat** with your artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+4.  **Ask** for searches: *"Search for the latest news on artificial intelligence"*
+5.  **The artificial intelligence API GOOGLE GEMINI 2.0 FLASH** automatically performs visual searches and gives you enriched results!
 
-**C'est tout ! Votre système est maintenant prêt pour une utilisation professionnelle.** 🚀
+**That's it! Your system is now ready for professional use.** 🚀
