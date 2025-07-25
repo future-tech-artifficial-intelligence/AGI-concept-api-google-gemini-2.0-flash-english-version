@@ -1,7 +1,6 @@
-
 """
-Système d'Apprentissage Continu et d'Auto-Amélioration
-Permet à l'AGI/ASI d'apprendre de manière autonome et de s'améliorer continuellement.
+Continuous Learning and Self-Improvement System
+Enables artificial intelligence GOOGLE GEMINI 2.0 FLASH API to learn autonomously and improve continuously.
 """
 
 import json
@@ -14,7 +13,7 @@ import hashlib
 
 @dataclass
 class LearningExperience:
-    """Représente une expérience d'apprentissage"""
+    """Represents a learning experience"""
     id: str
     context: Dict[str, Any]
     action_taken: str
@@ -26,7 +25,7 @@ class LearningExperience:
     generalization_potential: float = 0.0
 
 class ContinuousLearningSystem:
-    """Système d'apprentissage continu pour AGI/ASI"""
+    """Continuous learning system for AGI/ASI"""
     
     def __init__(self):
         self.experiences: List[LearningExperience] = []
@@ -37,7 +36,7 @@ class ContinuousLearningSystem:
         
     def record_experience(self, context: Dict[str, Any], action: str, 
                          outcome: Dict[str, Any], feedback_score: float) -> str:
-        """Enregistre une nouvelle expérience d'apprentissage"""
+        """Records a new learning experience"""
         experience_id = hashlib.md5(
             f"{datetime.now().isoformat()}_{action}".encode()
         ).hexdigest()[:8]
@@ -55,37 +54,37 @@ class ContinuousLearningSystem:
         
         self.experiences.append(experience)
         
-        # Déclencher l'apprentissage
+        # Trigger learning
         self._trigger_learning_from_experience(experience)
         
         return experience_id
     
     def _calculate_confidence(self, context: Dict[str, Any], outcome: Dict[str, Any]) -> float:
-        """Calcule la confiance dans l'expérience"""
-        # Facteurs de confiance
-        context_clarity = len(context) / 10  # Plus de contexte = plus de confiance
+        """Calculates confidence in the experience"""
+        # Confidence factors
+        context_clarity = len(context) / 10  # More context = more confidence
         outcome_clarity = 1.0 if outcome.get("success") else 0.5
         
         return min(1.0, (context_clarity + outcome_clarity) / 2)
     
     def _assess_generalization_potential(self, context: Dict[str, Any], action: str) -> float:
-        """Évalue le potentiel de généralisation d'une expérience"""
-        # Rechercher des expériences similaires
+        """Assesses the generalization potential of an experience"""
+        # Search for similar experiences
         similar_experiences = self._find_similar_experiences(context, action)
         
         if len(similar_experiences) > 3:
-            return 0.8  # Haute généralisation si beaucoup d'exemples similaires
+            return 0.8  # High generalization if many similar examples
         elif len(similar_experiences) > 1:
-            return 0.6  # Généralisation modérée
+            return 0.6  # Moderate generalization
         else:
-            return 0.3  # Faible généralisation (expérience unique)
+            return 0.3  # Low generalization (unique experience)
     
     def _find_similar_experiences(self, context: Dict[str, Any], action: str) -> List[LearningExperience]:
-        """Trouve des expériences similaires"""
+        """Finds similar experiences"""
         similar = []
         
         for exp in self.experiences:
-            # Calculer la similarité de contexte
+            # Calculate context similarity
             context_similarity = self._calculate_context_similarity(context, exp.context)
             action_similarity = 1.0 if action == exp.action_taken else 0.0
             
@@ -97,7 +96,7 @@ class ContinuousLearningSystem:
         return similar
     
     def _calculate_context_similarity(self, context1: Dict[str, Any], context2: Dict[str, Any]) -> float:
-        """Calcule la similarité entre deux contextes"""
+        """Calculates the similarity between two contexts"""
         common_keys = set(context1.keys()) & set(context2.keys())
         if not common_keys:
             return 0.0
@@ -106,10 +105,10 @@ class ContinuousLearningSystem:
         for key in common_keys:
             val1, val2 = context1[key], context2[key]
             if isinstance(val1, str) and isinstance(val2, str):
-                # Similarité textuelle simple
+                # Simple textual similarity
                 sim = len(set(val1.split()) & set(val2.split())) / len(set(val1.split()) | set(val2.split()))
             elif isinstance(val1, (int, float)) and isinstance(val2, (int, float)):
-                # Similarité numérique
+                # Numerical similarity
                 sim = 1.0 - abs(val1 - val2) / max(abs(val1), abs(val2), 1)
             else:
                 sim = 1.0 if val1 == val2 else 0.0
@@ -119,30 +118,30 @@ class ContinuousLearningSystem:
         return sum(similarities) / len(similarities) if similarities else 0.0
     
     def _trigger_learning_from_experience(self, experience: LearningExperience) -> None:
-        """Déclenche l'apprentissage à partir d'une expérience"""
-        # Extraire des patterns
+        """Triggers learning from an experience"""
+        # Extract patterns
         patterns = self._extract_patterns([experience])
         
-        # Mettre à jour les patterns appris
+        # Update learned patterns
         for pattern_id, pattern_data in patterns.items():
             if pattern_id in self.learned_patterns:
-                # Renforcer le pattern existant
+                # Strengthen existing pattern
                 self.learned_patterns[pattern_id]["confidence"] = min(1.0, 
                     self.learned_patterns[pattern_id]["confidence"] + 0.1)
                 self.learned_patterns[pattern_id]["occurrences"] += 1
             else:
-                # Nouveau pattern
+                # New pattern
                 self.learned_patterns[pattern_id] = pattern_data
         
-        # Meta-apprentissage
+        # Meta-learning
         self._update_meta_learning(experience)
     
     def _extract_patterns(self, experiences: List[LearningExperience]) -> Dict[str, Any]:
-        """Extrait des patterns d'apprentissage"""
+        """Extracts learning patterns"""
         patterns = {}
         
         for exp in experiences:
-            # Pattern contexte -> action
+            # Context -> action pattern
             context_key = self._create_context_signature(exp.context)
             action_pattern_id = f"context_action_{context_key}_{exp.action_taken}"
             
@@ -157,7 +156,7 @@ class ContinuousLearningSystem:
                 "last_seen": exp.timestamp
             }
             
-            # Pattern action -> outcome
+            # Action -> outcome pattern
             outcome_pattern_id = f"action_outcome_{exp.action_taken}"
             if outcome_pattern_id not in patterns:
                 patterns[outcome_pattern_id] = {
@@ -172,8 +171,8 @@ class ContinuousLearningSystem:
         return patterns
     
     def _create_context_signature(self, context: Dict[str, Any]) -> str:
-        """Crée une signature unique pour un contexte"""
-        # Simplifier le contexte en gardant les éléments clés
+        """Creates a unique signature for a context"""
+        # Simplify context by keeping key elements
         key_elements = []
         for key, value in context.items():
             if isinstance(value, str):
@@ -187,8 +186,8 @@ class ContinuousLearningSystem:
         return hashlib.md5(signature.encode()).hexdigest()[:8]
     
     def _update_meta_learning(self, experience: LearningExperience) -> None:
-        """Met à jour les données de méta-apprentissage"""
-        # Analyser l'efficacité des stratégies d'apprentissage
+        """Updates meta-learning data"""
+        # Analyze the effectiveness of learning strategies
         learning_strategy = experience.learning_type
         
         if learning_strategy not in self.meta_learning_data:
@@ -202,24 +201,24 @@ class ContinuousLearningSystem:
         meta_data = self.meta_learning_data[learning_strategy]
         meta_data["total_experiences"] += 1
         
-        # Mise à jour de la moyenne mobile du feedback
-        alpha = 0.1  # Facteur d'oubli
+        # Update moving average of feedback
+        alpha = 0.1  # Forgetting factor
         meta_data["average_feedback"] = (
             (1 - alpha) * meta_data["average_feedback"] + 
             alpha * experience.feedback_score
         )
         
-        # Mise à jour du taux de succès
+        # Update success rate
         success = 1.0 if experience.feedback_score > 0.5 else 0.0
         meta_data["success_rate"] = (
             (1 - alpha) * meta_data["success_rate"] + alpha * success
         )
     
     def suggest_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Suggère une action basée sur l'apprentissage"""
+        """Suggests an action based on learning"""
         context_signature = self._create_context_signature(context)
         
-        # Rechercher des patterns correspondants
+        # Search for matching patterns
         relevant_patterns = []
         for pattern_id, pattern_data in self.learned_patterns.items():
             if pattern_data["type"] == "context_action":
@@ -227,7 +226,7 @@ class ContinuousLearningSystem:
                     relevant_patterns.append((pattern_id, pattern_data))
         
         if relevant_patterns:
-            # Sélectionner le pattern avec la meilleure confiance
+            # Select the pattern with the best confidence
             best_pattern = max(relevant_patterns, key=lambda x: x[1]["confidence"])
             
             return {
@@ -238,20 +237,20 @@ class ContinuousLearningSystem:
                 "learning_source": "experience"
             }
         else:
-            # Pas de pattern exact, utiliser la généralisation
+            # No exact pattern, use generalization
             return self._generalize_suggestion(context)
     
     def _generalize_suggestion(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Génère une suggestion par généralisation"""
-        # Trouver les expériences les plus similaires
+        """Generates a suggestion by generalization"""
+        # Find the most similar experiences
         similar_experiences = []
         for exp in self.experiences:
             similarity = self._calculate_context_similarity(context, exp.context)
-            if similarity > 0.4:  # Seuil de similarité
+            if similarity > 0.4:  # Similarity threshold
                 similar_experiences.append((exp, similarity))
         
         if similar_experiences:
-            # Pondérer par similarité et performance
+            # Weight by similarity and performance
             weighted_actions = {}
             for exp, similarity in similar_experiences:
                 action = exp.action_taken
@@ -262,7 +261,7 @@ class ContinuousLearningSystem:
                 else:
                     weighted_actions[action] = weight
             
-            # Sélectionner l'action avec le meilleur score pondéré
+            # Select the action with the best weighted score
             best_action = max(weighted_actions.items(), key=lambda x: x[1])
             
             return {
@@ -274,7 +273,7 @@ class ContinuousLearningSystem:
                 "similarity_count": len(similar_experiences)
             }
         else:
-            # Aucune expérience similaire, suggestion exploratoire
+            # No similar experience, exploratory suggestion
             return {
                 "suggested_action": "explore_new_approach",
                 "confidence": 0.3,
@@ -284,7 +283,7 @@ class ContinuousLearningSystem:
             }
     
     def self_improve(self) -> Dict[str, Any]:
-        """Processus d'auto-amélioration"""
+        """Self-improvement process"""
         improvements = {
             "performance_analysis": self._analyze_performance(),
             "strategy_optimization": self._optimize_strategies(),
@@ -295,7 +294,7 @@ class ContinuousLearningSystem:
         return improvements
     
     def _analyze_performance(self) -> Dict[str, Any]:
-        """Analyse la performance du système"""
+        """Analyzes system performance"""
         if len(self.experiences) < 10:
             return {"status": "insufficient_data"}
         
@@ -313,7 +312,7 @@ class ContinuousLearningSystem:
         }
     
     def _optimize_strategies(self) -> Dict[str, Any]:
-        """Optimise les stratégies d'apprentissage"""
+        """Optimizes learning strategies"""
         strategy_performance = {}
         
         for strategy, meta_data in self.meta_learning_data.items():
@@ -333,8 +332,8 @@ class ContinuousLearningSystem:
         return {"status": "no_strategies_evaluated"}
     
     def _consolidate_knowledge(self) -> Dict[str, Any]:
-        """Consolide les connaissances apprises"""
-        # Identifier les patterns redondants
+        """Consolidates learned knowledge"""
+        # Identify redundant patterns
         pattern_groups = {}
         for pattern_id, pattern_data in self.learned_patterns.items():
             key = (pattern_data["type"], pattern_data.get("action", ""))
@@ -345,7 +344,7 @@ class ContinuousLearningSystem:
         consolidated = 0
         for group in pattern_groups.values():
             if len(group) > 1:
-                # Fusionner les patterns similaires
+                # Merge similar patterns
                 consolidated += self._merge_similar_patterns(group)
         
         return {
@@ -355,35 +354,35 @@ class ContinuousLearningSystem:
         }
     
     def _merge_similar_patterns(self, pattern_group: List[Tuple[str, Dict[str, Any]]]) -> int:
-        """Fusionne des patterns similaires"""
-        # Sélectionner le pattern avec la meilleure confiance comme base
+        """Merges similar patterns"""
+        # Select the pattern with the best confidence as base
         base_pattern_id, base_pattern = max(pattern_group, key=lambda x: x[1]["confidence"])
         
         merged_count = 0
         for pattern_id, pattern_data in pattern_group:
             if pattern_id != base_pattern_id:
-                # Fusionner dans le pattern de base
+                # Merge into base pattern
                 base_pattern["confidence"] = min(1.0, base_pattern["confidence"] + 0.05)
                 base_pattern["occurrences"] += pattern_data.get("occurrences", 1)
                 
-                # Supprimer le pattern redondant
+                # Delete redundant pattern
                 del self.learned_patterns[pattern_id]
                 merged_count += 1
         
         return merged_count
     
     def _enhance_capabilities(self) -> Dict[str, Any]:
-        """Améliore les capacités du système"""
+        """Enhances system capabilities"""
         enhancements = []
         
-        # Analyser les échecs récents pour identifier les améliorations
+        # Analyze recent failures to identify improvements
         recent_failures = [exp for exp in self.experiences[-50:] if exp.feedback_score < 0.4]
         
         if len(recent_failures) > 5:
             failure_patterns = self._analyze_failure_patterns(recent_failures)
             enhancements.append(f"Address failure pattern: {failure_patterns}")
         
-        # Identifier les domaines sous-explorés
+        # Identify underexplored areas
         action_diversity = len(set(exp.action_taken for exp in self.experiences))
         if action_diversity < 10:
             enhancements.append("Increase action space exploration")
@@ -394,12 +393,12 @@ class ContinuousLearningSystem:
         }
     
     def _analyze_failure_patterns(self, failures: List[LearningExperience]) -> str:
-        """Analyse les patterns d'échec"""
-        # Identifier les contextes ou actions qui mènent souvent à l'échec
+        """Analyzes failure patterns"""
+        # Identify contexts or actions that often lead to failure
         failure_contexts = [exp.context for exp in failures]
         failure_actions = [exp.action_taken for exp in failures]
         
-        # Analyser la fréquence
+        # Analyze frequency
         from collections import Counter
         action_failures = Counter(failure_actions)
         
@@ -409,18 +408,18 @@ class ContinuousLearningSystem:
         
         return "No clear failure pattern identified"
 
-# Instance globale
+# Global instance
 continuous_learner = ContinuousLearningSystem()
 
 def record_learning_experience(context: Dict[str, Any], action: str, 
                              outcome: Dict[str, Any], feedback_score: float) -> str:
-    """Interface pour enregistrer une expérience d'apprentissage"""
+    """Interface for recording a learning experience"""
     return continuous_learner.record_experience(context, action, outcome, feedback_score)
 
 def get_action_suggestion(context: Dict[str, Any]) -> Dict[str, Any]:
-    """Interface pour obtenir une suggestion d'action"""
+    """Interface for getting an action suggestion"""
     return continuous_learner.suggest_action(context)
 
 def trigger_self_improvement() -> Dict[str, Any]:
-    """Interface pour déclencher l'auto-amélioration"""
+    """Interface for triggering self-improvement"""
     return continuous_learner.self_improve()
