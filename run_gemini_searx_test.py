@@ -1,5 +1,5 @@
 """
-Script de lancement pour les tests d'interaction Gemini-Searx
+Launch script for artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Searx interaction tests
 """
 
 import os
@@ -9,10 +9,10 @@ import requests
 from pathlib import Path
 
 def check_prerequisites():
-    """Vérifie que tous les prérequis sont remplis"""
-    print("🔍 Vérification des prérequis...")
+    """Checks that all prerequisites are met"""
+    print("🔍 Checking prerequisites...")
     
-    # Vérifier que nous sommes dans le bon répertoire
+    # Verify that we are in the correct directory
     required_files = [
         'app.py',
         'searx_interface.py', 
@@ -26,69 +26,69 @@ def check_prerequisites():
             missing_files.append(file)
     
     if missing_files:
-        print(f"❌ Fichiers manquants: {', '.join(missing_files)}")
+        print(f"❌ Missing files: {', '.join(missing_files)}")
         return False
     
-    print("✅ Tous les fichiers requis sont présents")
+    print("✅ All required files are present")
     
-    # Vérifier que l'app Flask est en cours d'exécution
+    # Check that the Flask app is running
     try:
         response = requests.get("http://localhost:5000/", timeout=5)
         if response.status_code == 200:
-            print("✅ Application Flask accessible sur localhost:5000")
+            print("✅ Flask application accessible on localhost:5000")
         else:
-            print(f"⚠️  Application Flask répond avec le code: {response.status_code}")
+            print(f"⚠️  Flask application responds with code: {response.status_code}")
     except Exception as e:
-        print(f"❌ Application Flask non accessible: {str(e)}")
-        print("💡 Assurez-vous que 'python app.py' est en cours d'exécution")
+        print(f"❌ Flask application not accessible: {str(e)}")
+        print("💡 Make sure 'python app.py' is running")
         return False
     
-    # Vérifier Searx (optionnel car peut être intégré dans l'app)
+    # Check Searx (optional as it can be integrated into the app)
     try:
         response = requests.get("http://localhost:8080/", timeout=5)
         if response.status_code == 200:
-            print("✅ Searx accessible sur localhost:8080")
+            print("✅ Searx accessible on localhost:8080")
         else:
-            print(f"⚠️  Searx répond avec le code: {response.status_code}")
+            print(f"⚠️  Searx responds with code: {response.status_code}")
     except Exception as e:
-        print(f"⚠️  Searx non accessible sur localhost:8080: {str(e)}")
-        print("💡 Searx peut être intégré dans l'application Flask")
+        print(f"⚠️  Searx not accessible on localhost:8080: {str(e)}")
+        print("💡 Searx can be integrated into the Flask application")
     
     return True
 
 def main():
-    """Fonction principale"""
-    print("🧪 Test des Capacités d'Interaction Gemini-Searx")
+    """Main function"""
+    print("🧪 Testing artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Searx Interaction Capabilities")
     print("=" * 55)
     
     if not check_prerequisites():
-        print("\n❌ Prérequis non remplis. Veuillez:")
-        print("1. Vous assurer d'être dans le bon répertoire")
-        print("2. Démarrer l'application avec: python app.py")
-        print("3. Optionnellement démarrer Searx")
+        print("\n❌ Prerequisites not met. Please:")
+        print("1. Ensure you are in the correct directory")
+        print("2. Start the application with: python app.py")
+        print("3. Optionally start Searx")
         return
     
-    # Attendre un moment pour que les services se stabilisent
-    print("\n⏳ Attente de stabilisation des services...")
+    # Waiting for services to stabilize
+    print("\n⏳ Waiting for services to stabilize...")
     time.sleep(3)
     
-    print("🚀 Lancement du test d'interaction Gemini-Searx...\n")
+    print("🚀 Launching artificial intelligence API GOOGLE GEMINI 2.0 FLASH-Searx interaction test...\n")
     
-    # Lancer le test
+    # Launch the test
     try:
         import subprocess
         result = subprocess.run([sys.executable, "test_gemini_searx_interaction.py"], 
                               capture_output=False, text=True)
         
         if result.returncode == 0:
-            print("\n🎉 Tests terminés avec succès!")
+            print("\n🎉 Tests completed successfully!")
         else:
-            print(f"\n⚠️  Tests terminés avec des erreurs (code: {result.returncode})")
+            print(f"\n⚠️  Tests completed with errors (code: {result.returncode})")
             
     except Exception as e:
-        print(f"\n❌ Erreur lors du lancement des tests: {str(e)}")
+        print(f"\n❌ Error launching tests: {str(e)}")
     
-    print("📁 Consultez le dossier 'test_results_searx_interaction' pour les rapports détaillés")
+    print("📁 Consult the 'test_results_searx_interaction' folder for detailed reports")
 
 if __name__ == "__main__":
     main()
