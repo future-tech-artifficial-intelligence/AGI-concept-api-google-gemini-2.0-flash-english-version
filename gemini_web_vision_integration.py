@@ -1,6 +1,6 @@
 """
-Intégration Navigation Web + Vision Gemini
-Permet à Gemini de naviguer ET voir visuellement l'intérieur des sites web
+artificial intelligence Google Gemini 2.0 Flash AI Web + Vision Integration
+Allows Google Gemini 2.0 Flash AI to navigate AND visually see the inside of websites
 """
 
 import logging
@@ -10,7 +10,7 @@ from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
 from pathlib import Path
 
-# Import des systèmes existants
+# Import existing systems
 try:
     from advanced_web_navigator import AdvancedWebNavigator
     from gemini_visual_adapter import GeminiVisualAdapter, initialize_gemini_visual_adapter
@@ -18,46 +18,46 @@ try:
     NAVIGATION_AVAILABLE = True
 except ImportError as e:
     NAVIGATION_AVAILABLE = False
-    logger.error(f"❌ Modules de navigation non disponibles: {e}")
+    logger.error(f"❌ Navigation modules not available: {e}")
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger('GeminiWebVision')
+logger = logging.getLogger('Google Gemini 2.0 Flash AI WebVision')
 
 class GeminiWebVisionIntegration:
-    """Intégration complète Navigation Web + Vision Gemini"""
+    """Complete Web Navigation + Google Gemini 2.0 Flash AI Vision Integration"""
     
     def __init__(self, api_key: str = None):
         """
-        Initialise l'intégration Navigation + Vision
+        Initializes the Navigation + Vision integration
         
         Args:
-            api_key: Clé API Gemini
+            api_key: Google Gemini 2.0 Flash AI API Key
         """
         self.api_key = api_key
         
-        # Initialiser les composants
+        # Initialize components
         self.visual_adapter = initialize_gemini_visual_adapter(api_key)
         self.capture_system = initialize_intelligent_capture()
         
-        # Initialiser le navigateur web si disponible
+        # Initialize web navigator if available
         if NAVIGATION_AVAILABLE:
             self.web_navigator = AdvancedWebNavigator()
-            logger.info("✅ Navigateur web avancé intégré")
+            logger.info("✅ Advanced web navigator integrated")
         else:
             self.web_navigator = None
-            logger.warning("⚠️ Navigateur web non disponible")
+            logger.warning("⚠️ Web navigator not available")
         
         # Configuration
         self.config = {
-            'auto_capture': True,  # Capturer automatiquement pendant la navigation
+            'auto_capture': True,  # Automatically capture during navigation
             'capture_types': ['visible_area', 'full_page'],
             'analyze_during_navigation': True,
             'save_analysis': True,
             'max_captures_per_site': 5
         }
         
-        # Répertoires
+        # Directories
         self.data_dir = Path("data/gemini_web_vision")
         self.reports_dir = self.data_dir / "reports"
         self.navigation_logs_dir = self.data_dir / "navigation_logs"
@@ -65,10 +65,10 @@ class GeminiWebVisionIntegration:
         for dir_path in [self.data_dir, self.reports_dir, self.navigation_logs_dir]:
             dir_path.mkdir(parents=True, exist_ok=True)
         
-        # Sessions actives
+        # Active sessions
         self.active_sessions = {}
         
-        # Statistiques
+        # Statistics
         self.stats = {
             'sessions_created': 0,
             'sites_navigated': 0,
@@ -77,35 +77,35 @@ class GeminiWebVisionIntegration:
             'total_processing_time': 0
         }
         
-        logger.info("🚀 Intégration Gemini Web + Vision initialisée")
+        logger.info("🚀 Google Gemini 2.0 Flash AI Web + Vision Integration initialized")
     
     def create_vision_navigation_session(self, 
                                        session_id: str,
                                        user_query: str,
                                        navigation_goals: List[str] = None) -> Dict[str, Any]:
         """
-        Crée une session de navigation avec vision intégrée
+        Creates a navigation session with integrated vision
         
         Args:
-            session_id: Identifiant unique de la session
-            user_query: Requête utilisateur
-            navigation_goals: Objectifs de navigation spécifiques
+            session_id: Unique session identifier
+            user_query: User query
+            navigation_goals: Specific navigation goals
             
         Returns:
-            Information sur la session créée
+            Information about the created session
         """
         try:
-            # Validation des paramètres
+            # Parameter validation
             if not session_id or not isinstance(session_id, str) or len(session_id.strip()) == 0:
                 return {
                     'success': False,
-                    'error': 'session_id invalide: doit être une chaîne non vide'
+                    'error': 'invalid session_id: must be a non-empty string'
                 }
             
             if not user_query or not isinstance(user_query, str) or len(user_query.strip()) == 0:
                 return {
                     'success': False,
-                    'error': 'user_query invalide: doit être une chaîne non vide'
+                    'error': 'invalid user_query: must be a non-empty string'
                 }
             
             if navigation_goals is None:
@@ -126,7 +126,7 @@ class GeminiWebVisionIntegration:
             self.active_sessions[session_id] = session_info
             self.stats['sessions_created'] += 1
             
-            logger.info(f"🆕 Session vision-navigation créée: {session_id}")
+            logger.info(f"🆕 Vision-navigation session created: {session_id}")
             return {
                 'success': True,
                 'session_id': session_id,
@@ -134,7 +134,7 @@ class GeminiWebVisionIntegration:
             }
             
         except Exception as e:
-            error_msg = f"Erreur création session {session_id}: {str(e)}"
+            error_msg = f"Error creating session {session_id}: {str(e)}"
             logger.error(f"❌ {error_msg}")
             return {
                 'success': False,
@@ -147,16 +147,16 @@ class GeminiWebVisionIntegration:
                            navigation_type: str = "smart_exploration",
                            capture_config: Dict[str, Any] = None) -> Dict[str, Any]:
         """
-        Navigue sur un site avec capture et analyse visuelle automatique
+        Navigates a site with automatic visual capture and analysis
         
         Args:
-            session_id: ID de la session
-            url: URL à visiter
-            navigation_type: Type de navigation (smart_exploration, content_focus, ui_analysis)
-            capture_config: Configuration de capture personnalisée
+            session_id: Session ID
+            url: URL to visit
+            navigation_type: Navigation type (smart_exploration, content_focus, ui_analysis)
+            capture_config: Custom capture configuration
             
         Returns:
-            Résultats de la navigation avec analyses visuelles
+            Navigation results with visual analyses
         """
         start_time = datetime.now()
         
@@ -164,12 +164,12 @@ class GeminiWebVisionIntegration:
             if session_id not in self.active_sessions:
                 return {
                     'success': False,
-                    'error': f'Session {session_id} non trouvée'
+                    'error': f'Session {session_id} not found'
                 }
             
             session = self.active_sessions[session_id]
             
-            # Configuration par défaut de capture
+            # Default capture configuration
             if capture_config is None:
                 capture_config = {
                     'capture_type': 'full_page',
@@ -177,9 +177,9 @@ class GeminiWebVisionIntegration:
                     'analyze_elements': True
                 }
             
-            logger.info(f"🌐 Navigation avec vision: {url} (session: {session_id})")
+            logger.info(f"🌐 Navigation with vision: {url} (session: {session_id})")
             
-            # 1. Capturer le site avant navigation
+            # 1. Capture the site before navigation
             initial_capture = self.capture_system.capture_website_intelligent(
                 url=url,
                 **capture_config
@@ -188,10 +188,10 @@ class GeminiWebVisionIntegration:
             if not initial_capture['success']:
                 return {
                     'success': False,
-                    'error': f'Échec capture initiale: {initial_capture.get("error")}'
+                    'error': f'Initial capture failed: {initial_capture.get("error")}'
                 }
             
-            # 2. Analyser visuellement les captures
+            # 2. Visually analyze the captures
             visual_analyses = []
             for capture in initial_capture['captures']:
                 if 'optimized_path' in capture:
@@ -200,7 +200,7 @@ class GeminiWebVisionIntegration:
                     analysis_result = self.visual_adapter.analyze_website_screenshot(
                         image_path=capture['optimized_path'],
                         analysis_prompt=analysis_prompt,
-                        context=f"Navigation {navigation_type} pour: {session['user_query']}"
+                        context=f"Navigation {navigation_type} for: {session['user_query']}"
                     )
                     
                     if analysis_result['success']:
@@ -210,12 +210,12 @@ class GeminiWebVisionIntegration:
                             'processing_time': analysis_result['processing_time']
                         })
                         
-                        logger.info(f"✅ Analyse visuelle réussie pour section {capture.get('section', 1)}")
+                        logger.info(f"✅ Visual analysis successful for section {capture.get('section', 1)}")
             
-            # 3. Navigation basée sur l'analyse visuelle (si navigateur disponible)
+            # 3. Navigation based on visual analysis (if navigator available)
             navigation_result = None
             if self.web_navigator and navigation_type != "visual_only":
-                # Utiliser les analyses visuelles pour guider la navigation
+                # Use visual analyses to guide navigation
                 navigation_guidance = self._generate_navigation_guidance(visual_analyses)
                 
                 if hasattr(self.web_navigator, 'navigate_with_guidance'):
@@ -225,7 +225,7 @@ class GeminiWebVisionIntegration:
                         session_id=session_id
                     )
             
-            # 4. Mettre à jour la session
+            # 4. Update the session
             session['sites_visited'].append({
                 'url': url,
                 'timestamp': start_time.isoformat(),
@@ -237,16 +237,16 @@ class GeminiWebVisionIntegration:
             session['captures_taken'].extend(initial_capture['captures'])
             session['analyses_performed'].extend(visual_analyses)
             
-            # 5. Calculer les métriques
+            # 5. Calculate metrics
             processing_time = (datetime.now() - start_time).total_seconds()
             
-            # Mettre à jour les statistiques globales
+            # Update global statistics
             self.stats['sites_navigated'] += 1
             self.stats['captures_taken'] += len(initial_capture['captures'])
             self.stats['analyses_performed'] += len(visual_analyses)
             self.stats['total_processing_time'] += processing_time
             
-            # 6. Sauvegarder le rapport de session
+            # 6. Save the session report
             self._save_session_report(session_id, {
                 'url': url,
                 'navigation_type': navigation_type,
@@ -256,7 +256,7 @@ class GeminiWebVisionIntegration:
                 'processing_time': processing_time
             })
             
-            logger.info(f"✅ Navigation avec vision terminée: {url} en {processing_time:.2f}s")
+            logger.info(f"✅ Navigation with vision completed: {url} in {processing_time:.2f}s")
             
             return {
                 'success': True,
@@ -275,7 +275,7 @@ class GeminiWebVisionIntegration:
             }
             
         except Exception as e:
-            error_msg = f"Erreur navigation avec vision {url}: {str(e)}"
+            error_msg = f"Navigation with vision error {url}: {str(e)}"
             logger.error(f"❌ {error_msg}")
             
             return {
@@ -285,68 +285,68 @@ class GeminiWebVisionIntegration:
             }
     
     def _generate_analysis_prompt(self, navigation_type: str, user_query: str) -> str:
-        """Génère un prompt d'analyse adapté au type de navigation"""
+        """Generates an analysis prompt adapted to the navigation type"""
         
         base_prompts = {
             'smart_exploration': f"""
-🔍 **EXPLORATION INTELLIGENTE DU SITE**
+🔍 **INTELLIGENT SITE EXPLORATION**
 
-**Contexte utilisateur**: {user_query}
+**User context**: {user_query}
 
-**Analysez cette capture en tant qu'explorateur intelligent**:
-1. 🏗️ **Architecture**: Structure générale, organisation du contenu
-2. 🎯 **Points d'intérêt**: Éléments qui répondent à la requête utilisateur
-3. 🧭 **Navigation**: Menus, liens importants, chemins de navigation
-4. 📄 **Contenu clé**: Informations principales visibles
-5. 🔗 **Prochaines étapes** : Où naviguer ensuite pour répondre à la requête
+**Analyze this capture as an intelligent explorer**:
+1. 🏗️ **Architecture**: General structure, content organization
+2. 🎯 **Points of interest**: Elements that respond to the user query
+3. 🧭 **Navigation**: Menus, important links, navigation paths
+4. 📄 **Key content**: Main visible information
+5. 🔗 **Next steps**: Where to navigate next to answer the query
 """,
             
             'content_focus': f"""
-📖 **ANALYSE FOCALISÉE SUR LE CONTENU**
+📖 **CONTENT-FOCUSED ANALYSIS**
 
-**Recherche pour**: {user_query}
+**Searching for**: {user_query}
 
-**Concentrez-vous sur**:
-1. 📝 **Contenu textuel**: Titre, paragraphes, informations pertinentes
-2. 📊 **Données structurées**: Listes, tableaux, statistiques
-3. 🖼️ **Médias informatifs**: Images, graphiques avec du contenu
-4. 🔍 **Pertinence**: Lien avec la requête utilisateur
-5. 📋 **Extraction**: Résumé du contenu le plus important
+**Focus on**:
+1. 📝 **Textual content**: Title, paragraphs, relevant information
+2. 📊 **Structured data**: Lists, tables, statistics
+3. 🖼️ **Informative media**: Images, graphics with content
+4. 🔍 **Relevance**: Link with the user query
+5. 📋 **Extraction**: Summary of the most important content
 """,
             
             'ui_analysis': f"""
-🎨 **ANALYSE UX/UI DÉTAILLÉE**
+🎨 **DETAILED UX/UI ANALYSIS**
 
-**Dans le contexte de**: {user_query}
+**In the context of**: {user_query}
 
-**Évaluez l'interface**:
-1. 🖥️ **Design**: Cohérence visuelle, hiérarchie, lisibilité
-2. 🎛️ **Utilisabilité**: Facilité de navigation, accessibilité
-3. 📱 **Responsive**: Adaptation à différents écrans
-4. ⚡ **Performance visuelle**: Temps de chargement apparent
-5. 🏆 **Qualité globale**: Note et recommandations d'amélioration
+**Evaluate the interface**:
+1. 🖥️ **Design**: Visual consistency, hierarchy, readability
+2. 🎛️ **Usability**: Ease of navigation, accessibility
+3. 📱 **Responsive**: Adaptation to different screens
+4. ⚡ **Visual performance**: Apparent loading time
+5. 🏆 **Overall quality**: Rating and improvement recommendations
 """,
             
             'visual_only': f"""
-👁️ **ANALYSE VISUELLE PURE**
+👁️ **PURE VISUAL ANALYSIS**
 
-**Contexte**: {user_query}
+**Context**: {user_query}
 
-**Décrivez ce que vous voyez**:
-1. 🖼️ **Éléments visuels**: Couleurs, formes, mise en page
-2. 📐 **Composition**: Équilibre, alignement, espacement
-3. 🎭 **Ambiance**: Impression générale, ton du site
-4. 🔍 **Détails importants**: Éléments qui attirent l'attention
-5. 💭 **Interprétation**: Ce que le site communique visuellement
+**Describe what you see**:
+1. 🖼️ **Visual elements**: Colors, shapes, layout
+2. 📐 **Composition**: Balance, alignment, spacing
+3. 🎭 **Atmosphere**: General impression, site tone
+4. 🔍 **Important details**: Elements that draw attention
+5. 💭 **Interpretation**: What the site visually communicates
 """
         }
         
         return base_prompts.get(navigation_type, base_prompts['smart_exploration'])
     
     def _generate_navigation_guidance(self, visual_analyses: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Génère des conseils de navigation basés sur les analyses visuelles"""
+        """Generates navigation advice based on visual analyses"""
         try:
-            # Extraire les éléments d'intérêt des analyses
+            # Extract elements of interest from analyses
             navigation_elements = []
             content_areas = []
             ui_insights = []
@@ -354,16 +354,16 @@ class GeminiWebVisionIntegration:
             for analysis in visual_analyses:
                 analysis_text = analysis.get('analysis', '')
                 
-                # Chercher des mentions de navigation
-                if any(keyword in analysis_text.lower() for keyword in ['menu', 'navigation', 'lien', 'bouton']):
+                # Look for navigation mentions
+                if any(keyword in analysis_text.lower() for keyword in ['menu', 'navigation', 'link', 'button']):
                     navigation_elements.append(analysis_text[:200])
                 
-                # Chercher du contenu intéressant
-                if any(keyword in analysis_text.lower() for keyword in ['contenu', 'information', 'article', 'données']):
+                # Look for interesting content
+                if any(keyword in analysis_text.lower() for keyword in ['content', 'information', 'article', 'data']):
                     content_areas.append(analysis_text[:200])
                 
-                # Insights UI
-                if any(keyword in analysis_text.lower() for keyword in ['design', 'interface', 'utilisabilité']):
+                # UI Insights
+                if any(keyword in analysis_text.lower() for keyword in ['design', 'interface', 'usability']):
                     ui_insights.append(analysis_text[:200])
             
             return {
@@ -374,17 +374,17 @@ class GeminiWebVisionIntegration:
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur génération guidance: {e}")
+            logger.error(f"❌ Error generating guidance: {e}")
             return {}
     
     def _save_session_report(self, session_id: str, navigation_data: Dict[str, Any]):
-        """Sauvegarde un rapport détaillé de la session"""
+        """Saves a detailed session report"""
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             report_filename = f"vision_navigation_{session_id}_{timestamp}.json"
             report_path = self.reports_dir / report_filename
             
-            # Préparer le rapport complet
+            # Prepare the complete report
             report = {
                 'session_id': session_id,
                 'session_info': self.active_sessions.get(session_id, {}),
@@ -393,14 +393,14 @@ class GeminiWebVisionIntegration:
                 'generated_at': datetime.now().isoformat()
             }
             
-            # Sauvegarder
+            # Save
             with open(report_path, 'w', encoding='utf-8') as f:
                 json.dump(report, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"💾 Rapport de session sauvegardé: {report_filename}")
+            logger.info(f"💾 Session report saved: {report_filename}")
             
         except Exception as e:
-            logger.error(f"❌ Erreur sauvegarde rapport: {e}")
+            logger.error(f"❌ Error saving report: {e}")
     
     def analyze_site_comparison(self, 
                               session_id: str,
@@ -408,36 +408,36 @@ class GeminiWebVisionIntegration:
                               url2: str,
                               comparison_focus: str = "general") -> Dict[str, Any]:
         """
-        Compare visuellement deux sites web
+        Visually compares two websites
         
         Args:
-            session_id: ID de session
-            url1: Premier site
-            url2: Deuxième site  
-            comparison_focus: Focus de comparaison (general, ui, content, performance)
+            session_id: Session ID
+            url1: First site
+            url2: Second site  
+            comparison_focus: Comparison focus (general, ui, content, performance)
             
         Returns:
-            Résultat de la comparaison
+            Comparison result
         """
         try:
-            logger.info(f"🔍 Comparaison visuelle: {url1} vs {url2}")
+            logger.info(f"🔍 Visual comparison: {url1} vs {url2}")
             
-            # Capturer les deux sites
+            # Capture both sites
             capture1 = self.capture_system.capture_website_intelligent(url1, capture_type="visible_area")
             capture2 = self.capture_system.capture_website_intelligent(url2, capture_type="visible_area")
             
             if not capture1['success'] or not capture2['success']:
                 return {
                     'success': False,
-                    'error': 'Échec capture d\'un ou plusieurs sites'
+                    'error': 'Failed to capture one or more sites'
                 }
             
-            # Obtenir les chemins des images optimisées
+            # Get paths of optimized images
             image1_path = capture1['captures'][0]['optimized_path']
             image2_path = capture2['captures'][0]['optimized_path']
             
-            # Effectuer la comparaison visuelle
-            comparison_context = f"Comparaison {comparison_focus} entre {url1} et {url2}"
+            # Perform visual comparison
+            comparison_context = f"Comparison {comparison_focus} between {url1} and {url2}"
             
             comparison_result = self.visual_adapter.compare_website_changes(
                 image_path_before=image1_path,
@@ -446,7 +446,7 @@ class GeminiWebVisionIntegration:
             )
             
             if comparison_result['success']:
-                logger.info("✅ Comparaison visuelle réussie")
+                logger.info("✅ Visual comparison successful")
                 
                 return {
                     'success': True,
@@ -463,11 +463,11 @@ class GeminiWebVisionIntegration:
             else:
                 return {
                     'success': False,
-                    'error': comparison_result.get('error', 'Erreur comparaison')
+                    'error': comparison_result.get('error', 'Comparison error')
                 }
                 
         except Exception as e:
-            error_msg = f"Erreur comparaison sites: {str(e)}"
+            error_msg = f"Site comparison error: {str(e)}"
             logger.error(f"❌ {error_msg}")
             
             return {
@@ -477,26 +477,26 @@ class GeminiWebVisionIntegration:
     
     def close_session(self, session_id: str) -> Dict[str, Any]:
         """
-        Ferme une session et génère le rapport final
+        Closes a session and generates the final report
         
         Args:
-            session_id: ID de la session à fermer
+            session_id: ID of the session to close
             
         Returns:
-            Rapport final de la session
+            Final session report
         """
         try:
             if session_id not in self.active_sessions:
                 return {
                     'success': False,
-                    'error': f'Session {session_id} non trouvée'
+                    'error': f'Session {session_id} not found'
                 }
             
             session = self.active_sessions[session_id]
             session['status'] = 'closed'
             session['closed_at'] = datetime.now().isoformat()
             
-            # Calculer les statistiques de session
+            # Calculate session statistics
             session_stats = {
                 'sites_visited': len(session['sites_visited']),
                 'total_captures': len(session['captures_taken']),
@@ -506,17 +506,17 @@ class GeminiWebVisionIntegration:
             
             session['final_stats'] = session_stats
             
-            # Sauvegarder le rapport final
+            # Save the final report
             self._save_session_report(session_id, {
                 'type': 'final_report',
                 'session_summary': session,
                 'final_stats': session_stats
             })
             
-            # Supprimer de la liste des sessions actives
+            # Remove from active sessions list
             del self.active_sessions[session_id]
             
-            logger.info(f"🏁 Session fermée: {session_id}")
+            logger.info(f"🏁 Session closed: {session_id}")
             
             return {
                 'success': True,
@@ -526,7 +526,7 @@ class GeminiWebVisionIntegration:
             }
             
         except Exception as e:
-            error_msg = f"Erreur fermeture session {session_id}: {str(e)}"
+            error_msg = f"Error closing session {session_id}: {str(e)}"
             logger.error(f"❌ {error_msg}")
             
             return {
@@ -535,7 +535,7 @@ class GeminiWebVisionIntegration:
             }
     
     def _calculate_session_duration(self, session: Dict[str, Any]) -> float:
-        """Calcule la durée d'une session en secondes"""
+        """Calculates the duration of a session in seconds"""
         try:
             start_time = datetime.fromisoformat(session['created_at'])
             end_time = datetime.fromisoformat(session.get('closed_at', datetime.now().isoformat()))
@@ -544,7 +544,7 @@ class GeminiWebVisionIntegration:
             return 0.0
     
     def get_statistics(self) -> Dict[str, Any]:
-        """Retourne les statistiques globales du système"""
+        """Returns global system statistics"""
         avg_time = self.stats['total_processing_time'] / max(self.stats['sites_navigated'], 1)
         
         return {
@@ -563,54 +563,54 @@ class GeminiWebVisionIntegration:
         }
     
     def cleanup(self):
-        """Nettoie les ressources du système"""
+        """Cleans up system resources"""
         try:
-            # Fermer toutes les sessions actives
+            # Close all active sessions
             for session_id in list(self.active_sessions.keys()):
                 self.close_session(session_id)
             
-            # Nettoyer le système de capture
+            # Clean up the capture system
             if self.capture_system:
                 self.capture_system.close()
             
-            logger.info("🧹 Nettoyage du système terminé")
+            logger.info("🧹 System cleanup completed")
             
         except Exception as e:
-            logger.error(f"❌ Erreur nettoyage: {e}")
+            logger.error(f"❌ Cleanup error: {e}")
 
-# Instance globale
+# Global instance
 gemini_web_vision = None
 
 def initialize_gemini_web_vision(api_key: str = None) -> GeminiWebVisionIntegration:
     """
-    Initialise l'intégration globale Gemini Web + Vision
+    Initializes the global Google Gemini 2.0 Flash AI Web + Vision integration
     
     Args:
-        api_key: Clé API Gemini
+        api_key: Google Gemini 2.0 Flash AI API Key
         
     Returns:
-        Instance de l'intégration
+        Integration instance
     """
     global gemini_web_vision
     
     if gemini_web_vision is None:
         gemini_web_vision = GeminiWebVisionIntegration(api_key)
-        logger.info("🌟 Intégration Gemini Web + Vision initialisée globalement")
+        logger.info("🌟 Google Gemini 2.0 Flash AI Web + Vision Integration initialized globally")
     
     return gemini_web_vision
 
 def get_gemini_web_vision() -> Optional[GeminiWebVisionIntegration]:
     """
-    Retourne l'instance globale de l'intégration
+    Returns the global integration instance
     
     Returns:
-        Instance ou None si non initialisé
+        Instance or None if not initialized
     """
     global gemini_web_vision
     return gemini_web_vision
 
 if __name__ == "__main__":
-    # Test de l'intégration
+    # Integration test
     integration = initialize_gemini_web_vision()
-    print("🧪 Intégration Gemini Web + Vision prête pour les tests")
-    print(f"📊 Statistiques: {integration.get_statistics()}")
+    print("🧪 Google Gemini 2.0 Flash AI Web + Vision Integration ready for tests")
+    print(f"📊 Statistics: {integration.get_statistics()}")
