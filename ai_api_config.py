@@ -9,14 +9,14 @@ from pathlib import Path
 from typing import Dict, Optional
 
 def load_config() -> Dict:
-    """Charge la configuration depuis le fichier JSON"""
+    """Loads the configuration from the JSON file"""
     config_file = Path("ai_api_config.json")
     
     if config_file.exists():
         with open(config_file, 'r', encoding='utf-8') as f:
             return json.load(f)
     else:
-        # Configuration par défaut
+        # Default configuration
         default_config = {
             "default_api": "gemini",
             "apis": {
@@ -30,35 +30,35 @@ def load_config() -> Dict:
                 }
             }
         }
-        # Sauvegarder la configuration par défaut
+        # Save default configuration
         with open(config_file, 'w', encoding='utf-8') as f:
             json.dump(default_config, f, indent=4)
         return default_config
 
 def get_api_config(api_name: Optional[str] = None) -> Dict:
     """
-    Obtient la configuration d'une API spécifique
+    Gets the configuration for a specific API
     
     Args:
-        api_name: Nom de l'API (gemini, claude, etc.) ou None pour la configuration complète
+        api_name: Name of the API (gemini, claude, etc.) or None for the full configuration
     
     Returns:
-        Dict: Configuration de l'API
+        Dict: API configuration
     """
     config = load_config()
     
     if api_name is None:
-        # Retourner la configuration complète avec les clés d'environnement
+        # Return the full configuration with environment keys
         result_config = config.copy()
         
-        # Vérifier les variables d'environnement pour les clés API
+        # Check environment variables for API keys
         for api in result_config['apis']:
             env_var = f"{api.upper()}_API_KEY"
             env_key = os.getenv(env_var)
             if env_key:
                 result_config['apis'][api]['api_key'] = env_key
         
-        # Ajouter la clé Gemini principale si disponible
+        # Add the main artificial intelligence API GOOGLE GEMINI 2.0 FLASH key if available
         if os.getenv('GEMINI_API_KEY'):
             result_config['gemini_api_key'] = os.getenv('GEMINI_API_KEY')
         
@@ -67,7 +67,7 @@ def get_api_config(api_name: Optional[str] = None) -> Dict:
         if api_name in config['apis']:
             api_config = config['apis'][api_name].copy()
             
-            # Vérifier la variable d'environnement
+            # Check environment variable
             env_var = f"{api_name.upper()}_API_KEY"
             env_key = os.getenv(env_var)
             if env_key:
@@ -79,12 +79,12 @@ def get_api_config(api_name: Optional[str] = None) -> Dict:
 
 def update_api_config(api_name: str, api_key: str, api_url: Optional[str] = None):
     """
-    Met à jour la configuration d'une API
+    Updates the configuration of an API
     
     Args:
-        api_name: Nom de l'API
-        api_key: Clé API
-        api_url: URL de l'API (optionnel)
+        api_name: Name of the API
+        api_key: API key
+        api_url: API URL (optional)
     """
     config = load_config()
     
@@ -100,12 +100,12 @@ def update_api_config(api_name: str, api_key: str, api_url: Optional[str] = None
         json.dump(config, f, indent=4)
 
 def get_default_api() -> str:
-    """Obtient le nom de l'API par défaut"""
+    """Gets the name of the default API"""
     config = load_config()
     return config.get('default_api', 'gemini')
 
 def set_default_api(api_name: str):
-    """Définit l'API par défaut"""
+    """Sets the default API"""
     config = load_config()
     config['default_api'] = api_name
     
@@ -114,12 +114,12 @@ def set_default_api(api_name: str):
         json.dump(config, f, indent=4)
 
 def has_api_key(api_name: str) -> bool:
-    """Vérifie si une clé API est disponible"""
+    """Checks if an API key is available"""
     config = get_api_config(api_name)
     return bool(config.get('api_key'))
 
 def get_available_apis() -> list:
-    """Retourne la liste des APIs avec des clés disponibles"""
+    """Returns the list of APIs with available keys"""
     config = get_api_config()
     available = []
     
@@ -129,13 +129,13 @@ def get_available_apis() -> list:
     
     return available
 
-# Fonctions de compatibilité pour les anciens scripts
+# Compatibility functions for older scripts
 def get_gemini_api_key() -> Optional[str]:
-    """Obtient la clé API Gemini"""
+    """Gets the artificial intelligence API GOOGLE GEMINI 2.0 FLASH API key"""
     config = get_api_config('gemini')
     return config.get('api_key') or os.getenv('GEMINI_API_KEY')
 
 def get_claude_api_key() -> Optional[str]:
-    """Obtient la clé API Claude"""
+    """Gets the Claude API key"""
     config = get_api_config('claude')
     return config.get('api_key') or os.getenv('CLAUDE_API_KEY')
