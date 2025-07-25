@@ -11,21 +11,21 @@ def run_command(command, description):
         print(result.stdout)
         return True
     except subprocess.CalledProcessError as e:
-        print(f"Erreur: {e}")
-        print(f"Sortie de commande: {e.stdout}")
-        print(f"Erreur de commande: {e.stderr}")
+        print(f"Error: {e}")
+        print(f"Command output: {e.stdout}")
+        print(f"Command error: {e.stderr}")
         return False
 
 def create_version_tag():
-    """Crée un tag de version basé sur la date actuelle."""
+    """Creates a version tag based on the current date."""
     current_date = datetime.now()
     version_tag = f"v{current_date.year}.{current_date.month:02d}.{current_date.day:02d}"
     
-    # Vérifier si le tag existe déjà
+    # Check if the tag already exists
     try:
         result = subprocess.run(f"git tag -l {version_tag}", shell=True, capture_output=True, text=True)
         if version_tag in result.stdout:
-            # Si le tag existe, ajouter un suffixe avec l'heure
+            # If the tag exists, add a suffix with the time
             version_tag = f"v{current_date.year}.{current_date.month:02d}.{current_date.day:02d}-{current_date.hour:02d}{current_date.minute:02d}"
     except:
         pass
@@ -34,88 +34,88 @@ def create_version_tag():
 
 def main():
     project_path = os.path.dirname(os.path.abspath(__file__))
-    repo_url = "https://github.com/future-tech-artifficial-intelligence/AGI-concept-api-google-gemini-2.0-flash-english-version-update1.git"
+    repo_url = "https://github.com/future-tech-artifficial-intelligence/AGI-concept-api-google-gemini-2.0-flash-english-version.git"
     
-    print(f"Déploiement du projet dans le dossier: {project_path}")
-    print(f"Vers le dépôt GitHub: {repo_url}")
+    print(f"Deploying the project to folder: {project_path}")
+    print(f"To GitHub repository: {repo_url}")
     
     os.chdir(project_path)
     
-    # Nettoyage du dépôt Git existant si nécessaire
+    # Clean up existing Git repository if necessary
     if os.path.exists(".git"):
-        print("\nDépôt Git existant détecté. Nettoyage en cours...")
+        print("\nExisting Git repository detected. Cleaning up...")
         try:
-            # Supprimer le dossier .git pour un nouveau départ
+            # Remove the .git folder for a fresh start
             import shutil
             shutil.rmtree(".git", ignore_errors=True)
-            print("Ancien dépôt Git supprimé avec succès.")
+            print("Old Git repository successfully deleted.")
         except Exception as e:
-            print(f"Attention: Impossible de supprimer l'ancien dépôt Git: {e}")
-            print("Tentative de réinitialisation forcée...")
+            print(f"Warning: Could not delete old Git repository: {e}")
+            print("Attempting forced re-initialization...")
     
-    # Initialisation du dépôt Git
-    if not run_command("git init", "Initialisation du dépôt Git"):
+    # Initialize Git repository
+    if not run_command("git init", "Initializing Git repository"):
         return
     
-    # Ajout des fichiers au suivi Git
-    if not run_command("git add --all", "Ajout de tous les fichiers au suivi Git"):
+    # Add files to Git tracking
+    if not run_command("git add --all", "Adding all files to Git tracking"):
         return
     
-    # Création du commit initial
-    commit_message = "Upload complet du projet AGI-ASI-AI avec compatibilité Termux/Android"
+    # Create initial commit
+    commit_message = "Full upload of the AGI-ASI-AI project open-source
     commit_result = subprocess.run(f'git commit -m "{commit_message}"', shell=True, capture_output=True, text=True)
     
-    # Vérifier si le commit a échoué parce qu'il n'y a rien à committer
+    # Check if commit failed because there's nothing to commit
     if "nothing to commit" in commit_result.stderr or "nothing to commit" in commit_result.stdout:
-        print("Aucun changement détecté, tous les fichiers sont déjà commités. Poursuite du déploiement...")
+        print("No changes detected, all files are already committed. Continuing deployment...")
     elif commit_result.returncode != 0:
-        # Si une autre erreur s'est produite
-        print(f"Erreur lors du commit: {commit_result.stderr}")
+        # If another error occurred
+        print(f"Error during commit: {commit_result.stderr}")
         return
     
-    # Création d'un tag de version pour permettre les releases
+    # Create a version tag to enable releases
     version_tag = create_version_tag()
-    if not run_command(f'git tag -a {version_tag} -m "Release {version_tag} - Ajout compatibilité Termux/Android"', 
-                      f"Création du tag de version {version_tag}"):
-        print("Attention: Impossible de créer le tag, mais on continue...")
+    if not run_command(f'git tag -a {version_tag} -m "Release {version_tag} - Added Termux/Android compatibility"', 
+                      f"Creating version tag {version_tag}"):
+        print("Warning: Could not create tag, but continuing...")
     
-    # Configuration du dépôt distant
-    # Vérifier si le remote origin existe déjà
+    # Configure remote repository
+    # Check if remote origin already exists
     try:
         subprocess.run("git remote get-url origin", shell=True, check=True, capture_output=True, text=True)
-        print("Le remote 'origin' existe déjà. Suppression pour reconfiguration...")
-        run_command("git remote remove origin", "Suppression du remote existant")
+        print("Remote 'origin' already exists. Deleting for reconfiguration...")
+        run_command("git remote remove origin", "Deleting existing remote")
     except subprocess.CalledProcessError:
-        pass  # Le remote n'existe pas, continue normalement
+        pass  # Remote does not exist, continue normally
     
-    if not run_command(f'git remote add origin {repo_url}', "Configuration du dépôt distant"):
+    if not run_command(f'git remote add origin {repo_url}', "Configuring remote repository"):
         return
     
-    # Détermination de la branche par défaut
-    print("\nDétection de la branche par défaut...")
-    default_branch = "main"  # La plupart des nouveaux dépôts utilisent "main" comme branche par défaut
+    # Determine default branch
+    print("\nDetecting default branch...")
+    default_branch = "main"  # Most new repositories use "main" as the default branch
     
-    # Envoi du code vers GitHub
-    if not run_command(f"git push -u origin {default_branch}", f"Envoi du code vers la branche {default_branch}"):
-        print("\nTentative de push vers la branche 'master' à la place...")
-        if not run_command("git push -u origin master", "Envoi du code vers la branche master"):
-            print("\nÉchec du déploiement. Vérifiez vos identifiants GitHub et les paramètres du dépôt.")
+    # Push code to GitHub
+    if not run_command(f"git push -u origin {default_branch}", f"Pushing code to branch {default_branch}"):
+        print("\nAttempting to push to 'master' branch instead...")
+        if not run_command("git push -u origin master", "Pushing code to master branch"):
+            print("\nDeployment failed. Check your GitHub credentials and repository settings.")
             return
         default_branch = "master"
     
-    # Envoi des tags vers GitHub
-    if not run_command("git push origin --tags", "Envoi des tags vers GitHub"):
-        print("Attention: Impossible d'envoyer les tags, mais le code a été transféré.")
+    # Push tags to GitHub
+    if not run_command("git push origin --tags", "Pushing tags to GitHub"):
+        print("Warning: Could not push tags, but code has been transferred.")
     
-    print(f"\nTerminé! Votre code a été transféré avec succès vers GitHub.")
-    print(f"URL du dépôt: {repo_url}")
-    print(f"Tag créé: {version_tag}")
-    print(f"\nPour créer une release sur GitHub:")
-    print(f"1. Allez sur {repo_url}/releases")
-    print(f"2. Cliquez sur 'Create a new release'")
-    print(f"3. Sélectionnez le tag '{version_tag}'")
-    print(f"4. Ajoutez un titre et une description pour votre release")
+    print(f"\nDone! Your code has been successfully transferred to GitHub.")
+    print(f"Repository URL: {repo_url}")
+    print(f"Tag created: {version_tag}")
+    print(f"\nTo create a release on GitHub:")
+    print(f"1. Go to {repo_url}/releases")
+    print(f"2. Click on 'Create a new release'")
+    print(f"3. Select tag '{version_tag}'")
+    print(f"4. Add a title and description for your release")
 
 if __name__ == "__main__":
     main()
-    input("\nAppuyez sur Entrée pour quitter...")
+    input("\nPress Enter to exit...")
