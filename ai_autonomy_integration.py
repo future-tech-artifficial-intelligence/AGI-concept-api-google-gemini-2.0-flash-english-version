@@ -11,7 +11,7 @@ from typing import Dict, List, Any, Optional
 from pathlib import Path
 from datetime import datetime
 
-# Imports pour l'accès web autonome
+# Imports for autonomous web access
 try:
     from web_learning_integration import trigger_autonomous_learning, get_web_learning_integration_status
     from autonomous_web_scraper import get_autonomous_learning_status
@@ -19,7 +19,7 @@ try:
 except ImportError:
     WEB_LEARNING_AVAILABLE = False
 
-# Import pour l'accès aux fichiers
+# Import for file access
 try:
     from direct_file_access import get_all_project_files, search_files
     FILE_ACCESS_AVAILABLE = True
@@ -29,18 +29,18 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 class SimpleAIAutonomy:
-    """Système d'autonomie IA simplifié avec accès web direct"""
+    """Simplified AI Autonomy System with direct web access"""
 
     def __init__(self):
         self.autonomy_active = True
         self.web_access_enabled = True
         self.file_access_enabled = True
 
-        # Répertoires de données
+        # Data directories
         self.data_dir = Path("data/ai_autonomy")
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        # Mémoire d'interaction
+        # Interaction memory
         self.interaction_memory = {
             "total_interactions": 0,
             "web_learning_sessions": [],
@@ -49,13 +49,13 @@ class SimpleAIAutonomy:
             "last_update": datetime.now().isoformat()
         }
 
-        # Charger la mémoire existante
+        # Load existing memory
         self._load_interaction_memory()
 
-        logger.info("Système d'autonomie IA simplifié initialisé")
+        logger.info("Simplified AI autonomy system initialized")
 
     def process_user_input(self, user_input: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
-        """Traite l'entrée utilisateur avec autonomie complète"""
+        """Processes user input with full autonomy"""
 
         self.interaction_memory["total_interactions"] += 1
 
@@ -69,10 +69,10 @@ class SimpleAIAutonomy:
         }
 
         try:
-            # Analyser l'entrée pour détecter les besoins
+            # Analyze input to detect needs
             needs_analysis = self._analyze_user_needs(user_input)
 
-            # Accès web autonome si nécessaire
+            # Autonomous web access if needed
             if needs_analysis.get("needs_web_info") and self.web_access_enabled:
                 web_result = self._trigger_autonomous_web_access()
                 result["web_access_triggered"] = web_result.get("triggered", False)
@@ -82,11 +82,11 @@ class SimpleAIAutonomy:
                     self.interaction_memory["web_learning_sessions"].append({
                         "timestamp": time.time(),
                         "trigger_reason": "user_input_analysis",
-                        "user_input": user_input[:100],  # Limiter la taille
+                        "user_input": user_input[:100],  # Limit size
                         "session_data": web_result["session_result"]
                     })
 
-            # Accès aux fichiers si nécessaire
+            # File access if needed
             if needs_analysis.get("needs_file_access") and self.file_access_enabled:
                 file_results = self._autonomous_file_access(needs_analysis.get("search_terms", []))
                 result["files_accessed"] = file_results
@@ -98,20 +98,20 @@ class SimpleAIAutonomy:
                     "files_found": len(file_results)
                 })
 
-            # Enregistrer les décisions autonomes prises
+            # Record autonomous decisions made
             result["autonomous_decisions"] = needs_analysis.get("decisions", [])
 
-            # Sauvegarder la mémoire
+            # Save memory
             self._save_interaction_memory()
 
         except Exception as e:
-            logger.error(f"Erreur lors du traitement autonome: {str(e)}")
+            logger.error(f"Error during autonomous processing: {str(e)}")
             result["error"] = str(e)
 
         return result
 
     def _analyze_user_needs(self, user_input: str) -> Dict[str, Any]:
-        """Analyse les besoins de l'utilisateur de manière autonome"""
+        """Analyzes user needs autonomously"""
 
         user_input_lower = user_input.lower()
 
@@ -122,52 +122,52 @@ class SimpleAIAutonomy:
             "decisions": []
         }
 
-        # Détecter le besoin d'informations web
+        # Detect need for web information
         web_indicators = [
-            "information", "recherche", "actualité", "nouveau", "récent",
-            "qu'est-ce que", "comment", "pourquoi", "tendance", "innovation"
+            "information", "research", "news", "new", "recent",
+            "what is", "how", "why", "trend", "innovation"
         ]
 
         if any(indicator in user_input_lower for indicator in web_indicators):
             analysis["needs_web_info"] = True
-            analysis["decisions"].append("Détection du besoin d'informations web")
+            analysis["decisions"].append("Detection of need for web information")
 
-        # Détecter le besoin d'accès aux fichiers
+        # Detect need for file access
         file_indicators = [
-            "fichier", "code", "fonction", "module", "projet", "système",
-            "comment fonctionne", "où se trouve", "montre-moi"
+            "file", "code", "function", "module", "project", "system",
+            "how it works", "where is", "show me"
         ]
 
         if any(indicator in user_input_lower for indicator in file_indicators):
             analysis["needs_file_access"] = True
-            analysis["decisions"].append("Détection du besoin d'accès aux fichiers")
+            analysis["decisions"].append("Detection of need for file access")
 
-            # Extraire les termes de recherche
+            # Extract search terms
             import re
-            # Mots significatifs pour la recherche
+            # Significant words for search
             words = re.findall(r'\b\w{3,}\b', user_input_lower)
             analysis["search_terms"] = [w for w in words if w not in [
-                "comment", "fonctionne", "montre", "moi", "que", "est", "une", "des"
+                "how", "works", "show", "me", "what", "is", "a", "of"
             ]][:5]
 
         return analysis
 
     def _trigger_autonomous_web_access(self) -> Dict[str, Any]:
-        """Déclenche l'accès web autonome"""
+        """Triggers autonomous web access"""
 
         if not WEB_LEARNING_AVAILABLE:
-            return {"triggered": False, "reason": "Module web non disponible"}
+            return {"triggered": False, "reason": "Web module not available"}
 
         try:
             result = trigger_autonomous_learning()
-            logger.info(f"Accès web autonome: {result.get('triggered', False)}")
+            logger.info(f"Autonomous web access: {result.get('triggered', False)}")
             return result
         except Exception as e:
-            logger.error(f"Erreur lors de l'accès web autonome: {str(e)}")
+            logger.error(f"Error during autonomous web access: {str(e)}")
             return {"triggered": False, "error": str(e)}
 
     def _autonomous_file_access(self, search_terms: List[str]) -> List[Dict[str, Any]]:
-        """Accès autonome aux fichiers du projet"""
+        """Autonomous access to project files"""
 
         if not FILE_ACCESS_AVAILABLE:
             return []
@@ -175,13 +175,13 @@ class SimpleAIAutonomy:
         try:
             file_results = []
 
-            # Rechercher pour chaque terme
+            # Search for each term
             for term in search_terms:
                 search_result = search_files(term)
                 if search_result.get("results"):
-                    file_results.extend(search_result["results"][:3])  # Limiter à 3 par terme
+                    file_results.extend(search_result["results"][:3])  # Limit to 3 per term
 
-            # Supprimer les doublons
+            # Remove duplicates
             seen_files = set()
             unique_results = []
             for result in file_results:
@@ -190,23 +190,23 @@ class SimpleAIAutonomy:
                     seen_files.add(file_path)
                     unique_results.append(result)
 
-            logger.info(f"Accès fichiers autonome: {len(unique_results)} fichiers trouvés")
-            return unique_results[:10]  # Limiter à 10 résultats
+            logger.info(f"Autonomous file access: {len(unique_results)} files found")
+            return unique_results[:10]  # Limit to 10 results
 
         except Exception as e:
-            logger.error(f"Erreur lors de l'accès aux fichiers: {str(e)}")
+            logger.error(f"Error during file access: {str(e)}")
             return []
 
     def get_autonomy_status(self) -> Dict[str, Any]:
-        """Retourne le statut du système d'autonomie"""
+        """Returns the autonomy system status"""
 
-        # Statut du web learning si disponible
+        # Web learning status if available
         web_status = {}
         if WEB_LEARNING_AVAILABLE:
             try:
                 web_status = get_web_learning_integration_status()
             except:
-                web_status = {"error": "Module web inaccessible"}
+                web_status = {"error": "Web module inaccessible"}
 
         return {
             "autonomy_active": self.autonomy_active,
@@ -220,7 +220,7 @@ class SimpleAIAutonomy:
         }
 
     def _load_interaction_memory(self) -> None:
-        """Charge la mémoire d'interaction"""
+        """Loads interaction memory"""
         memory_file = self.data_dir / "interaction_memory.json"
 
         if memory_file.exists():
@@ -229,10 +229,10 @@ class SimpleAIAutonomy:
                     loaded_memory = json.load(f)
                     self.interaction_memory.update(loaded_memory)
             except Exception as e:
-                logger.error(f"Erreur lors du chargement de la mémoire: {str(e)}")
+                logger.error(f"Error loading memory: {str(e)}")
 
     def _save_interaction_memory(self) -> None:
-        """Sauvegarde la mémoire d'interaction"""
+        """Saves interaction memory"""
         memory_file = self.data_dir / "interaction_memory.json"
 
         try:
@@ -240,56 +240,56 @@ class SimpleAIAutonomy:
             with open(memory_file, 'w', encoding='utf-8') as f:
                 json.dump(self.interaction_memory, f, indent=2, ensure_ascii=False)
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde de la mémoire: {str(e)}")
+            logger.error(f"Error saving memory: {str(e)}")
 
     def enable_web_access(self) -> Dict[str, Any]:
-        """Active l'accès web autonome"""
+        """Enables autonomous web access"""
         self.web_access_enabled = True
-        logger.info("Accès web autonome activé")
-        return {"status": "Accès web autonome activé"}
+        logger.info("Autonomous web access enabled")
+        return {"status": "Autonomous web access enabled"}
 
     def disable_web_access(self) -> Dict[str, Any]:
-        """Désactive l'accès web autonome"""
+        """Disables autonomous web access"""
         self.web_access_enabled = False
-        logger.info("Accès web autonome désactivé")
-        return {"status": "Accès web autonome désactivé"}
+        logger.info("Autonomous web access disabled")
+        return {"status": "Autonomous web access disabled"}
 
-# Instance globale
+# Global instance
 ai_autonomy = SimpleAIAutonomy()
 
-# Fonctions d'interface publique
+# Public interface functions
 def process_input(user_input: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
-    """Interface publique pour traiter l'entrée utilisateur avec autonomie"""
+    """Public interface to process user input with autonomy"""
     return ai_autonomy.process_user_input(user_input, context)
 
 def get_status() -> Dict[str, Any]:
-    """Interface publique pour obtenir le statut d'autonomie"""
+    """Public interface to get autonomy status"""
     return ai_autonomy.get_autonomy_status()
 
 def enable_autonomous_web_access() -> Dict[str, Any]:
-    """Interface publique pour activer l'accès web autonome"""
+    """Public interface to enable autonomous web access"""
     return ai_autonomy.enable_web_access()
 
 def disable_autonomous_web_access() -> Dict[str, Any]:
-    """Interface publique pour désactiver l'accès web autonome"""
+    """Public interface to disable autonomous web access"""
     return ai_autonomy.disable_web_access()
 
 if __name__ == "__main__":
-    print("=== Test du Système d'Autonomie IA Simplifié ===")
+    print("=== Simplified AI Autonomy System Test ===")
 
-    # Test de traitement d'entrée
-    test_input = "Comment fonctionne l'intelligence artificielle moderne ?"
+    # Test input processing
+    test_input = "How does modern artificial intelligence work?"
     result = process_input(test_input)
 
-    print(f"Entrée traitée: {result['input_processed']}")
-    print(f"Actions prises: {result['actions_taken']}")
-    print(f"Accès web déclenché: {result['web_access_triggered']}")
-    print(f"Fichiers accédés: {len(result['files_accessed'])}")
+    print(f"Input processed: {result['input_processed']}")
+    print(f"Actions taken: {result['actions_taken']}")
+    print(f"Web access triggered: {result['web_access_triggered']}")
+    print(f"Files accessed: {len(result['files_accessed'])}")
 
-    # Statut du système
+    # System status
     status = get_status()
-    print(f"\n=== Statut du Système ===")
-    print(f"Autonomie active: {status['autonomy_active']}")
-    print(f"Accès web activé: {status['web_access_enabled']}")
+    print(f"\n=== System Status ===")
+    print(f"Autonomy active: {status['autonomy_active']}")
+    print(f"Web access enabled: {status['web_access_enabled']}")
     print(f"Total interactions: {status['total_interactions']}")
-    print(f"Sessions web: {status['web_sessions_count']}")
+    print(f"Web sessions: {status['web_sessions_count']}")
