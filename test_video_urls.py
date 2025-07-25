@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test spécifique pour les URLs vidéo
+Specific test for video URLs
 """
 
 import sys
@@ -10,37 +10,37 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from gemini_api import get_gemini_response, trigger_searx_search_session
 
 def test_video_urls():
-    """Test spécifique pour les URLs vidéo"""
+    """Specific test for video URLs"""
     
-    print("🎥 Test des URLs vidéo avec Searx + Gemini")
+    print("🎥 Testing video URLs with Searx + artificial intelligence API GOOGLE GEMINI 2.0 FLASH")
     print("=" * 60)
     
-    # 1. Test de recherche vidéo directe
-    print("\n1. Test de recherche vidéo Searx:")
-    video_search = trigger_searx_search_session("ovni videos témoignages", "videos")
-    print(f"   Résultat: {video_search}")
+    # 1. Direct video search test
+    print("\n1. Searx video search test:")
+    video_search = trigger_searx_search_session("UFO videos testimonies", "videos")
+    print(f"   Result: {video_search}")
     
-    # 2. Test avec Gemini - question sur OVNI qui devrait déclencher une recherche
-    print("\n2. Test Gemini avec question OVNI:")
-    test_question = "Trouve-moi des vidéos récentes sur les observations d'OVNI"
+    # 2. Test with artificial intelligence API GOOGLE GEMINI 2.0 FLASH - UFO question that should trigger a search
+    print("\n2. Test with artificial intelligence API GOOGLE GEMINI 2.0 FLASH - UFO question:")
+    test_question = "Find me recent videos on UFO sightings"
     
     print(f"   Question: {test_question}")
-    print("   Traitement en cours...")
+    print("   Processing...")
     
     response = get_gemini_response(test_question)
     
-    print(f"   Statut: {response['status']}")
-    print(f"   Longueur réponse: {len(response['response'])} caractères")
-    print(f"\n   Réponse complète:")
+    print(f"   Status: {response['status']}")
+    print(f"   Response length: {len(response['response'])} characters")
+    print(f"\n   Full response:")
     print(f"   {response['response']}")
     
-    # Vérifier si la réponse contient des "xxxxxxxxxx"
+    # Check if the response contains "xxxxxxxxxx"
     if "xxxxxxxxxx" in response['response']:
-        print("\n   ❌ PROBLÈME: La réponse contient encore des 'xxxxxxxxxx'")
+        print("\n   ❌ PROBLEM: The response still contains 'xxxxxxxxxx'")
     else:
-        print("\n   ✅ Aucun 'xxxxxxxxxx' détecté dans la réponse")
+        print("\n   ✅ No 'xxxxxxxxxx' detected in the response")
     
-    print("\n✅ Test des URLs vidéo terminé!")
+    print("\n✅ Video URLs test finished!")
 
 if __name__ == "__main__":
     test_video_urls()
