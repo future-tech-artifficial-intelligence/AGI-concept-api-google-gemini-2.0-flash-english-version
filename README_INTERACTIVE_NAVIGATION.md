@@ -1,5 +1,3 @@
-Here is the full text translated into English, ensuring that "artificial intelligence API GOOGLE GEMINI 2.0 FLASH" is used consistently:
-
 # 🌐 Gemini Interactive Navigation System
 
 ## 🎯 Overview
