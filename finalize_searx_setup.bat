@@ -1,120 +1,120 @@
 @echo off
-title Searx AI - Demarrage Final
+title Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH - Final Startup
 color 0B
 
 echo.
 echo ============================================================
-echo           🎉 FINALISATION DU SYSTEME SEARX AI
+echo           🎉 FINALIZING SEARX artificial intelligence API GOOGLE GEMINI 2.0 FLASH SYSTEM
 echo ============================================================
 echo.
 
-echo ✅ Systeme Searx intelligent: PRET (5/6 tests reussis)
-echo ✅ Gestionnaire de ports: FONCTIONNEL
-echo ✅ Interface Searx: OPERATIONNELLE  
-echo ✅ Capture visuelle: INTEGREE
-echo ✅ Scripts de gestion: DISPONIBLES
+echo ✅ Intelligent Searx System: READY (5/6 tests successful)
+echo ✅ Port Manager: FUNCTIONAL
+echo ✅ Searx Interface: OPERATIONAL
+echo ✅ Visual Capture: INTEGRATED
+echo ✅ Management Scripts: AVAILABLE
 echo.
-echo ⚠️  Docker Desktop: A DEMARRER
+echo ⚠️ Docker Desktop: TO BE STARTED
 echo.
 
-echo 🔍 Verification de l'etat de Docker...
+echo 🔍 Checking Docker status...
 docker ps >nul 2>&1
 if errorlevel 1 (
     echo.
-    echo ❌ Docker Desktop n'est pas demarre
+    echo ❌ Docker Desktop is not started
     echo.
-    echo 🚀 DEMARRAGE AUTOMATIQUE DE DOCKER...
+    echo 🚀 AUTOMATIC DOCKER STARTUP...
     echo.
     
-    REM Essayer de démarrer Docker Desktop
+    REM Try to start Docker Desktop
     start "" "C:\Program Files\Docker\Docker\Docker Desktop.exe"
     
-    echo ⏳ Attente du demarrage de Docker Desktop...
-    echo    (Cela peut prendre 1-2 minutes)
+    echo ⏳ Waiting for Docker Desktop to start...
+    echo    (This may take 1-2 minutes)
     echo.
     
-    REM Attendre que Docker soit prêt
+    REM Wait for Docker to be ready
     set /a counter=0
     :wait_docker
     timeout /t 10 /nobreak >nul
     docker ps >nul 2>&1
     if not errorlevel 1 (
-        echo ✅ Docker Desktop est maintenant actif!
+        echo ✅ Docker Desktop is now active!
         goto docker_ready
     )
     
     set /a counter+=1
     if %counter% lss 12 (
-        echo    Tentative %counter%/12 - Docker en cours de demarrage...
+        echo    Attempt %counter%/12 - Docker starting up...
         goto wait_docker
     )
     
     echo.
-    echo ⚠️  Docker met plus de temps que prevu a demarrer
+    echo ⚠️ Docker is taking longer than expected to start
     echo.
     echo 💡 Solutions:
-    echo    1. Attendez encore 1-2 minutes
-    echo    2. Demarrez manuellement Docker Desktop
-    echo    3. Redemarrez votre ordinateur si necessaire
+    echo    1. Wait another 1-2 minutes
+    echo    2. Manually start Docker Desktop
+    echo    3. Restart your computer if necessary
     echo.
-    echo Voulez-vous continuer sans attendre Docker?
-    set /p continue="Continuer? (o/N): "
-    if /i "%continue%"=="o" goto start_without_docker
-    if /i "%continue%"=="oui" goto start_without_docker
+    echo Do you want to continue without waiting for Docker?
+    set /p continue="Continue? (y/N): "
+    if /i "%continue%"=="y" goto start_without_docker
+    if /i "%continue%"=="yes" goto start_without_docker
     
-    echo Operation annulee. Demarrez Docker Desktop manuellement puis relancez ce script.
+    echo Operation canceled. Start Docker Desktop manually then rerun this script.
     pause
     exit /b 1
     
 ) else (
-    echo ✅ Docker Desktop est deja actif!
+    echo ✅ Docker Desktop is already active!
     goto docker_ready
 )
 
 :docker_ready
 echo.
 echo ============================================================
-echo              🚀 DEMARRAGE INTELLIGENT SEARX
+echo              🚀 INTELLIGENT SEARX STARTUP
 echo ============================================================
 echo.
 
-echo Lancement du systeme avec toutes les fonctionnalites...
+echo Launching the system with all functionalities...
 python searx_smart_start.py
 
 if errorlevel 1 (
     echo.
-    echo ❌ Probleme lors du demarrage
-    echo 🔧 Tentative avec liberation de port...
+    echo ❌ Problem during startup
+    echo 🔧 Attempting with port release...
     
-    REM Libérer le port 8080 si nécessaire
+    REM Release port 8080 if necessary
     if exist "free_port_8080.bat" call free_port_8080.bat
     
     echo.
-    echo Nouvelle tentative...
+    echo Retrying...
     python searx_smart_start.py
     
     if errorlevel 1 (
         echo.
-        echo ❌ Echec persistant
+        echo ❌ Persistent failure
         goto troubleshooting
     )
 )
 
 echo.
 echo ============================================================
-echo                🎉 SEARX AI OPERATIONNEL!
+echo                🎉 SEARX artificial intelligence API GOOGLE GEMINI 2.0 FLASH OPERATIONAL!
 echo ============================================================
 echo.
-echo ✅ Systeme demarre avec succes
-echo 🌐 Interface web accessible (voir URL ci-dessus)
-echo 🔍 Pret pour les recherches autonomes
-echo 📸 Capture visuelle activee
-echo 🤖 Integration Gemini disponible
+echo ✅ System started successfully
+echo 🌐 Web interface accessible (see URL above)
+echo 🔍 Ready for autonomous searches
+echo 📸 Visual capture activated
+echo 🤖 Gemini Integration available
 echo.
-echo 💡 Pour tester le systeme:
-echo    1. Ouvrez l'URL affichee dans votre navigateur
-echo    2. Testez une recherche manuelle
-echo    3. Lancez python app.py pour l'integration complete
+echo 💡 To test the system:
+echo    1. Open the URL displayed in your browser
+echo    2. Perform a manual search
+echo    3. Launch python app.py for full integration
 echo.
 pause
 goto end
@@ -122,31 +122,31 @@ goto end
 :start_without_docker
 echo.
 echo ============================================================
-echo        🔧 DEMARRAGE EN MODE DEVELOPPEMENT (sans Docker)
+echo        🔧 STARTING IN DEVELOPMENT MODE (without Docker)
 echo ============================================================
 echo.
-echo ⚠️  Mode degrade: certaines fonctionnalites limitees
-echo ✅ Tests et developpement: possibles
+echo ⚠️ Degraded mode: some functionalities limited
+echo ✅ Tests and development: possible
 echo.
 
-echo Verification des composants disponibles...
+echo Checking available components...
 python -c "
 from port_manager import PortManager
 from searx_interface import SearxInterface
 
-print('✅ Gestionnaire de ports: OK')
-print('✅ Interface Searx: OK')
-print('⚠️  Docker Searx: Non disponible')
+print('✅ Port Manager: OK')
+print('✅ Searx Interface: OK')
+print('⚠️ Docker Searx: Not available')
 print('')
-print('🔧 Fonctionnalites disponibles:')
-print('   - Gestion intelligente des ports')
-print('   - Interface de recherche (structure)')
-print('   - Capture visuelle (si ChromeDriver installe)')
-print('   - Integration Gemini (structure)')
+print('🔧 Available functionalities:')
+print('   - Intelligent port management')
+print('   - Search interface (structure)')
+print('   - Visual capture (if ChromeDriver installed)')
+print('   - Gemini Integration (structure)')
 print('')
-print('💡 Pour activer Searx complet:')
-print('   1. Demarrez Docker Desktop')
-print('   2. Relancez ce script')
+print('💡 To activate full Searx:')
+print('   1. Start Docker Desktop')
+print('   2. Rerun this script')
 "
 
 echo.
@@ -156,47 +156,47 @@ goto end
 :troubleshooting
 echo.
 echo ============================================================
-echo                  🔧 GUIDE DE DEPANNAGE
+echo                  🔧 TROUBLESHOOTING GUIDE
 echo ============================================================
 echo.
-echo ❌ Le systeme a rencontre des difficultes
+echo ❌ The system encountered difficulties
 echo.
-echo 🔍 Verifications a effectuer:
+echo 🔍 Checks to perform:
 echo.
 echo 1. DOCKER:
-echo    ✓ Docker Desktop installe et demarre
-echo    ✓ Commande 'docker ps' fonctionne
-echo    ✓ Memoire suffisante (4GB+ recommandes)
+echo    ✓ Docker Desktop installed and started
+echo    ✓ 'docker ps' command works
+echo    ✓ Sufficient memory (4GB+ recommended)
 echo.
 echo 2. PORTS:
-echo    ✓ Ports 8080-8083 libres
-echo    ✓ Pas de conflit avec autres services
-echo    ✓ Firewall autorisant les connexions locales
+echo    ✓ Ports 8080-8083 free
+echo    ✓ No conflict with other services
+echo    ✓ Firewall allowing local connections
 echo.
-echo 3. DEPENDANCES:
-echo    ✓ Python 3.8+ installe
-echo    ✓ pip install -r requirements.txt execute
-echo    ✓ Modules psutil, requests disponibles
+echo 3. DEPENDENCIES:
+echo    ✓ Python 3.8+ installed
+echo    ✓ pip install -r requirements.txt executed
+    ✓ psutil, requests modules available
 echo.
-echo 🔧 Actions correctives:
+echo 🔧 Corrective actions:
 echo.
-echo A. Redemarrage complet:
-set /p restart="   Redemarrer l'ordinateur? (o/N): "
-if /i "%restart%"=="o" shutdown /r /t 60 /c "Redemarrage pour Searx AI"
-if /i "%restart%"=="oui" shutdown /r /t 60 /c "Redemarrage pour Searx AI"
+echo A. Full restart:
+set /p restart="   Restart computer? (y/N): "
+if /i "%restart%"=="y" shutdown /r /t 60 /c "Restart for Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH"
+if /i "%restart%"=="yes" shutdown /r /t 60 /c "Restart for Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH"
 
 echo.
-echo B. Reinstallation Docker:
-echo    1. Desinstallez Docker Desktop
-echo    2. Redemarrez l'ordinateur
-echo    3. Reinstallez Docker Desktop
-echo    4. Relancez ce script
+echo B. Docker reinstallation:
+echo    1. Uninstall Docker Desktop
+echo    2. Restart computer
+echo    3. Reinstall Docker Desktop
+echo    4. Rerun this script
 echo.
 
-echo C. Support avance:
-echo    1. Consultez les logs: searx_smart_start.log
-echo    2. Executez: python test_searx_complete.py
-echo    3. Documentez les erreurs pour le support
+echo C. Advanced support:
+echo    1. Consult logs: searx_smart_start.log
+echo    2. Execute: python test_searx_complete.py
+echo    3. Document errors for support
 echo.
 
 pause
@@ -204,23 +204,23 @@ pause
 :end
 echo.
 echo ============================================================
-echo                     👋 TERMINE
+echo                     👋 DONE
 echo ============================================================
 echo.
-echo Merci d'avoir configure Searx AI!
+echo Thank you for configuring Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH!
 echo.
-echo 📋 Recap de votre installation:
-echo    ✅ Systeme intelligent: INSTALLE
-echo    ✅ Gestion des ports: ACTIVE
-echo    ✅ Scripts de gestion: DISPONIBLES
-echo    🌐 Interface web: CONFIGURABLE
+echo 📋 Summary of your installation:
+echo    ✅ Intelligent System: INSTALLED
+echo    ✅ Port Management: ACTIVE
+echo    ✅ Management Scripts: AVAILABLE
+echo    🌐 Web Interface: CONFIGURABLE
 echo.
-echo 🚀 Prochaines etapes:
-echo    1. Assurez-vous que Docker fonctionne
-echo    2. Lancez: python searx_smart_start.py
-echo    3. Ou utilisez: start_searx_ai.bat
+echo 🚀 Next steps:
+echo    1. Ensure Docker is running
+echo    2. Launch: python searx_smart_start.py
+echo    3. Or use: start_searx_ai.bat
 echo.
-echo 📚 Documentation complete dans les fichiers README
+echo 📚 Full documentation in README files
 echo.
 pause
 exit /b 0
