@@ -1,8 +1,6 @@
-
-"""
-Système de Planification Stratégique Multi-Niveaux pour AGI/ASI
-Permet la planification à long terme, la décomposition d'objectifs complexes
-et l'adaptation dynamique des stratégies.
+Multi-Level Strategic Planning System for Artificial Intelligence API GOOGLE GEMINI 2.0 FLASH
+Enables long-term planning, complex goal decomposition,
+and dynamic strategy adaptation.
 """
 
 import json
@@ -15,15 +13,15 @@ import networkx as nx
 import numpy as np
 
 class PlanningHorizon(Enum):
-    IMMEDIATE = "immediate"      # Seconde à minute
-    SHORT_TERM = "short_term"    # Minute à heure  
-    MEDIUM_TERM = "medium_term"  # Heure à jour
-    LONG_TERM = "long_term"      # Jour à semaine
-    STRATEGIC = "strategic"      # Semaine à mois+
+    IMMEDIATE = "immediate"      # Seconds to minute
+    SHORT_TERM = "short_term"    # Minutes to hour  
+    MEDIUM_TERM = "medium_term"  # Hours to day
+    LONG_TERM = "long_term"      # Days to week
+    STRATEGIC = "strategic"      # Weeks to months+
 
 @dataclass
 class Goal:
-    """Représente un objectif dans la hiérarchie"""
+    """Represents a goal in the hierarchy"""
     id: str
     description: str
     horizon: PlanningHorizon
@@ -38,7 +36,7 @@ class Goal:
 
 @dataclass
 class Action:
-    """Représente une action concrète"""
+    """Represents a concrete action"""
     id: str
     description: str
     goal_id: str
@@ -50,7 +48,7 @@ class Action:
     confidence_level: float = 0.7
 
 class StrategicPlanningSystem:
-    """Système de planification stratégique pour AGI/ASI"""
+    """Strategic planning system for AGI/ASI"""
     
     def __init__(self):
         self.goals_hierarchy = nx.DiGraph()
@@ -60,10 +58,10 @@ class StrategicPlanningSystem:
         self.adaptation_rules: Dict[str, callable] = {}
         
     def create_goal_hierarchy(self, root_objective: str) -> str:
-        """Crée une hiérarchie d'objectifs à partir d'un objectif racine"""
+        """Creates a goal hierarchy from a root objective"""
         root_id = f"goal_{len(self.goals)}"
         
-        # Créer l'objectif racine
+        # Create the root goal
         root_goal = Goal(
             id=root_id,
             description=root_objective,
@@ -74,25 +72,25 @@ class StrategicPlanningSystem:
         self.goals[root_id] = root_goal
         self.goals_hierarchy.add_node(root_id)
         
-        # Décomposer récursivement
+        # Recursively decompose
         self._decompose_goal(root_id, depth=0, max_depth=4)
         
         return root_id
     
     def _decompose_goal(self, goal_id: str, depth: int, max_depth: int):
-        """Décompose un objectif en sous-objectifs"""
+        """Decomposes a goal into sub-goals"""
         if depth >= max_depth:
             return
             
         goal = self.goals[goal_id]
         
-        # Générer des sous-objectifs intelligemment
+        # Intelligently generate sub-goals
         sub_objectives = self._generate_sub_objectives(goal)
         
         for sub_desc in sub_objectives:
             sub_id = f"goal_{len(self.goals)}"
             
-            # Déterminer l'horizon temporel du sous-objectif
+            # Determine the time horizon of the sub-goal
             sub_horizon = self._determine_sub_horizon(goal.horizon, depth)
             
             sub_goal = Goal(
@@ -109,53 +107,53 @@ class StrategicPlanningSystem:
             self.goals_hierarchy.add_node(sub_id)
             self.goals_hierarchy.add_edge(goal_id, sub_id)
             
-            # Décomposer récursivement
+            # Recursively decompose
             self._decompose_goal(sub_id, depth + 1, max_depth)
     
     def _generate_sub_objectives(self, goal: Goal) -> List[str]:
-        """Génère des sous-objectifs intelligents"""
-        # Analyse du texte de l'objectif pour identifier les composants
+        """Generates intelligent sub-goals"""
+        # Analyze goal text to identify components
         description = goal.description.lower()
         
         sub_objectives = []
         
-        # Patterns de décomposition
-        if "développer" in description or "créer" in description:
+        # Decomposition patterns
+        if "develop" in description or "create" in description:
             sub_objectives.extend([
-                "Analyser les exigences et contraintes",
-                "Concevoir l'architecture et la solution",
-                "Implémenter les composants principaux",
-                "Tester et valider la solution",
-                "Déployer et optimiser"
+                "Analyze requirements and constraints",
+                "Design the architecture and solution",
+                "Implement core components",
+                "Test and validate the solution",
+                "Deploy and optimize"
             ])
-        elif "apprendre" in description or "comprendre" in description:
+        elif "learn" in description or "understand" in description:
             sub_objectives.extend([
-                "Identifier les sources d'information pertinentes",
-                "Acquérir les connaissances de base",
-                "Approfondir la compréhension",
-                "Appliquer les connaissances acquises",
-                "Évaluer et consolider l'apprentissage"
+                "Identify relevant information sources",
+                "Acquire basic knowledge",
+                "Deepen understanding",
+                "Apply acquired knowledge",
+                "Evaluate and consolidate learning"
             ])
-        elif "résoudre" in description or "problème" in description:
+        elif "solve" in description or "problem" in description:
             sub_objectives.extend([
-                "Analyser et définir le problème",
-                "Identifier les solutions possibles",
-                "Évaluer les alternatives",
-                "Implémenter la solution choisie",
-                "Vérifier l'efficacité de la solution"
+                "Analyze and define the problem",
+                "Identify possible solutions",
+                "Evaluate alternatives",
+                "Implement the chosen solution",
+                "Verify the solution's effectiveness"
             ])
         else:
-            # Décomposition générique
+            # Generic decomposition
             sub_objectives.extend([
-                f"Phase de préparation pour {goal.description}",
-                f"Exécution principale de {goal.description}",
-                f"Finalisation et validation de {goal.description}"
+                f"Preparation phase for {goal.description}",
+                f"Main execution of {goal.description}",
+                f"Finalization and validation of {goal.description}"
             ])
         
-        return sub_objectives[:3]  # Limiter à 3 sous-objectifs
+        return sub_objectives[:3]  # Limit to 3 sub-goals
     
     def _determine_sub_horizon(self, parent_horizon: PlanningHorizon, depth: int) -> PlanningHorizon:
-        """Détermine l'horizon temporel d'un sous-objectif"""
+        """Determines the time horizon of a sub-goal"""
         horizons = [
             PlanningHorizon.STRATEGIC,
             PlanningHorizon.LONG_TERM,
@@ -170,77 +168,77 @@ class StrategicPlanningSystem:
         return horizons[sub_index]
     
     def generate_action_plan(self, goal_id: str) -> List[Action]:
-        """Génère un plan d'actions pour un objectif"""
+        """Generates an action plan for a goal"""
         goal = self.goals[goal_id]
         actions = []
         
-        # Si l'objectif a des sous-objectifs, générer des actions pour chacun
+        # If the goal has sub-goals, generate actions for each
         if goal.sub_goals:
             for sub_goal_id in goal.sub_goals:
                 sub_actions = self.generate_action_plan(sub_goal_id)
                 actions.extend(sub_actions)
         else:
-            # Générer des actions concrètes pour les objectifs feuilles
+            # Generate concrete actions for leaf goals
             concrete_actions = self._generate_concrete_actions(goal)
             actions.extend(concrete_actions)
         
         return actions
     
     def _generate_concrete_actions(self, goal: Goal) -> List[Action]:
-        """Génère des actions concrètes pour un objectif feuille"""
+        """Generates concrete actions for a leaf goal"""
         actions = []
         
-        # Analyse du type d'objectif pour générer des actions appropriées
+        # Analyze goal type to generate appropriate actions
         description = goal.description.lower()
         
-        if "analyser" in description:
+        if "analyze" in description:
             actions.append(Action(
                 id=f"action_{len(self.actions)}",
-                description=f"Collecter les données nécessaires pour {goal.description}",
+                description=f"Collect necessary data for {goal.description}",
                 goal_id=goal.id,
                 estimated_duration=timedelta(hours=2),
                 required_capabilities=["data_collection", "analysis"]
             ))
             actions.append(Action(
                 id=f"action_{len(self.actions) + 1}",
-                description=f"Effectuer l'analyse pour {goal.description}",
+                description=f"Perform analysis for {goal.description}",
                 goal_id=goal.id,
                 estimated_duration=timedelta(hours=4),
                 required_capabilities=["analysis", "reasoning"]
             ))
-        elif "implémenter" in description:
+        elif "implement" in description:
             actions.append(Action(
                 id=f"action_{len(self.actions)}",
-                description=f"Concevoir la solution pour {goal.description}",
+                description=f"Design the solution for {goal.description}",
                 goal_id=goal.id,
                 estimated_duration=timedelta(hours=3),
                 required_capabilities=["design", "architecture"]
             ))
             actions.append(Action(
                 id=f"action_{len(self.actions) + 1}",
-                description=f"Coder la solution pour {goal.description}",
+                description=f"Code the solution for {goal.description}",
                 goal_id=goal.id,
                 estimated_duration=timedelta(hours=6),
                 required_capabilities=["coding", "implementation"]
             ))
         else:
-            # Action générique
+            # Generic action
             actions.append(Action(
                 id=f"action_{len(self.actions)}",
-                description=f"Exécuter {goal.description}",
+                description=f"Execute {goal.description}",
                 goal_id=goal.id,
                 estimated_duration=timedelta(hours=2),
                 required_capabilities=["general_execution"]
             ))
         
-        # Enregistrer les actions
+        # Register actions
         for action in actions:
             self.actions[action.id] = action
         
         return actions
     
     def adaptive_replanning(self, execution_feedback: Dict[str, Any]) -> Dict[str, Any]:
-        """Replanification adaptive basée sur les résultats d'exécution"""
+        """Adaptive replanning based on execution results"""
         results = {
             "replanning_triggered": False,
             "modifications": [],
@@ -248,19 +246,19 @@ class StrategicPlanningSystem:
             "updated_priorities": {}
         }
         
-        # Analyser les écarts de performance
+        # Analyze performance deviations
         if "performance_gap" in execution_feedback:
             gap = execution_feedback["performance_gap"]
             
-            if gap > 0.3:  # Écart significatif
+            if gap > 0.3:  # Significant deviation
                 results["replanning_triggered"] = True
                 
-                # Identifier les objectifs affectés
+                # Identify affected goals
                 affected_goals = execution_feedback.get("affected_goals", [])
                 
                 for goal_id in affected_goals:
                     if goal_id in self.goals:
-                        # Adapter la priorité
+                        # Adapt priority
                         old_priority = self.goals[goal_id].priority
                         new_priority = min(1.0, old_priority * 1.2)
                         self.goals[goal_id].priority = new_priority
@@ -270,7 +268,7 @@ class StrategicPlanningSystem:
                             "new": new_priority
                         }
                         
-                        # Générer de nouvelles actions si nécessaire
+                        # Generate new actions if necessary
                         if gap > 0.5:
                             new_actions = self._generate_recovery_actions(goal_id, gap)
                             results["new_actions"].extend(new_actions)
@@ -278,51 +276,51 @@ class StrategicPlanningSystem:
         return results
     
     def _generate_recovery_actions(self, goal_id: str, performance_gap: float) -> List[Action]:
-        """Génère des actions de récupération pour un objectif en difficulté"""
+        """Generates recovery actions for a struggling goal"""
         goal = self.goals[goal_id]
         recovery_actions = []
         
-        # Actions de récupération basées sur l'ampleur du problème
+        # Recovery actions based on problem magnitude
         if performance_gap > 0.7:
-            # Problème majeur - revoir l'approche
+            # Major problem - review approach
             recovery_actions.append(Action(
                 id=f"recovery_{len(self.actions)}",
-                description=f"Réviser complètement l'approche pour {goal.description}",
+                description=f"Completely revise the approach for {goal.description}",
                 goal_id=goal_id,
                 estimated_duration=timedelta(hours=4),
                 required_capabilities=["strategic_thinking", "problem_solving"]
             ))
         elif performance_gap > 0.5:
-            # Problème modéré - ajuster la méthode
+            # Moderate problem - adjust method
             recovery_actions.append(Action(
                 id=f"recovery_{len(self.actions)}",
-                description=f"Ajuster la méthode d'exécution pour {goal.description}",
+                description=f"Adjust the execution method for {goal.description}",
                 goal_id=goal_id,
                 estimated_duration=timedelta(hours=2),
                 required_capabilities=["adaptation", "optimization"]
             ))
         else:
-            # Problème mineur - optimiser
+            # Minor problem - optimize
             recovery_actions.append(Action(
                 id=f"recovery_{len(self.actions)}",
-                description=f"Optimiser l'exécution de {goal.description}",
+                description=f"Optimize the execution of {goal.description}",
                 goal_id=goal_id,
                 estimated_duration=timedelta(hours=1),
                 required_capabilities=["optimization"]
             ))
         
-        # Enregistrer les actions
+        # Register actions
         for action in recovery_actions:
             self.actions[action.id] = action
         
         return recovery_actions
     
     def get_strategic_status(self) -> Dict[str, Any]:
-        """Retourne le statut stratégique du système"""
+        """Returns the strategic status of the system"""
         total_goals = len(self.goals)
         completed_goals = sum(1 for g in self.goals.values() if g.completion_status >= 1.0)
         
-        # Calculer la progression par horizon
+        # Calculate progress by horizon
         horizon_progress = {}
         for horizon in PlanningHorizon:
             horizon_goals = [g for g in self.goals.values() if g.horizon == horizon]
@@ -339,11 +337,11 @@ class StrategicPlanningSystem:
             "pending_actions": len([a for a in self.actions.values() if a.execution_status == "planned"])
         }
 
-# Instance globale
+# Global instance
 strategic_planner = StrategicPlanningSystem()
 
 def create_strategic_plan(objective: str) -> Dict[str, Any]:
-    """Interface pour créer un plan stratégique"""
+    """Interface to create a strategic plan"""
     goal_id = strategic_planner.create_goal_hierarchy(objective)
     actions = strategic_planner.generate_action_plan(goal_id)
     
