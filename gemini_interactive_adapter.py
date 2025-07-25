@@ -1,6 +1,6 @@
 """
-Intégration du Système de Navigation Interactive avec l'Adaptateur Gemini
-Ce module connecte le nouveau système d'interaction web avec l'API Gemini
+Integration of the Interactive Navigation System with the artificial intelligence   API GOOGLE GEMINI 2.0 FLASH Adapter
+This module connects the new web interaction system with the Gemini API
 """
 
 import logging
@@ -18,21 +18,21 @@ from interactive_web_navigator import (
     close_interactive_session
 )
 
-# Configuration du logging
+# Logging configuration
 logger = logging.getLogger('GeminiInteractiveIntegration')
 
 class GeminiInteractiveWebAdapter:
-    """Adaptateur pour intégrer la navigation interactive avec l'API Gemini"""
+    """Adapter to integrate interactive navigation with the Gemini API"""
     
     def __init__(self, gemini_api_instance=None):
         self.gemini_api = gemini_api_instance
         self.interactive_enabled = True
         self.max_content_length = 8000
         
-        # Initialiser le navigateur interactif
+        # Initialize the interactive navigator
         self.navigator = initialize_interactive_navigator()
         
-        # Compteurs et statistiques
+        # Counters and statistics
         self.interaction_stats = {
             'total_requests': 0,
             'interactive_sessions_created': 0,
@@ -42,47 +42,47 @@ class GeminiInteractiveWebAdapter:
             'forms_interacted': 0
         }
         
-        logger.info("🎯 Adaptateur Gemini-Navigation Interactive initialisé")
+        logger.info("🎯 Gemini-Interactive Navigation Adapter initialized")
     
     def detect_interactive_request(self, prompt: str) -> Dict[str, Any]:
         """
-        Détecte si le prompt nécessite une interaction avec des éléments web
+        Detects if the prompt requires interaction with web elements
         
         Args:
-            prompt: Le prompt de l'utilisateur
+            prompt: The user's prompt
             
         Returns:
-            Dict contenant le type d'interaction et les paramètres
+            Dict containing the interaction type and parameters
         """
         prompt_lower = prompt.lower()
         
-        # Mots-clés pour interactions directes
+        # Keywords for direct interactions
         interaction_keywords = [
-            'clique sur', 'cliquer sur', 'appuie sur', 'appuyer sur',
-            'sélectionne', 'sélectionner', 'choisir', 'choisit',
-            'ouvre l\'onglet', 'ouvrir l\'onglet', 'va dans l\'onglet',
-            'remplis le formulaire', 'remplir le formulaire',
-            'interagir avec', 'interagis avec'
+            'click on', 'press on',
+            'select', 'choose',
+            'open the tab', 'go to the tab',
+            'fill the form',
+            'interact with'
         ]
         
-        # Mots-clés pour navigation par onglets
+        # Keywords for tab navigation
         tab_keywords = [
-            'onglet', 'onglets', 'tab', 'tabs',
-            'section', 'sections', 'catégorie', 'catégories',
+            'tab', 'tabs',
+            'section', 'sections', 'category', 'categories',
             'menu', 'navigation'
         ]
         
-        # Mots-clés pour exploration complète
+        # Keywords for full exploration
         exploration_keywords = [
-            'explore toutes les options', 'parcours tous les onglets',
-            'visite toutes les sections', 'analyse tous les menus',
-            'teste toutes les fonctionnalités'
+            'explore all options', 'browse all tabs',
+            'visit all sections', 'analyze all menus',
+            'test all functionalities'
         ]
         
-        # Mots-clés pour formulaires
+        # Keywords for forms
         form_keywords = [
-            'formulaire', 'form', 'remplis', 'saisir', 'entrer',
-            'recherche', 'search', 'login', 'connexion'
+            'form', 'fill', 'enter',
+            'search', 'login', 'connection'
         ]
         
         detection_result = {
@@ -93,7 +93,7 @@ class GeminiInteractiveWebAdapter:
             'suggested_actions': []
         }
         
-        # Détecter les interactions directes
+        # Detect direct interactions
         if any(keyword in prompt_lower for keyword in interaction_keywords):
             detection_result.update({
                 'requires_interaction': True,
@@ -101,12 +101,12 @@ class GeminiInteractiveWebAdapter:
                 'confidence': 0.9
             })
             
-            # Extraire l'élément cible si mentionné
+            # Extract target element if mentioned
             target_element = self._extract_target_element(prompt)
             if target_element:
                 detection_result['extracted_params']['target_element'] = target_element
         
-        # Détecter la navigation par onglets
+        # Detect tab navigation
         elif any(keyword in prompt_lower for keyword in tab_keywords):
             detection_result.update({
                 'requires_interaction': True,
@@ -115,7 +115,7 @@ class GeminiInteractiveWebAdapter:
             })
             detection_result['suggested_actions'] = ['explore_tabs', 'click_tabs']
         
-        # Détecter l'exploration complète
+        # Detect full exploration
         elif any(keyword in prompt_lower for keyword in exploration_keywords):
             detection_result.update({
                 'requires_interaction': True,
@@ -124,7 +124,7 @@ class GeminiInteractiveWebAdapter:
             })
             detection_result['suggested_actions'] = ['explore_all_elements', 'systematic_navigation']
         
-        # Détecter les interactions avec formulaires
+        # Detect form interactions
         elif any(keyword in prompt_lower for keyword in form_keywords):
             detection_result.update({
                 'requires_interaction': True,
@@ -133,49 +133,49 @@ class GeminiInteractiveWebAdapter:
             })
             detection_result['suggested_actions'] = ['fill_forms', 'submit_forms']
         
-        # Extraire l'URL si présente
+        # Extract URL if present
         url_match = self._extract_url_from_prompt(prompt)
         if url_match:
             detection_result['extracted_params']['url'] = url_match
         
         self.interaction_stats['total_requests'] += 1
         
-        logger.info(f"🔍 Détection interaction: {detection_result['interaction_type']} "
-                   f"(confiance: {detection_result['confidence']})")
+        logger.info(f"🔍 Interaction detection: {detection_result['interaction_type']} "
+                   f"(confidence: {detection_result['confidence']})")
         
         return detection_result
     
     def handle_interactive_request(self, prompt: str, user_id: int, 
                                  session_id: str = None) -> Dict[str, Any]:
         """
-        Traite une demande d'interaction web
+        Handles a web interaction request
         
         Args:
-            prompt: Le prompt de l'utilisateur
-            user_id: ID de l'utilisateur
-            session_id: ID de session (optionnel)
+            prompt: The user's prompt
+            user_id: User ID
+            session_id: Session ID (optional)
             
         Returns:
-            Dict contenant la réponse et les données d'interaction
+            Dict containing the response and interaction data
         """
         try:
-            # Détecter le type d'interaction nécessaire
+            # Detect the type of interaction needed
             detection = self.detect_interactive_request(prompt)
             
             if not detection['requires_interaction']:
                 return {
                     'success': False,
-                    'error': 'Aucune interaction détectée',
+                    'error': 'No interaction detected',
                     'fallback_required': True
                 }
             
-            # Générer un ID de session unique si non fourni
+            # Generate a unique session ID if not provided
             if not session_id:
                 session_id = f"interactive_{user_id}_{int(time.time())}"
             
             interaction_type = detection['interaction_type']
             
-            # Traiter selon le type d'interaction
+            # Process according to interaction type
             if interaction_type == 'direct_interaction':
                 result = self._handle_direct_interaction(prompt, session_id, detection)
             elif interaction_type == 'tab_navigation':
@@ -187,7 +187,7 @@ class GeminiInteractiveWebAdapter:
             else:
                 result = self._handle_generic_interaction(prompt, session_id, detection)
             
-            # Enrichir la réponse avec des informations contextuelles
+            # Enrich the response with contextual information
             if result['success']:
                 result['interaction_summary'] = self._generate_interaction_summary(session_id)
                 result['response'] = self._format_interaction_response(result, prompt)
@@ -195,7 +195,7 @@ class GeminiInteractiveWebAdapter:
             return result
             
         except Exception as e:
-            logger.error(f"❌ Erreur traitement interaction: {e}")
+            logger.error(f"❌ Error processing interaction: {e}")
             return {
                 'success': False,
                 'error': str(e),
@@ -204,14 +204,14 @@ class GeminiInteractiveWebAdapter:
     
     def _handle_direct_interaction(self, prompt: str, session_id: str, 
                                  detection: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite une interaction directe (clic sur un élément spécifique)"""
+        """Handles a direct interaction (clicking on a specific element)"""
         try:
-            # Extraire l'URL si fournie
+            # Extract URL if provided
             url = detection['extracted_params'].get('url')
             if not url:
-                return {'success': False, 'error': 'URL requise pour l\'interaction directe'}
+                return {'success': False, 'error': 'URL required for direct interaction'}
             
-            # Créer la session interactive
+            # Create the interactive session
             navigation_result = create_interactive_navigation_session(
                 session_id, url, goals=['direct_interaction']
             )
@@ -221,13 +221,13 @@ class GeminiInteractiveWebAdapter:
             
             self.interaction_stats['interactive_sessions_created'] += 1
             
-            # Obtenir les éléments interactifs
+            # Get interactive elements
             elements_result = get_page_interactive_elements(session_id)
             
             if not elements_result['success']:
                 return elements_result
             
-            # Identifier l'élément cible
+            # Identify the target element
             target_text = detection['extracted_params'].get('target_element', '')
             target_element = self._find_best_matching_element(
                 elements_result['top_interactive_elements'], target_text
@@ -236,11 +236,11 @@ class GeminiInteractiveWebAdapter:
             if not target_element:
                 return {
                     'success': False,
-                    'error': 'Élément cible non trouvé',
+                    'error': 'Target element not found',
                     'available_elements': elements_result['top_interactive_elements'][:5]
                 }
             
-            # Effectuer l'interaction
+            # Perform the interaction
             interaction_result = interact_with_web_element(
                 session_id, target_element['id'], 'click'
             )
@@ -259,18 +259,18 @@ class GeminiInteractiveWebAdapter:
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur interaction directe: {e}")
+            logger.error(f"❌ Direct interaction error: {e}")
             return {'success': False, 'error': str(e)}
     
     def _handle_tab_navigation(self, prompt: str, session_id: str, 
                              detection: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite la navigation par onglets"""
+        """Handles tab navigation"""
         try:
             url = detection['extracted_params'].get('url')
             if not url:
-                return {'success': False, 'error': 'URL requise pour la navigation par onglets'}
+                return {'success': False, 'error': 'URL required for tab navigation'}
             
-            # Créer la session
+            # Create the session
             navigation_result = create_interactive_navigation_session(
                 session_id, url, goals=['tab_navigation', 'explore_tabs']
             )
@@ -280,15 +280,15 @@ class GeminiInteractiveWebAdapter:
             
             self.interaction_stats['interactive_sessions_created'] += 1
             
-            # Obtenir les éléments
+            # Get elements
             elements_result = get_page_interactive_elements(session_id)
             tabs_info = []
             tab_contents = []
             
-            # Trouver tous les onglets
+            # Find all tabs
             for element in elements_result.get('top_interactive_elements', []):
                 if element['type'] == 'tabs':
-                    # Cliquer sur l'onglet
+                    # Click on the tab
                     interaction_result = interact_with_web_element(
                         session_id, element['id'], 'click'
                     )
@@ -296,10 +296,10 @@ class GeminiInteractiveWebAdapter:
                     if interaction_result['success']:
                         self.interaction_stats['tabs_explored'] += 1
                         
-                        # Attendre le chargement du contenu
+                        # Wait for content to load
                         time.sleep(2)
                         
-                        # Capturer le contenu de l'onglet
+                        # Capture tab content
                         current_elements = get_page_interactive_elements(session_id)
                         tab_content = {
                             'tab_name': element['text'],
@@ -315,20 +315,20 @@ class GeminiInteractiveWebAdapter:
                 'interaction_performed': True,
                 'tabs_explored': len(tabs_info),
                 'tabs_content': tab_contents,
-                'navigation_summary': f"Exploré {len(tabs_info)} onglets avec succès"
+                'navigation_summary': f"Explored {len(tabs_info)} tabs successfully"
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur navigation onglets: {e}")
+            logger.error(f"❌ Tab navigation error: {e}")
             return {'success': False, 'error': str(e)}
     
     def _handle_full_exploration(self, prompt: str, session_id: str, 
                                detection: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite l'exploration complète d'un site"""
+        """Handles full site exploration"""
         try:
             url = detection['extracted_params'].get('url')
             if not url:
-                return {'success': False, 'error': 'URL requise pour l\'exploration complète'}
+                return {'success': False, 'error': 'URL required for full exploration'}
             
             navigation_result = create_interactive_navigation_session(
                 session_id, url, goals=['full_exploration', 'systematic_analysis']
@@ -346,11 +346,11 @@ class GeminiInteractiveWebAdapter:
                 'interaction_log': []
             }
             
-            # Phase 1: Explorer tous les onglets
+            # Phase 1: Explore all tabs
             elements_result = get_page_interactive_elements(session_id)
             
-            for element in elements_result.get('top_interactive_elements', [])[:15]:  # Top 15 pour éviter trop d'interactions
-                if element['score'] > 0.5:  # Seulement les éléments pertinents
+            for element in elements_result.get('top_interactive_elements', [])[:15]:  # Top 15 to avoid too many interactions
+                if element['score'] > 0.5:  # Only relevant elements
                     interaction_result = interact_with_web_element(
                         session_id, element['id'], 'click'
                     )
@@ -370,10 +370,10 @@ class GeminiInteractiveWebAdapter:
                         elif element['type'] == 'navigation':
                             exploration_results['navigation_links_followed'] += 1
                     
-                    # Petit délai entre les interactions
+                    # Small delay between interactions
                     time.sleep(1.5)
             
-            # Résumé final
+            # Final summary
             total_interactions = sum([
                 exploration_results['tabs_explored'],
                 exploration_results['buttons_clicked'],
@@ -386,20 +386,20 @@ class GeminiInteractiveWebAdapter:
                 'exploration_complete': True,
                 'total_interactions': total_interactions,
                 'results': exploration_results,
-                'summary': f"Exploration complète: {total_interactions} interactions réalisées"
+                'summary': f"Full exploration: {total_interactions} interactions performed"
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur exploration complète: {e}")
+            logger.error(f"❌ Full exploration error: {e}")
             return {'success': False, 'error': str(e)}
     
     def _handle_form_interaction(self, prompt: str, session_id: str, 
                                detection: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite les interactions avec les formulaires"""
+        """Handles interactions with forms"""
         try:
             url = detection['extracted_params'].get('url')
             if not url:
-                return {'success': False, 'error': 'URL requise pour l\'interaction avec formulaire'}
+                return {'success': False, 'error': 'URL required for form interaction'}
             
             navigation_result = create_interactive_navigation_session(
                 session_id, url, goals=['form_interaction']
@@ -411,7 +411,7 @@ class GeminiInteractiveWebAdapter:
             elements_result = get_page_interactive_elements(session_id)
             form_results = []
             
-            # Trouver les formulaires et champs
+            # Find forms and fields
             for element in elements_result.get('elements_by_type', {}).get('forms', []):
                 form_results.append({
                     'form_id': element['id'],
@@ -426,20 +426,20 @@ class GeminiInteractiveWebAdapter:
                 'interaction_performed': True,
                 'forms_found': len(form_results),
                 'forms_details': form_results,
-                'note': 'Interaction avec formulaires identifiés (saisie de données non implémentée pour sécurité)'
+                'note': 'Form interaction identified (data entry not implemented for security)'
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur interaction formulaire: {e}")
+            logger.error(f"❌ Form interaction error: {e}")
             return {'success': False, 'error': str(e)}
     
     def _handle_generic_interaction(self, prompt: str, session_id: str, 
                                   detection: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite les interactions génériques"""
+        """Handles generic interactions"""
         try:
             url = detection['extracted_params'].get('url')
             if not url:
-                return {'success': False, 'error': 'URL requise'}
+                return {'success': False, 'error': 'URL required'}
             
             navigation_result = create_interactive_navigation_session(session_id, url)
             
@@ -458,21 +458,21 @@ class GeminiInteractiveWebAdapter:
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur interaction générique: {e}")
+            logger.error(f"❌ Generic interaction error: {e}")
             return {'success': False, 'error': str(e)}
     
     def _extract_target_element(self, prompt: str) -> str:
-        """Extrait l'élément cible mentionné dans le prompt"""
+        """Extracts the target element mentioned in the prompt"""
         prompt_lower = prompt.lower()
         
-        # Patterns pour identifier les éléments cibles
+        # Patterns to identify target elements
         patterns = [
-            r'clique(?:r)? sur ["\']?([^"\']+)["\']?',
-            r'appuie(?:r)? sur ["\']?([^"\']+)["\']?',
-            r'sélectionne(?:r)? ["\']?([^"\']+)["\']?',
-            r'l\'onglet ["\']?([^"\']+)["\']?',
-            r'le bouton ["\']?([^"\']+)["\']?',
-            r'le lien ["\']?([^"\']+)["\']?'
+            r'click(?:ing)? on ["\']?([^"\']+)["\']?',
+            r'press(?:ing)? on ["\']?([^"\']+)["\']?',
+            r'select(?:ing)? ["\']?([^"\']+)["\']?',
+            r'the tab ["\']?([^"\']+)["\']?',
+            r'the button ["\']?([^"\']+)["\']?',
+            r'the link ["\']?([^"\']+)["\']?'
         ]
         
         import re
@@ -484,14 +484,14 @@ class GeminiInteractiveWebAdapter:
         return ""
     
     def _extract_url_from_prompt(self, prompt: str) -> Optional[str]:
-        """Extrait l'URL du prompt"""
+        """Extracts the URL from the prompt"""
         import re
         url_pattern = r'https?://[^\s]+|www\.[^\s]+'
         match = re.search(url_pattern, prompt)
         return match.group(0) if match else None
     
     def _find_best_matching_element(self, elements: List[Dict], target_text: str) -> Optional[Dict]:
-        """Trouve l'élément qui correspond le mieux au texte cible"""
+        """Finds the element that best matches the target text"""
         if not target_text:
             return elements[0] if elements else None
         
@@ -516,11 +516,11 @@ class GeminiInteractiveWebAdapter:
         return best_match if best_match else (elements[0] if elements else None)
     
     def _summarize_tab_content(self, elements_result: Dict[str, Any]) -> str:
-        """Résume le contenu d'un onglet"""
+        """Summarizes the content of a tab"""
         total_elements = elements_result.get('total_elements', 0)
         elements_by_type = elements_result.get('elements_by_type', {})
         
-        summary_parts = [f"{total_elements} éléments interactifs"]
+        summary_parts = [f"{total_elements} interactive elements"]
         
         for element_type, elements in elements_by_type.items():
             if elements:
@@ -529,7 +529,7 @@ class GeminiInteractiveWebAdapter:
         return ", ".join(summary_parts)
     
     def _generate_interaction_summary(self, session_id: str) -> Dict[str, Any]:
-        """Génère un résumé des interactions pour une session"""
+        """Generates an interaction summary for a session"""
         try:
             elements_result = get_page_interactive_elements(session_id)
             
@@ -544,93 +544,93 @@ class GeminiInteractiveWebAdapter:
                 'top_recommendations': elements_result.get('interaction_suggestions', [])
             }
         except Exception as e:
-            logger.error(f"❌ Erreur génération résumé: {e}")
+            logger.error(f"❌ Error generating summary: {e}")
             return {}
     
     def _format_interaction_response(self, result: Dict[str, Any], original_prompt: str) -> str:
-        """Formate la réponse pour l'utilisateur"""
+        """Formats the response for the user"""
         if not result['success']:
-            return f"❌ Je n'ai pas pu effectuer l'interaction demandée: {result.get('error', 'Erreur inconnue')}"
+            return f"❌ I could not perform the requested interaction: {result.get('error', 'Unknown error')}"
         
         response_parts = []
         
         if result.get('interaction_performed'):
             if result.get('tabs_explored', 0) > 0:
-                response_parts.append(f"✅ J'ai exploré {result['tabs_explored']} onglets sur le site.")
+                response_parts.append(f"✅ I have explored {result['tabs_explored']} tabs on the site.")
                 
                 if 'tabs_content' in result:
-                    response_parts.append("\n📋 Contenu des onglets découverts:")
-                    for tab in result['tabs_content'][:5]:  # Limiter à 5
+                    response_parts.append("\n📋 Discovered tab content:")
+                    for tab in result['tabs_content'][:5]:  # Limit to 5
                         response_parts.append(f"• {tab['tab_name']}: {tab['content_summary']}")
             
             elif result.get('element_interacted'):
                 element = result['element_interacted']
-                response_parts.append(f"✅ J'ai cliqué sur '{element['text'][:50]}'")
+                response_parts.append(f"✅ I clicked on '{element['text'][:50]}'")
                 
                 if result.get('page_changed'):
-                    response_parts.append("📄 La page a changé suite à cette interaction.")
+                    response_parts.append("📄 The page changed after this interaction.")
             
             elif result.get('exploration_complete'):
                 total = result.get('total_interactions', 0)
-                response_parts.append(f"✅ J'ai effectué une exploration complète avec {total} interactions.")
+                response_parts.append(f"✅ I performed a full exploration with {total} interactions.")
                 
                 if 'results' in result:
                     r = result['results']
-                    response_parts.append(f"📊 Résultats: {r.get('tabs_explored', 0)} onglets, "
-                                        f"{r.get('buttons_clicked', 0)} boutons, "
-                                        f"{r.get('navigation_links_followed', 0)} liens de navigation")
+                    response_parts.append(f"📊 Results: {r.get('tabs_explored', 0)} tabs, "
+                                        f"{r.get('buttons_clicked', 0)} buttons, "
+                                        f"{r.get('navigation_links_followed', 0)} navigation links")
         
         else:
-            response_parts.append("🔍 J'ai analysé les éléments interactifs de la page.")
+            response_parts.append("🔍 I analyzed the interactive elements of the page.")
             
             if result.get('elements_discovered', 0) > 0:
-                response_parts.append(f"📋 {result['elements_discovered']} éléments interactifs découverts.")
+                response_parts.append(f"📋 {result['elements_discovered']} interactive elements discovered.")
         
-        # Ajouter les suggestions si disponibles
+        # Add suggestions if available
         if 'interaction_summary' in result and result['interaction_summary'].get('top_recommendations'):
-            response_parts.append("\n💡 Suggestions d'interaction:")
+            response_parts.append("\n💡 Interaction suggestions:")
             for suggestion in result['interaction_summary']['top_recommendations'][:3]:
-                response_parts.append(f"• {suggestion.get('description', 'Action suggérée')}")
+                response_parts.append(f"• {suggestion.get('description', 'Suggested action')}")
         
-        return "\n".join(response_parts) if response_parts else "✅ Interaction réalisée avec succès."
+        return "\n".join(response_parts) if response_parts else "✅ Interaction successfully performed."
     
     def get_interaction_statistics(self) -> Dict[str, Any]:
-        """Retourne les statistiques d'interaction"""
+        """Returns interaction statistics"""
         return {
             'stats': self.interaction_stats,
             'navigator_stats': self.navigator.get_statistics() if self.navigator else {}
         }
     
     def cleanup_sessions(self, max_age_hours: int = 2):
-        """Nettoie les sessions anciennes"""
+        """Cleans up old sessions"""
         try:
-            # À implémenter : nettoyage automatique des sessions
-            logger.info(f"🧹 Nettoyage des sessions de plus de {max_age_hours}h")
+            # To be implemented: automatic session cleanup
+            logger.info(f"🧹 Cleaning up sessions older than {max_age_hours}h")
         except Exception as e:
-            logger.error(f"❌ Erreur nettoyage: {e}")
+            logger.error(f"❌ Cleanup error: {e}")
 
-# Instance globale
+# Global instance
 _gemini_interactive_adapter = None
 
 def get_gemini_interactive_adapter(gemini_api_instance=None):
-    """Retourne l'instance globale de l'adaptateur interactif"""
+    """Returns the global interactive adapter instance"""
     global _gemini_interactive_adapter
     if _gemini_interactive_adapter is None:
         _gemini_interactive_adapter = GeminiInteractiveWebAdapter(gemini_api_instance)
     return _gemini_interactive_adapter
 
 def initialize_gemini_interactive_adapter(gemini_api_instance=None):
-    """Initialise l'adaptateur interactif Gemini"""
+    """Initializes the Gemini interactive adapter"""
     adapter = get_gemini_interactive_adapter(gemini_api_instance)
-    logger.info("🚀 Adaptateur Gemini Interactive initialisé")
+    logger.info("🚀 Gemini Interactive Adapter initialized")
     return adapter
 
 def handle_gemini_interactive_request(prompt: str, user_id: int, session_id: str = None):
-    """Point d'entrée principal pour les requêtes interactives Gemini"""
+    """Main entry point for Gemini interactive requests"""
     adapter = get_gemini_interactive_adapter()
     return adapter.handle_interactive_request(prompt, user_id, session_id)
 
 def detect_interactive_need(prompt: str):
-    """Détecte si un prompt nécessite une interaction web"""
+    """Detects if a prompt requires web interaction"""
     adapter = get_gemini_interactive_adapter()
     return adapter.detect_interactive_request(prompt)
