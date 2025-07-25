@@ -12,255 +12,255 @@ from gemini_api_adapter import GeminiAPI
 from claude_api_adapter import ClaudeAPI
 from custom_llm_adapter import CustomLLMAPI
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Chemin vers le fichier de configuration des API
+# Path to the API configuration file
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ai_api_config.json')
 
 class AIApiManager:
     """
-    Gestionnaire des API d'IA qui permet de charger et utiliser différentes implémentations.
+    AI API manager that allows loading and using different implementations.
     """
-    # Dictionnaire des API disponibles (nom_api -> classe d'implémentation)
+    # Dictionary of available APIs (api_name -> implementation class)
     _available_apis = {
-        'gemini': GeminiAPI,
+        'artificial intelligence API GOOGLE GEMINI 2.0 FLASH': GeminiAPI,
         'claude': ClaudeAPI,
         'custom_llm': CustomLLMAPI
     }
     
-    # Instance singleton
+    # Singleton instance
     _instance = None
     
     def __new__(cls):
-        """Implémentation du pattern Singleton."""
+        """Implements the Singleton pattern."""
         if cls._instance is None:
             cls._instance = super(AIApiManager, cls).__new__(cls)
             cls._instance._initialize()
         return cls._instance
     
     def _initialize(self):
-        """Initialise le gestionnaire d'API."""
-        self.default_api_name = 'gemini'
+        """Initializes the API manager."""
+        self.default_api_name = 'artificial intelligence API GOOGLE GEMINI 2.0 FLASH'
         self.active_api: Optional[AIApiInterface] = None
         self.config: Dict[str, Dict[str, Any]] = {}
         
-        # Charger la configuration
+        # Load configuration
         self._load_config()
         
-        # Initialiser l'API par défaut
+        # Initialize default API
         self._set_active_api(self.default_api_name)
         
-        logger.info(f"Gestionnaire d'API initialisé avec l'API par défaut: {self.default_api_name}")
+        logger.info(f"API Manager initialized with default API: {self.default_api_name}")
     
     def _load_config(self):
-        """Charge la configuration des API depuis le fichier de configuration."""
+        """Loads API configuration from the configuration file."""
         try:
             if os.path.exists(CONFIG_PATH):
-                with open(CONFIG_PATH, 'r') as f:
+                with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
                     self.config = json.load(f)
-                logger.info(f"Configuration des API chargée depuis {CONFIG_PATH}")
+                logger.info(f"API configuration loaded from {CONFIG_PATH}")
                 
-                # Définir l'API par défaut si spécifiée dans la configuration
+                # Set default API if specified in configuration
                 if 'default_api' in self.config:
                     self.default_api_name = self.config['default_api']
             else:
-                # Créer une configuration par défaut
+                # Create default configuration
                 self.config = {
-                    'default_api': 'gemini',
+                    'default_api': 'artificial intelligence API GOOGLE GEMINI 2.0 FLASH',
                     'apis': {
-                        'gemini': {
-                            'api_key': None,  # Utiliser la clé par défaut
-                            'api_url': None   # Utiliser l'URL par défaut
+                        'artificial intelligence API GOOGLE GEMINI 2.0 FLASH': {
+                            'api_key': None,  # Use default key
+                            'api_url': None   # Use default URL
                         },                        'claude': {
-                            'api_key': None,  # À configurer par l'utilisateur
-                            'api_url': None   # Utiliser l'URL par défaut
+                            'api_key': None,  # To be configured by the user
+                            'api_url': None   # Use default URL
                         },
                         'custom_llm': {
-                            'api_key': None,  # À configurer par l'utilisateur
-                            'api_url': None   # À configurer par l'utilisateur
+                            'api_key': None,  # To be configured by the user
+                            'api_url': None   # To be configured by the user
                         }
                     }
                 }
                 self._save_config()
-                logger.info("Configuration par défaut créée")
+                logger.info("Default configuration created")
         except Exception as e:
-            logger.error(f"Erreur lors du chargement de la configuration: {str(e)}")
+            logger.error(f"Error loading configuration: {str(e)}")
     
     def _save_config(self):
-        """Sauvegarde la configuration des API dans le fichier de configuration."""
+        """Saves API configuration to the configuration file."""
         try:
-            with open(CONFIG_PATH, 'w') as f:
+            with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
                 json.dump(self.config, f, indent=4)
-            logger.info(f"Configuration des API sauvegardée dans {CONFIG_PATH}")
+            logger.info(f"API configuration saved to {CONFIG_PATH}")
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde de la configuration: {str(e)}")
+            logger.error(f"Error saving configuration: {str(e)}")
     
     def _set_active_api(self, api_name: str) -> bool:
         """
-        Définit l'API active par son nom.
+        Sets the active API by its name.
         
         Args:
-            api_name: Nom de l'API à activer
+            api_name: Name of the API to activate
             
         Returns:
-            True si l'API a été activée avec succès, False sinon
+            True if the API was successfully activated, False otherwise
         """
         if api_name not in self._available_apis:
-            logger.error(f"API '{api_name}' non disponible")
+            logger.error(f"API '{api_name}' not available")
             return False
         
         try:
-            # Récupérer la configuration de l'API
+            # Retrieve API configuration
             api_config = {}
             if 'apis' in self.config and api_name in self.config['apis']:
                 api_config = self.config['apis'][api_name]
             
-            # Créer une instance de l'API
+            # Create an instance of the API
             api_class = self._available_apis[api_name]
             self.active_api = api_class(**api_config)
-            logger.info(f"API '{api_name}' activée avec succès")
+            logger.info(f"API '{api_name}' successfully activated")
             return True
         except Exception as e:
-            logger.error(f"Erreur lors de l'activation de l'API '{api_name}': {str(e)}")
+            logger.error(f"Error activating API '{api_name}': {str(e)}")
             return False
     
     def add_api_implementation(self, api_name: str, api_class: Type[AIApiInterface]) -> bool:
         """
-        Ajoute une nouvelle implémentation d'API.
+        Adds a new API implementation.
         
         Args:
-            api_name: Nom de l'API à ajouter
-            api_class: Classe d'implémentation de l'API (doit hériter de AIApiInterface)
+            api_name: Name of the API to add
+            api_class: API implementation class (must inherit from AIApiInterface)
             
         Returns:
-            True si l'API a été ajoutée avec succès, False sinon
+            True if the API was successfully added, False otherwise
         """
         if not issubclass(api_class, AIApiInterface):
-            logger.error(f"La classe '{api_class.__name__}' n'implémente pas l'interface AIApiInterface")
+            logger.error(f"Class '{api_class.__name__}' does not implement the AIApiInterface")
             return False
         
         self._available_apis[api_name] = api_class
-        logger.info(f"API '{api_name}' ajoutée avec succès")
+        logger.info(f"API '{api_name}' successfully added")
         return True
     
     def set_api(self, api_name: str) -> bool:
         """
-        Change l'API active.
+        Changes the active API.
         
         Args:
-            api_name: Nom de l'API à activer
+            api_name: Name of the API to activate
             
         Returns:
-            True si l'API a été activée avec succès, False sinon
+            True if the API was successfully activated, False otherwise
         """
         result = self._set_active_api(api_name)
         if result:
-            # Mettre à jour l'API par défaut dans la configuration
+            # Update default API in configuration
             self.config['default_api'] = api_name
             self._save_config()
         return result
     
     def list_available_apis(self) -> List[str]:
         """
-        Retourne la liste des APIs disponibles.
+        Returns the list of available APIs.
         
         Returns:
-            Liste des noms d'API disponibles
+            List of available API names
         """
         return list(self._available_apis.keys())
     
     def get_current_api_name(self) -> str:
         """
-        Retourne le nom de l'API active.
+        Returns the name of the active API.
         
         Returns:
-            Nom de l'API active
+            Name of the active API
         """
         return self.default_api_name
     
     def configure_api(self, api_name: str, config: Dict[str, Any]) -> bool:
         """
-        Configure une API spécifique.
+        Configures a specific API.
         
         Args:
-            api_name: Nom de l'API à configurer
-            config: Configuration de l'API (clé API, URL, etc.)
+            api_name: Name of the API to configure
+            config: API configuration (API key, URL, etc.)
             
         Returns:
-            True si la configuration a été appliquée avec succès, False sinon
+            True if the configuration was successfully applied, False otherwise
         """
         if api_name not in self._available_apis:
-            logger.error(f"API '{api_name}' non disponible")
+            logger.error(f"API '{api_name}' not available")
             return False
         
         try:
-            # Mettre à jour la configuration
+            # Update configuration
             if 'apis' not in self.config:
                 self.config['apis'] = {}
             self.config['apis'][api_name] = config
             self._save_config()
             
-            # Si c'est l'API active, la réinitialiser avec la nouvelle configuration
+            # If it's the active API, reinitialize it with the new configuration
             if self.default_api_name == api_name:
                 self._set_active_api(api_name)
                 
-            logger.info(f"Configuration de l'API '{api_name}' mise à jour")
+            logger.info(f"Configuration for API '{api_name}' updated")
             return True
         except Exception as e:
-            logger.error(f"Erreur lors de la configuration de l'API '{api_name}': {str(e)}")
+            logger.error(f"Error configuring API '{api_name}': {str(e)}")
             return False
     
     def get_api_config(self, api_name: str) -> Dict[str, Any]:
         """
-        Récupère la configuration d'une API spécifique.
+        Retrieves the configuration for a specific API.
         
         Args:
-            api_name: Nom de l'API dont on veut récupérer la configuration
+            api_name: Name of the API whose configuration to retrieve
             
         Returns:
-            Configuration de l'API ou un dictionnaire vide si l'API n'existe pas
+            API configuration or an empty dictionary if the API does not exist
         """
         if api_name not in self._available_apis:
-            logger.warning(f"API '{api_name}' non disponible, impossible de récupérer sa configuration")
+            logger.warning(f"API '{api_name}' not available, cannot retrieve its configuration")
             return {}
         
         try:
-            # Récupérer la configuration
+            # Retrieve configuration
             if 'apis' in self.config and api_name in self.config['apis']:
                 return self.config['apis'][api_name]
             else:
                 return {}
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération de la configuration de l'API '{api_name}': {str(e)}")
+            logger.error(f"Error retrieving configuration for API '{api_name}': {str(e)}")
             return {}
     
     def get_api_instance(self) -> Optional[AIApiInterface]:
         """
-        Retourne l'instance de l'API active.
+        Returns the instance of the active API.
         
         Returns:
-            Instance de l'API active ou None si aucune API n'est active
+            Instance of the active API or None if no API is active
         """
         return self.active_api
     
-    # Méthodes de délégation pour faciliter l'utilisation
+    # Delegation methods for ease of use
     def get_response(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """
-        Délègue l'appel à la méthode get_response de l'API active.
+        Delegates the call to the get_response method of the active API.
         
         Args:
-            prompt: Le texte de la requête
-            **kwargs: Arguments supplémentaires à passer à l'API
+            prompt: The request text
+            **kwargs: Additional arguments to pass to the API
             
         Returns:
-            Dictionnaire contenant la réponse et les métadonnées
+            Dictionary containing the response and metadata
         """
         if self.active_api is None:
-            logger.error("Aucune API active")
+            logger.error("No active API")
             return {
-                'response': "Erreur: Aucune API d'IA n'est active.",
+                'response': "Error: No artificial intelligence API GOOGLE GEMINI 2.0 FLASH is active.",
                 'status': 'error',
                 'error': 'No active API'
             }
@@ -269,47 +269,47 @@ class AIApiManager:
     
     def process_memory_request(self, prompt: str, user_id: int, session_id: str) -> Optional[str]:
         """
-        Délègue l'appel à la méthode process_memory_request de l'API active.
+        Delegates the call to the process_memory_request method of the active API.
         
         Args:
-            prompt: La question ou instruction de l'utilisateur
-            user_id: ID de l'utilisateur
-            session_id: ID de la session actuelle
+            prompt: The user's question or instruction
+            user_id: User ID
+            session_id: Current session ID
             
         Returns:
-            Un contexte enrichi si la demande est liée à la mémoire, sinon None
+            Enriched context if the request is memory-related, otherwise None
         """
         if self.active_api is None:
-            logger.error("Aucune API active")
+            logger.error("No active API")
             return None
         
         return self.active_api.process_memory_request(prompt, user_id, session_id)
     
     def get_conversation_history(self, user_id: int, session_id: str, max_messages: int = 10) -> str:
         """
-        Délègue l'appel à la méthode get_conversation_history de l'API active.
+        Delegates the call to the get_conversation_history method of the active API.
         
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
-            max_messages: Nombre maximal de messages à inclure
+            user_id: User ID
+            session_id: Session ID
+            max_messages: Maximum number of messages to include
             
         Returns:
-            Un résumé de la conversation précédente
+            A summary of the previous conversation
         """
         if self.active_api is None:
-            logger.error("Aucune API active")
+            logger.error("No active API")
             return ""
         
         return self.active_api.get_conversation_history(user_id, session_id, max_messages)
 
 
-# Fonction globale pour obtenir l'instance du gestionnaire d'API
+# Global function to get the API manager instance
 def get_ai_api_manager() -> AIApiManager:
     """
-    Retourne l'instance singleton du gestionnaire d'API.
+    Returns the singleton instance of the API manager.
     
     Returns:
-        Instance du gestionnaire d'API
+        API manager instance
     """
     return AIApiManager()
