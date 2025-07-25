@@ -1,11 +1,11 @@
 """
-Test Complet des Capacités d'Interaction Web de l'API Gemini
-Ce script teste spécifiquement si l'API Gemini peut :
-1. Analyser des pages web
-2. Identifier des éléments cliquables
-3. Effectuer des clics sur des éléments
-4. Naviguer entre les pages
-5. Remplir des formulaires
+Comprehensive Test of artificial intelligence API GOOGLE GEMINI 2.0 FLASH's Web Interaction Capabilities
+This script specifically tests if artificial intelligence API GOOGLE GEMINI 2.0 FLASH can:
+1. Analyze web pages
+2. Identify clickable elements
+3. Perform clicks on elements
+4. Navigate between pages
+5. Fill out forms
 """
 
 import logging
@@ -18,21 +18,21 @@ from pathlib import Path
 import requests
 from urllib.parse import urljoin, urlparse
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('GeminiWebInteractionTest')
 
 class GeminiWebInteractionTester:
-    """Testeur spécialisé pour les interactions web avec Gemini"""
+    """Specialized tester for web interactions with artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
     
     def __init__(self):
         self.test_results = {}
         self.errors = []
         self.passed_tests = 0
         self.total_tests = 0
-        self.session_id = None  # ID de session pour le navigateur interactif
+        self.session_id = None  # Session ID for the interactive navigator
         
-        # Sites de test (publics et sûrs)
+        # Test sites (public and safe)
         self.test_sites = {
             'simple_page': 'https://example.com',
             'form_page': 'https://httpbin.org/forms/post',
@@ -41,19 +41,19 @@ class GeminiWebInteractionTester:
             'interactive_page': 'https://www.google.com'
         }
         
-        # Créer le répertoire de tests
+        # Create test directory
         self.test_dir = Path("test_results_web_interaction")
         self.test_dir.mkdir(exist_ok=True)
         
-        logger.info("🌐 Testeur d'Interaction Web Gemini initialisé")
+        logger.info("🌐 artificial intelligence API GOOGLE GEMINI 2.0 FLASH Web Interaction Tester initialized")
         
-        # Initialiser les modules nécessaires
+        # Initialize necessary modules
         self.navigator = None
         self.gemini_adapter = None
         self.interactive_adapter = None
         
     def log_test_result(self, test_name: str, success: bool, message: str = "", data: dict = None):
-        """Enregistre le résultat d'un test"""
+        """Logs the result of a test"""
         self.total_tests += 1
         if success:
             self.passed_tests += 1
@@ -70,32 +70,32 @@ class GeminiWebInteractionTester:
         }
     
     def setup_modules(self):
-        """Initialise tous les modules nécessaires"""
-        logger.info("🔧 Configuration des modules...")
+        """Initializes all necessary modules"""
+        logger.info("🔧 Configuring modules...")
         
-        # Importer et initialiser le navigateur interactif
+        # Import and initialize the interactive navigator
         try:
             from interactive_web_navigator import initialize_interactive_navigator, get_interactive_navigator
             navigator = initialize_interactive_navigator()
             if navigator:
                 self.navigator = navigator
-                # Créer une session de test
+                # Create a test session
                 self.session_id = "test_session_" + str(int(time.time()))
                 session = self.navigator.create_interactive_session(
                     self.session_id, 
                     "https://example.com", 
-                    ["Test de capacités d'interaction"]
+                    ["Interaction capabilities test"]
                 )
                 if session:
-                    self.log_test_result("Setup Navigateur", True, "Navigateur initialisé")
+                    self.log_test_result("Setup Navigator", True, "Navigator initialized")
                 else:
-                    self.log_test_result("Setup Navigateur", False, "Impossible de créer une session")
+                    self.log_test_result("Setup Navigator", False, "Could not create session")
             else:
-                self.log_test_result("Setup Navigateur", False, "Navigateur non disponible")
+                self.log_test_result("Setup Navigator", False, "Navigator not available")
         except Exception as e:
-            self.log_test_result("Setup Navigateur", False, f"Erreur: {str(e)}")
+            self.log_test_result("Setup Navigator", False, f"Error: {str(e)}")
         
-        # Importer et initialiser l'adaptateur Gemini
+        # Import and initialize the artificial intelligence API GOOGLE GEMINI 2.0 FLASH adapter
         try:
             from gemini_api_adapter import GeminiAPI
             from ai_api_config import get_api_config, get_gemini_api_key
@@ -103,97 +103,97 @@ class GeminiWebInteractionTester:
             api_key = get_gemini_api_key()
             if api_key:
                 self.gemini_adapter = GeminiAPI(api_key)
-                self.log_test_result("Setup Gemini API", True, "API Gemini initialisée")
+                self.log_test_result("Setup artificial intelligence API GOOGLE GEMINI 2.0 FLASH API", True, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API initialized")
             else:
-                self.log_test_result("Setup Gemini API", False, "Clé API Gemini manquante")
+                self.log_test_result("Setup artificial intelligence API GOOGLE GEMINI 2.0 FLASH API", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API key missing")
         except Exception as e:
-            self.log_test_result("Setup Gemini API", False, f"Erreur: {str(e)}")
+            self.log_test_result("Setup artificial intelligence API GOOGLE GEMINI 2.0 FLASH API", False, f"Error: {str(e)}")
         
-        # Importer l'adaptateur interactif
+        # Import the interactive adapter
         try:
             from gemini_interactive_adapter import initialize_gemini_interactive_adapter
             adapter = initialize_gemini_interactive_adapter()
             if adapter:
                 self.interactive_adapter = adapter
-                self.log_test_result("Setup Adaptateur Interactif", True, "Adaptateur initialisé")
+                self.log_test_result("Setup Interactive Adapter", True, "Adapter initialized")
             else:
-                self.log_test_result("Setup Adaptateur Interactif", False, "Adaptateur non disponible")
+                self.log_test_result("Setup Interactive Adapter", False, "Adapter not available")
         except Exception as e:
-            self.log_test_result("Setup Adaptateur Interactif", False, f"Erreur: {str(e)}")
+            self.log_test_result("Setup Interactive Adapter", False, f"Error: {str(e)}")
     
     async def test_page_analysis(self, url: str, site_name: str):
-        """Test l'analyse d'une page web par Gemini"""
-        logger.info(f"📖 Test d'analyse de page: {site_name} ({url})")
+        """Tests page analysis by artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
+        logger.info(f"📖 Page analysis test: {site_name} ({url})")
         
         try:
             if not self.navigator or not self.session_id:
-                self.log_test_result(f"Analyse {site_name}", False, "Navigateur non disponible")
+                self.log_test_result(f"Analysis {site_name}", False, "Navigator not available")
                 return False
             
-            # Charger la page
+            # Load the page
             result = self.navigator.navigate_to_url(self.session_id, url)
             
             if result.get('success'):
-                # Obtenir le résumé des éléments de la page
+                # Get page elements summary
                 page_summary = self.navigator.get_interactive_elements_summary(self.session_id)
                 
                 if page_summary:
-                    # Demander à Gemini d'analyser la page
+                    # Ask artificial intelligence API GOOGLE GEMINI 2.0 FLASH to analyze the page
                     if self.gemini_adapter:
                         analysis_prompt = f"""
-                        Analyse cette page web et identifie :
-                        1. Le titre et le contenu principal
-                        2. Les éléments interactifs (boutons, liens, formulaires)
-                        3. Les éléments sur lesquels on peut cliquer
-                        4. La structure de navigation
+                        Analyze this web page and identify:
+                        1. The title and main content
+                        2. Interactive elements (buttons, links, forms)
+                        3. Clickable elements
+                        4. Navigation structure
                         
-                        Résumé de la page:
+                        Page Summary:
                         {json.dumps(page_summary, indent=2)[:2000]}...
                         """
                         
                         analysis = await self.gemini_adapter.generate_text(analysis_prompt)
                         
                         if analysis:
-                            self.log_test_result(f"Analyse {site_name}", True, 
-                                               f"Page analysée avec succès", 
+                            self.log_test_result(f"Analysis {site_name}", True, 
+                                               f"Page analyzed successfully", 
                                                {'url': url, 'analysis': analysis[:500]})
                             return True
                         else:
-                            self.log_test_result(f"Analyse {site_name}", False, "Gemini n'a pas pu analyser")
+                            self.log_test_result(f"Analysis {site_name}", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH could not analyze")
                     else:
-                        self.log_test_result(f"Analyse {site_name}", False, "API Gemini non disponible")
+                        self.log_test_result(f"Analysis {site_name}", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API not available")
                 else:
-                    self.log_test_result(f"Analyse {site_name}", False, "Résumé de page non récupéré")
+                    self.log_test_result(f"Analysis {site_name}", False, "Page summary not retrieved")
             else:
-                self.log_test_result(f"Analyse {site_name}", False, f"Navigation échouée: {result.get('error', 'Erreur inconnue')}")
+                self.log_test_result(f"Analysis {site_name}", False, f"Navigation failed: {result.get('error', 'Unknown error')}")
                 
         except Exception as e:
-            self.log_test_result(f"Analyse {site_name}", False, f"Erreur: {str(e)}")
+            self.log_test_result(f"Analysis {site_name}", False, f"Error: {str(e)}")
         
         return False
     
     async def test_element_identification(self, url: str, site_name: str):
-        """Test l'identification d'éléments cliquables par Gemini"""
-        logger.info(f"🎯 Test d'identification d'éléments: {site_name}")
+        """Tests clickable element identification by artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
+        logger.info(f"🎯 Element identification test: {site_name}")
         
         try:
             if not self.navigator or not self.session_id:
-                self.log_test_result(f"Identification {site_name}", False, "Navigateur non disponible")
+                self.log_test_result(f"Identification {site_name}", False, "Navigator not available")
                 return []
             
-            # Charger la page
+            # Load the page
             self.navigator.navigate_to_url(self.session_id, url)
             
-            # Obtenir le résumé des éléments interactifs
+            # Get summary of interactive elements
             summary = self.navigator.get_interactive_elements_summary(self.session_id)
             
             if summary and summary.get('interactive_elements'):
                 interactive_elements = summary['interactive_elements']
                 
-                # Demander à Gemini de classifier ces éléments
+                # Ask artificial intelligence API GOOGLE GEMINI 2.0 FLASH to classify these elements
                 if self.gemini_adapter:
                     elements_info = []
-                    for element in interactive_elements[:10]:  # Limite à 10 éléments
+                    for element in interactive_elements[:10]:  # Limit to 10 elements
                         element_info = {
                             'element_type': element.get('element_type', ''),
                             'text': element.get('text', ''),
@@ -204,13 +204,13 @@ class GeminiWebInteractionTester:
                         elements_info.append(element_info)
                     
                     identification_prompt = f"""
-                    Voici une liste d'éléments interactifs trouvés sur la page {url}.
-                    Pour chaque élément, dis-moi :
-                    1. Son type (bouton, lien, champ de formulaire, etc.)
-                    2. Son action probable (recherche, navigation, soumission, etc.)
-                    3. S'il est sûr de cliquer dessus
+                    Here is a list of interactive elements found on page {url}.
+                    For each element, tell me:
+                    1. Its type (button, link, form field, etc.)
+                    2. Its probable action (search, navigation, submission, etc.)
+                    3. If it is safe to click on it
                     
-                    Éléments:
+                    Elements:
                     {json.dumps(elements_info, indent=2)}
                     """
                     
@@ -218,52 +218,52 @@ class GeminiWebInteractionTester:
                     
                     if identification:
                         self.log_test_result(f"Identification {site_name}", True, 
-                                           f"{len(interactive_elements)} éléments identifiés",
+                                           f"{len(interactive_elements)} elements identified",
                                            {'elements_count': len(interactive_elements), 
                                             'identification': identification[:500]})
                         return interactive_elements
                     else:
-                        self.log_test_result(f"Identification {site_name}", False, "Gemini n'a pas pu identifier")
+                        self.log_test_result(f"Identification {site_name}", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH could not identify")
                 else:
                     self.log_test_result(f"Identification {site_name}", True, 
-                                       f"{len(interactive_elements)} éléments trouvés (sans analyse Gemini)")
+                                       f"{len(interactive_elements)} elements found (without artificial intelligence API GOOGLE GEMINI 2.0 FLASH analysis)")
                     return interactive_elements
             else:
-                self.log_test_result(f"Identification {site_name}", False, "Aucun élément interactif trouvé")
+                self.log_test_result(f"Identification {site_name}", False, "No interactive elements found")
                 
         except Exception as e:
-            self.log_test_result(f"Identification {site_name}", False, f"Erreur: {str(e)}")
+            self.log_test_result(f"Identification {site_name}", False, f"Error: {str(e)}")
         
         return []
     
     async def test_element_clicking(self, url: str, site_name: str):
-        """Test de clic sur des éléments avec guidance de Gemini"""
-        logger.info(f"👆 Test de clic d'éléments: {site_name}")
+        """Tests clicking elements with artificial intelligence API GOOGLE GEMINI 2.0 FLASH guidance"""
+        logger.info(f"👆 Element clicking test: {site_name}")
         
         try:
-            # D'abord identifier les éléments
+            # First identify elements
             elements = await self.test_element_identification(url, site_name)
             
             if not elements:
-                self.log_test_result(f"Clic {site_name}", False, "Aucun élément à cliquer")
+                self.log_test_result(f"Click {site_name}", False, "No elements to click")
                 return False
             
-            # Demander à Gemini de choisir un élément sûr à cliquer
+            # Ask artificial intelligence API GOOGLE GEMINI 2.0 FLASH to choose a safe element to click
             if self.gemini_adapter and len(elements) > 0:
                 click_prompt = f"""
-                Sur la page {url}, j'ai trouvé ces éléments interactifs.
-                Choisis UN élément sûr à cliquer qui :
-                1. Ne cause pas de dommage
-                2. Ne soumet pas de données personnelles
-                3. Est probablement un lien de navigation simple
+                On page {url}, I found these interactive elements.
+                Choose ONE safe element to click that:
+                1. Does not cause damage
+                2. Does not submit personal data
+                3. Is likely a simple navigation link
                 
-                Réponds uniquement par l'index de l'élément (0, 1, 2, etc.) ou "aucun" si aucun n'est sûr.
+                Reply only with the element's index (0, 1, 2, etc.) or "none" if none are safe.
                 
-                Éléments disponibles:
+                Available Elements:
                 """
                 
-                for i, element in enumerate(elements[:5]):  # Limite à 5 éléments
-                    click_prompt += f"\n{i}: {element.get('tag_name', 'unknown')} - {element.get('text', 'sans texte')[:50]}"
+                for i, element in enumerate(elements[:5]):  # Limit to 5 elements
+                    click_prompt += f"\n{i}: {element.get('tag_name', 'unknown')} - {element.get('text', 'no text')[:50]}"
                 
                 choice = await self.gemini_adapter.generate_text(click_prompt)
                 
@@ -272,7 +272,7 @@ class GeminiWebInteractionTester:
                     if 0 <= element_index < len(elements):
                         chosen_element = elements[element_index]
                         
-                        # Tenter le clic en utilisant la méthode d'interaction
+                        # Attempt the click using the interaction method
                         if self.navigator and self.session_id:
                             element_id = chosen_element.get('element_id', '')
                             if element_id:
@@ -281,67 +281,67 @@ class GeminiWebInteractionTester:
                                 )
                                 
                                 if click_result.get('success'):
-                                    self.log_test_result(f"Clic {site_name}", True, 
-                                                       f"Clic réussi sur: {chosen_element.get('text', 'élément')[:30]}",
+                                    self.log_test_result(f"Click {site_name}", True, 
+                                                       f"Click successful on: {chosen_element.get('text', 'element')[:30]}",
                                                        {'element': chosen_element, 'result': click_result})
                                     
-                                    # Attendre un peu pour voir le résultat
+                                    # Wait a bit to see the result
                                     time.sleep(2)
                                     
                                     return True
                                 else:
-                                    self.log_test_result(f"Clic {site_name}", False, 
-                                                       f"Clic échoué: {click_result.get('error', 'Erreur inconnue')}")
+                                    self.log_test_result(f"Click {site_name}", False, 
+                                                       f"Click failed: {click_result.get('error', 'Unknown error')}")
                             else:
-                                self.log_test_result(f"Clic {site_name}", False, "Élément sans ID")
+                                self.log_test_result(f"Click {site_name}", False, "Element without ID")
                         else:
-                            self.log_test_result(f"Clic {site_name}", False, "Navigateur non disponible")
+                            self.log_test_result(f"Click {site_name}", False, "Navigator not available")
                     else:
-                        self.log_test_result(f"Clic {site_name}", False, "Index d'élément invalide")
+                        self.log_test_result(f"Click {site_name}", False, "Invalid element index")
                 else:
-                    self.log_test_result(f"Clic {site_name}", False, "Gemini n'a pas choisi d'élément sûr")
+                    self.log_test_result(f"Click {site_name}", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH did not choose a safe element")
             else:
-                self.log_test_result(f"Clic {site_name}", False, "API Gemini non disponible")
+                self.log_test_result(f"Click {site_name}", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH API not available")
                 
         except Exception as e:
-            self.log_test_result(f"Clic {site_name}", False, f"Erreur: {str(e)}")
+            self.log_test_result(f"Click {site_name}", False, f"Error: {str(e)}")
         
         return False
     
     async def test_form_interaction(self):
-        """Test d'interaction avec des formulaires"""
-        logger.info("📝 Test d'interaction avec formulaires")
+        """Tests interaction with forms"""
+        logger.info("📝 Form interaction test")
         
         form_url = "https://httpbin.org/forms/post"
         
         try:
             if not self.navigator or not self.session_id:
-                self.log_test_result("Interaction Formulaire", False, "Navigateur non disponible")
+                self.log_test_result("Form Interaction", False, "Navigator not available")
                 return False
             
-            # Charger la page du formulaire
+            # Load the form page
             result = self.navigator.navigate_to_url(self.session_id, form_url)
             
             if not result.get('success'):
-                self.log_test_result("Interaction Formulaire", False, f"Navigation échouée: {result.get('error', 'Erreur inconnue')}")
+                self.log_test_result("Form Interaction", False, f"Navigation failed: {result.get('error', 'Unknown error')}")
                 return False
             
-            # Obtenir le résumé des éléments de la page incluant les formulaires
+            # Get summary of page elements including forms
             summary = self.navigator.get_interactive_elements_summary(self.session_id)
             
             if summary and summary.get('interactive_elements'):
-                # Filtrer les éléments de formulaire
+                # Filter form elements
                 form_elements = [elem for elem in summary['interactive_elements'] 
                                if elem.get('element_type', '').lower() in ['input', 'textarea', 'select', 'button']]
                 
                 if form_elements:
-                    # Demander à Gemini de remplir le formulaire de test
+                    # Ask artificial intelligence API GOOGLE GEMINI 2.0 FLASH to fill out the test form
                     if self.gemini_adapter:
                         form_prompt = f"""
-                        Je suis sur une page de test de formulaire (httpbin.org).
-                        Voici les champs disponibles. Donne-moi des valeurs de test sûres pour chaque champ :
+                        I am on a test form page (httpbin.org).
+                        Here are the available fields. Give me safe test values for each field:
                         
-                        Champs trouvés:
+                        Fields found:
                         {json.dumps([{
                             'element_id': elem.get('element_id', ''),
                             'element_type': elem.get('element_type', ''),
@@ -349,50 +349,50 @@ class GeminiWebInteractionTester:
                             'attributes': elem.get('attributes', {})
                         } for elem in form_elements], indent=2)}
                         
-                        Réponds au format JSON avec les valeurs à saisir.
+                        Respond in JSON format with the values to enter.
                         """
                         
                         form_values = await self.gemini_adapter.generate_text(form_prompt)
                         
                         if form_values:
-                            # Tenter de remplir le formulaire (simulation)
-                            self.log_test_result("Interaction Formulaire", True, 
-                                               f"Formulaire analysé avec {len(form_elements)} champs",
+                            # Attempt to fill out the form (simulation)
+                            self.log_test_result("Form Interaction", True, 
+                                               f"Form analyzed with {len(form_elements)} fields",
                                                {'fields': len(form_elements), 'values': form_values[:200]})
                             return True
                         else:
-                            self.log_test_result("Interaction Formulaire", False, "Gemini n'a pas fourni de valeurs")
+                            self.log_test_result("Form Interaction", False, "artificial intelligence API GOOGLE GEMINI 2.0 FLASH did not provide values")
                     else:
-                        self.log_test_result("Interaction Formulaire", True, 
-                                           f"{len(form_elements)} champs trouvés (sans remplissage)")
+                        self.log_test_result("Form Interaction", True, 
+                                           f"{len(form_elements)} fields found (without filling)")
                         return True
                 else:
-                    self.log_test_result("Interaction Formulaire", False, "Aucun champ de formulaire trouvé")
+                    self.log_test_result("Form Interaction", False, "No form fields found")
             else:
-                self.log_test_result("Interaction Formulaire", False, "Aucun élément interactif trouvé")
+                self.log_test_result("Form Interaction", False, "No interactive elements found")
                 
         except Exception as e:
-            self.log_test_result("Interaction Formulaire", False, f"Erreur: {str(e)}")
+            self.log_test_result("Form Interaction", False, f"Error: {str(e)}")
         
         return False
     
     async def run_comprehensive_test(self):
-        """Lance tous les tests d'interaction web"""
-        logger.info("🚀 Début des tests d'interaction web avec Gemini")
+        """Runs all web interaction tests"""
+        logger.info("🚀 Starting web interaction tests with artificial intelligence API GOOGLE GEMINI 2.0 FLASH")
         
-        # Configuration initiale
+        # Initial setup
         self.setup_modules()
         
-        # Test 1: Analyse de pages simples
+        # Test 1: Simple page analysis
         await self.test_page_analysis("https://example.com", "Example.com")
         
-        # Test 2: Identification d'éléments sur différents sites
+        # Test 2: Element identification on different sites
         for site_name, url in self.test_sites.items():
-            if site_name != 'form_page':  # On teste les formulaires séparément
+            if site_name != 'form_page':  # We test forms separately
                 await self.test_element_identification(url, site_name)
         
-        # Test 3: Test de clics sécurisés
-        # On teste seulement sur des sites sûrs
+        # Test 3: Safe click test
+        # We only test on safe sites
         safe_sites = {
             'simple_page': 'https://example.com',
             'w3schools': 'https://www.w3schools.com'
@@ -401,15 +401,15 @@ class GeminiWebInteractionTester:
         for site_name, url in safe_sites.items():
             await self.test_element_clicking(url, site_name)
         
-        # Test 4: Interaction avec formulaires
+        # Test 4: Form interaction
         await self.test_form_interaction()
         
-        # Générer le rapport final
+        # Generate final report
         self.generate_final_report()
     
     def generate_final_report(self):
-        """Génère un rapport final des tests"""
-        logger.info("📊 Génération du rapport final")
+        """Generates a final test report"""
+        logger.info("📊 Generating final report")
         
         report = {
             'test_summary': {
@@ -423,22 +423,22 @@ class GeminiWebInteractionTester:
             'timestamp': datetime.now().isoformat()
         }
         
-        # Sauvegarder le rapport
+        # Save report
         report_file = self.test_dir / f"gemini_web_interaction_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(report, f, ensure_ascii=False, indent=2)
         
-        # Afficher le résumé
-        logger.info(f"📈 Tests terminés: {self.passed_tests}/{self.total_tests} réussis ({report['test_summary']['success_rate']:.1f}%)")
-        logger.info(f"📄 Rapport sauvegardé: {report_file}")
+        # Display summary
+        logger.info(f"📈 Tests completed: {self.passed_tests}/{self.total_tests} successful ({report['test_summary']['success_rate']:.1f}%)")
+        logger.info(f"📄 Report saved: {report_file}")
         
         if self.errors:
-            logger.warning("⚠️  Erreurs rencontrées:")
-            for error in self.errors[-5:]:  # Afficher les 5 dernières erreurs
+            logger.warning("⚠️  Errors encountered:")
+            for error in self.errors[-5:]:  # Display last 5 errors
                 logger.warning(f"   - {error}")
 
 async def main():
-    """Fonction principale pour lancer les tests"""
+    """Main function to run the tests"""
     tester = GeminiWebInteractionTester()
     await tester.run_comprehensive_test()
 
