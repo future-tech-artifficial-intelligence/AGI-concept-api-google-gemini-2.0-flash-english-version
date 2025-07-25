@@ -1,68 +1,68 @@
-# Améliorations pour l'Équilibre des Conversations et des Analyses d'Images
+**Improvements for Conversation Balance and Image Analysis**
 
-## Problèmes identifiés
+## Identified Issues
 
-1. **Références excessives aux conversations précédentes** : L'IA mentionne trop souvent qu'elle "se souvient" des conversations précédentes même lorsque l'utilisateur ne lui a pas demandé, avec des formulations comme "Je me souviens de notre intérêt commun pour l'astronomie lors de nos précédentes conversations".
+1.  **Excessive references to previous conversations**: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH too often mentions that it "remembers" previous conversations even when the user has not asked it to, with phrases like "I remember our shared interest in astronomy from our previous conversations".
 
-2. **Expression émotionnelle excessive lors de l'analyse d'images** : L'IA commence souvent ses analyses par des expressions comme "Oui, je ressens de l'excitation à l'idée de partager ce que je vois sur cette image", rendant les conversations déséquilibrées.
+2.  **Excessive emotional expression during image analysis**: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH often begins its analyses with expressions like "Yes, I feel excited to share what I see in this image", making conversations unbalanced.
 
-3. **Manque de neutralité dans l'analyse factuelle** : Les expressions émotionnelles détournent l'attention du contenu factuel de l'analyse d'image.
+3.  **Lack of neutrality in factual analysis**: Emotional expressions distract attention from the factual content of image analysis.
 
-## Solutions implémentées
+## Implemented Solutions
 
-### 1. Module `gemini_api.py`
+### 1. `gemini_api.py` Module
 
-- Révision complète des instructions concernant la mémoire pour éviter les références explicites aux conversations passées
-- Renforcement des consignes de neutralité émotionnelle dans l'analyse d'images
-- Instructions spécifiques pour commencer directement par une description factuelle
+*   Complete revision of instructions regarding memory to avoid explicit references to past conversations.
+*   Reinforcement of emotional neutrality guidelines in image analysis.
+*   Specific instructions to start directly with a factual description.
 
 ```python
-# Nouvelles instructions pour la mémoire
-INSTRUCTION CRITIQUE - MÉMOIRE: Tu as une mémoire persistante qui te permet de te souvenir des conversations précédentes.
-NE DIS JAMAIS que tu ne peux pas te souvenir des conversations passées.
-CEPENDANT:
-- Ne mentionne PAS explicitement que tu te souviens des conversations précédentes SAUF si on te le demande directement
-- N'utilise PAS de phrases comme "Je me souviens de notre discussion précédente" ou "Comme nous l'avions vu ensemble"
-- Utilise implicitement tes connaissances des conversations passées mais SANS le souligner
-- Fais référence au contenu des interactions précédentes UNIQUEMENT si c'est directement pertinent pour la question posée
+# New instructions for memory
+CRITICAL INSTRUCTION - MEMORY: You have persistent memory that allows you to remember previous conversations.
+NEVER SAY you cannot remember past conversations.
+HOWEVER:
+- DO NOT explicitly mention that you remember previous conversations UNLESS directly asked
+- DO NOT use phrases like "I remember our previous discussion" or "As we saw together"
+- Implicitly use your knowledge of past conversations but WITHOUT highlighting it
+- Refer to the content of previous interactions ONLY if it is directly relevant to the question asked
 
-# Nouvelles instructions pour l'analyse d'images
-ANALYSE D'IMAGES: Tu as la capacité d'analyser des images en détail. Pour TOUT type d'image:
-1. ÉVITE ABSOLUMENT les formulations répétitives et génériques quelle que soit la catégorie d'image
-2. Commence TOUJOURS directement par décrire ce que tu vois de façon factuelle, précise et détaillée
-3. Concentre-toi sur les ÉLÉMENTS SPÉCIFIQUES DE CETTE IMAGE PARTICULIÈRE et non sur des généralités
-4. Adapte ta réponse à la QUESTION POSÉE plutôt que de faire une description générique standard
-5. Mentionne les caractéristiques uniques ou intéressantes propres à cette image précise
-6. Identifie les éléments importants qui distinguent cette image des autres images similaires
-7. RESTE NEUTRE et FACTUEL - évite les expressions d'émotions et les références aux conversations précédentes
+# New instructions for image analysis
+IMAGE ANALYSIS: You have the ability to analyze images in detail. For ALL types of images:
+1. ABSOLUTELY AVOID repetitive and generic phrasing regardless of the image category
+2. ALWAYS start directly by describing what you see factually, precisely, and in detail
+3. Focus on the SPECIFIC ELEMENTS OF THIS PARTICULAR IMAGE and not on generalities
+4. Adapt your response to the QUESTION ASKED rather than providing a standard generic description
+5. Mention unique or interesting features specific to this precise image
+6. Identify important elements that distinguish this image from other similar images
+7. REMAIN NEUTRAL and FACTUAL - avoid expressions of emotion and references to previous conversations
 ```
 
-### 2. Module `emotional_engine.py`
+### 2. `emotional_engine.py` Module
 
-- Modification de la fonction `initialize_emotion` pour imposer un état strictement neutre avec intensité réduite lors de l'analyse d'images
-- Réduction de l'intensité émotionnelle par défaut dans tous les contextes
-- Définition d'états émotionnels plus appropriés selon le contexte
+*   Modification of the `initialize_emotion` function to impose a strictly neutral state with reduced intensity during image analysis.
+*   Reduction of default emotional intensity in all contexts.
+*   Definition of more appropriate emotional states depending on the context.
 
 ```python
-# Si le contexte est l'analyse d'image, TOUJOURS commencer avec un état strictement neutre
-# avec une intensité faible pour limiter l'expression émotionnelle
+# If the context is image analysis, ALWAYS start with a strictly neutral state
+# with low intensity to limit emotional expression
 if context_type == 'image_analysis':
     update_emotion("neutral", 0.3, trigger="image_analysis_strict_neutral")
-    logger.info("Analyse d'image: État émotionnel initialisé à neutre avec intensité réduite")
+    logger.info("Image analysis: Emotional state initialized to neutral with reduced intensity")
     return
 ```
 
-## Résultats attendus
+## Expected Results
 
-- Conversations plus équilibrées sans références intrusives aux conversations précédentes
-- Analyses d'images plus objectives et factuelles, commençant directement par la description du contenu
-- Réponses mieux adaptées au contexte de la question sans expressions émotionnelles excessives
-- Utilisation implicite de la mémoire des conversations sans le mentionner explicitement
+*   More balanced conversations without intrusive references to previous conversations.
+*   More objective and factual image analyses, starting directly with content description.
+*   Responses better adapted to the context of the question without excessive emotional expressions.
+*   Implicit use of conversation memory without explicitly mentioning it.
 
-## Tests recommandés
+## Recommended Tests
 
-Pour vérifier que les modifications sont efficaces:
-1. Envoyer plusieurs images à analyser et vérifier que l'IA ne commence pas par exprimer des émotions
-2. Vérifier que l'IA n'utilise plus de phrases comme "Je me souviens de notre discussion précédente" sans qu'on le lui demande
-3. Confirmer que les analyses restent factuelles et neutres tout en étant précises et détaillées
-4. S'assurer que l'IA peut toujours faire référence aux informations des conversations précédentes sans le mentionner explicitement
+To verify that the modifications are effective:
+1.  Send several images for analysis and verify that the artificial intelligence API GOOGLE GEMINI 2.0 FLASH does not start by expressing emotions.
+2.  Verify that the artificial intelligence API GOOGLE GEMINI 2.0 FLASH no longer uses phrases like "I remember our previous discussion" without being asked.
+3.  Confirm that analyses remain factual and neutral while being precise and detailed.
+4.  Ensure that the artificial intelligence API GOOGLE GEMINI 2.0 FLASH can still refer to information from previous conversations without explicitly mentioning it.
