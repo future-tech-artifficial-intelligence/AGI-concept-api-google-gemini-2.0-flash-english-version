@@ -1,3 +1,4 @@
+```python
 """
 **Abstract Interface for Various Artificial Intelligence APIs.**
 This module defines a common interface for all supported AI APIs.
@@ -6,12 +7,12 @@ import logging
 import abc
 from typing import Dict, Any, Optional, List, Union
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class AIApiInterface(abc.ABC):
-    """Interface abstraite que toutes les implémentations d'API d'IA doivent suivre."""
+    """Abstract interface that all AI API implementations must follow."""
     
     @abc.abstractmethod
     def get_response(self, 
@@ -22,47 +23,47 @@ class AIApiInterface(abc.ABC):
                     user_id: int = 1,
                     session_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Méthode abstraite pour obtenir une réponse de l'API d'IA.
+        Abstract method to get a response from the AI API.
         
         Args:
-            prompt: Le texte de la requête
-            image_data: Données d'image encodées en base64 (optionnel)
-            context: Contexte de conversation précédent (optionnel)
-            emotional_state: État émotionnel actuel de l'IA (optionnel)
-            user_id: ID de l'utilisateur
-            session_id: ID de la session (optionnel)
+            prompt: The request text
+            image_data: Base64-encoded image data (optional)
+            context: Previous conversation context (optional)
+            emotional_state: Current emotional state of the AI (optional)
+            user_id: User ID
+            session_id: Session ID (optional)
         
         Returns:
-            Dictionnaire contenant la réponse et les métadonnées
+            Dictionary containing the response and metadata
         """
         pass
     
     @abc.abstractmethod
     def process_memory_request(self, prompt: str, user_id: int, session_id: str) -> Optional[str]:
         """
-        Méthode abstraite pour traiter les demandes liées à la mémoire.
+        Abstract method to process memory-related requests.
         
         Args:
-            prompt: La question ou instruction de l'utilisateur
-            user_id: ID de l'utilisateur
-            session_id: ID de la session actuelle
+            prompt: The user's question or instruction
+            user_id: User ID
+            session_id: Current session ID
             
         Returns:
-            Un contexte enrichi si la demande est liée à la mémoire, sinon None
+            Enriched context if the request is memory-related, otherwise None
         """
         pass
     
     @abc.abstractmethod
     def get_conversation_history(self, user_id: int, session_id: str, max_messages: int = 10) -> str:
         """
-        Méthode abstraite pour récupérer l'historique de conversation.
+        Abstract method to retrieve conversation history.
         
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
-            max_messages: Nombre maximal de messages à inclure
+            user_id: User ID
+            session_id: Session ID
+            max_messages: Maximum number of messages to include
             
         Returns:
-            Un résumé de la conversation précédente
+            A summary of the previous conversation
         """
         pass
