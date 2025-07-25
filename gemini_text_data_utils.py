@@ -3,23 +3,23 @@ import shutil
 from direct_file_access import ensure_text_data_folder_exists, TEXT_DATA_FOLDER, get_all_text_files
 
 def add_text_file(filename, content):
-    """Ajoute un nouveau fichier texte au dossier de données"""
+    """Adds a new text file to the data folder"""
     ensure_text_data_folder_exists()
     file_path = os.path.join(TEXT_DATA_FOLDER, filename)
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(content)
-    return f"Fichier {filename} ajouté avec succès"
+    return f"File {filename} added successfully"
 
 def delete_text_file(filename):
-    """Supprime un fichier texte du dossier de données"""
+    """Deletes a text file from the data folder"""
     file_path = os.path.join(TEXT_DATA_FOLDER, filename)
     if os.path.exists(file_path) and filename.endswith('.txt'):
         os.remove(file_path)
-        return f"Fichier {filename} supprimé avec succès"
-    return f"Fichier {filename} non trouvé"
+        return f"File {filename} deleted successfully"
+    return f"File {filename} not found"
 
 def get_folder_stats():
-    """Obtient les statistiques du dossier de données textuelles"""
+    """Gets statistics for the text data folder"""
     files = get_all_text_files()
     total_size = 0
     for file in files:
@@ -27,14 +27,14 @@ def get_folder_stats():
         total_size += os.path.getsize(file_path)
     
     return {
-        "nombre_fichiers": len(files),
-        "taille_totale_octets": total_size,
-        "taille_totale_mb": total_size / (1024 * 1024),
-        "liste_fichiers": files
+        "num_files": len(files),
+        "total_size_bytes": total_size,
+        "total_size_mb": total_size / (1024 * 1024),
+        "file_list": files
     }
 
 def backup_text_folder(backup_location):
-    """Effectue une sauvegarde du dossier de données textuelles"""
+    """Performs a backup of the text data folder"""
     if not os.path.exists(backup_location):
         os.makedirs(backup_location)
     
@@ -43,4 +43,4 @@ def backup_text_folder(backup_location):
         shutil.rmtree(backup_folder)
     
     shutil.copytree(TEXT_DATA_FOLDER, backup_folder)
-    return f"Sauvegarde effectuée dans {backup_folder}"
+    return f"Backup performed successfully in {backup_folder}"
