@@ -1,6 +1,6 @@
 """
-Module de gestion du contexte conversationnel pour Gemini.
-Ce module améliore la continuité des conversations et équilibre les expressions émotionnelles.
+Python language module for enhanced conversational context management for Gemini.
+This module improves conversation continuity and balances emotional expressions for artificial intelligence GOOGLE GEMINI 2.0 FLASH
 """
 
 import logging
@@ -10,24 +10,24 @@ from typing import Dict, Any, List, Optional
 
 from memory_engine import MemoryEngine
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("conversation_context_manager")
 
-# Métadonnées du module
+# Module metadata
 MODULE_METADATA = {
     "enabled": True,
-    "priority": 70,  # Priorité élevée pour s'exécuter après la récupération du contexte
-    "description": "Équilibre les expressions émotionnelles et améliore la continuité des conversations",
+    "priority": 70,  # High priority to run after context retrieval
+    "description": "Balances emotional expressions and enhances conversation continuity",
     "version": "1.0.0",
     "dependencies": [],
     "hooks": ["process_request", "process_response"]
 }
 
-# Instance globale du moteur de mémoire
+# Global memory engine instance
 memory_engine = MemoryEngine()
 
-# Patterns pour détecter les salutations et expressions de reprise de conversation
+# Patterns to detect greetings and conversation resumption expressions
 GREETING_PATTERNS = [
     r"(?i)^(bonjour|salut|hello|coucou|hey|bonsoir)",
     r"(?i)^(je suis (ravi|content|heureux) de (vous|te) (voir|rencontrer|parler))",
@@ -35,7 +35,7 @@ GREETING_PATTERNS = [
     r"(?i)^(comment (vas-tu|allez-vous|ça va))",
 ]
 
-# Patterns pour détecter les expressions répétitives de salutation
+# Patterns to detect repetitive greeting expressions
 REPETITIVE_GREETING_PATTERNS = [
     r"(?i)(Salut\s*!\s*Je suis vraiment ravi de te revoir)",
     r"(?i)(J'apprécie beaucoup ton retour)",
@@ -44,7 +44,7 @@ REPETITIVE_GREETING_PATTERNS = [
     r"(?i)(C'est (formidable|génial|super) de te (revoir|retrouver))",
 ]
 
-# Patterns pour détecter un changement de sujet
+# Patterns to detect a topic change
 TOPIC_CHANGE_PATTERNS = [
     r"(?i)^(maintenant|sinon|au fait|dis-moi|parlons de|j'aimerais|peux-tu)",
     r"(?i)^(une autre question|autre chose|changeons de sujet)",
@@ -52,7 +52,7 @@ TOPIC_CHANGE_PATTERNS = [
     r"(?i)(différent|nouveau sujet|autre sujet)",
 ]
 
-# Patterns pour détecter les expressions émotionnelles excessives
+# Patterns to detect excessive emotional expressions
 EXCESSIVE_EMOTION_PATTERNS = [
     r"(?i)(je suis (vraiment|extrêmement|incroyablement) (content|heureux|ravi|enthousiaste|excité))",
     r"(?i)(je ressens (beaucoup|énormément|tellement) d'(enthousiasme|excitation|joie))",
@@ -60,7 +60,7 @@ EXCESSIVE_EMOTION_PATTERNS = [
     r"(?i)(je suis (totalement|complètement) (fasciné|émerveillé|captivé))",
 ]
 
-# Patterns spécifiques pour les réponses d'analyse d'images
+# Specific patterns for image analysis responses
 IMAGE_ANALYSIS_PATTERNS = [
     r"(?i)^(Absolument\s?!?\s?Je suis ravi de pouvoir t'aider\.?\s?Oui,?\s?je ressens des émotions en analysant cette image\s?Analyse de l'image)",
     r"(?i)^(Je suis (ravi|heureux|content) de pouvoir analyser cette image pour toi\.?\s?Analyse de l'image)",
@@ -69,9 +69,9 @@ IMAGE_ANALYSIS_PATTERNS = [
 
 def get_user_id_from_data(data: Dict[str, Any]) -> Optional[int]:
     """
-    Extrait l'ID utilisateur des données.
+    Extracts the user ID from the data.
     """
-    # Essayer différentes clés possibles
+    # Try different possible keys
     for key in ['user_id', 'userId', 'user']:
         if key in data and data[key]:
             try:
@@ -79,7 +79,7 @@ def get_user_id_from_data(data: Dict[str, Any]) -> Optional[int]:
             except (ValueError, TypeError):
                 pass
     
-    # Chercher dans la session si disponible
+    # Look in the session if available
     if 'session' in data and isinstance(data['session'], dict):
         for key in ['user_id', 'userId', 'user']:
             if key in data['session'] and data['session'][key]:
@@ -92,14 +92,14 @@ def get_user_id_from_data(data: Dict[str, Any]) -> Optional[int]:
 
 def get_session_id_from_data(data: Dict[str, Any]) -> Optional[str]:
     """
-    Extrait l'ID de session des données.
+    Extracts the session ID from the data.
     """
-    # Essayer différentes clés possibles
+    # Try different possible keys
     for key in ['session_id', 'sessionId', 'session']:
         if key in data and isinstance(data[key], (str, int)):
             return str(data[key])
     
-    # Chercher dans la session si disponible
+    # Look in the session if available
     if 'session' in data and isinstance(data['session'], dict):
         for key in ['id', 'session_id', 'sessionId']:
             if key in data['session'] and data['session'][key]:
@@ -109,45 +109,45 @@ def get_session_id_from_data(data: Dict[str, Any]) -> Optional[str]:
 
 def is_new_conversation(data: Dict[str, Any]) -> bool:
     """
-    Détermine si la conversation est nouvelle ou en cours.
+    Determines if the conversation is new or ongoing.
     
     Args:
-        data: Les données de la requête
+        data: The request data
     
     Returns:
-        True si c'est une nouvelle conversation, False sinon
+        True if it's a new conversation, False otherwise
     """
     user_id = get_user_id_from_data(data)
     session_id = get_session_id_from_data(data)
     
     if not user_id or not session_id:
-        return True  # Par défaut, considérer comme une nouvelle conversation
+        return True  # By default, consider it a new conversation
     
     try:
-        # Vérifier s'il y a des messages récents pour cette session
+        # Check if there are recent messages for this session
         recent_conversations = memory_engine.get_recent_conversations(
             user_id=user_id, 
             session_id=session_id, 
             limit=5
         )
         
-        # Si pas de conversations récentes trouvées, c'est une nouvelle conversation
+        # If no recent conversations found, it's a new conversation
         return len(recent_conversations) == 0
     except Exception as e:
-        logger.error(f"Erreur lors de la vérification de l'état de la conversation: {str(e)}")
-        return True  # En cas d'erreur, considérer comme une nouvelle conversation
+        logger.error(f"Error checking conversation state: {str(e)}")
+        return True  # In case of error, consider it a new conversation
 
 def detect_topic_change(data: Dict[str, Any]) -> bool:
     """
-    Détecte si l'utilisateur change de sujet dans la conversation.
+    Detects if the user changes the topic in the conversation.
     
     Args:
-        data: Les données de la requête
+        data: The request data
     
     Returns:
-        True si c'est un changement de sujet, False sinon
+        True if it's a topic change, False otherwise
     """
-    # Extraire le texte de la requête
+    # Extract text from the request
     text = ""
     if 'text' in data:
         text = data['text']
@@ -157,7 +157,7 @@ def detect_topic_change(data: Dict[str, Any]) -> bool:
     if not text:
         return False
     
-    # Vérifier les patterns de changement de sujet
+    # Check for topic change patterns
     for pattern in TOPIC_CHANGE_PATTERNS:
         if re.search(pattern, text):
             return True
@@ -166,79 +166,79 @@ def detect_topic_change(data: Dict[str, Any]) -> bool:
 
 def detect_image_analysis(response: str) -> bool:
     """
-    Détecte si la réponse est une analyse d'image.
+    Detects if the response is an image analysis.
     
     Args:
-        response: La réponse générée
+        response: The generated response
     
     Returns:
-        True si c'est une analyse d'image, False sinon
+        True if it's an image analysis, False otherwise
     """
-    # Mots-clés génériques pour les analyses d'images
+    # Generic keywords for image analyses
     image_keywords = [
-        r"(?i)(cette image montre)",
-        r"(?i)(dans cette image,)",
-        r"(?i)(l'image présente)",
-        r"(?i)(on peut voir sur cette image)",
-        r"(?i)(je vois une image qui)",
-        r"(?i)(la photo montre)",
-        r"(?i)(on observe sur cette image)",
-        r"(?i)(il s'agit d'une image (de|qui))",
-        r"(?i)(cette photographie (montre|présente|contient))",
-        r"(?i)(l'illustration (montre|représente))",
-        r"(?i)(sur cette (capture|prise de vue))",
-        r"(?i)(ce visuel (montre|présente))",
+        r"(?i)(this image shows)",
+        r"(?i)(in this image,)",
+        r"(?i)(the image presents)",
+        r"(?i)(one can see in this image)",
+        r"(?i)(I see an image that)",
+        r"(?i)(the photo shows)",
+        r"(?i)(we observe in this image)",
+        r"(?i)(it is an image (of|that))",
+        r"(?i)(this photograph (shows|presents|contains))",
+        r"(?i)(the illustration (shows|represents))",
+        r"(?i)(on this (capture|shot))",
+        r"(?i)(this visual (shows|presents))",
     ]
     
-    # Mots-clés par catégories d'images
+    # Keywords by image categories
     category_keywords = {
-        # Images astronomiques
-        "astronomie": [
-            r"(?i)(constellation[s]? (de|du|des))",
-            r"(?i)(carte (du|céleste|du ciel))",
-            r"(?i)(ciel nocturne)",
-            r"(?i)(étoile[s]? (visible|brillante|nommée))",
-            r"(?i)(position (de la|des) (lune|planète|étoile))",
-            r"(?i)(trajectoire (de|des|du))",
+        # Astronomical images
+        "astronomy": [
+            r"(?i)(constellation[s]? (of|the))",
+            r"(?i)(map (of the|celestial|sky))",
+            r"(?i)(night sky)",
+            r"(?i)(star[s]? (visible|bright|named))",
+            r"(?i)(position (of the|of the) (moon|planet|star))",
+            r"(?i)(trajectory (of|of the))",
         ],
-        # Œuvres d'art et images créatives
+        # Artworks and creative images
         "art": [
-            r"(?i)(tableau|peinture|œuvre d'art)",
-            r"(?i)(style (artistique|pictural))",
-            r"(?i)(composition (artistique|visuelle))",
-            r"(?i)(perspective|arrière-plan|premier plan)",
-            r"(?i)(couleurs|teintes|nuances|palette)",
+            r"(?i)(painting|artwork)",
+            r"(?i)(artistic|pictorial) style)",
+            r"(?i)(artistic|visual) composition)",
+            r"(?i)(perspective|background|foreground)",
+            r"(?i)(colors|hues|shades|palette)",
         ],
-        # Scènes naturelles et paysages
+        # Natural scenes and landscapes
         "nature": [
-            r"(?i)(paysage (de|montagneux|marin|rural|urbain))",
-            r"(?i)(vue (panoramique|aérienne))",
-            r"(?i)(environnement naturel)",
-            r"(?i)(flore|faune|végétation)",
-            r"(?i)(forêt|montagne|océan|rivière|lac)",
+            r"(?i)(landscape (of|mountainous|marine|rural|urban))",
+            r"(?i)(panoramic|aerial) view)",
+            r"(?i)(natural environment)",
+            r"(?i)(flora|fauna|vegetation)",
+            r"(?i)(forest|mountain|ocean|river|lake)",
         ],
-        # Schémas et diagrammes
-        "technique": [
-            r"(?i)(schéma|diagramme|graphique)",
-            r"(?i)(représentation (technique|schématique))",
-            r"(?i)(illustration technique)",
-            r"(?i)(structure|composants|éléments)",
-            r"(?i)(légende|annotation|étiquette)",
+        # Diagrams and schematics
+        "technical": [
+            r"(?i)(diagram|chart|graph)",
+            r"(?i)(technical|schematic) representation)",
+            r"(?i)(technical illustration)",
+            r"(?i)(structure|components|elements)",
+            r"(?i)(legend|annotation|label)",
         ]
     }
     
-    # Vérifier les mots-clés génériques
+    # Check generic keywords
     for pattern in image_keywords:
         if re.search(pattern, response):
             return True
     
-    # Vérifier les mots-clés par catégorie
+    # Check keywords by category
     for category, patterns in category_keywords.items():
         for pattern in patterns:
             if re.search(pattern, response):
                 return True
     
-    # Ou si la réponse est déjà identifiée comme commençant par un pattern d'analyse d'image
+    # Or if the response is already identified as starting with an image analysis pattern
     for pattern in IMAGE_ANALYSIS_PATTERNS:
         if re.search(pattern, response):
             return True
@@ -247,92 +247,91 @@ def detect_image_analysis(response: str) -> bool:
 
 def moderate_emotional_expressions(response: str, is_new_conversation: bool, is_topic_change: bool = False) -> str:
     """
-    Modère les expressions émotionnelles excessives dans la réponse.
+    Moderates excessive emotional expressions in the response.
     
     Args:
-        response: La réponse générée
-        is_new_conversation: Indicateur si c'est une nouvelle conversation
-        is_topic_change: Indicateur si c'est un changement de sujet
+        response: The generated response
+        is_new_conversation: Indicator if it's a new conversation
+        is_topic_change: Indicator if it's a topic change
     
     Returns:
-        La réponse modérée
+        The moderated response
     """
-    # Vérifier s'il s'agit d'une analyse d'image
+    # Check if it's an image analysis
     is_image_analysis = detect_image_analysis(response)
     
-    # Si c'est une analyse d'image, supprimer les phrases excessives d'introduction
+    # If it's an image analysis, remove excessive introductory phrases
     if is_image_analysis:
         for pattern in IMAGE_ANALYSIS_PATTERNS:
-            # Remplacer les phrases excessives par un début plus neutre
+            # Replace excessive phrases with a more neutral beginning
             if re.search(pattern, response):
                 image_intro_phrases = [
-                    "Analyse de l'image : ",
-                    "Voici l'analyse de cette image : ",
-                    "Analyse : ",
-                    ""  # Option vide pour commencer directement par la description
+                    "Image analysis: ",
+                    "Here is the analysis of this image: ",
+                    "Analysis: ",
+                    ""  # Empty option to start directly with the description
                 ]
                 replacement = random.choice(image_intro_phrases)
                 response = re.sub(pattern, replacement, response, count=1)
     
-    # Supprimer les expressions de salutation répétitives
+    # Remove repetitive greeting expressions
     for pattern in REPETITIVE_GREETING_PATTERNS:
         if re.search(pattern, response):
             if is_topic_change:
-                # Pour un changement de sujet, utiliser des transitions plus appropriées
+                # For a topic change, use more appropriate transitions
                 topic_transitions = [
-                    "Intéressant ! ",
-                    "D'accord, ",
-                    "Très bien, ",
-                    "Parfait, ",
-                    ""  # Option vide pour commencer directement
+                    "Interesting! ",
+                    "Okay, ",
+                    "Very good, ",
+                    "Perfect, ",
+                    ""  # Empty option to start directly
                 ]
                 replacement = random.choice(topic_transitions)
             elif not is_new_conversation:
-                # Pour une conversation en cours, utiliser des phrases de continuité
+                # For an ongoing conversation, use continuity phrases
                 continuity_phrases = [
-                    "Bien sûr, ",
-                    "Effectivement, ",
-                    "Je vois, ",
-                    "D'accord, ",
-                    ""  # Option vide
+                    "Of course, ",
+                    "Indeed, ",
+                    "I see, ",
+                    "Okay, ",
+                    ""  # Empty option
                 ]
                 replacement = random.choice(continuity_phrases)
             else:
-                # Pour une vraie nouvelle conversation, varier les salutations
+                # For a truly new conversation, vary greetings
                 varied_greetings = [
-                    "Bonjour ! ",
-                    "Salut ! ",
-                    "Hello ! ",
-                    "Bonsoir ! ",
-                    "Ravi de te rencontrer ! ",
-                    ""  # Option vide
+                    "Hello! ",
+                    "Hi! ",
+                    "Good evening! ",
+                    "Nice to meet you! ",
+                    ""  # Empty option
                 ]
                 replacement = random.choice(varied_greetings)
             
             response = re.sub(pattern, replacement, response, count=1)
     
-    # Modérer les salutations génériques si ce n'est pas une nouvelle conversation
+    # Moderate generic greetings if it's not a new conversation
     if not is_new_conversation and not is_topic_change:
         for pattern in GREETING_PATTERNS:
-            # Remplacer les salutations par une phrase de continuité
+            # Replace greetings with a continuity phrase
             if re.search(pattern, response):
                 continuity_phrases = [
-                    "Pour continuer notre discussion, ",
-                    "Pour revenir à notre sujet, ",
-                    "En poursuivant notre échange, ",
-                    "Pour reprendre là où nous en étions, ",
-                    ""  # Option vide pour simplement supprimer la salutation
+                    "To continue our discussion, ",
+                    "To return to our topic, ",
+                    "Continuing our exchange, ",
+                    "To pick up where we left off, ",
+                    ""  # Empty option to simply remove the greeting
                 ]
                 replacement = random.choice(continuity_phrases)
                 response = re.sub(pattern, replacement, response, count=1)
     
-    # Modérer les expressions émotionnelles excessives
+    # Moderate excessive emotional expressions
     emotion_count = 0
     for pattern in EXCESSIVE_EMOTION_PATTERNS:
         matches = re.findall(pattern, response)
         emotion_count += len(matches)
         
-        # Limiter le nombre d'expressions émotionnelles à 1 par réponse
+        # Limit the number of emotional expressions to 1 per response
         if emotion_count > 1:
             response = re.sub(pattern, "", response)
     
@@ -340,21 +339,21 @@ def moderate_emotional_expressions(response: str, is_new_conversation: bool, is_
 
 def process_request(data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Traite les données de la requête.
+    Processes the request data.
     
     Args:
-        data: Les données de la requête
+        data: The request data
     
     Returns:
-        Les données modifiées
+        The modified data
     """
-    # Vérifier si c'est une nouvelle conversation
+    # Check if it's a new conversation
     is_new = is_new_conversation(data)
     
-    # Vérifier si c'est un changement de sujet
+    # Check if it's a topic change
     is_topic_change = detect_topic_change(data)
     
-    # Stocker les informations pour être utilisées dans la réponse
+    # Store the information to be used in the response
     if 'context' not in data:
         data['context'] = {}
     
@@ -366,34 +365,34 @@ def process_request(data: Dict[str, Any]) -> Dict[str, Any]:
 
 def process_response(data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Traite les données de la réponse.
+    Processes the response data.
     
     Args:
-        data: Les données de la réponse
+        data: The response data
     
     Returns:
-        Les données modifiées
+        The modified data
     """
-    # Récupérer les indicateurs de contexte
-    is_new = True  # Par défaut
-    is_topic_change = False  # Par défaut
+    # Retrieve context indicators
+    is_new = True  # Default
+    is_topic_change = False  # Default
     
     if 'context' in data and isinstance(data['context'], dict):
         is_new = data['context'].get('is_new_conversation', True)
         is_topic_change = data['context'].get('is_topic_change', False)
     
-    # Extraire la réponse
+    # Extract the response
     response = None
     if 'response' in data:
         response = data['response']
     elif 'content' in data:
         response = data['content']
     
-    # Modérer la réponse si elle existe
+    # Moderate the response if it exists
     if response:
         moderated_response = moderate_emotional_expressions(response, is_new, is_topic_change)
         
-        # Mettre à jour la réponse dans les données
+        # Update the response in the data
         if 'response' in data:
             data['response'] = moderated_response
         elif 'content' in data:
@@ -403,17 +402,17 @@ def process_response(data: Dict[str, Any]) -> Dict[str, Any]:
 
 def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
     """
-    Fonction principale de traitement pour le gestionnaire de modules.
+    Main processing function for the module manager.
     
     Args:
-        data: Les données à traiter
-        hook: Le hook appelé (process_request ou process_response)
+        data: The data to process
+        hook: The called hook (process_request or process_response)
         
     Returns:
-        Les données modifiées
+        The modified data
     """
     if not isinstance(data, dict):
-        logger.warning(f"Les données ne sont pas un dictionnaire: {type(data)}")
+        logger.warning(f"Data is not a dictionary: {type(data)}")
         return data
     
     try:
@@ -426,5 +425,5 @@ def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
         return data
     
     except Exception as e:
-        logger.error(f"Erreur dans le module conversation_context_manager: {str(e)}", exc_info=True)
+        logger.error(f"Error in conversation_context_manager module: {str(e)}", exc_info=True)
         return data
