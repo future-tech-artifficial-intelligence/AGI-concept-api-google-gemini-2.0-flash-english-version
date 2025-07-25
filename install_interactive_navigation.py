@@ -1,6 +1,6 @@
 """
-Script d'Installation Automatique - Système de Navigation Interactive Gemini
-Ce script configure automatiquement toutes les dépendances nécessaires
+Automatic Installation Script - Google Gemini 2.0 Flash AI Interactive Navigation System
+This script automatically configures all necessary dependencies
 """
 
 import os
@@ -12,12 +12,12 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('InteractiveInstaller')
 
 class InteractiveNavigationInstaller:
-    """Installeur automatique pour le système de navigation interactive"""
+    """Automatic installer for the Google Gemini 2.0 Flash AI interactive navigation system"""
     
     def __init__(self):
         self.installation_log = []
@@ -28,10 +28,10 @@ class InteractiveNavigationInstaller:
             'architecture': platform.architecture()[0]
         }
         
-        logger.info(f"🚀 Démarrage de l'installation sur {self.system_info['platform']}")
+        logger.info(f"🚀 Starting installation on {self.system_info['platform']}")
     
     def log_step(self, step_name: str, success: bool, message: str = ""):
-        """Enregistre une étape d'installation"""
+        """Logs an installation step"""
         timestamp = datetime.now().isoformat()
         
         entry = {
@@ -50,24 +50,24 @@ class InteractiveNavigationInstaller:
             self.errors.append(entry)
     
     def check_python_version(self):
-        """Vérifie la version de Python"""
-        logger.info("🐍 Vérification de la version Python...")
+        """Checks the Python version"""
+        logger.info("🐍 Checking Python version...")
         
         version_info = sys.version_info
         required_major, required_minor = 3, 8
         
         if version_info.major >= required_major and version_info.minor >= required_minor:
-            self.log_step("Vérification Python", True, 
+            self.log_step("Python Check", True, 
                          f"Python {version_info.major}.{version_info.minor}.{version_info.micro} OK")
             return True
         else:
-            self.log_step("Vérification Python", False, 
-                         f"Python {required_major}.{required_minor}+ requis, {version_info.major}.{version_info.minor} détecté")
+            self.log_step("Python Check", False, 
+                         f"Python {required_major}.{required_minor}+ required, {version_info.major}.{version_info.minor} detected")
             return False
     
     def install_base_requirements(self):
-        """Installe les dépendances de base"""
-        logger.info("📦 Installation des dépendances de base...")
+        """Installs base dependencies"""
+        logger.info("📦 Installing base dependencies...")
         
         base_packages = [
             'selenium>=4.15.0',
@@ -80,13 +80,13 @@ class InteractiveNavigationInstaller:
         
         try:
             for package in base_packages:
-                logger.info(f"   Instalation de {package}...")
+                logger.info(f"   Installing {package}...")
                 result = subprocess.run([
                     sys.executable, '-m', 'pip', 'install', package
                 ], capture_output=True, text=True)
                 
                 if result.returncode == 0:
-                    self.log_step(f"Installation {package.split('>=')[0]}", True, "Package installé")
+                    self.log_step(f"Installation {package.split('>=')[0]}", True, "Package installed")
                 else:
                     self.log_step(f"Installation {package.split('>=')[0]}", False, result.stderr)
                     return False
@@ -94,12 +94,12 @@ class InteractiveNavigationInstaller:
             return True
             
         except Exception as e:
-            self.log_step("Installation Dépendances Base", False, str(e))
+            self.log_step("Base Dependencies Installation", False, str(e))
             return False
     
     def check_webdriver_availability(self):
-        """Vérifie la disponibilité des WebDrivers"""
-        logger.info("🌐 Vérification des WebDrivers...")
+        """Checks WebDrivers availability"""
+        logger.info("🌐 Checking WebDrivers...")
         
         drivers_available = {
             'chrome': False,
@@ -118,19 +118,19 @@ class InteractiveNavigationInstaller:
             chrome_options.add_argument('--no-sandbox')
             chrome_options.add_argument('--disable-dev-shm-usage')
             
-            # Tenter d'initialiser ChromeDriver
+            # Attempt to initialize ChromeDriver
             driver_path = ChromeDriverManager().install()
             driver = webdriver.Chrome(service=webdriver.chrome.service.Service(driver_path), 
                                     options=chrome_options)
             driver.quit()
             
             drivers_available['chrome'] = True
-            self.log_step("Chrome WebDriver", True, "ChromeDriver opérationnel")
+            self.log_step("Chrome WebDriver", True, "ChromeDriver operational")
             
         except Exception as e:
-            self.log_step("Chrome WebDriver", False, f"Erreur: {str(e)}")
+            self.log_step("Chrome WebDriver", False, f"Error: {str(e)}")
         
-        # Test Edge (si sur Windows)
+        # Test Edge (if on Windows)
         if self.system_info['platform'] == 'Windows':
             try:
                 from selenium.webdriver.edge.options import Options as EdgeOptions
@@ -146,29 +146,29 @@ class InteractiveNavigationInstaller:
                 driver.quit()
                 
                 drivers_available['edge'] = True
-                self.log_step("Edge WebDriver", True, "EdgeDriver opérationnel")
+                self.log_step("Edge WebDriver", True, "EdgeDriver operational")
                 
             except Exception as e:
-                self.log_step("Edge WebDriver", False, f"Erreur: {str(e)}")
+                self.log_step("Edge WebDriver", False, f"Error: {str(e)}")
         
-        # Résumé
+        # Summary
         available_count = sum(drivers_available.values())
         if available_count > 0:
-            self.log_step("WebDrivers Globaux", True, 
-                         f"{available_count} driver(s) disponible(s): {', '.join([k for k, v in drivers_available.items() if v])}")
+            self.log_step("Global WebDrivers", True, 
+                         f"{available_count} driver(s) available: {', '.join([k for k, v in drivers_available.items() if v])}")
             return True
         else:
-            self.log_step("WebDrivers Globaux", False, "Aucun WebDriver disponible")
+            self.log_step("Global WebDrivers", False, "No WebDriver available")
             return False
     
     def test_interactive_modules(self):
-        """Teste l'importation des modules interactifs"""
-        logger.info("🧪 Test des modules interactifs...")
+        """Tests the import of interactive modules"""
+        logger.info("🧪 Testing interactive modules...")
         
         modules_to_test = [
-            ('interactive_web_navigator', 'Navigateur Interactif'),
-            ('gemini_interactive_adapter', 'Adaptateur Gemini Interactif'),
-            ('gemini_api_adapter', 'Adaptateur Gemini Principal')
+            ('interactive_web_navigator', 'Interactive Navigator'),
+            ('gemini_interactive_adapter', 'Google Gemini 2.0 Flash AI Interactive Adapter'),
+            ('gemini_api_adapter', 'Google Gemini 2.0 Flash AI Main Adapter')
         ]
         
         successful_imports = 0
@@ -176,23 +176,23 @@ class InteractiveNavigationInstaller:
         for module_name, display_name in modules_to_test:
             try:
                 __import__(module_name)
-                self.log_step(f"Import {display_name}", True, "Module importé avec succès")
+                self.log_step(f"Import {display_name}", True, "Module imported successfully")
                 successful_imports += 1
                 
             except ImportError as e:
-                self.log_step(f"Import {display_name}", False, f"Erreur d'import: {str(e)}")
+                self.log_step(f"Import {display_name}", False, f"Import error: {str(e)}")
         
         if successful_imports == len(modules_to_test):
-            self.log_step("Test Modules", True, "Tous les modules sont disponibles")
+            self.log_step("Module Test", True, "All modules are available")
             return True
         else:
-            self.log_step("Test Modules", False, 
-                         f"Seulement {successful_imports}/{len(modules_to_test)} modules disponibles")
+            self.log_step("Module Test", False, 
+                         f"Only {successful_imports}/{len(modules_to_test)} modules available")
             return False
     
     def create_configuration_file(self):
-        """Crée un fichier de configuration par défaut"""
-        logger.info("⚙️ Création du fichier de configuration...")
+        """Creates a default configuration file"""
+        logger.info("⚙️ Creating configuration file...")
         
         config = {
             'interactive_navigation': {
@@ -211,9 +211,9 @@ class InteractiveNavigationInstaller:
             'detection_settings': {
                 'confidence_threshold': 0.6,
                 'interaction_keywords': {
-                    'click': ['clique', 'cliquer', 'appuie', 'appuyer'],
-                    'navigate': ['explore', 'parcours', 'navigue'],
-                    'analyze': ['analyse', 'regarde', 'examine']
+                    'click': ['click', 'press'],
+                    'navigate': ['explore', 'browse', 'navigate'],
+                    'analyze': ['analyze', 'look', 'examine']
                 }
             },
             'safety_settings': {
@@ -233,25 +233,25 @@ class InteractiveNavigationInstaller:
             with open(config_path, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
             
-            self.log_step("Configuration", True, f"Fichier créé: {config_path}")
+            self.log_step("Configuration", True, f"File created: {config_path}")
             return True
             
         except Exception as e:
-            self.log_step("Configuration", False, f"Erreur création fichier: {str(e)}")
+            self.log_step("Configuration", False, f"Error creating file: {str(e)}")
             return False
     
     def run_basic_tests(self):
-        """Exécute des tests de base du système"""
-        logger.info("🧪 Exécution des tests de base...")
+        """Executes basic system tests"""
+        logger.info("🧪 Running basic tests...")
         
         try:
-            # Test de détection d'interaction
+            # Interaction detection test
             from gemini_interactive_adapter import detect_interactive_need
             
             test_prompts = [
-                "Clique sur l'onglet Services",
-                "Explore tous les onglets de ce site",
-                "Qu'est-ce que l'intelligence artificielle ?"
+                "Click on the Services tab",
+                "Explore all tabs on this site",
+                "What is artificial intelligence?"
             ]
             
             detection_results = []
@@ -265,35 +265,35 @@ class InteractiveNavigationInstaller:
                         'confidence': result.get('confidence', 0)
                     })
                 except Exception as e:
-                    logger.warning(f"Erreur test détection pour '{prompt}': {e}")
+                    logger.warning(f"Detection test error for '{prompt}': {e}")
             
             interactive_detected = sum(1 for r in detection_results if r['detected'])
-            self.log_step("Tests Détection", True, 
-                         f"{interactive_detected}/{len(test_prompts)} interactions détectées")
+            self.log_step("Detection Tests", True, 
+                         f"{interactive_detected}/{len(test_prompts)} interactions detected")
             
-            # Test d'initialisation des composants
+            # Component initialization test
             try:
                 from interactive_web_navigator import get_interactive_navigator
                 navigator = get_interactive_navigator()
                 
                 if navigator:
                     stats = navigator.get_statistics()
-                    self.log_step("Test Navigateur", True, "Navigateur initialisé")
+                    self.log_step("Navigator Test", True, "Navigator initialized")
                 else:
-                    self.log_step("Test Navigateur", False, "Navigateur non initialisé")
+                    self.log_step("Navigator Test", False, "Navigator not initialized")
             
             except Exception as e:
-                self.log_step("Test Navigateur", False, f"Erreur: {str(e)}")
+                self.log_step("Navigator Test", False, f"Error: {str(e)}")
             
             return True
             
         except Exception as e:
-            self.log_step("Tests de Base", False, f"Erreur globale: {str(e)}")
+            self.log_step("Basic Tests", False, f"Global error: {str(e)}")
             return False
     
     def generate_installation_report(self):
-        """Génère un rapport d'installation complet"""
-        logger.info("📋 Génération du rapport d'installation...")
+        """Generates a complete installation report"""
+        logger.info("📋 Generating installation report...")
         
         successful_steps = sum(1 for entry in self.installation_log if entry['success'])
         total_steps = len(self.installation_log)
@@ -313,73 +313,73 @@ class InteractiveNavigationInstaller:
             'recommendations': self._generate_recommendations()
         }
         
-        # Sauvegarder le rapport
+        # Save the report
         try:
             report_path = Path(f'installation_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json')
             with open(report_path, 'w', encoding='utf-8') as f:
                 json.dump(report, f, indent=2, ensure_ascii=False)
             
-            self.log_step("Rapport Installation", True, f"Rapport sauvegardé: {report_path}")
+            self.log_step("Installation Report", True, f"Report saved: {report_path}")
         
         except Exception as e:
-            self.log_step("Rapport Installation", False, f"Erreur sauvegarde: {str(e)}")
+            self.log_step("Installation Report", False, f"Error saving: {str(e)}")
         
         return report
     
     def _generate_recommendations(self):
-        """Génère des recommandations basées sur l'installation"""
+        """Generates recommendations based on the installation"""
         recommendations = []
         
-        # Vérifier les erreurs communes
+        # Check common errors
         if any('WebDriver' in error['step'] for error in self.errors):
             recommendations.append({
                 'type': 'webdriver_issue',
-                'title': 'Problème WebDriver détecté',
-                'description': 'Installez manuellement ChromeDriver ou vérifiez que Chrome est installé',
+                'title': 'WebDriver issue detected',
+                'description': 'Manually install ChromeDriver or verify Chrome is installed',
                 'actions': [
-                    'Télécharger ChromeDriver depuis https://chromedriver.chromium.org/',
-                    'Ajouter ChromeDriver au PATH système',
-                    'Ou installer Chrome/Chromium navigateur'
+                    'Download ChromeDriver from https://chromedriver.chromium.org/',
+                    'Add ChromeDriver to system PATH',
+                    'Or install Chrome/Chromium browser'
                 ]
             })
         
         if any('Python' in error['step'] for error in self.errors):
             recommendations.append({
                 'type': 'python_version',
-                'title': 'Version Python insuffisante',
-                'description': 'Mettez à jour Python vers la version 3.8 ou supérieure',
+                'title': 'Insufficient Python version',
+                'description': 'Update Python to version 3.8 or higher',
                 'actions': [
-                    'Télécharger Python 3.8+ depuis python.org',
-                    'Réinstaller les dépendances après la mise à jour'
+                    'Download Python 3.8+ from python.org',
+                    'Reinstall dependencies after updating'
                 ]
             })
         
         if not self.errors:
             recommendations.append({
                 'type': 'success',
-                'title': 'Installation réussie',
-                'description': 'Le système est prêt à être utilisé',
+                'title': 'Installation successful',
+                'description': 'The system is ready for use',
                 'actions': [
-                    'Exécuter python demo_interactive_navigation.py pour voir une démonstration',
-                    'Lire le guide d\'utilisation GUIDE_NAVIGATION_INTERACTIVE.md',
-                    'Tester avec vos propres cas d\'usage'
+                    'Execute python demo_interactive_navigation.py to see a demonstration',
+                    'Read the user guide GUIDE_INTERACTIVE_NAVIGATION.md',
+                    'Test with your own use cases'
                 ]
             })
         
         return recommendations
     
     def run_full_installation(self):
-        """Lance l'installation complète"""
-        logger.info("🎯 DÉMARRAGE DE L'INSTALLATION COMPLÈTE")
+        """Launches the full installation"""
+        logger.info("🎯 STARTING FULL INSTALLATION")
         logger.info("=" * 80)
         
         installation_steps = [
-            ('Vérification Python', self.check_python_version),
-            ('Installation Dépendances', self.install_base_requirements),
-            ('Vérification WebDrivers', self.check_webdriver_availability),
-            ('Test Modules Interactifs', self.test_interactive_modules),
-            ('Création Configuration', self.create_configuration_file),
-            ('Tests de Base', self.run_basic_tests)
+            ('Python Check', self.check_python_version),
+            ('Dependencies Installation', self.install_base_requirements),
+            ('WebDrivers Check', self.check_webdriver_availability),
+            ('Interactive Modules Test', self.test_interactive_modules),
+            ('Configuration Creation', self.create_configuration_file),
+            ('Basic Tests', self.run_basic_tests)
         ]
         
         start_time = datetime.now()
@@ -389,65 +389,65 @@ class InteractiveNavigationInstaller:
             try:
                 success = step_function()
                 if not success:
-                    logger.warning(f"⚠️ {step_name} a échoué, mais l'installation continue...")
+                    logger.warning(f"⚠️ {step_name} failed, but installation continues...")
             except Exception as e:
-                logger.error(f"❌ Erreur critique dans {step_name}: {e}")
-                self.log_step(step_name, False, f"Erreur critique: {str(e)}")
+                logger.error(f"❌ Critical error in {step_name}: {e}")
+                self.log_step(step_name, False, f"Critical error: {str(e)}")
         
         installation_time = (datetime.now() - start_time).total_seconds()
         
-        # Générer le rapport final
+        # Generate the final report
         report = self.generate_installation_report()
         
-        # Afficher le résumé
+        # Display the summary
         logger.info("\n" + "=" * 80)
-        logger.info("🏁 INSTALLATION TERMINÉE")
-        logger.info(f"⏱️ Temps d'installation: {installation_time:.1f}s")
-        logger.info(f"📊 Résultats: {report['installation_summary']['successful_steps']}/{report['installation_summary']['total_steps']} étapes réussies")
-        logger.info(f"📈 Taux de réussite: {report['installation_summary']['success_rate']:.1f}%")
-        logger.info(f"🎖️ Statut: {report['installation_summary']['overall_status']}")
+        logger.info("🏁 INSTALLATION COMPLETE")
+        logger.info(f"⏱️ Installation time: {installation_time:.1f}s")
+        logger.info(f"📊 Results: {report['installation_summary']['successful_steps']}/{report['installation_summary']['total_steps']} steps successful")
+        logger.info(f"📈 Success rate: {report['installation_summary']['success_rate']:.1f}%")
+        logger.info(f"🎖️ Status: {report['installation_summary']['overall_status']}")
         
-        # Afficher les recommandations
+        # Display recommendations
         if report['recommendations']:
-            logger.info("\n💡 RECOMMANDATIONS:")
+            logger.info("\n💡 RECOMMENDATIONS:")
             for rec in report['recommendations']:
                 logger.info(f"   🔸 {rec['title']}: {rec['description']}")
         
-        # Message final
+        # Final message
         if report['installation_summary']['overall_status'] == 'SUCCESS':
-            logger.info("\n🎉 INSTALLATION RÉUSSIE !")
-            logger.info("✅ Le système de navigation interactive Gemini est opérationnel")
-            logger.info("🚀 Vous pouvez maintenant utiliser les nouvelles fonctionnalités")
-            logger.info("\n📖 Prochaines étapes:")
-            logger.info("   1. Lire le guide: GUIDE_NAVIGATION_INTERACTIVE.md")
-            logger.info("   2. Tester: python demo_interactive_navigation.py")
-            logger.info("   3. Valider: python test_interactive_navigation.py")
+            logger.info("\n🎉 INSTALLATION SUCCESSFUL!")
+            logger.info("✅ The Google Gemini 2.0 Flash AI interactive navigation system is operational")
+            logger.info("🚀 You can now use the new features")
+            logger.info("\n📖 Next steps:")
+            logger.info("   1. Read the guide: GUIDE_INTERACTIVE_NAVIGATION.md")
+            logger.info("   2. Test: python demo_interactive_navigation.py")
+            logger.info("   3. Validate: python test_interactive_navigation.py")
         else:
-            logger.info("\n⚠️ INSTALLATION PARTIELLE")
-            logger.info("🔧 Consultez le rapport d'installation pour résoudre les problèmes")
-            logger.info("💬 Certaines fonctionnalités peuvent être limitées")
+            logger.info("\n⚠️ PARTIAL INSTALLATION")
+            logger.info("🔧 Consult the installation report to resolve issues")
+            logger.info("💬 Some features may be limited")
         
         logger.info("=" * 80)
         
         return report
 
 def main():
-    """Fonction principale d'installation"""
-    print("🌟 Installation du Système de Navigation Interactive Gemini")
-    print("🎯 Ce script va configurer automatiquement votre environnement\n")
+    """Main installation function"""
+    print("🌟 Installing Google Gemini 2.0 Flash AI Interactive Navigation System")
+    print("🎯 This script will automatically configure your environment\n")
     
     installer = InteractiveNavigationInstaller()
     report = installer.run_full_installation()
     
-    # Code de sortie basé sur le succès
+    # Exit code based on success
     success = report['installation_summary']['overall_status'] in ['SUCCESS', 'PARTIAL']
     
     if success:
-        print("\n✅ Installation terminée avec succès")
-        print("🎯 Le système de navigation interactive est prêt à être utilisé !")
+        print("\n✅ Installation completed successfully")
+        print("🎯 The interactive navigation system is ready to use!")
     else:
-        print("\n❌ Installation échouée")
-        print("🔧 Consultez les logs et le rapport d'installation pour plus d'informations")
+        print("\n❌ Installation failed")
+        print("🔧 Consult the logs and installation report for more information")
     
     return success
 
@@ -456,8 +456,8 @@ if __name__ == "__main__":
         success = main()
         sys.exit(0 if success else 1)
     except KeyboardInterrupt:
-        print("\n\n⏹️ Installation interrompue par l'utilisateur")
+        print("\n\n⏹️ Installation interrupted by user")
         sys.exit(1)
     except Exception as e:
-        logger.error(f"❌ Erreur critique lors de l'installation: {e}")
+        logger.error(f"❌ Critical error during installation: {e}")
         sys.exit(1)
