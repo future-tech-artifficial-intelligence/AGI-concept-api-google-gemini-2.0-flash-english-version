@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Lanceur Rapide - Système de Navigation Interactive Gemini
-Interface simple pour démarrer rapidement toutes les fonctionnalités
+Quick Launcher - artificial intelligence API GOOGLE GEMINI 2.0 FLASH Interactive Navigation System
+Simple interface to quickly start all functionalities
 """
 
 import os
@@ -13,7 +13,7 @@ from pathlib import Path
 from datetime import datetime
 
 class InteractiveNavigationLauncher:
-    """Lanceur pour le système de navigation interactive"""
+    """Launcher for the interactive navigation system"""
     
     def __init__(self):
         self.project_root = Path(__file__).parent
@@ -21,28 +21,28 @@ class InteractiveNavigationLauncher:
         self.available_actions = {}
         
     def print_header(self):
-        """Affiche l'en-tête du lanceur"""
+        """Prints the launcher header"""
         print("=" * 80)
-        print("🚀 LANCEUR SYSTÈME DE NAVIGATION INTERACTIVE GEMINI")
-        print("🎯 Interface de démarrage rapide")
+        print("🚀 ARTIFICIAL INTELLIGENCE API GOOGLE GEMINI 2.0 FLASH INTERACTIVE NAVIGATION SYSTEM LAUNCHER")
+        print("🎯 Quick Start Interface")
         print("=" * 80)
         
     def print_menu(self):
-        """Affiche le menu principal"""
-        print("\n📋 ACTIONS DISPONIBLES:")
+        """Prints the main menu"""
+        print("\n📋 AVAILABLE ACTIONS:")
         print("=" * 50)
         
         actions = {
-            "1": ("🏗️  Installation", "Installer le système complet", "install"),
-            "2": ("🎭 Démonstration", "Lancer la démonstration interactive", "demo"),
-            "3": ("🧪 Tests", "Exécuter les tests automatisés", "test"),
-            "4": ("🔧 Maintenance", "Effectuer la maintenance système", "maintenance"),
-            "5": ("🌐 Navigation", "Démarrer la navigation interactive", "navigate"),
-            "6": ("📊 Rapport", "Générer un rapport de statut", "status"),
-            "7": ("🔍 Diagnostic", "Diagnostiquer les problèmes", "diagnose"),
-            "8": ("📖 Guide", "Afficher le guide d'utilisation", "guide"),
-            "9": ("⚙️  Configuration", "Configurer le système", "config"),
-            "0": ("🚪 Quitter", "Fermer le lanceur", "exit")
+            "1": ("🏗️  Installation", "Install the complete system", "install"),
+            "2": ("🎭 Demonstration", "Launch the interactive demonstration", "demo"),
+            "3": ("🧪 Tests", "Run automated tests", "test"),
+            "4": ("🔧 Maintenance", "Perform system maintenance", "maintenance"),
+            "5": ("🌐 Navigation", "Start interactive navigation", "navigate"),
+            "6": ("📊 Report", "Generate a status report", "status"),
+            "7": ("🔍 Diagnosis", "Diagnose problems", "diagnose"),
+            "8": ("📖 Guide", "Show the user guide", "guide"),
+            "9": ("⚙️  Configuration", "Configure the system", "config"),
+            "0": ("🚪 Exit", "Close the launcher", "exit")
         }
         
         for key, (icon, desc, action) in actions.items():
@@ -52,16 +52,16 @@ class InteractiveNavigationLauncher:
         print("=" * 50)
         
     def check_prerequisites(self) -> bool:
-        """Vérifie les prérequis système"""
-        print("\n🔍 Vérification des prérequis...")
+        """Checks system prerequisites"""
+        print("\n🔍 Checking prerequisites...")
         
-        # Vérification Python
+        # Python check
         if sys.version_info < (3, 8):
-            print(f"❌ Python 3.8+ requis (version actuelle: {sys.version_info.major}.{sys.version_info.minor})")
+            print(f"❌ Python 3.8+ required (current version: {sys.version_info.major}.{sys.version_info.minor})")
             return False
-        print(f"✅ Python {sys.version_info.major}.{sys.version_info.minor} détecté")
+        print(f"✅ Python {sys.version_info.major}.{sys.version_info.minor} detected")
         
-        # Vérification des fichiers critiques
+        # Critical file check
         critical_files = [
             'interactive_web_navigator.py',
             'gemini_interactive_adapter.py',
@@ -74,161 +74,161 @@ class InteractiveNavigationLauncher:
                 missing_files.append(file_name)
                 
         if missing_files:
-            print(f"❌ Fichiers manquants: {', '.join(missing_files)}")
+            print(f"❌ Missing files: {', '.join(missing_files)}")
             return False
-        print("✅ Fichiers critiques présents")
+        print("✅ Critical files present")
         
-        # Vérification de la configuration
+        # Configuration check
         env_file = self.project_root / '.env'
         if not env_file.exists():
-            print("⚠️ Fichier .env manquant - configuration requise")
+            print("⚠️ .env file missing - configuration required")
             return False
             
-        # Vérification de la clé API
+        # API Key check
         with open(env_file, 'r', encoding='utf-8') as f:
             env_content = f.read()
             
-        if 'GEMINI_API_KEY' not in env_content or 'votre_cle_api_ici' in env_content:
-            print("⚠️ Clé API Gemini non configurée")
+        if 'GEMINI_API_KEY' not in env_content or 'your_api_key_here' in env_content: # Changed 'votre_cle_api_ici' to 'your_api_key_here' for consistency in English
+            print("⚠️ artificial intelligence API GOOGLE GEMINI 2.0 FLASH API Key not configured")
             return False
-        print("✅ Configuration de base présente")
+        print("✅ Basic configuration present")
         
         return True
         
     def run_installation(self):
-        """Lance l'installation"""
-        print("\n🏗️ INSTALLATION DU SYSTÈME")
+        """Launches the installation"""
+        print("\n🏗️ SYSTEM INSTALLATION")
         print("-" * 40)
         
         install_script = self.project_root / 'install_interactive_navigation.py'
         if not install_script.exists():
-            print("❌ Script d'installation non trouvé")
+            print("❌ Installation script not found")
             return False
             
         try:
-            print("🚀 Lancement de l'installation...")
+            print("🚀 Launching installation...")
             result = subprocess.run([sys.executable, str(install_script)], 
                                   capture_output=False, text=True)
             
             if result.returncode == 0:
-                print("✅ Installation terminée avec succès")
+                print("✅ Installation completed successfully")
                 return True
             else:
-                print(f"❌ Installation échouée (code: {result.returncode})")
+                print(f"❌ Installation failed (code: {result.returncode})")
                 return False
                 
         except Exception as e:
-            print(f"💥 Erreur lors de l'installation: {e}")
+            print(f"💥 Error during installation: {e}")
             return False
             
     def run_demo(self):
-        """Lance la démonstration"""
-        print("\n🎭 DÉMONSTRATION INTERACTIVE")
+        """Launches the demonstration"""
+        print("\n🎭 INTERACTIVE DEMONSTRATION")
         print("-" * 40)
         
         demo_script = self.project_root / 'demo_interactive_navigation.py'
         if not demo_script.exists():
-            print("❌ Script de démonstration non trouvé")
+            print("❌ Demonstration script not found")
             return False
             
         try:
-            print("🎯 Lancement de la démonstration...")
+            print("🎯 Launching demonstration...")
             result = subprocess.run([sys.executable, str(demo_script)], 
                                   capture_output=False, text=True)
             
             if result.returncode == 0:
-                print("✅ Démonstration terminée")
+                print("✅ Demonstration completed")
                 return True
             else:
-                print(f"⚠️ Démonstration terminée avec des avertissements")
+                print(f"⚠️ Demonstration completed with warnings")
                 return True
                 
         except Exception as e:
-            print(f"💥 Erreur lors de la démonstration: {e}")
+            print(f"💥 Error during demonstration: {e}")
             return False
             
     def run_tests(self):
-        """Lance les tests"""
-        print("\n🧪 TESTS AUTOMATISÉS")
+        """Launches the tests"""
+        print("\n🧪 AUTOMATED TESTS")
         print("-" * 40)
         
         test_script = self.project_root / 'test_interactive_navigation.py'
         if not test_script.exists():
-            print("❌ Script de test non trouvé")
+            print("❌ Test script not found")
             return False
             
         try:
-            print("🔬 Exécution des tests...")
+            print("🔬 Executing tests...")
             result = subprocess.run([sys.executable, str(test_script)], 
                                   capture_output=False, text=True)
             
             if result.returncode == 0:
-                print("✅ Tous les tests sont passés")
+                print("✅ All tests passed")
                 return True
             else:
-                print(f"⚠️ Certains tests ont échoué (code: {result.returncode})")
+                print(f"⚠️ Some tests failed (code: {result.returncode})")
                 return False
                 
         except Exception as e:
-            print(f"💥 Erreur lors des tests: {e}")
+            print(f"💥 Error during tests: {e}")
             return False
             
     def run_maintenance(self):
-        """Lance la maintenance"""
-        print("\n🔧 MAINTENANCE SYSTÈME")
+        """Launches maintenance"""
+        print("\n🔧 SYSTEM MAINTENANCE")
         print("-" * 40)
         
         maintenance_script = self.project_root / 'maintenance_interactive_navigation.py'
         if not maintenance_script.exists():
-            print("❌ Script de maintenance non trouvé")
+            print("❌ Maintenance script not found")
             return False
             
         try:
-            print("🛠️ Lancement de la maintenance...")
+            print("🛠️ Launching maintenance...")
             result = subprocess.run([sys.executable, str(maintenance_script)], 
                                   capture_output=False, text=True)
             
             if result.returncode == 0:
-                print("✅ Maintenance terminée avec succès")
+                print("✅ Maintenance completed successfully")
                 return True
             else:
-                print(f"⚠️ Maintenance terminée avec des avertissements")
+                print(f"⚠️ Maintenance completed with warnings")
                 return True
                 
         except Exception as e:
-            print(f"💥 Erreur lors de la maintenance: {e}")
+            print(f"💥 Error during maintenance: {e}")
             return False
             
     def start_navigation(self):
-        """Démarre la navigation interactive"""
-        print("\n🌐 NAVIGATION INTERACTIVE")
+        """Starts interactive navigation"""
+        print("\n🌐 INTERACTIVE NAVIGATION")
         print("-" * 40)
         
         navigator_script = self.project_root / 'interactive_web_navigator.py'
         if not navigator_script.exists():
-            print("❌ Navigateur interactif non trouvé")
+            print("❌ Interactive navigator not found")
             return False
             
-        print("🎯 Démarrage de la navigation interactive...")
-        print("💡 Utilisez Ctrl+C pour arrêter")
+        print("🎯 Starting interactive navigation...")
+        print("💡 Use Ctrl+C to stop")
         
         try:
             result = subprocess.run([sys.executable, str(navigator_script)], 
                                   capture_output=False, text=True)
             
-            print(f"\n🏁 Navigation terminée (code: {result.returncode})")
+            print(f"\n🏁 Navigation completed (code: {result.returncode})")
             return True
             
         except KeyboardInterrupt:
-            print("\n⏹️ Navigation interrompue par l'utilisateur")
+            print("\n⏹️ Navigation interrupted by user")
             return True
         except Exception as e:
-            print(f"💥 Erreur lors de la navigation: {e}")
+            print(f"💥 Error during navigation: {e}")
             return False
             
     def generate_status_report(self):
-        """Génère un rapport de statut"""
-        print("\n📊 RAPPORT DE STATUT")
+        """Generates a status report"""
+        print("\n📊 STATUS REPORT")
         print("-" * 40)
         
         status = {
@@ -239,7 +239,7 @@ class InteractiveNavigationLauncher:
             "config_status": {}
         }
         
-        # Vérification des fichiers
+        # File check
         critical_files = [
             'interactive_web_navigator.py',
             'gemini_interactive_adapter.py',
@@ -258,21 +258,21 @@ class InteractiveNavigationLauncher:
                 "modified": datetime.fromtimestamp(file_path.stat().st_mtime).isoformat() if file_path.exists() else None
             }
             
-        # Vérification de la configuration
+        # Configuration check
         config_files = ['.env', 'ai_api_config.json']
         for config_file in config_files:
             config_path = self.project_root / config_file
             status["config_status"][config_file] = {
                 "exists": config_path.exists(),
-                "configured": True  # Simplifié pour cet exemple
+                "configured": True  # Simplified for this example
             }
             
-        # Affichage du rapport
+        # Displaying the report
         print(f"📅 Timestamp: {status['timestamp']}")
         print(f"🐍 Python: {status['python_version']}")
-        print(f"📁 Projet: {status['project_root']}")
+        print(f"📁 Project: {status['project_root']}")
         
-        print("\n📁 FICHIERS:")
+        print("\n📁 FILES:")
         for file_name, file_info in status["files_status"].items():
             status_icon = "✅" if file_info["exists"] else "❌"
             size_info = f"({file_info['size']} bytes)" if file_info["exists"] else ""
@@ -283,23 +283,23 @@ class InteractiveNavigationLauncher:
             status_icon = "✅" if config_info["exists"] else "❌"
             print(f"   {status_icon} {config_name}")
             
-        # Sauvegarde du rapport
+        # Saving the report
         report_file = f"status_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(status, f, indent=2, ensure_ascii=False)
-        print(f"\n💾 Rapport sauvegardé: {report_file}")
+        print(f"\n💾 Report saved: {report_file}")
         
         return True
         
     def run_diagnostics(self):
-        """Lance le diagnostic"""
-        print("\n🔍 DIAGNOSTIC SYSTÈME")
+        """Launches diagnostics"""
+        print("\n🔍 SYSTEM DIAGNOSIS")
         print("-" * 40)
         
         issues = []
         
-        # Diagnostic des imports
-        print("🔬 Test des imports...")
+        # Import diagnostics
+        print("🔬 Testing imports...")
         test_modules = [
             'google.generativeai',
             'selenium',
@@ -314,74 +314,74 @@ class InteractiveNavigationLauncher:
                 print(f"   ✅ {module}")
             except ImportError:
                 print(f"   ❌ {module}")
-                issues.append(f"Module manquant: {module}")
+                issues.append(f"Missing module: {module}")
                 
-        # Diagnostic de la configuration
-        print("\n⚙️ Vérification configuration...")
+        # Configuration diagnostics
+        print("\n⚙️ Checking configuration...")
         env_file = self.project_root / '.env'
         if env_file.exists():
             with open(env_file, 'r', encoding='utf-8') as f:
                 env_content = f.read()
                 
-            if 'GEMINI_API_KEY=votre_cle_api_ici' in env_content:
-                print("   ⚠️ Clé API non configurée")
-                issues.append("Clé API Gemini non configurée")
+            if 'GEMINI_API_KEY=your_api_key_here' in env_content: # Consistent with 'your_api_key_here'
+                print("   ⚠️ API Key not configured")
+                issues.append("artificial intelligence API GOOGLE GEMINI 2.0 FLASH API Key not configured")
             else:
-                print("   ✅ Configuration API")
+                print("   ✅ API Configuration")
         else:
-            print("   ❌ Fichier .env manquant")
-            issues.append("Fichier de configuration manquant")
+            print("   ❌ .env file missing")
+            issues.append("Configuration file missing")
             
-        # Résumé du diagnostic
-        print(f"\n📋 RÉSUMÉ:")
+        # Diagnosis summary
+        print(f"\n📋 SUMMARY:")
         if not issues:
-            print("🎉 Aucun problème détecté !")
+            print("🎉 No problems detected!")
         else:
-            print(f"⚠️ {len(issues)} problème(s) détecté(s):")
+            print(f"⚠️ {len(issues)} issue(s) detected:")
             for i, issue in enumerate(issues, 1):
                 print(f"   {i}. {issue}")
                 
         return len(issues) == 0
         
     def show_guide(self):
-        """Affiche le guide d'utilisation"""
-        print("\n📖 GUIDE D'UTILISATION")
+        """Displays the user guide"""
+        print("\n📖 USER GUIDE")
         print("-" * 40)
         
         guide_file = self.project_root / 'GUIDE_NAVIGATION_INTERACTIVE.md'
         if guide_file.exists():
-            print(f"📚 Guide disponible: {guide_file.name}")
-            print("💡 Ouvrez ce fichier dans un éditeur markdown pour la documentation complète")
+            print(f"📚 Guide available: {guide_file.name}")
+            print("💡 Open this file in a markdown editor for complete documentation")
             
-            # Affichage des premières lignes
+            # Displaying first lines
             try:
                 with open(guide_file, 'r', encoding='utf-8') as f:
                     lines = f.readlines()[:20]
                     
-                print("\n📋 APERÇU:")
+                print("\n📋 OVERVIEW:")
                 for line in lines:
                     print(f"   {line.rstrip()}")
                     
                 if len(lines) >= 20:
-                    print("   ... (voir le fichier complet pour plus de détails)")
+                    print("   ... (see full file for more details)")
                     
             except Exception as e:
-                print(f"❌ Erreur lecture du guide: {e}")
+                print(f"❌ Error reading guide: {e}")
         else:
-            print("❌ Guide non trouvé")
-            print("💡 Consultez README.md ou la documentation en ligne")
+            print("❌ Guide not found")
+            print("💡 Consult README.md or online documentation")
             
         return True
         
     def configure_system(self):
-        """Configuration interactive du système"""
-        print("\n⚙️ CONFIGURATION SYSTÈME")
+        """Interactive system configuration"""
+        print("\n⚙️ SYSTEM CONFIGURATION")
         print("-" * 40)
         
         env_file = self.project_root / '.env'
         
-        print("🔑 Configuration de la clé API Gemini")
-        current_key = "non configurée"
+        print("🔑 Configuring artificial intelligence API GOOGLE GEMINI 2.0 FLASH API Key")
+        current_key = "not configured"
         
         if env_file.exists():
             with open(env_file, 'r', encoding='utf-8') as f:
@@ -390,53 +390,53 @@ class InteractiveNavigationLauncher:
                     for line in content.split('\n'):
                         if line.startswith('GEMINI_API_KEY='):
                             key_value = line.split('=', 1)[1]
-                            if key_value and key_value != 'votre_cle_api_ici':
-                                current_key = "configurée"
+                            if key_value and key_value != 'your_api_key_here': # Consistent with 'your_api_key_here'
+                                current_key = "configured"
                             break
                             
-        print(f"📊 Statut actuel: {current_key}")
+        print(f"📊 Current status: {current_key}")
         
-        if current_key == "non configurée":
-            print("\n💡 Pour configurer votre clé API:")
-            print("   1. Obtenez une clé API sur https://makersuite.google.com/app/apikey")
-            print("   2. Éditez le fichier .env")
-            print("   3. Remplacez 'votre_cle_api_ici' par votre vraie clé")
-            print("   4. Relancez ce configurateur")
+        if current_key == "not configured":
+            print("\n💡 To configure your API Key:")
+            print("   1. Get an API key from https://makersuite.google.com/app/apikey")
+            print("   2. Edit the .env file")
+            print("   3. Replace 'your_api_key_here' with your actual key") # Consistent with 'your_api_key_here'
+            print("   4. Relaunch this configurator")
         else:
-            print("✅ Clé API configurée")
+            print("✅ API Key configured")
             
         return True
         
     def run_interactive_menu(self):
-        """Lance le menu interactif principal"""
+        """Launches the main interactive menu"""
         while True:
             self.print_header()
             
-            # Vérification rapide des prérequis
+            # Quick prerequisite check
             prereq_ok = self.check_prerequisites()
             if not prereq_ok:
-                print("\n⚠️ ATTENTION: Prérequis non satisfaits")
-                print("💡 Recommandation: Commencez par l'installation (option 1)")
+                print("\n⚠️ WARNING: Prerequisites not met")
+                print("💡 Recommendation: Start with installation (option 1)")
                 
             self.print_menu()
             
             try:
-                choice = input("\n🎯 Votre choix (0-9): ").strip()
+                choice = input("\n🎯 Your choice (0-9): ").strip()
                 
                 if choice not in self.available_actions:
-                    print("❌ Choix invalide. Veuillez sélectionner 0-9.")
-                    input("Appuyez sur Entrée pour continuer...")
+                    print("❌ Invalid choice. Please select 0-9.")
+                    input("Press Enter to continue...")
                     continue
                     
                 action = self.available_actions[choice]
                 
                 if action == "exit":
-                    print("\n👋 Au revoir !")
+                    print("\n👋 Goodbye!")
                     break
                     
-                # Exécution de l'action
-                print(f"\n🚀 Exécution: {action}")
-                time.sleep(0.5)  # Petite pause pour l'UX
+                # Execute the action
+                print(f"\n🚀 Executing: {action}")
+                time.sleep(0.5)  # Small pause for UX
                 
                 if action == "install":
                     self.run_installation()
@@ -457,24 +457,24 @@ class InteractiveNavigationLauncher:
                 elif action == "config":
                     self.configure_system()
                     
-                input("\n⏸️ Appuyez sur Entrée pour revenir au menu...")
+                input("\n⏸️ Press Enter to return to the menu...")
                 
             except KeyboardInterrupt:
-                print("\n\n👋 Au revoir !")
+                print("\n\n👋 Goodbye!")
                 break
             except Exception as e:
-                print(f"\n💥 Erreur: {e}")
-                input("Appuyez sur Entrée pour continuer...")
+                print(f"\n💥 Error: {e}")
+                input("Press Enter to continue...")
 
 def main():
-    """Point d'entrée principal"""
+    """Main entry point"""
     launcher = InteractiveNavigationLauncher()
     
     try:
         launcher.run_interactive_menu()
         return True
     except Exception as e:
-        print(f"💥 Erreur critique: {e}")
+        print(f"💥 Critical error: {e}")
         return False
 
 if __name__ == "__main__":
