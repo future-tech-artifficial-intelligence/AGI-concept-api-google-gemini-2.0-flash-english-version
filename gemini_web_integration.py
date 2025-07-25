@@ -1,6 +1,6 @@
 """
-Intégration du Système de Navigation Web Avancé avec Searx et Gemini
-Ce module connecte le navigateur avancé avec l'API Gemini et Searx
+Advanced Web Navigation System Integration with Searx and artificial intelligence Google Gemini 2.0 Flash AI
+This module connects the advanced navigator with the Google Gemini 2.0 Flash AI API and Searx
 """
 
 import logging
@@ -14,11 +14,11 @@ from urllib.parse import urljoin, urlparse
 
 from advanced_web_navigator import AdvancedWebNavigator, WebPageContent, NavigationPath
 
-# Configuration du logging
+# Logger configuration
 logger = logging.getLogger('GeminiWebIntegration')
 
 class GeminiWebNavigationIntegration:
-    """Intégration navigation web pour l'API Gemini"""
+    """Web navigation integration for the Google Gemini 2.0 Flash AI API"""
     
     def __init__(self, searx_interface=None):
         self.navigator = AdvancedWebNavigator()
@@ -30,55 +30,55 @@ class GeminiWebNavigationIntegration:
         self.max_pages_per_site = 8
         self.content_quality_threshold = 3.0
         
-        # Cache des recherches récentes
+        # Recent search cache
         self.search_cache = {}
         self.cache_duration = timedelta(hours=1)
         
-        # Répertoire pour les rapports Gemini
+        # Directory for Google Gemini 2.0 Flash AI reports
         self.reports_dir = Path("data/gemini_web_reports")
         self.reports_dir.mkdir(parents=True, exist_ok=True)
         
-        logger.info("✅ Intégration Gemini-Navigation initialisée")
+        logger.info("✅ Google Gemini 2.0 Flash AI-Navigation Integration initialized")
     
     def search_and_navigate_for_gemini(self, query: str, user_context: str = "") -> Dict[str, Any]:
         """
-        Effectue une recherche et navigation complète pour Gemini
+        Performs a comprehensive search and navigation for Google Gemini 2.0 Flash AI
         
         Args:
-            query: Requête de recherche
-            user_context: Contexte utilisateur pour personnaliser la recherche
+            query: Search query
+            user_context: User context to customize the search
             
         Returns:
-            Dictionnaire avec contenu structuré pour Gemini
+            Dictionary with structured content for Google Gemini 2.0 Flash AI
         """
         search_id = f"search_{int(time.time())}"
-        logger.info(f"🔍 Recherche Gemini: {query} (ID: {search_id})")
+        logger.info(f"🔍 Google Gemini 2.0 Flash AI search: {query} (ID: {search_id})")
         
-        # Vérifier le cache
+        # Check cache
         cache_key = f"{query}_{hash(user_context)}"
         if cache_key in self.search_cache:
             cached_result, cached_time = self.search_cache[cache_key]
             if datetime.now() - cached_time < self.cache_duration:
-                logger.info("📋 Résultat récupéré du cache")
+                logger.info("📋 Result retrieved from cache")
                 return cached_result
         
         try:
-            # Phase 1: Recherche avec Searx
+            # Phase 1: Search with Searx
             search_results = self._perform_searx_search(query)
             
             if not search_results:
-                logger.warning("⚠️ Aucun résultat de recherche")
-                return self._create_empty_result(query, "Aucun résultat trouvé")
+                logger.warning("⚠️ No search results")
+                return self._create_empty_result(query, "No results found")
             
-            # Phase 2: Navigation dans les résultats
+            # Phase 2: Navigate through results
             navigation_results = []
             total_content_extracted = 0
             
             for i, search_result in enumerate(search_results[:self.max_search_results]):
                 try:
-                    logger.info(f"🚀 Navigation site {i+1}: {search_result['url']}")
+                    logger.info(f"🚀 Navigating site {i+1}: {search_result['url']}")
                     
-                    # Navigation en profondeur
+                    # Deep navigation
                     nav_path = self.navigator.navigate_deep(
                         start_url=search_result['url'],
                         max_depth=self.max_navigation_depth,
@@ -96,13 +96,13 @@ class GeminiWebNavigationIntegration:
                         })
                         total_content_extracted += nav_path.total_content_extracted
                         
-                        logger.info(f"✅ Site navigué: {len(nav_path.visited_pages)} pages, {nav_path.total_content_extracted} caractères")
+                        logger.info(f"✅ Site navigated: {len(nav_path.visited_pages)} pages, {nav_path.total_content_extracted} characters")
                     
                 except Exception as e:
-                    logger.error(f"❌ Erreur navigation site {search_result['url']}: {str(e)}")
+                    logger.error(f"❌ Error navigating site {search_result['url']}: {str(e)}")
                     continue
             
-            # Phase 3: Synthèse pour Gemini
+            # Phase 3: Synthesis for Google Gemini 2.0 Flash AI
             gemini_report = self._create_gemini_report(
                 query=query,
                 user_context=user_context,
@@ -111,33 +111,33 @@ class GeminiWebNavigationIntegration:
                 search_id=search_id
             )
             
-            # Mettre en cache
+            # Cache the result
             self.search_cache[cache_key] = (gemini_report, datetime.now())
             
-            # Sauvegarder le rapport
+            # Save the report
             self._save_gemini_report(gemini_report, search_id)
             
-            logger.info(f"🎯 Recherche terminée: {len(navigation_results)} sites navigués, {total_content_extracted} caractères extraits")
+            logger.info(f"🎯 Search completed: {len(navigation_results)} sites navigated, {total_content_extracted} characters extracted")
             
             return gemini_report
             
         except Exception as e:
-            logger.error(f"❌ Erreur dans la recherche Gemini: {str(e)}")
+            logger.error(f"❌ Error in Google Gemini 2.0 Flash AI search: {str(e)}")
             return self._create_error_result(query, str(e))
     
     def extract_specific_content(self, url: str, content_requirements: List[str]) -> Dict[str, Any]:
         """
-        Extrait du contenu spécifique d'une URL selon les exigences
+        Extracts specific content from a URL according to requirements
         
         Args:
-            url: URL à analyser
-            content_requirements: Liste des types de contenu requis
+            url: URL to analyze
+            content_requirements: List of required content types
                                 ['summary', 'details', 'links', 'images', 'structure']
         """
-        logger.info(f"🎯 Extraction spécifique: {url}")
+        logger.info(f"🎯 Specific extraction: {url}")
         
         try:
-            # Extraction du contenu
+            # Content extraction
             page_content = self.navigator.extract_page_content(url)
             
             if not page_content.success:
@@ -147,7 +147,7 @@ class GeminiWebNavigationIntegration:
                     'url': url
                 }
             
-            # Préparer la réponse selon les exigences
+            # Prepare response according to requirements
             extracted_content = {
                 'success': True,
                 'url': url,
@@ -157,16 +157,16 @@ class GeminiWebNavigationIntegration:
                 'language': page_content.language
             }
             
-            # Ajouter le contenu selon les exigences
+            # Add content according to requirements
             if 'summary' in content_requirements:
                 extracted_content['summary'] = page_content.summary
             
             if 'details' in content_requirements:
                 extracted_content['main_content'] = page_content.main_content
-                extracted_content['cleaned_text'] = page_content.cleaned_text[:2000]  # Limite pour Gemini
+                extracted_content['cleaned_text'] = page_content.cleaned_text[:2000]  # Limit for Google Gemini 2.0 Flash AI
             
             if 'links' in content_requirements:
-                extracted_content['links'] = page_content.links[:20]  # Top 20 liens
+                extracted_content['links'] = page_content.links[:20]  # Top 20 links
             
             if 'images' in content_requirements:
                 extracted_content['images'] = page_content.images[:10]  # Top 10 images
@@ -184,7 +184,7 @@ class GeminiWebNavigationIntegration:
             return extracted_content
             
         except Exception as e:
-            logger.error(f"❌ Erreur extraction spécifique {url}: {str(e)}")
+            logger.error(f"❌ Specific extraction error {url}: {str(e)}")
             return {
                 'success': False,
                 'error': str(e),
@@ -193,34 +193,34 @@ class GeminiWebNavigationIntegration:
     
     def navigate_user_journey(self, start_url: str, user_intent: str) -> Dict[str, Any]:
         """
-        Simule un parcours utilisateur sur un site selon son intention
+        Simulates a user journey on a site based on their intent
         
         Args:
-            start_url: URL de départ
-            user_intent: Intention de l'utilisateur ('buy', 'learn', 'contact', 'explore')
+            start_url: Starting URL
+            user_intent: User's intent ('buy', 'learn', 'contact', 'explore')
         """
-        logger.info(f"👤 Parcours utilisateur: {user_intent} depuis {start_url}")
+        logger.info(f"👤 User journey: {user_intent} from {start_url}")
         
         try:
-            # Configuration selon l'intention
+            # Configuration according to intent
             intent_config = {
                 'buy': {
-                    'keywords': ['prix', 'acheter', 'commander', 'panier', 'produit'],
+                    'keywords': ['price', 'buy', 'order', 'cart', 'product'],
                     'max_depth': 4,
                     'max_pages': 15
                 },
                 'learn': {
-                    'keywords': ['guide', 'tutoriel', 'formation', 'cours', 'apprendre'],
+                    'keywords': ['guide', 'tutorial', 'training', 'course', 'learn'],
                     'max_depth': 3,
                     'max_pages': 10
                 },
                 'contact': {
-                    'keywords': ['contact', 'support', 'aide', 'téléphone', 'email'],
+                    'keywords': ['contact', 'support', 'help', 'phone', 'email'],
                     'max_depth': 2,
                     'max_pages': 8
                 },
                 'explore': {
-                    'keywords': ['voir', 'découvrir', 'plus', 'détail', 'information'],
+                    'keywords': ['see', 'discover', 'more', 'detail', 'information'],
                     'max_depth': 3,
                     'max_pages': 12
                 }
@@ -228,12 +228,12 @@ class GeminiWebNavigationIntegration:
             
             config = intent_config.get(user_intent, intent_config['explore'])
             
-            # Navigation avec filtre d'intention
+            # Navigation with intent filter
             def intent_filter(page_content: WebPageContent) -> bool:
                 text_lower = page_content.cleaned_text.lower()
                 title_lower = page_content.title.lower()
                 
-                # Vérifier la présence de mots-clés d'intention
+                # Check for presence of intent keywords
                 keyword_score = sum(1 for keyword in config['keywords'] 
                                   if keyword in text_lower or keyword in title_lower)
                 
@@ -248,7 +248,7 @@ class GeminiWebNavigationIntegration:
                 content_filter=intent_filter
             )
             
-            # Analyser le parcours
+            # Analyze the journey
             journey_analysis = self._analyze_user_journey(nav_path, user_intent, config['keywords'])
             
             return {
@@ -266,7 +266,7 @@ class GeminiWebNavigationIntegration:
             }
             
         except Exception as e:
-            logger.error(f"❌ Erreur parcours utilisateur: {str(e)}")
+            logger.error(f"❌ User journey error: {str(e)}")
             return {
                 'success': False,
                 'error': str(e),
@@ -275,16 +275,16 @@ class GeminiWebNavigationIntegration:
             }
     
     def _perform_searx_search(self, query: str) -> List[Dict[str, Any]]:
-        """Effectue une recherche avec Searx"""
+        """Performs a search with Searx"""
         if not self.searx_interface:
-            logger.warning("⚠️ Interface Searx non disponible, utilisation de résultats simulés")
+            logger.warning("⚠️ Searx interface not available, using simulated results")
             return self._simulate_search_results(query)
         
         try:
-            # Utiliser l'interface Searx
+            # Use the Searx interface
             search_results = self.searx_interface.search(query, categories=['general'], max_results=10)
             
-            # Convertir au format attendu
+            # Convert to expected format
             formatted_results = []
             for result in search_results:
                 formatted_results.append({
@@ -298,25 +298,25 @@ class GeminiWebNavigationIntegration:
             return formatted_results
             
         except Exception as e:
-            logger.error(f"❌ Erreur recherche Searx: {str(e)}")
+            logger.error(f"❌ Searx search error: {str(e)}")
             return self._simulate_search_results(query)
     
     def _simulate_search_results(self, query: str) -> List[Dict[str, Any]]:
-        """Simule des résultats de recherche (fallback)"""
-        # Résultats simulés basés sur la requête
+        """Simulates search results (fallback)"""
+        # Simulated results based on the query
         base_results = [
             {
-                'title': f'Résultat 1 pour {query}',
-                'url': 'https://fr.wikipedia.org/wiki/Intelligence_artificielle',
-                'content': f'Information détaillée sur {query}',
+                'title': f'Result 1 for {query}',
+                'url': 'https://en.wikipedia.org/wiki/Artificial_intelligence',
+                'content': f'Detailed information about {query}',
                 'engine': 'wikipedia',
                 'score': 0.9
             },
             {
-                'title': f'Guide complet sur {query}',
-                'url': 'https://www.futura-sciences.com/',
-                'content': f'Guide et explication de {query}',
-                'engine': 'futura-sciences',
+                'title': f'Complete Guide on {query}',
+                'url': 'https://www.nature.com/articles/d41586-023-02202-0',
+                'content': f'Guide and explanation of {query}',
+                'engine': 'nature-journal',
                 'score': 0.8
             }
         ]
@@ -324,18 +324,18 @@ class GeminiWebNavigationIntegration:
         return base_results
     
     def _quality_content_filter(self, page_content: WebPageContent) -> bool:
-        """Filtre les pages selon leur qualité"""
+        """Filters pages based on their quality"""
         return (page_content.content_quality_score >= self.content_quality_threshold and
                 len(page_content.cleaned_text) > 200 and
-                page_content.title != "Page sans titre")
+                page_content.title != "Untitled Page")
     
     def _create_gemini_report(self, query: str, user_context: str, 
                             search_results: List[Dict], 
                             navigation_results: List[Dict],
                             search_id: str) -> Dict[str, Any]:
-        """Crée un rapport structuré pour Gemini"""
+        """Creates a structured report for Google Gemini 2.0 Flash AI"""
         
-        # Extraire le meilleur contenu
+        # Extract best content
         best_content = []
         all_keywords = set()
         total_pages = 0
@@ -345,22 +345,22 @@ class GeminiWebNavigationIntegration:
             total_pages += len(nav_path.visited_pages)
             
             for page in nav_path.visited_pages:
-                if page.content_quality_score >= 4.0:  # Seulement le meilleur contenu
+                if page.content_quality_score >= 4.0:  # Only the best content
                     best_content.append({
                         'url': page.url,
                         'title': page.title,
                         'summary': page.summary,
-                        'main_content': page.main_content[:1000],  # Limite pour Gemini
+                        'main_content': page.main_content[:1000],  # Limit for Google Gemini 2.0 Flash AI
                         'keywords': page.keywords,
                         'quality_score': page.content_quality_score,
                         'language': page.language
                     })
                     all_keywords.update(page.keywords)
         
-        # Créer une synthèse intelligente
+        # Create an intelligent synthesis
         content_synthesis = self._synthesize_content(best_content)
         
-        # Rapport final
+        # Final report
         return {
             'search_id': search_id,
             'query': query,
@@ -373,66 +373,66 @@ class GeminiWebNavigationIntegration:
                 'high_quality_pages': len(best_content)
             },
             'content_synthesis': content_synthesis,
-            'best_content': best_content[:5],  # Top 5 contenus
-            'aggregated_keywords': list(all_keywords)[:20],  # Top 20 mots-clés
+            'best_content': best_content[:5],  # Top 5 contents
+            'aggregated_keywords': list(all_keywords)[:20],  # Top 20 keywords
             'navigation_insights': self._generate_navigation_insights(navigation_results),
             'recommended_actions': self._generate_recommendations(query, best_content),
             'success': True
         }
     
     def _synthesize_content(self, content_list: List[Dict]) -> str:
-        """Synthétise le contenu extrait"""
+        """Synthesizes extracted content"""
         if not content_list:
-            return "Aucun contenu de qualité trouvé."
+            return "No quality content found."
         
-        # Combiner les résumés
+        # Combine summaries
         all_summaries = [content['summary'] for content in content_list if content['summary']]
         
-        # Extraire les informations clés
+        # Extract key information
         key_info = []
         for content in content_list:
             key_info.append(f"• {content['title']}: {content['summary'][:150]}...")
         
-        synthesis = f"Synthèse basée sur {len(content_list)} pages de qualité:\n\n"
+        synthesis = f"Synthesis based on {len(content_list)} quality pages:\n\n"
         synthesis += "\n".join(key_info[:5])  # Top 5
         
         return synthesis
     
     def _generate_navigation_insights(self, navigation_results: List[Dict]) -> List[str]:
-        """Génère des insights sur la navigation"""
+        """Generates navigation insights"""
         insights = []
         
         for nav_result in navigation_results:
             nav_path = nav_result['navigation_path']
             site_domain = urlparse(nav_result['search_result']['url']).netloc
             
-            insights.append(f"Site {site_domain}: {len(nav_path.visited_pages)} pages explorées, "
-                          f"profondeur {nav_path.navigation_depth}")
+            insights.append(f"Site {site_domain}: {len(nav_path.visited_pages)} pages explored, "
+                          f"depth {nav_path.navigation_depth}")
         
         return insights
     
     def _generate_recommendations(self, query: str, content_list: List[Dict]) -> List[str]:
-        """Génère des recommandations basées sur le contenu"""
+        """Generates recommendations based on content"""
         recommendations = []
         
         if not content_list:
-            recommendations.append("Essayer une recherche avec d'autres mots-clés")
+            recommendations.append("Try searching with different keywords")
             return recommendations
         
-        # Recommandations basées sur la qualité
+        # Quality-based recommendations
         high_quality_count = sum(1 for c in content_list if c['quality_score'] >= 7.0)
         if high_quality_count > 0:
-            recommendations.append(f"{high_quality_count} sources de très haute qualité identifiées")
+            recommendations.append(f"{high_quality_count} very high-quality sources identified")
         
-        # Recommandations linguistiques
+        # Language recommendations
         languages = set(c['language'] for c in content_list if c['language'])
         if 'fr' in languages and 'en' in languages:
-            recommendations.append("Contenu disponible en français et anglais")
+            recommendations.append("Content available in French and English")
         
         return recommendations
     
     def _analyze_user_journey(self, nav_path: NavigationPath, intent: str, keywords: List[str]) -> Dict[str, Any]:
-        """Analyse le parcours utilisateur"""
+        """Analyzes the user journey"""
         analysis = {
             'intent_satisfaction': 0.0,
             'journey_efficiency': 0.0,
@@ -443,7 +443,7 @@ class GeminiWebNavigationIntegration:
         if not nav_path.visited_pages:
             return analysis
         
-        # Calculer la satisfaction d'intention
+        # Calculate intent satisfaction
         intent_pages = 0
         for page in nav_path.visited_pages:
             text_lower = page.cleaned_text.lower()
@@ -452,35 +452,35 @@ class GeminiWebNavigationIntegration:
         
         analysis['intent_satisfaction'] = intent_pages / len(nav_path.visited_pages)
         
-        # Calculer l'efficacité du parcours
+        # Calculate journey efficiency
         avg_quality = sum(p.content_quality_score for p in nav_path.visited_pages) / len(nav_path.visited_pages)
         analysis['journey_efficiency'] = min(avg_quality / 10.0, 1.0)
         
-        # Pertinence du contenu
+        # Content relevance
         total_content = sum(len(p.cleaned_text) for p in nav_path.visited_pages)
-        analysis['content_relevance'] = min(total_content / 10000, 1.0)  # Normaliser
+        analysis['content_relevance'] = min(total_content / 10000, 1.0)  # Normalize
         
-        # Findings clés
+        # Key findings
         analysis['key_findings'] = [
-            f"Parcours de {len(nav_path.visited_pages)} pages",
-            f"Profondeur de navigation: {nav_path.navigation_depth}",
-            f"Score de qualité moyen: {avg_quality:.1f}/10"
+            f"Journey of {len(nav_path.visited_pages)} pages",
+            f"Navigation depth: {nav_path.navigation_depth}",
+            f"Average quality score: {avg_quality:.1f}/10"
         ]
         
         return analysis
     
     def _extract_key_pages(self, nav_path: NavigationPath, keywords: List[str]) -> List[Dict[str, Any]]:
-        """Extrait les pages clés du parcours"""
+        """Extracts key pages from the journey"""
         key_pages = []
         
         for page in nav_path.visited_pages:
-            # Score basé sur qualité + pertinence mots-clés
+            # Score based on quality + keyword relevance
             keyword_score = sum(1 for keyword in keywords 
                               if keyword in page.cleaned_text.lower())
             
             total_score = page.content_quality_score + keyword_score
             
-            if total_score >= 5.0:  # Seuil pour les pages clés
+            if total_score >= 5.0:  # Threshold for key pages
                 key_pages.append({
                     'url': page.url,
                     'title': page.title,
@@ -489,12 +489,12 @@ class GeminiWebNavigationIntegration:
                     'keywords_found': keyword_score
                 })
         
-        # Trier par score et retourner le top
+        # Sort by score and return the top
         key_pages.sort(key=lambda x: x['score'], reverse=True)
         return key_pages[:5]
     
     def _create_empty_result(self, query: str, reason: str) -> Dict[str, Any]:
-        """Crée un résultat vide"""
+        """Creates an empty result"""
         return {
             'search_id': f"empty_{int(time.time())}",
             'query': query,
@@ -507,15 +507,15 @@ class GeminiWebNavigationIntegration:
                 'total_pages_visited': 0,
                 'high_quality_pages': 0
             },
-            'content_synthesis': f"Aucun résultat trouvé pour: {query}",
+            'content_synthesis': f"No results found for: {query}",
             'best_content': [],
             'aggregated_keywords': [],
             'navigation_insights': [],
-            'recommended_actions': ["Essayer avec d'autres mots-clés", "Vérifier l'orthographe"]
+            'recommended_actions': ["Try with different keywords", "Check spelling"]
         }
     
     def _create_error_result(self, query: str, error: str) -> Dict[str, Any]:
-        """Crée un résultat d'erreur"""
+        """Creates an error result"""
         return {
             'search_id': f"error_{int(time.time())}",
             'query': query,
@@ -528,15 +528,15 @@ class GeminiWebNavigationIntegration:
                 'total_pages_visited': 0,
                 'high_quality_pages': 0
             },
-            'content_synthesis': f"Erreur lors de la recherche: {error}",
+            'content_synthesis': f"Error during search: {error}",
             'best_content': [],
             'aggregated_keywords': [],
             'navigation_insights': [],
-            'recommended_actions': ["Réessayer plus tard", "Vérifier la connexion"]
+            'recommended_actions': ["Try again later", "Check connection"]
         }
     
     def _save_gemini_report(self, report: Dict[str, Any], search_id: str):
-        """Sauvegarde le rapport pour Gemini"""
+        """Saves the report for Google Gemini 2.0 Flash AI"""
         try:
             filename = f"gemini_report_{search_id}.json"
             filepath = self.reports_dir / filename
@@ -544,29 +544,29 @@ class GeminiWebNavigationIntegration:
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(report, f, ensure_ascii=False, indent=2)
             
-            logger.info(f"📊 Rapport Gemini sauvegardé: {filepath}")
+            logger.info(f"📊 Google Gemini 2.0 Flash AI report saved: {filepath}")
             
         except Exception as e:
-            logger.error(f"Erreur sauvegarde rapport: {str(e)}")
+            logger.error(f"Error saving report: {str(e)}")
 
-# Instance globale
+# Global instance
 gemini_web_integration = None
 
 def initialize_gemini_web_integration(searx_interface=None):
-    """Initialise l'intégration Gemini-Web"""
+    """Initializes the Google Gemini 2.0 Flash AI-Web Integration"""
     global gemini_web_integration
     gemini_web_integration = GeminiWebNavigationIntegration(searx_interface)
-    logger.info("🚀 Intégration Gemini-Web initialisée")
+    logger.info("🚀 Google Gemini 2.0 Flash AI-Web Integration initialized")
 
 def search_web_for_gemini(query: str, user_context: str = "") -> Dict[str, Any]:
-    """Interface publique pour Gemini"""
+    """Public interface for Google Gemini 2.0 Flash AI"""
     if not gemini_web_integration:
         initialize_gemini_web_integration()
     
     return gemini_web_integration.search_and_navigate_for_gemini(query, user_context)
 
 def extract_content_for_gemini(url: str, requirements: List[str] = None) -> Dict[str, Any]:
-    """Interface publique pour extraction spécifique"""
+    """Public interface for specific extraction"""
     if not gemini_web_integration:
         initialize_gemini_web_integration()
     
@@ -576,27 +576,27 @@ def extract_content_for_gemini(url: str, requirements: List[str] = None) -> Dict
     return gemini_web_integration.extract_specific_content(url, requirements)
 
 def simulate_user_journey(start_url: str, intent: str) -> Dict[str, Any]:
-    """Interface publique pour parcours utilisateur"""
+    """Public interface for user journey"""
     if not gemini_web_integration:
         initialize_gemini_web_integration()
     
     return gemini_web_integration.navigate_user_journey(start_url, intent)
 
 if __name__ == "__main__":
-    print("=== Test de l'Intégration Gemini-Navigation ===")
+    print("=== Google Gemini 2.0 Flash AI-Navigation Integration Test ===")
     
-    # Initialiser
+    # Initialize
     initialize_gemini_web_integration()
     
-    # Test de recherche
-    test_query = "intelligence artificielle apprentissage automatique"
-    print(f"Test de recherche: {test_query}")
+    # Search test
+    test_query = "artificial intelligence machine learning"
+    print(f"Search test: {test_query}")
     
-    result = search_web_for_gemini(test_query, "utilisateur intéressé par l'IA")
+    result = search_web_for_gemini(test_query, "user interested in AI")
     
     if result['success']:
-        print(f"✅ Recherche réussie: {result['search_summary']['total_pages_visited']} pages visitées")
-        print(f"✅ Synthèse: {result['content_synthesis'][:200]}...")
-        print(f"✅ Mots-clés: {result['aggregated_keywords'][:10]}")
+        print(f"✅ Search successful: {result['search_summary']['total_pages_visited']} pages visited")
+        print(f"✅ Synthesis: {result['content_synthesis'][:200]}...")
+        print(f"✅ Keywords: {result['aggregated_keywords'][:10]}")
     else:
-        print(f"❌ Échec: {result.get('error', 'Erreur inconnue')}")
+        print(f"❌ Failed: {result.get('error', 'Unknown error')}")
