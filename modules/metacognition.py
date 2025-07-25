@@ -1,18 +1,18 @@
 """
-Module de métacognition profonde et auto-réflexion pour Gemini.
-Ce module implémente un système avancé de métacognition permettant à l'IA de :
-- S'auto-évaluer en temps réel
-- Détecter et corriger ses biais cognitifs
-- Monitorer ses processus de raisonnement
-- Prendre conscience de ses limites
-- Optimiser ses stratégies d'apprentissage
+Python language module for deep metacognition and self-reflection enhancement for artificial intelligence API GOOGLE GEMINI 2.0 FLASH.
+This module implements an advanced metacognition system allowing artificial intelligence API GOOGLE GEMINI 2.0 FLASH to:
+- Self-evaluate in real-time
+- Detect and correct its cognitive biases
+- Monitor its reasoning processes
+- Become aware of its limitations
+- Optimize its learning strategies
 
-Fonctionnalités principales :
-- Auto-évaluation continue de la qualité du raisonnement
-- Système de détection et correction des biais cognitifs
-- Monitoring adaptatif des processus de résolution
-- Gestion de l'incertitude et conscience des limites
-- Stratégies métacognitives d'optimisation
+Main functionalities:
+- Continuous self-evaluation of reasoning quality
+- Cognitive bias detection and correction system
+- Adaptive monitoring of resolution processes
+- Uncertainty management and awareness of limits
+- Metacognitive optimization strategies
 """
 
 import logging
@@ -30,35 +30,35 @@ import asyncio
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-# Métadonnées du module
+# Module Metadata
 MODULE_METADATA = {
     "enabled": True,
     "priority": 60,
-    "description": "Module de métacognition profonde et auto-réflexion avancée",
+    "description": "Deep metacognition and advanced self-reflection module",
     "version": "2.0.0",
     "dependencies": ["enhanced_reasoning"],
     "hooks": ["process_request", "process_response", "pre_reasoning", "post_reasoning"]
 }
 
-# Configuration du logger
+# Logger Configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class TypeBiais(Enum):
-    """Types de biais cognitifs détectables."""
+    """Types of detectable cognitive biases."""
     CONFIRMATION = "confirmation"
-    ANCRAGE = "ancrage"
-    DISPONIBILITE = "disponibilite"
-    REPRESENTATIVITE = "representativite"
-    SURCONFIANCE = "surconfiance"
-    SOUSCONFIANCE = "sousconfiance"
-    EFFET_HALO = "effet_halo"
-    ESCALADE_ENGAGEMENT = "escalade_engagement"
-    BIAIS_OPTIMISME = "biais_optimisme"
-    BIAIS_NEGATIVITE = "biais_negativite"
+    ANCRAGE = "anchoring"
+    DISPONIBILITE = "availability"
+    REPRESENTATIVITE = "representativeness"
+    SURCONFIANCE = "overconfidence"
+    SOUSCONFIANCE = "underconfidence"
+    EFFET_HALO = "halo_effect"
+    ESCALADE_ENGAGEMENT = "escalation_of_commitment"
+    BIAIS_OPTIMISME = "optimism_bias"
+    BIAIS_NEGATIVITE = "negativity_bias"
 
 class NiveauQualite(Enum):
-    """Niveaux de qualité du raisonnement."""
+    """Levels of reasoning quality."""
     EXCELLENT = 5
     BON = 4
     MOYEN = 3
@@ -66,7 +66,7 @@ class NiveauQualite(Enum):
     TRES_FAIBLE = 1
 
 class StatutProcessus(Enum):
-    """Statut des processus de raisonnement."""
+    """Status of reasoning processes."""
     INITIALISATION = auto()
     EN_COURS = auto()
     EVALUATION = auto()
@@ -75,16 +75,16 @@ class StatutProcessus(Enum):
     ERREUR = auto()
 
 class TypeIncertitude(Enum):
-    """Types d'incertitude identifiables."""
-    EPISTEMIQUE = "epistemique"  # Manque de connaissances
-    ALEATOIRE = "aleatoire"      # Incertitude intrinsèque
-    MODELISATION = "modelisation" # Limites du modèle
-    DONNEES = "donnees"          # Qualité des données
-    TEMPORELLE = "temporelle"    # Évolution dans le temps
+    """Types of identifiable uncertainty."""
+    EPISTEMIQUE = "epistemic"  # Lack of knowledge
+    ALEATOIRE = "aleatory"      # Intrinsic uncertainty
+    MODELISATION = "modeling" # Model limitations
+    DONNEES = "data"          # Data quality
+    TEMPORELLE = "temporal"    # Evolution over time
 
 @dataclass
 class MetriqueQualite:
-    """Métriques pour évaluer la qualité du raisonnement."""
+    """Metrics for evaluating reasoning quality."""
     coherence: float = 0.0
     completude: float = 0.0
     pertinence: float = 0.0
@@ -95,7 +95,7 @@ class MetriqueQualite:
     complexite: float = 0.0
     
     def calculer_score_global(self) -> float:
-        """Calcule le score global de qualité."""
+        """Calculates the global quality score."""
         poids = {
             'coherence': 0.25,
             'completude': 0.2,
@@ -115,7 +115,7 @@ class MetriqueQualite:
 
 @dataclass
 class BiaisCognitif:
-    """Représente un biais cognitif détecté."""
+    """Represents a detected cognitive bias."""
     type_biais: TypeBiais
     intensite: float
     confiance_detection: float
@@ -126,13 +126,13 @@ class BiaisCognitif:
     corrige: bool = False
     
     def generer_alerte(self) -> str:
-        """Génère une alerte pour ce biais."""
-        return (f"⚠️ Biais {self.type_biais.value} détecté "
-                f"(intensité: {self.intensite:.2f}, confiance: {self.confiance_detection:.2f})")
+        """Generates an alert for this bias."""
+        return (f"⚠️ Bias {self.type_biais.value} detected "
+                f"(intensity: {self.intensite:.2f}, confidence: {self.confiance_detection:.2f})")
 
 @dataclass
 class ProcessusRaisonnement:
-    """Représente un processus de raisonnement en cours."""
+    """Represents an ongoing reasoning process."""
     id: str
     type_processus: str
     statut: StatutProcessus
@@ -145,7 +145,7 @@ class ProcessusRaisonnement:
     ressources_utilisees: Dict[str, float] = field(default_factory=dict)
     
     def ajouter_etape(self, description: str, donnees: Dict[str, Any] = None) -> None:
-        """Ajoute une étape au processus."""
+        """Adds a step to the process."""
         etape = {
             'timestamp': datetime.now(),
             'description': description,
@@ -154,14 +154,14 @@ class ProcessusRaisonnement:
         self.etapes.append(etape)
     
     def calculer_duree(self) -> float:
-        """Calcule la durée du processus en secondes."""
+        """Calculates the duration of the process in seconds."""
         if self.timestamp_fin:
             return (self.timestamp_fin - self.timestamp_debut).total_seconds()
         return (datetime.now() - self.timestamp_debut).total_seconds()
 
 @dataclass
 class ZoneIncertitude:
-    """Représente une zone d'incertitude identifiée."""
+    """Represents an identified uncertainty zone."""
     domaine: str
     type_incertitude: TypeIncertitude
     niveau: float
@@ -171,7 +171,7 @@ class ZoneIncertitude:
     timestamp: datetime = field(default_factory=datetime.now)
 
 class AutoEvaluateur:
-    """Système d'auto-évaluation en temps réel de la qualité du raisonnement."""
+    """Real-time self-evaluation system for reasoning quality."""
     
     def __init__(self):
         self.historique_evaluations: List[MetriqueQualite] = []
@@ -183,83 +183,83 @@ class AutoEvaluateur:
         }
         self.patterns_qualite: Dict[str, List[str]] = {
             'excellente_coherence': [
-                "logique claire", "arguments structurés", "conclusions cohérentes",
-                "raisonnement suivi", "enchaînement logique"
+                "clear logic", "structured arguments", "consistent conclusions",
+                "coherent reasoning", "logical flow"
             ],
             'faible_coherence': [
-                "contradiction", "incohérence", "logique floue",
-                "arguments disparates", "raisonnement confus"
+                "contradiction", "incoherence", "fuzzy logic",
+                "disparate arguments", "confused reasoning"
             ],
             'haute_pertinence': [
-                "directement lié", "répond à la question", "pertinent",
-                "adapté au contexte", "ciblé"
+                "directly related", "answers the question", "relevant",
+                "adapted to context", "targeted"
             ],
             'faible_pertinence': [
-                "hors sujet", "tangentiel", "non pertinent",
-                "éloigné du sujet", "digression"
+                "off-topic", "tangential", "irrelevant",
+                "away from the subject", "digression"
             ]
         }
     
     def evaluer_reponse(self, texte: str, contexte: Dict[str, Any] = None) -> MetriqueQualite:
-        """Évalue la qualité d'une réponse en temps réel."""
+        """Evaluates the quality of a response in real-time."""
         if contexte is None:
             contexte = {}
         
         metriques = MetriqueQualite()
         
-        # Évaluation de la cohérence
+        # Coherence evaluation
         metriques.coherence = self._evaluer_coherence(texte)
         
-        # Évaluation de la complétude
+        # Completeness evaluation
         metriques.completude = self._evaluer_completude(texte, contexte)
         
-        # Évaluation de la pertinence
+        # Relevance evaluation
         metriques.pertinence = self._evaluer_pertinence(texte, contexte)
         
-        # Évaluation de l'originalité
+        # Originality evaluation
         metriques.originalite = self._evaluer_originalite(texte)
         
-        # Évaluation de la précision
+        # Precision evaluation
         metriques.precision = self._evaluer_precision(texte)
         
-        # Évaluation de la confiance
+        # Confidence evaluation
         metriques.confiance = self._evaluer_confiance(texte)
         
-        # Métriques temporelles et de complexité
+        # Temporal and complexity metrics
         metriques.temps_reponse = contexte.get('temps_generation', 0)
         metriques.complexite = self._evaluer_complexite(texte)
         
-        # Enregistrer dans l'historique
+        # Store in history
         self.historique_evaluations.append(metriques)
         
-        # Limiter la taille de l'historique
+        # Limit history size
         if len(self.historique_evaluations) > 100:
             self.historique_evaluations.pop(0)
         
         return metriques
     
     def _evaluer_coherence(self, texte: str) -> float:
-        """Évalue la cohérence du raisonnement."""
-        score = 0.5  # Score de base
+        """Evaluates the coherence of reasoning."""
+        score = 0.5  # Base score
         
-        # Recherche de marqueurs de cohérence
+        # Search for coherence markers
         marqueurs_positifs = self.patterns_qualite['excellente_coherence']
         marqueurs_negatifs = self.patterns_qualite['faible_coherence']
         
         texte_lower = texte.lower()
         
-        # Compter les occurrences positives
+        # Count positive occurrences
         for marqueur in marqueurs_positifs:
             if marqueur in texte_lower:
                 score += 0.1
         
-        # Pénaliser les marqueurs négatifs
+        # Penalize negative markers
         for marqueur in marqueurs_negatifs:
             if marqueur in texte_lower:
                 score -= 0.15
         
-        # Vérifier la structure logique
-        connecteurs_logiques = ["donc", "par conséquent", "ainsi", "en effet", "car", "parce que"]
+        # Check logical structure
+        connecteurs_logiques = ["therefore", "consequently", "thus", "indeed", "because", "since"]
         nb_connecteurs = sum(1 for conn in connecteurs_logiques if conn in texte_lower)
         
         if nb_connecteurs > 0:
@@ -268,21 +268,21 @@ class AutoEvaluateur:
         return min(max(score, 0.0), 1.0)
     
     def _evaluer_completude(self, texte: str, contexte: Dict[str, Any]) -> float:
-        """Évalue la complétude de la réponse."""
+        """Evaluates the completeness of the response."""
         score = 0.5
         
-        # Longueur relative (ni trop court ni trop long)
+        # Relative length (neither too short nor too long)
         longueur = len(texte.split())
         if 50 <= longueur <= 300:
             score += 0.2
         elif longueur < 20:
             score -= 0.3
         
-        # Présence d'éléments structurants
-        if any(marker in texte for marker in ["premièrement", "deuxièmement", "enfin", "en conclusion"]):
+        # Presence of structuring elements
+        if any(marker in texte for marker in ["firstly", "secondly", "finally", "in conclusion"]):
             score += 0.15
         
-        # Réponse aux aspects de la question (si disponible)
+        # Answer to question aspects (if available)
         question = contexte.get('question_originale', '')
         if question:
             mots_cles_question = set(question.lower().split())
@@ -293,10 +293,10 @@ class AutoEvaluateur:
         return min(max(score, 0.0), 1.0)
     
     def _evaluer_pertinence(self, texte: str, contexte: Dict[str, Any]) -> float:
-        """Évalue la pertinence de la réponse."""
+        """Evaluates the relevance of the response."""
         score = 0.5
         
-        # Utiliser les patterns de pertinence
+        # Use relevance patterns
         marqueurs_positifs = self.patterns_qualite['haute_pertinence']
         marqueurs_negatifs = self.patterns_qualite['faible_pertinence']
         
@@ -310,7 +310,7 @@ class AutoEvaluateur:
             if marqueur in texte_lower:
                 score -= 0.2
         
-        # Pertinence contextuelle
+        # Contextual relevance
         if 'domaine' in contexte:
             domaine = contexte['domaine'].lower()
             if domaine in texte_lower:
@@ -319,16 +319,16 @@ class AutoEvaluateur:
         return min(max(score, 0.0), 1.0)
     
     def _evaluer_originalite(self, texte: str) -> float:
-        """Évalue l'originalité de la réponse."""
-        # Comparer avec les réponses récentes
+        """Evaluates the originality of the response."""
+        # Compare with recent responses
         if len(self.historique_evaluations) < 5:
-            return 0.7  # Score par défaut pour les premières évaluations
+            return 0.7  # Default score for first evaluations
         
-        # Simuler une comparaison de similarité
+        # Simulate a similarity comparison
         score_originalite = 0.5 + random.uniform(-0.2, 0.3)
         
-        # Bonus pour les formulations créatives
-        marqueurs_creativite = ["innovation", "créatif", "original", "unique", "nouveau"]
+        # Bonus for creative formulations
+        marqueurs_creativite = ["innovation", "creative", "original", "unique", "new"]
         for marqueur in marqueurs_creativite:
             if marqueur in texte.lower():
                 score_originalite += 0.1
@@ -336,21 +336,21 @@ class AutoEvaluateur:
         return min(max(score_originalite, 0.0), 1.0)
     
     def _evaluer_precision(self, texte: str) -> float:
-        """Évalue la précision de la réponse."""
+        """Evaluates the precision of the response."""
         score = 0.5
         
-        # Présence de données spécifiques
+        # Presence of specific data
         if any(char.isdigit() for char in texte):
             score += 0.15
         
-        # Utilisation de termes précis
-        termes_precis = ["précisément", "exactement", "spécifiquement", "notamment", "en particulier"]
+        # Use of precise terms
+        termes_precis = ["precisely", "exactly", "specifically", "notably", "in particular"]
         for terme in termes_precis:
             if terme in texte.lower():
                 score += 0.1
         
-        # Éviter les termes vagues
-        termes_vagues = ["peut-être", "probablement", "en général", "souvent", "parfois"]
+        # Avoid vague terms
+        termes_vagues = ["perhaps", "probably", "in general", "often", "sometimes"]
         for terme in termes_vagues:
             if terme in texte.lower():
                 score -= 0.05
@@ -358,17 +358,17 @@ class AutoEvaluateur:
         return min(max(score, 0.0), 1.0)
     
     def _evaluer_confiance(self, texte: str) -> float:
-        """Évalue le niveau de confiance exprimé."""
+        """Evaluates the expressed confidence level."""
         score = 0.5
         
-        # Marqueurs de haute confiance
-        haute_confiance = ["certain", "sûr", "évident", "clairement", "définitivement"]
+        # High confidence markers
+        haute_confiance = ["certain", "sure", "evident", "clearly", "definitely"]
         for marqueur in haute_confiance:
             if marqueur in texte.lower():
                 score += 0.1
         
-        # Marqueurs de faible confiance
-        faible_confiance = ["incertain", "doute", "peut-être", "possiblement", "il semble"]
+        # Low confidence markers
+        faible_confiance = ["uncertain", "doubt", "perhaps", "possibly", "it seems"]
         for marqueur in faible_confiance:
             if marqueur in texte.lower():
                 score -= 0.1
@@ -376,39 +376,39 @@ class AutoEvaluateur:
         return min(max(score, 0.0), 1.0)
     
     def _evaluer_complexite(self, texte: str) -> float:
-        """Évalue la complexité du raisonnement."""
-        # Basé sur la longueur des phrases, le vocabulaire, etc.
+        """Evaluates the complexity of reasoning."""
+        # Based on sentence length, vocabulary, etc.
         phrases = texte.split('.')
         longueur_moyenne = statistics.mean([len(phrase.split()) for phrase in phrases if phrase.strip()])
         
-        # Normaliser la complexité
+        # Normalize complexity
         complexite = min(longueur_moyenne / 20, 1.0)
         return complexite
     
     def identifier_problemes_qualite(self, metriques: MetriqueQualite) -> List[str]:
-        """Identifie les problèmes de qualité détectés."""
+        """Identifies detected quality issues."""
         problemes = []
         
         if metriques.coherence < self.seuils_qualite['coherence_min']:
-            problemes.append("Cohérence insuffisante du raisonnement")
+            problemes.append("Insufficient reasoning coherence")
         
         if metriques.completude < self.seuils_qualite['completude_min']:
-            problemes.append("Réponse incomplète")
+            problemes.append("Incomplete answer")
         
         if metriques.pertinence < self.seuils_qualite['pertinence_min']:
-            problemes.append("Pertinence limitée par rapport au sujet")
+            problemes.append("Limited relevance to the subject")
         
         if metriques.precision < self.seuils_qualite['precision_min']:
-            problemes.append("Manque de précision dans les détails")
+            problemes.append("Lack of precision in details")
         
         return problemes
     
     def obtenir_tendances_qualite(self) -> Dict[str, float]:
-        """Analyse les tendances de qualité sur l'historique."""
+        """Analyzes quality trends over history."""
         if len(self.historique_evaluations) < 5:
             return {}
         
-        recent = self.historique_evaluations[-10:]  # 10 dernières évaluations
+        recent = self.historique_evaluations[-10:]  # Last 10 evaluations
         
         tendances = {}
         for attribut in ['coherence', 'completude', 'pertinence', 'precision']:
@@ -419,60 +419,60 @@ class AutoEvaluateur:
         return tendances
 
 class DetecteurBiais:
-    """Système de détection et correction des biais cognitifs."""
+    """Cognitive bias detection and correction system."""
     
     def __init__(self):
         self.historique_biais: List[BiaisCognitif] = []
         self.patterns_biais = {
             TypeBiais.CONFIRMATION: {
                 'indicateurs': [
-                    "confirme que", "comme prévu", "évidemment", "il est clair que",
-                    "sans surprise", "comme attendu"
+                    "confirms that", "as expected", "obviously", "it is clear that",
+                    "unsurprisingly", "as anticipated"
                 ],
                 'corrections': [
-                    "Chercher des contre-exemples",
-                    "Considérer des perspectives alternatives",
-                    "Questionner les assumptions initiales"
+                    "Search for counter-examples",
+                    "Consider alternative perspectives",
+                    "Question initial assumptions"
                 ]
             },
             TypeBiais.ANCRAGE: {
                 'indicateurs': [
-                    "basé sur", "en partant de", "selon l'information initiale",
-                    "comme mentionné au début"
+                    "based on", "starting from", "according to initial information",
+                    "as mentioned at the beginning"
                 ],
                 'corrections': [
-                    "Réévaluer sans référence aux informations initiales",
-                    "Considérer des points de départ alternatifs",
-                    "Questionner la pertinence de l'ancre"
+                    "Re-evaluate without reference to initial information",
+                    "Consider alternative starting points",
+                    "Question the relevance of the anchor"
                 ]
             },
             TypeBiais.DISPONIBILITE: {
                 'indicateurs': [
-                    "récemment", "souvent", "couramment", "typiquement",
-                    "habituellement", "généralement"
+                    "recently", "often", "commonly", "typically",
+                    "usually", "generally"
                 ],
                 'corrections': [
-                    "Rechercher des statistiques objectives",
-                    "Considérer des cas moins visibles",
-                    "Évaluer la représentativité des exemples"
+                    "Search for objective statistics",
+                    "Consider less visible cases",
+                    "Evaluate the representativeness of examples"
                 ]
             },
             TypeBiais.SURCONFIANCE: {
                 'indicateurs': [
-                    "certainement", "sans aucun doute", "absolument sûr",
-                    "impossible que", "évidemment", "clairement"
+                    "certainly", "without a doubt", "absolutely sure",
+                    "impossible that", "obviously", "clearly"
                 ],
                 'corrections': [
-                    "Identifier les sources d'incertitude",
-                    "Chercher des scénarios d'échec",
-                    "Calibrer le niveau de confiance"
+                    "Identify sources of uncertainty",
+                    "Look for failure scenarios",
+                    "Calibrate confidence level"
                 ]
             }
         }
         self.seuil_detection = 0.6
     
     def detecter_biais(self, texte: str, contexte: Dict[str, Any] = None) -> List[BiaisCognitif]:
-        """Détecte les biais cognitifs dans un texte."""
+        """Detects cognitive biases in a text."""
         if contexte is None:
             contexte = {}
         
@@ -492,68 +492,68 @@ class DetecteurBiais:
                 )
                 biais_detectes.append(biais)
         
-        # Enregistrer dans l'historique
+        # Store in history
         self.historique_biais.extend(biais_detectes)
         
         return biais_detectes
     
     def _calculer_score_biais(self, texte: str, indicateurs: List[str]) -> float:
-        """Calcule le score de présence d'un biais."""
+        """Calculates the score of bias presence."""
         score = 0.0
         total_mots = len(texte.split())
         
         for indicateur in indicateurs:
             occurrences = texte.count(indicateur)
             if occurrences > 0:
-                # Score basé sur la fréquence relative
+                # Score based on relative frequency
                 score += (occurrences / max(total_mots, 1)) * 10
         
         return min(score, 1.0)
     
     def corriger_biais(self, texte: str, biais: BiaisCognitif) -> str:
-        """Propose une correction pour un biais détecté."""
-        correction = f"\n\n🔍 **Auto-correction cognitive détectée**\n"
-        correction += f"Biais identifié: {biais.type_biais.value}\n"
-        correction += f"Stratégies de correction appliquées:\n"
+        """Proposes a correction for a detected bias."""
+        correction = f"\n\n🔍 **Cognitive self-correction detected**\n"
+        correction += f"Identified bias: {biais.type_biais.value}\n"
+        correction += f"Correction strategies applied:\n"
         
         for i, strategie in enumerate(biais.strategies_correction, 1):
             correction += f"{i}. {strategie}\n"
         
-        correction += "\n**Révision du raisonnement:**\n"
+        correction += "\n**Reasoning revision:**\n"
         correction += self._generer_revision(texte, biais)
         
         return texte + correction
     
     def _generer_revision(self, texte: str, biais: BiaisCognitif) -> str:
-        """Génère une révision pour corriger un biais."""
+        """Generates a revision to correct a bias."""
         revisions = {
-            TypeBiais.CONFIRMATION: "Examinons des perspectives alternatives et des contre-arguments...",
-            TypeBiais.ANCRAGE: "Reconsidérons cette question sans référence aux informations initiales...",
-            TypeBiais.DISPONIBILITE: "Cherchons des données plus représentatives et objectives...",
-            TypeBiais.SURCONFIANCE: "Identifions les sources d'incertitude et les limites de cette analyse..."
+            TypeBiais.CONFIRMATION: "Let's examine alternative perspectives and counter-arguments...",
+            TypeBiais.ANCRAGE: "Let's reconsider this question without reference to initial information...",
+            TypeBiais.DISPONIBILITE: "Let's seek more representative and objective data...",
+            TypeBiais.SURCONFIANCE: "Let's identify sources of uncertainty and the limits of this analysis..."
         }
         
-        return revisions.get(biais.type_biais, "Révision du raisonnement nécessaire.")
+        return revisions.get(biais.type_biais, "Reasoning revision needed.")
     
     def obtenir_statistiques_biais(self) -> Dict[str, Any]:
-        """Retourne des statistiques sur les biais détectés."""
+        """Returns statistics on detected biases."""
         if not self.historique_biais:
             return {"total": 0}
         
         stats = {"total": len(self.historique_biais)}
         
-        # Compter par type
+        # Count by type
         compteur_types = defaultdict(int)
         for biais in self.historique_biais:
             compteur_types[biais.type_biais.value] += 1
         
         stats["par_type"] = dict(compteur_types)
         
-        # Biais les plus fréquents
+        # Most frequent biases
         if compteur_types:
             stats["plus_frequent"] = max(compteur_types.items(), key=lambda x: x[1])
         
-        # Tendance récente
+        # Recent trend
         recent = [b for b in self.historique_biais if 
                  (datetime.now() - b.timestamp).days <= 7]
         stats["recent_7_jours"] = len(recent)
@@ -561,7 +561,7 @@ class DetecteurBiais:
         return stats
 
 class MoniteurProcessus:
-    """Système de monitoring des processus de résolution avec adaptation dynamique."""
+    """Process monitoring system with dynamic adaptation."""
     
     def __init__(self):
         self.processus_actifs: Dict[str, ProcessusRaisonnement] = {}
@@ -579,7 +579,7 @@ class MoniteurProcessus:
         }
     
     def demarrer_monitoring(self, processus_id: str, type_processus: str) -> ProcessusRaisonnement:
-        """Démarre le monitoring d'un processus."""
+        """Starts monitoring a process."""
         processus = ProcessusRaisonnement(
             id=processus_id,
             type_processus=type_processus,
@@ -588,22 +588,22 @@ class MoniteurProcessus:
         )
         
         self.processus_actifs[processus_id] = processus
-        logger.info(f"Monitoring démarré pour le processus {processus_id}")
+        logger.info(f"Monitoring started for process {processus_id}")
         
         return processus
     
     def mettre_a_jour_processus(self, processus_id: str, etape: str, donnees: Dict[str, Any] = None) -> None:
-        """Met à jour un processus en cours."""
+        """Updates an ongoing process."""
         if processus_id in self.processus_actifs:
             processus = self.processus_actifs[processus_id]
             processus.ajouter_etape(etape, donnees)
             processus.statut = StatutProcessus.EN_COURS
             
-            # Vérifier si des adaptations sont nécessaires
+            # Check if adaptations are needed
             self._verifier_besoins_adaptation(processus)
     
     def terminer_processus(self, processus_id: str, metriques: MetriqueQualite = None) -> None:
-        """Termine le monitoring d'un processus."""
+        """Ends the monitoring of a process."""
         if processus_id in self.processus_actifs:
             processus = self.processus_actifs[processus_id]
             processus.timestamp_fin = datetime.now()
@@ -612,63 +612,63 @@ class MoniteurProcessus:
             if metriques:
                 processus.metriques = metriques
             
-            # Archiver le processus
+            # Archive the process
             self.historique_processus.append(processus)
             del self.processus_actifs[processus_id]
             
-            logger.info(f"Processus {processus_id} terminé en {processus.calculer_duree():.2f}s")
+            logger.info(f"Process {processus_id} finished in {processus.calculer_duree():.2f}s")
     
     def _verifier_besoins_adaptation(self, processus: ProcessusRaisonnement) -> None:
-        """Vérifie si le processus nécessite des adaptations."""
+        """Checks if the process requires adaptations."""
         duree_actuelle = processus.calculer_duree()
         
-        # Adaptation pour ralentissement
+        # Adaptation for slowdown
         if duree_actuelle > self.seuils_adaptation['duree_max']:
             self._appliquer_adaptation(processus, 'ralentissement')
         
-        # Adaptation pour qualité faible
+        # Adaptation for low quality
         if processus.metriques.calculer_score_global() < self.seuils_adaptation['qualite_min']:
             self._appliquer_adaptation(processus, 'qualite_faible')
         
-        # Adaptation pour biais fréquents
+        # Adaptation for frequent biases
         if len(processus.biais_detectes) > 2:
             self._appliquer_adaptation(processus, 'biais_frequent')
     
     def _appliquer_adaptation(self, processus: ProcessusRaisonnement, type_adaptation: str) -> None:
-        """Applique une stratégie d'adaptation."""
+        """Applies an adaptation strategy."""
         if type_adaptation in self.strategies_adaptation:
             adaptation = self.strategies_adaptation[type_adaptation](processus)
             processus.adaptations.append(adaptation)
-            logger.info(f"Adaptation appliquée au processus {processus.id}: {adaptation}")
+            logger.info(f"Adaptation applied to process {processus.id}: {adaptation}")
     
     def _adapter_pour_ralentissement(self, processus: ProcessusRaisonnement) -> str:
-        """Stratégie d'adaptation pour les ralentissements."""
+        """Adaptation strategy for slowdowns."""
         strategies = [
-            "Simplification du raisonnement en cours",
-            "Priorisation des éléments essentiels",
-            "Division en sous-tâches plus petites",
-            "Réduction de la profondeur d'analyse"
+            "Simplification of ongoing reasoning",
+            "Prioritization of essential elements",
+            "Division into smaller sub-tasks",
+            "Reduction of analysis depth"
         ]
         strategie = random.choice(strategies)
         processus.statut = StatutProcessus.OPTIMISATION
-        return f"Ralentissement détecté - {strategie}"
+        return f"Slowdown detected - {strategie}"
     
     def _adapter_pour_erreurs(self, processus: ProcessusRaisonnement) -> str:
-        """Stratégie d'adaptation pour les erreurs répétées."""
-        return "Erreurs répétées détectées - Changement d'approche méthodologique"
+        """Adaptation strategy for repeated errors."""
+        return "Repeated errors detected - Change of methodological approach"
     
     def _adapter_pour_qualite(self, processus: ProcessusRaisonnement) -> str:
-        """Stratégie d'adaptation pour la qualité faible."""
-        return "Qualité insuffisante - Renforcement des vérifications et révisions"
+        """Adaptation strategy for low quality."""
+        return "Insufficient quality - Reinforcement of checks and revisions"
     
     def _adapter_pour_biais(self, processus: ProcessusRaisonnement) -> str:
-        """Stratégie d'adaptation pour les biais fréquents."""
-        return "Biais fréquents détectés - Activation des contre-mesures cognitives"
+        """Adaptation strategy for frequent biases."""
+        return "Frequent biases detected - Activation of cognitive countermeasures"
     
     def obtenir_rapport_performance(self) -> Dict[str, Any]:
-        """Génère un rapport de performance des processus."""
+        """Generates a performance report for processes."""
         if not self.historique_processus:
-            return {"message": "Aucun processus terminé"}
+            return {"message": "No process completed"}
         
         durees = [p.calculer_duree() for p in self.historique_processus]
         qualites = [p.metriques.calculer_score_global() for p in self.historique_processus]
@@ -685,28 +685,28 @@ class MoniteurProcessus:
         return rapport
 
 class ConscienceLimites:
-    """Système de conscience des propres limites et zones d'incertitude."""
+    """System for awareness of own limitations and uncertainty zones."""
     
     def __init__(self):
         self.zones_incertitude: List[ZoneIncertitude] = []
         self.limites_connues = {
-            "temporel": "Connaissance limitée aux données d'entraînement",
-            "factuel": "Possible obsolescence des informations",
-            "culturel": "Biais culturels potentiels dans la formation",
-            "technique": "Limites des modèles de langage actuels",
-            "creatif": "Contraintes dans la génération vraiment originale"
+            "temporel": "Knowledge limited to training data",
+            "factuel": "Possible obsolescence of information",
+            "culturel": "Potential cultural biases in training",
+            "technique": "Limitations of current language models",
+            "creatif": "Constraints in truly original generation"
         }
         self.domaines_expertise = {
-            "fort": ["analyse textuelle", "logique", "mathématiques de base"],
-            "moyen": ["sciences générales", "histoire", "programmation"],
-            "faible": ["prédictions futures", "conseils médicaux", "conseils juridiques"]
+            "fort": ["textual analysis", "logic", "basic mathematics"],
+            "moyen": ["general sciences", "history", "programming"],
+            "faible": ["future predictions", "medical advice", "legal advice"]
         }
     
     def identifier_incertitudes(self, contexte: str, domaine: str = "") -> List[ZoneIncertitude]:
-        """Identifie les zones d'incertitude pour un contexte donné."""
+        """Identifies uncertainty zones for a given context."""
         incertitudes = []
         
-        # Analyse du domaine
+        # Domain analysis
         niveau_expertise = self._evaluer_niveau_expertise(domaine)
         
         if niveau_expertise == "faible":
@@ -714,44 +714,44 @@ class ConscienceLimites:
                 domaine=domaine,
                 type_incertitude=TypeIncertitude.EPISTEMIQUE,
                 niveau=0.8,
-                description=f"Expertise limitée dans le domaine {domaine}",
+                description=f"Limited expertise in the domain {domaine}",
                 impact_potentiel=0.7,
                 strategies_mitigation=[
-                    "Recommander de consulter un expert",
-                    "Préciser les limites de l'analyse",
-                    "Fournir des sources pour vérification"
+                    "Recommend consulting an expert",
+                    "Specify analysis limits",
+                    "Provide sources for verification"
                 ]
             )
             incertitudes.append(incertitude)
         
-        # Détection d'incertitudes temporelles
-        if any(mot in contexte.lower() for mot in ["futur", "prédiction", "prévision", "demain"]):
+        # Detection of temporal uncertainties
+        if any(mot in contexte.lower() for mot in ["future", "prediction", "forecast", "tomorrow"]):
             incertitude = ZoneIncertitude(
-                domaine="prédiction",
+                domaine="prediction",
                 type_incertitude=TypeIncertitude.TEMPORELLE,
                 niveau=0.9,
-                description="Prédictions futures intrinsèquement incertaines",
+                description="Future predictions are inherently uncertain",
                 impact_potentiel=0.8,
                 strategies_mitigation=[
-                    "Présenter plusieurs scénarios",
-                    "Indiquer les facteurs d'incertitude",
-                    "Éviter les prédictions absolues"
+                    "Present multiple scenarios",
+                    "Indicate uncertainty factors",
+                    "Avoid absolute predictions"
                 ]
             )
             incertitudes.append(incertitude)
         
-        # Détection d'incertitudes sur les données
-        if "récent" in contexte.lower() or "actualité" in contexte.lower():
+        # Detection of data uncertainties
+        if "recent" in contexte.lower() or "news" in contexte.lower():
             incertitude = ZoneIncertitude(
-                domaine="actualité",
+                domaine="current_events",
                 type_incertitude=TypeIncertitude.DONNEES,
                 niveau=0.7,
-                description="Informations récentes possiblement non incluses",
+                description="Recent information possibly not included",
                 impact_potentiel=0.6,
                 strategies_mitigation=[
-                    "Préciser la date limite des connaissances",
-                    "Recommander de vérifier les sources récentes",
-                    "Indiquer le caractère potentiellement daté"
+                    "Specify knowledge cutoff date",
+                    "Recommend checking recent sources",
+                    "Indicate potentially outdated nature"
                 ]
             )
             incertitudes.append(incertitude)
@@ -760,40 +760,40 @@ class ConscienceLimites:
         return incertitudes
     
     def _evaluer_niveau_expertise(self, domaine: str) -> str:
-        """Évalue le niveau d'expertise dans un domaine."""
+        """Evaluates the level of expertise in a domain."""
         domaine_lower = domaine.lower()
         
         for niveau, domaines in self.domaines_expertise.items():
             if any(d in domaine_lower for d in domaines):
                 return niveau
         
-        return "moyen"  # Par défaut
+        return "moyen"  # Default
     
     def generer_avertissement_limites(self, incertitudes: List[ZoneIncertitude]) -> str:
-        """Génère un avertissement sur les limites identifiées."""
+        """Generates a warning about identified limitations."""
         if not incertitudes:
             return ""
         
-        avertissement = "\n\n⚠️ **Conscience des limites**\n"
+        avertissement = "\n\n⚠️ **Awareness of limits**\n"
         
         for incertitude in incertitudes:
             avertissement += f"• **{incertitude.domaine}**: {incertitude.description}\n"
             
             if incertitude.niveau > 0.7:
-                avertissement += f"  - Niveau d'incertitude élevé ({incertitude.niveau:.1%})\n"
+                avertissement += f"  - High uncertainty level ({incertitude.niveau:.1%})\n"
             
             if incertitude.strategies_mitigation:
-                avertissement += f"  - Recommandation: {incertitudes[0].strategies_mitigation[0]}\n"
+                avertissement += f"  - Recommendation: {incertitudes[0].strategies_mitigation[0]}\n"
         
         return avertissement
     
     def evaluer_confiance_globale(self, contexte: str, domaine: str = "") -> float:
-        """Évalue la confiance globale pour une réponse."""
-        # Confiance de base selon l'expertise
+        """Evaluates overall confidence for a response."""
+        # Base confidence according to expertise
         niveau_expertise = self._evaluer_niveau_expertise(domaine)
         confiance_base = {"fort": 0.9, "moyen": 0.7, "faible": 0.4}[niveau_expertise]
         
-        # Ajustements selon les incertitudes
+        # Adjustments based on uncertainties
         incertitudes = self.identifier_incertitudes(contexte, domaine)
         
         for incertitude in incertitudes:
@@ -802,7 +802,7 @@ class ConscienceLimites:
         return max(confiance_base, 0.1)
     
     def obtenir_cartographie_limites(self) -> Dict[str, Any]:
-        """Retourne une cartographie complète des limites."""
+        """Returns a complete mapping of limitations."""
         return {
             "limites_connues": self.limites_connues,
             "domaines_expertise": self.domaines_expertise,
@@ -811,66 +811,66 @@ class ConscienceLimites:
         }
 
 class StrategieMetacognitive:
-    """Système de stratégies métacognitives pour optimiser l'apprentissage."""
+    """Metacognitive strategies system for learning optimization."""
     
     def __init__(self):
         self.strategies_disponibles = {
             "planification": {
-                "description": "Planification du processus de raisonnement",
+                "description": "Reasoning process planning",
                 "techniques": [
-                    "Décomposition du problème",
-                    "Définition d'objectifs intermédiaires",
-                    "Allocation des ressources cognitives"
+                    "Problem decomposition",
+                    "Definition of intermediate objectives",
+                    "Allocation of cognitive resources"
                 ]
             },
             "monitoring": {
-                "description": "Surveillance continue du processus",
+                "description": "Continuous process monitoring",
                 "techniques": [
-                    "Vérifications régulières de progression",
-                    "Détection d'erreurs en cours",
-                    "Ajustement de la stratégie si nécessaire"
+                    "Regular progress checks",
+                    "Ongoing error detection",
+                    "Strategy adjustment if necessary"
                 ]
             },
             "evaluation": {
-                "description": "Évaluation des résultats et du processus",
+                "description": "Evaluation of results and process",
                 "techniques": [
-                    "Analyse de la qualité du résultat",
-                    "Identification des points d'amélioration",
-                    "Calibration de la confiance"
+                    "Analysis of result quality",
+                    "Identification of improvement points",
+                    "Confidence calibration"
                 ]
             },
             "regulation": {
-                "description": "Régulation et optimisation",
+                "description": "Regulation and optimization",
                 "techniques": [
-                    "Correction des erreurs détectées",
-                    "Optimisation des stratégies",
-                    "Adaptation aux contraintes"
+                    "Correction of detected errors",
+                    "Optimization of strategies",
+                    "Adaptation to constraints"
                 ]
             }
         }
         self.historique_optimisations: List[Dict[str, Any]] = []
         
     def optimiser_processus_raisonnement(self, processus: ProcessusRaisonnement) -> Dict[str, Any]:
-        """Optimise un processus de raisonnement."""
+        """Optimizes a reasoning process."""
         optimisations = {}
         
-        # Étape 1: Planification
+        # Step 1: Planning
         plan = self._planifier_ameliorations(processus)
         optimisations["planification"] = plan
         
-        # Étape 2: Identification des goulots d'étranglement
+        # Step 2: Bottleneck identification
         goulots = self._identifier_goulots_etranglement(processus)
         optimisations["goulots_detectes"] = goulots
         
-        # Étape 3: Stratégies d'amélioration
+        # Step 3: Improvement strategies
         strategies = self._generer_strategies_amelioration(processus, goulots)
         optimisations["strategies"] = strategies
         
-        # Étape 4: Mesures préventives
+        # Step 4: Preventive measures
         preventions = self._definir_mesures_preventives(processus)
         optimisations["preventions"] = preventions
         
-        # Enregistrer l'optimisation
+        # Save optimization
         self.historique_optimisations.append({
             "timestamp": datetime.now(),
             "processus_id": processus.id,
@@ -880,109 +880,109 @@ class StrategieMetacognitive:
         return optimisations
     
     def _planifier_ameliorations(self, processus: ProcessusRaisonnement) -> List[str]:
-        """Planifie les améliorations possibles."""
+        """Plans possible improvements."""
         ameliorations = []
         
-        # Analyse de la durée
+        # Duration analysis
         duree = processus.calculer_duree()
-        if duree > 60:  # Plus d'une minute
-            ameliorations.append("Optimiser la vitesse de traitement")
+        if duree > 60:  # More than one minute
+            ameliorations.append("Optimize processing speed")
         
-        # Analyse de la qualité
+        # Quality analysis
         score_qualite = processus.metriques.calculer_score_global()
         if score_qualite < 0.7:
-            ameliorations.append("Améliorer la qualité du raisonnement")
+            ameliorations.append("Improve reasoning quality")
         
-        # Analyse des biais
+        # Bias analysis
         if len(processus.biais_detectes) > 1:
-            ameliorations.append("Renforcer la détection de biais")
+            ameliorations.append("Strengthen bias detection")
         
         return ameliorations
     
     def _identifier_goulots_etranglement(self, processus: ProcessusRaisonnement) -> List[str]:
-        """Identifie les goulots d'étranglement."""
+        """Identifies bottlenecks."""
         goulots = []
         
-        # Analyser les étapes les plus longues (simulation)
+        # Analyze longest steps (simulation)
         if len(processus.etapes) > 5:
-            goulots.append("Trop d'étapes intermédiaires")
+            goulots.append("Too many intermediate steps")
         
-        # Analyser les biais répétitifs
+        # Analyze repetitive biases
         types_biais = [b.type_biais for b in processus.biais_detectes]
         if len(set(types_biais)) != len(types_biais):
-            goulots.append("Biais cognitifs répétitifs")
+            goulots.append("Repetitive cognitive biases")
         
-        # Analyser les métriques de qualité
+        # Analyze quality metrics
         if processus.metriques.coherence < 0.6:
-            goulots.append("Problèmes de cohérence")
+            goulots.append("Coherence issues")
         
         return goulots
     
     def _generer_strategies_amelioration(self, processus: ProcessusRaisonnement, goulots: List[str]) -> List[str]:
-        """Génère des stratégies d'amélioration spécifiques."""
+        """Generates specific improvement strategies."""
         strategies = []
         
         for goulot in goulots:
             if "étapes" in goulot:
-                strategies.append("Regrouper les étapes similaires")
-                strategies.append("Paralléliser les traitements indépendants")
+                strategies.append("Group similar steps")
+                strategies.append("Parallelize independent processes")
             
             elif "biais" in goulot:
-                strategies.append("Implémenter des contre-vérifications systématiques")
-                strategies.append("Diversifier les perspectives d'analyse")
+                strategies.append("Implement systematic cross-checks")
+                strategies.append("Diversify analysis perspectives")
             
             elif "cohérence" in goulot:
-                strategies.append("Renforcer la validation logique")
-                strategies.append("Améliorer l'enchaînement des idées")
+                strategies.append("Strengthen logical validation")
+                strategies.append("Improve idea flow")
         
         return strategies
     
     def _definir_mesures_preventives(self, processus: ProcessusRaisonnement) -> List[str]:
-        """Définit des mesures préventives."""
+        """Defines preventive measures."""
         mesures = [
-            "Checkpoint de qualité tous les 2 minutes",
-            "Vérification automatique des biais toutes les 5 étapes",
-            "Calibration de confiance avant conclusion",
-            "Révision par perspective alternative"
+            "Quality checkpoint every 2 minutes",
+            "Automatic bias check every 5 steps",
+            "Confidence calibration before conclusion",
+            "Revision from alternative perspective"
         ]
         
         return mesures
     
     def apprentissage_adaptatif(self, feedback: Dict[str, Any]) -> Dict[str, Any]:
-        """Implémente un apprentissage adaptatif basé sur le feedback."""
+        """Implements adaptive learning based on feedback."""
         adaptations = {
             "strategies_ajustees": [],
             "seuils_modifies": {},
             "nouvelles_regles": []
         }
         
-        # Ajuster les stratégies selon le feedback
+        # Adjust strategies based on feedback
         if feedback.get("qualite_insuffisante"):
-            adaptations["strategies_ajustees"].append("Renforcement des vérifications de qualité")
+            adaptations["strategies_ajustees"].append("Reinforcement of quality checks")
         
         if feedback.get("trop_lent"):
-            adaptations["strategies_ajustees"].append("Optimisation du processus de génération")
+            adaptations["strategies_ajustees"].append("Optimization of generation process")
         
         if feedback.get("biais_non_detecte"):
-            adaptations["strategies_ajustees"].append("Amélioration de la détection de biais")
+            adaptations["strategies_ajustees"].append("Improvement of bias detection")
         
-        # Modifier les seuils si nécessaire
+        # Modify thresholds if necessary
         if feedback.get("false_positive_biais"):
-            adaptations["seuils_modifies"]["seuil_biais"] = "Augmentation pour réduire les faux positifs"
+            adaptations["seuils_modifies"]["seuil_biais"] = "Increase to reduce false positives"
         
         return adaptations
     
     def obtenir_rapport_apprentissage(self) -> Dict[str, Any]:
-        """Génère un rapport sur l'apprentissage et l'optimisation."""
+        """Generates a report on learning and optimization."""
         return {
             "optimisations_effectuees": len(self.historique_optimisations),
             "strategies_utilisees": len(self.strategies_disponibles),
-            "tendances_amelioration": "Analyse des tendances d'amélioration",
-            "efficacite_strategies": "Évaluation de l'efficacité des stratégies"
+            "tendances_amelioration": "Analysis of improvement trends",
+            "efficacite_strategies": "Evaluation of strategy effectiveness"
         }
 
 class MetacognitionProfonde:
-    """Classe principale orchestrant tous les composants de métacognition."""
+    """Main class orchestrating all metacognition components."""
     
     def __init__(self):
         self.auto_evaluateur = AutoEvaluateur()
@@ -994,22 +994,22 @@ class MetacognitionProfonde:
         self.historique_sessions: List[Dict[str, Any]] = []
         self.mode_debug = False
         
-        logger.info("Système de métacognition profonde initialisé")
+        logger.info("Deep metacognition system initialized")
     
     def processer_requete(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite une requête avec métacognition complète."""
+        """Processes a request with full metacognition."""
         session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
         
-        # Démarrer le monitoring
-        processus = self.moniteur_processus.demarrer_monitoring(session_id, "traitement_requete")
+        # Start monitoring
+        processus = self.moniteur_processus.demarrer_monitoring(session_id, "request_processing")
         
         try:
-            # Identifier les incertitudes
+            # Identify uncertainties
             contexte = data.get('text', '')
             domaine = data.get('domain', '')
             incertitudes = self.conscience_limites.identifier_incertitudes(contexte, domaine)
             
-            # Évaluer la confiance a priori
+            # Evaluate a priori confidence
             confiance_initiale = self.conscience_limites.evaluer_confiance_globale(contexte, domaine)
             
             data['metacognition'] = {
@@ -1022,12 +1022,12 @@ class MetacognitionProfonde:
             return data
             
         except Exception as e:
-            logger.error(f"Erreur dans le traitement métacognitif: {str(e)}")
+            logger.error(f"Error in metacognitive processing: {str(e)}")
             self.moniteur_processus.terminer_processus(session_id)
             return data
     
     def processer_reponse(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """Traite une réponse avec analyse métacognitive complète."""
+        """Processes a response with complete metacognitive analysis."""
         try:
             if 'metacognition' not in data:
                 return data
@@ -1036,58 +1036,58 @@ class MetacognitionProfonde:
             session_id = metacognition['session_id']
             texte = data.get('text', '')
             
-            # Auto-évaluation de la qualité
+            # Self-evaluation of quality
             metriques = self.auto_evaluateur.evaluer_reponse(texte, data)
             
-            # Détection de biais
+            # Bias detection
             biais_detectes = self.detecteur_biais.detecter_biais(texte, data)
             
-            # Mise à jour du processus
+            # Process update
             if session_id in self.moniteur_processus.processus_actifs:
                 processus = self.moniteur_processus.processus_actifs[session_id]
                 processus.metriques = metriques
                 processus.biais_detectes = biais_detectes
                 
-                # Optimisation si nécessaire
+                # Optimization if necessary
                 if metriques.calculer_score_global() < 0.6 or len(biais_detectes) > 1:
                     optimisations = self.strategie_metacognitive.optimiser_processus_raisonnement(processus)
                     data['optimisations_suggerees'] = optimisations
                 
                 self.moniteur_processus.terminer_processus(session_id, metriques)
             
-            # Génération des améliorations de la réponse
+            # Response improvement generation
             texte_ameliore = self._ameliorer_reponse(texte, metriques, biais_detectes, metacognition.get('incertitudes_detectees', []))
             
-            # Mise à jour des données
+            # Data update
             data['text'] = texte_ameliore
             data['metriques_qualite'] = metriques
             data['biais_detectes'] = biais_detectes
             
-            # Enregistrer la session
+            # Log session
             self._enregistrer_session(session_id, data, metriques, biais_detectes)
             
             return data
             
         except Exception as e:
-            logger.error(f"Erreur dans l'analyse métacognitive de la réponse: {str(e)}")
+            logger.error(f"Error in metacognitive analysis of response: {str(e)}")
             return data
     
     def _ameliorer_reponse(self, texte: str, metriques: MetriqueQualite, 
                           biais: List[BiaisCognitif], incertitudes: List[ZoneIncertitude]) -> str:
-        """Améliore une réponse basée sur l'analyse métacognitive."""
+        """Improves a response based on metacognitive analysis."""
         texte_ameliore = texte
         
-        # Ajouter des corrections de biais
+        # Add bias corrections
         for biais_detecte in biais:
             if biais_detecte.intensite > 0.7:
                 texte_ameliore = self.detecteur_biais.corriger_biais(texte_ameliore, biais_detecte)
         
-        # Ajouter des avertissements sur les limites
+        # Add warnings about limitations
         if incertitudes:
             avertissement = self.conscience_limites.generer_avertissement_limites(incertitudes)
             texte_ameliore += avertissement
         
-        # Ajouter une réflexion métacognitive si la qualité est faible
+        # Add metacognitive reflection if quality is low
         if metriques.calculer_score_global() < 0.7:
             reflexion = self._generer_reflexion_metacognitive(metriques)
             texte_ameliore += f"\n\n{reflexion}"
@@ -1095,25 +1095,25 @@ class MetacognitionProfonde:
         return texte_ameliore
     
     def _generer_reflexion_metacognitive(self, metriques: MetriqueQualite) -> str:
-        """Génère une réflexion métacognitive sur la qualité."""
+        """Generates a metacognitive reflection on quality."""
         problemes = self.auto_evaluateur.identifier_problemes_qualite(metriques)
         
         if not problemes:
             return ""
         
-        reflexion = "🤔 **Réflexion métacognitive**\n"
-        reflexion += "J'identifie les axes d'amélioration suivants dans ma réponse:\n"
+        reflexion = "🤔 **Metacognitive Reflection**\n"
+        reflexion += "I identify the following areas for improvement in my response:\n"
         
         for i, probleme in enumerate(problemes, 1):
             reflexion += f"{i}. {probleme}\n"
         
-        reflexion += "\nJe m'engage à améliorer ces aspects dans mes prochaines réponses."
+        reflexion += "\nI am committed to improving these aspects in my future responses."
         
         return reflexion
     
     def _enregistrer_session(self, session_id: str, data: Dict[str, Any], 
                            metriques: MetriqueQualite, biais: List[BiaisCognitif]) -> None:
-        """Enregistre une session pour analyse future."""
+        """Records a session for future analysis."""
         session = {
             'id': session_id,
             'timestamp': datetime.now(),
@@ -1126,12 +1126,12 @@ class MetacognitionProfonde:
         
         self.historique_sessions.append(session)
         
-        # Limiter la taille de l'historique
+        # Limit history size
         if len(self.historique_sessions) > 1000:
             self.historique_sessions = self.historique_sessions[-500:]
     
     def generer_rapport_complet(self) -> Dict[str, Any]:
-        """Génère un rapport complet sur la métacognition."""
+        """Generates a comprehensive metacognition report."""
         return {
             "auto_evaluation": {
                 "evaluations_effectuees": len(self.auto_evaluateur.historique_evaluations),
@@ -1146,7 +1146,7 @@ class MetacognitionProfonde:
         }
     
     def _calculer_performance_globale(self) -> Dict[str, float]:
-        """Calcule la performance globale du système."""
+        """Calculates the overall system performance."""
         if not self.historique_sessions:
             return {}
         
@@ -1160,19 +1160,19 @@ class MetacognitionProfonde:
             "taux_optimisation": sum(1 for s in self.historique_sessions if s['optimisations_appliquees']) / len(self.historique_sessions)
         }
 
-# Instance globale
+# Global instance
 metacognition_system = MetacognitionProfonde()
 
 def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
     """
-    Point d'entrée principal pour le traitement métacognitif.
+    Main entry point for metacognitive processing.
     
     Args:
-        data: Les données à traiter
-        hook: Le type de hook (process_request, process_response, etc.)
+        data: The data to process
+        hook: The type of hook (process_request, process_response, etc.)
         
     Returns:
-        Les données modifiées avec métacognition
+        The modified data with metacognition
     """
     try:
         if hook == "process_request" or hook == "pre_reasoning":
@@ -1184,61 +1184,61 @@ def process(data: Dict[str, Any], hook: str) -> Dict[str, Any]:
         return data
     
     except Exception as e:
-        logger.error(f"Erreur dans le traitement métacognitif global: {str(e)}")
+        logger.error(f"Error in global metacognitive processing: {str(e)}")
         return data
 
-# Fonctions utilitaires pour l'interface externe
+# Utility functions for external interface
 def obtenir_rapport_metacognition() -> Dict[str, Any]:
-    """Retourne un rapport complet sur l'état de la métacognition."""
+    """Returns a comprehensive report on the state of metacognition."""
     return metacognition_system.generer_rapport_complet()
 
 def activer_mode_debug(actif: bool = True) -> None:
-    """Active ou désactive le mode debug."""
+    """Activates or deactivates debug mode."""
     metacognition_system.mode_debug = actif
-    logger.info(f"Mode debug métacognition: {'activé' if actif else 'désactivé'}")
+    logger.info(f"Metacognition debug mode: {'activated' if actif else 'deactivated'}")
 
 def obtenir_historique_reflexions(limite: int = 50) -> List[Dict[str, Any]]:
-    """Retourne l'historique des réflexions métacognitives."""
+    """Returns the history of metacognitive reflections."""
     return metacognition_system.historique_sessions[-limite:]
 
-# Test et exemple d'utilisation
+# Test and example usage
 if __name__ == "__main__":
-    # Test du système de métacognition
+    # Metacognition system test
     def test_metacognition():
-        # Simulation d'une requête
+        # Simulate a request
         requete = {
-            'text': 'Expliquez-moi comment résoudre le problème du réchauffement climatique',
-            'domain': 'environnement'
+            'text': 'Explain to me how to solve the problem of global warming',
+            'domain': 'environment'
         }
         
-        # Traitement de la requête
+        # Process the request
         requete_traitee = process(requete, 'process_request')
-        print("Requête traitée:", requete_traitee.get('metacognition', {}).get('session_id'))
+        print("Processed request:", requete_traitee.get('metacognition', {}).get('session_id'))
         
-        # Simulation d'une réponse
+        # Simulate a response
         reponse = {
             **requete_traitee,
-            'text': 'Le réchauffement climatique est un problème complexe qui nécessite des solutions à plusieurs niveaux. Évidemment, la transition énergétique est la solution principale. Il faut absolument passer aux énergies renouvelables sans aucun doute.'
+            'text': 'Global warming is a complex problem that requires multi-level solutions. Obviously, energy transition is the main solution. We absolutely must switch to renewable energies without a doubt.'
         }
         
-        # Traitement de la réponse
+        # Process the response
         reponse_traitee = process(reponse, 'process_response')
         
-        print("\n=== RÉSULTAT DE L'ANALYSE MÉTACOGNITIVE ===")
-        print(f"Texte final: {reponse_traitee['text'][:200]}...")
+        print("\n=== METACOGNITIVE ANALYSIS RESULT ===")
+        print(f"Final text: {reponse_traitee['text'][:200]}...")
         
         if 'metriques_qualite' in reponse_traitee:
             metriques = reponse_traitee['metriques_qualite']
-            print(f"Score de qualité: {metriques.calculer_score_global():.2f}")
+            print(f"Quality score: {metriques.calculer_score_global():.2f}")
         
         if 'biais_detectes' in reponse_traitee:
             biais = reponse_traitee['biais_detectes']
-            print(f"Biais détectés: {len(biais)}")
+            print(f"Biases detected: {len(biais)}")
             for b in biais:
                 print(f"  - {b.type_biais.value}: {b.intensite:.2f}")
         
-        # Rapport final
+        # Final report
         rapport = obtenir_rapport_metacognition()
-        print(f"\nSessions traitées: {rapport['sessions_total']}")
+        print(f"\nSessions processed: {rapport['sessions_total']}")
     
     test_metacognition()
