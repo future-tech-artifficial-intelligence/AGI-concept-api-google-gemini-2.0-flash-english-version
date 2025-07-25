@@ -1,113 +1,113 @@
-# 🎯 Résumé de l'intégration Searx dans l'API Gemini
+# 🎯 Searx Integration Summary in artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## ✅ Modifications réalisées
+## ✅ Modifications Made
 
-### 1. **Import et initialisation de Searx**
-- Module Searx importé et initialisé dès le démarrage de `gemini_api.py`
-- Variable globale `SEARX_AVAILABLE` pour vérifier la disponibilité
-- Gestion automatique des erreurs d'import
+### 1. **Searx Import and Initialization**
+- Searx module imported and initialized upon `gemini_api.py` startup
+- Global variable `SEARX_AVAILABLE` to check availability
+- Automatic import error handling
 
-### 2. **Système prompt mis à jour**
-- Ajout des capacités Searx dans le système prompt de Gemini
-- Instructions détaillées sur l'utilisation de Searx
-- Mention du parsing HTML au lieu de l'API JSON
-- Types de recherches disponibles (general, it, videos)
+### 2. **Updated System Prompt**
+- Added Searx capabilities to the artificial intelligence API GOOGLE GEMINI 2.0 FLASH system prompt
+- Detailed instructions on using Searx
+- Mention of HTML parsing instead of JSON API
+- Available search types (general, it, videos)
 
-### 3. **Recherche automatique intégrée**
-- Détection automatique des mots-clés nécessitant une recherche web
-- Déclenchement automatique de Searx quand pertinent
-- Intégration transparente des résultats dans le contexte de Gemini
+### 3. **Integrated Automatic Search**
+- Automatic detection of keywords requiring a web search
+- Automatic triggering of Searx when relevant
+- Seamless integration of results into the artificial intelligence API GOOGLE GEMINI 2.0 FLASH context
 
-### 4. **Fonctions utilitaires**
-- `perform_searx_search()` : Effectue une recherche et formate les résultats
-- `format_searx_results_for_ai()` : Formate les résultats pour l'IA
-- `get_searx_status()` : Vérifie le statut du système Searx
-- `trigger_searx_search_session()` : Déclenche manuellement une recherche
-- `perform_web_search_with_gemini()` : Recherche + analyse par Gemini
+### 4. **Utility Functions**
+- `perform_searx_search()`: Performs a search and formats the results
+- `format_searx_results_for_ai()`: Formats results for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+- `get_searx_status()`: Checks the status of the Searx system
+- `trigger_searx_search_session()`: Manually triggers a search
+- `perform_web_search_with_gemini()`: Search + analysis by artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## 🔍 Fonctionnement
+## 🔍 How it Works
 
-### Mots-clés déclencheurs de recherche :
-- **Général** : recherche, actualités, récent, nouveau, 2024, 2025, etc.
-- **Technique** : définition, explication, comment, pourquoi, etc.
-- **Informations** : données, statistiques, prix, cours, météo, etc.
+### Search Trigger Keywords:
+- **General**: search, news, recent, new, 2024, 2025, etc.
+- **Technical**: definition, explanation, how, why, etc.
+- **Information**: data, statistics, price, course, weather, etc.
 
-### Processus automatique :
-1. **Analyse du prompt** → Détection des mots-clés
-2. **Déclenchement Searx** → Recherche automatique (3 résultats max)
-3. **Formatage** → Intégration dans le contexte
-4. **Enrichissement** → Gemini utilise les données actualisées
+### Automatic Process:
+1.  **Prompt Analysis** → Keyword detection
+2.  **Searx Triggering** → Automatic search (3 results max)
+3.  **Formatting** → Integration into context
+4.  **Enrichment** → artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses updated data
 
-## 📊 Résultats des tests
+## 📊 Test Results
 
-### ✅ Tests réussis :
-1. **Statut Searx** : Module opérationnel sur port 8080
-2. **Recherche manuelle** : 10 résultats trouvés avec parsing HTML
-3. **Recherche automatique** : Intégration transparente dans les réponses
-4. **Réponses enrichies** : Gemini utilise les données Searx
+### ✅ Successful Tests:
+1.  **Searx Status**: Module operational on port 8080
+2.  **Manual Search**: 10 results found with HTML parsing
+3.  **Automatic Search**: Seamless integration into responses
+4.  **Enriched Responses**: artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses Searx data
 
-### 🔧 Optimisations appliquées :
-- Suppression des duplications de code
-- Évitement des recherches redondantes
-- Gestion d'erreurs robuste
-- Logs informatifs
+### 🔧 Applied Optimizations:
+- Code duplication removal
+- Avoidance of redundant searches
+- Robust error handling
+- Informative logs
 
-## 🌐 Avantages de l'intégration
+## 🌐 Benefits of Integration
 
-### Pour l'utilisateur :
-- **Informations à jour** via parsing HTML
-- **Recherches automatiques** sans intervention
-- **Sources multiples** (Google, Bing, DuckDuckGo, etc.)
-- **Réponses enrichies** avec données récentes
+### For the User:
+-   **Up-to-date information** via HTML parsing
+-   **Automatic searches** without intervention
+-   **Multiple sources** (Google, Bing, DuckDuckGo, etc.)
+-   **Enriched responses** with recent data
 
-### Pour le système :
-- **Remplacement complet** de l'ancien webscraping
-- **Parsing HTML** au lieu de l'API JSON
-- **Performance optimisée** avec cache Searx
-- **Fiabilité améliorée** avec démarrage automatique
+### For the System:
+-   **Complete replacement** of old web scraping
+-   **HTML parsing** instead of JSON API
+-   **Optimized performance** with Searx cache
+-   **Improved reliability** with automatic startup
 
-## 🚀 Utilisation
+## 🚀 Usage
 
-### Automatique :
+### Automatic:
 ```python
-# L'IA détecte automatiquement et effectue la recherche
-response = get_gemini_response("Quelles sont les dernières actualités en IA ?")
+# The artificial intelligence API GOOGLE GEMINI 2.0 FLASH automatically detects and performs the search
+response = get_gemini_response("What are the latest AI news?")
 ```
 
-### Manuelle :
+### Manual:
 ```python
-# Déclenchement manuel d'une recherche
-result = trigger_searx_search_session("Python 3.12 nouveautés")
+# Manually trigger a search
+result = trigger_searx_search_session("Python 3.12 new features")
 ```
 
-### Statut :
+### Status:
 ```python
-# Vérification du système
+# System check
 status = get_searx_status()
 ```
 
-## 📈 Performances observées
+## 📈 Observed Performance
 
-- **Initialisation** : ✅ Module Searx chargé avec succès
-- **Connectivité** : ✅ Searx opérationnel sur localhost:8080
-- **Recherches** : ✅ 3-10 résultats par requête en ~2-3 secondes
-- **Parsing HTML** : ✅ Extraction précise du contenu
-- **Intégration** : ✅ Contexte enrichi automatiquement
+-   **Initialization**: ✅ Searx module loaded successfully
+-   **Connectivity**: ✅ Searx operational on localhost:8080
+-   **Searches**: ✅ 3-10 results per query in ~2-3 seconds
+-   **HTML Parsing**: ✅ Accurate content extraction
+-   **Integration**: ✅ Context automatically enriched
 
-## 🎯 Objectifs atteints
+## 🎯 Objectives Achieved
 
-1. ✅ **Searx par défaut** : Remplace complètement l'ancien webscraping
-2. ✅ **Parsing HTML** : Au lieu de l'API JSON pour plus de précision
-3. ✅ **Recherches automatiques** : Gemini déclenche Searx quand nécessaire
-4. ✅ **Intégration transparente** : L'utilisateur ne voit pas la différence
-5. ✅ **Performance optimisée** : Évitement des duplications et erreurs
+1.  ✅ **Searx by default**: Completely replaces old web scraping
+2.  ✅ **HTML Parsing**: Instead of JSON API for more precision
+3.  ✅ **Automatic Searches**: artificial intelligence API GOOGLE GEMINI 2.0 FLASH triggers Searx when needed
+4.  ✅ **Seamless Integration**: User does not notice the difference
+5.  ✅ **Optimized Performance**: Avoidance of duplications and errors
 
-## 🔧 Configuration finale
+## 🔧 Final Configuration
 
-L'API Gemini utilise maintenant **Searx par défaut** pour toutes les recherches web :
-- **Pas de détection de recherches** requise
-- **Searx intégré** directement dans le flux de réponses
-- **Parsing HTML** privilégié pour la précision
-- **Démarrage automatique** de Searx si nécessaire
+The artificial intelligence API GOOGLE GEMINI 2.0 FLASH now uses **Searx by default** for all web searches:
+-   **No search detection** required
+-   **Searx integrated** directly into the response flow
+-   **HTML parsing** prioritized for accuracy
+-   **Automatic startup** of Searx if necessary
 
-L'ancien système de webscraping est **complètement remplacé** par Searx.
+The old web scraping system is **completely replaced** by Searx.
