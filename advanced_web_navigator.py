@@ -24,13 +24,13 @@ from bs4 import BeautifulSoup, Comment
 import nltk
 from collections import defaultdict
 
-# Configuration du logging
+# Logging configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('AdvancedWebNavigator')
 
 @dataclass
 class WebPageContent:
-    """Contenu structuré d'une page web"""
+    """Structured content of a web page"""
     url: str
     title: str
     content: str
@@ -51,7 +51,7 @@ class WebPageContent:
 
 @dataclass
 class NavigationPath:
-    """Chemin de navigation dans un site"""
+    """Navigation path within a site"""
     start_url: str
     visited_pages: List[WebPageContent]
     navigation_depth: int
@@ -61,7 +61,7 @@ class NavigationPath:
     created_at: datetime
 
 class AdvancedContentExtractor:
-    """Extracteur de contenu web avancé"""
+    """Advanced web content extractor"""
     
     def __init__(self):
         self.content_selectors = {
@@ -89,50 +89,50 @@ class AdvancedContentExtractor:
         ]
     
     def extract_page_content(self, html: str, url: str) -> WebPageContent:
-        """Extrait le contenu structuré d'une page web"""
+        """Extracts structured content from a web page"""
         try:
             soup = BeautifulSoup(html, 'html.parser')
             
-            # Supprimer le bruit
+            # Remove noise
             for selector in self.noise_selectors:
                 for element in soup.select(selector):
                     element.decompose()
             
-            # Extraire les métadonnées
+            # Extract metadata
             metadata = self._extract_metadata(soup)
             
-            # Extraire le titre
+            # Extract title
             title = self._extract_title(soup)
             
-            # Extraire le contenu principal
+            # Extract main content
             main_content = self._extract_main_content(soup)
             
-            # Extraire tout le texte
+            # Extract all text
             all_text = soup.get_text(separator=' ', strip=True)
             cleaned_text = self._clean_text(all_text)
             
-            # Créer un résumé
+            # Create a summary
             summary = self._create_summary(cleaned_text)
             
-            # Extraire les liens
+            # Extract links
             links = self._extract_links(soup, url)
             
-            # Extraire les images
+            # Extract images
             images = self._extract_images(soup, url)
             
-            # Extraire les éléments de navigation
+            # Extract navigation elements
             nav_elements = self._extract_navigation_elements(soup, url)
             
-            # Extraire les sections de contenu
+            # Extract content sections
             content_sections = self._extract_content_sections(soup)
             
-            # Extraire les mots-clés
+            # Extract keywords
             keywords = self._extract_keywords(cleaned_text)
             
-            # Détecter la langue
+            # Detect language
             language = self._detect_language(cleaned_text)
             
-            # Calculer le score de qualité
+            # Calculate quality score
             quality_score = self._calculate_content_quality(cleaned_text, title, links)
             
             return WebPageContent(
@@ -155,7 +155,7 @@ class AdvancedContentExtractor:
             )
             
         except Exception as e:
-            logger.error(f"Erreur lors de l'extraction du contenu de {url}: {str(e)}")
+            logger.error(f"Error during content extraction from {url}: {str(e)}")
             return WebPageContent(
                 url=url,
                 title="",
@@ -177,7 +177,7 @@ class AdvancedContentExtractor:
             )
     
     def _extract_metadata(self, soup: BeautifulSoup) -> Dict[str, Any]:
-        """Extrait les métadonnées de la page"""
+        """Extracts page metadata"""
         metadata = {}
         
         # Meta tags
@@ -198,8 +198,8 @@ class AdvancedContentExtractor:
         return metadata
     
     def _extract_title(self, soup: BeautifulSoup) -> str:
-        """Extrait le titre de la page"""
-        # Essayer plusieurs sources pour le titre
+        """Extracts page title"""
+        # Try multiple sources for the title
         title_sources = [
             lambda: soup.find('title').get_text().strip() if soup.find('title') else '',
             lambda: soup.find('h1').get_text().strip() if soup.find('h1') else '',
@@ -215,19 +215,19 @@ class AdvancedContentExtractor:
             except:
                 continue
         
-        return "Page sans titre"
+        return "Untitled page"
     
     def _extract_main_content(self, soup: BeautifulSoup) -> str:
-        """Extrait le contenu principal de la page"""
-        # Essayer les sélecteurs de contenu principal
+        """Extracts the main content of the page"""
+        # Try main content selectors
         for selector in self.content_selectors['main_content']:
             elements = soup.select(selector)
             if elements:
-                # Prendre le plus grand élément
+                # Take the largest element
                 main_element = max(elements, key=lambda x: len(x.get_text()))
                 return main_element.get_text(separator=' ', strip=True)
         
-        # Fallback: supprimer navigation, sidebar, footer et prendre le reste
+        # Fallback: remove navigation, sidebar, footer and take the rest
         content_soup = BeautifulSoup(str(soup), 'html.parser')
         
         for selector_type in ['navigation', 'sidebar', 'footer']:
@@ -238,41 +238,41 @@ class AdvancedContentExtractor:
         return content_soup.get_text(separator=' ', strip=True)
     
     def _clean_text(self, text: str) -> str:
-        """Nettoie le texte extrait"""
+        """Cleans the extracted text"""
         if not text:
             return ""
         
-        # Supprimer les espaces multiples
+        # Remove multiple spaces
         text = re.sub(r'\s+', ' ', text)
         
-        # Supprimer les caractères de contrôle
+        # Remove control characters
         text = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', text)
         
-        # Supprimer les lignes vides multiples
+        # Remove multiple empty lines
         text = re.sub(r'\n\s*\n', '\n\n', text)
         
         return text.strip()
     
     def _create_summary(self, text: str, max_sentences: int = 3) -> str:
-        """Crée un résumé du contenu"""
+        """Creates a summary of the content"""
         if not text or len(text) < 100:
             return text
         
-        # Diviser en phrases
+        # Split into sentences
         sentences = re.split(r'[.!?]+', text)
         sentences = [s.strip() for s in sentences if len(s.strip()) > 20]
         
         if len(sentences) <= max_sentences:
             return text[:500] + "..." if len(text) > 500 else text
         
-        # Prendre les premières phrases qui contiennent des informations importantes
+        # Take the first sentences that contain important information
         important_sentences = []
-        for sentence in sentences[:10]:  # Examiner les 10 premières phrases
+        for sentence in sentences[:10]:  # Examine the first 10 sentences
             if any(keyword in sentence.lower() for keyword in 
-                   ['important', 'principal', 'essentiel', 'clé', 'majeur', 'définition']):
+                   ['important', 'principal', 'essential', 'key', 'major', 'definition']):
                 important_sentences.append(sentence)
         
-        # Si pas assez de phrases importantes, prendre les premières
+        # If not enough important sentences, take the first ones
         if len(important_sentences) < max_sentences:
             summary_sentences = sentences[:max_sentences]
         else:
@@ -281,13 +281,13 @@ class AdvancedContentExtractor:
         return '. '.join(summary_sentences) + '.'
     
     def _extract_links(self, soup: BeautifulSoup, base_url: str) -> List[Dict[str, str]]:
-        """Extrait tous les liens de la page"""
+        """Extracts all links from the page"""
         links = []
         for link in soup.find_all('a', href=True):
             href = link['href']
             full_url = urljoin(base_url, href)
             
-            # Nettoyer l'URL
+            # Clean the URL
             parsed = urlparse(full_url)
             if parsed.scheme in ['http', 'https']:
                 links.append({
@@ -301,7 +301,7 @@ class AdvancedContentExtractor:
         return links
     
     def _extract_images(self, soup: BeautifulSoup, base_url: str) -> List[Dict[str, str]]:
-        """Extrait toutes les images de la page"""
+        """Extracts all images from the page"""
         images = []
         for img in soup.find_all('img', src=True):
             src = img['src']
@@ -318,7 +318,7 @@ class AdvancedContentExtractor:
         return images
     
     def _extract_navigation_elements(self, soup: BeautifulSoup, base_url: str) -> List[Dict[str, str]]:
-        """Extrait les éléments de navigation"""
+        """Extracts navigation elements"""
         nav_elements = []
         
         for selector in self.content_selectors['navigation']:
@@ -336,15 +336,15 @@ class AdvancedContentExtractor:
         return nav_elements
     
     def _extract_content_sections(self, soup: BeautifulSoup) -> List[Dict[str, str]]:
-        """Extrait les sections de contenu"""
+        """Extracts content sections"""
         sections = []
         
-        # Sections avec headers
-        for i in range(1, 7):  # h1 à h6
+        # Sections with headers
+        for i in range(1, 7):  # h1 to h6
             for header in soup.find_all(f'h{i}'):
                 section_content = ""
                 
-                # Trouver le contenu après le header
+                # Find content after the header
                 next_element = header.next_sibling
                 while next_element and next_element.name not in [f'h{j}' for j in range(1, i+1)]:
                     if hasattr(next_element, 'get_text'):
@@ -361,11 +361,11 @@ class AdvancedContentExtractor:
         return sections
     
     def _extract_keywords(self, text: str, max_keywords: int = 10) -> List[str]:
-        """Extrait les mots-clés du texte"""
+        """Extracts keywords from the text"""
         if not text:
             return []
         
-        # Mots vides en français et anglais
+        # Stop words in French and English
         stop_words = {
             'le', 'de', 'et', 'à', 'un', 'il', 'être', 'et', 'en', 'avoir', 'que', 'pour',
             'dans', 'ce', 'son', 'une', 'sur', 'avec', 'ne', 'se', 'pas', 'tout', 'plus',
@@ -374,24 +374,24 @@ class AdvancedContentExtractor:
             'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from'
         }
         
-        # Extraire les mots
+        # Extract words
         words = re.findall(r'\b[a-zA-ZÀ-ÿ]{3,}\b', text.lower())
         
-        # Compter les fréquences
+        # Count frequencies
         word_freq = defaultdict(int)
         for word in words:
             if word not in stop_words:
                 word_freq[word] += 1
         
-        # Retourner les mots les plus fréquents
+        # Return the most frequent words
         return [word for word, freq in sorted(word_freq.items(), key=lambda x: x[1], reverse=True)[:max_keywords]]
     
     def _detect_language(self, text: str) -> str:
-        """Détecte la langue du texte"""
+        """Detects the language of the text"""
         if not text:
             return "unknown"
         
-        # Mots indicateurs français
+        # French indicator words
         french_indicators = ['le', 'la', 'les', 'de', 'du', 'des', 'et', 'ou', 'est', 'sont', 'avec', 'dans', 'pour', 'sur', 'par']
         english_indicators = ['the', 'and', 'or', 'is', 'are', 'with', 'in', 'for', 'on', 'by', 'at', 'to', 'of']
         
@@ -407,10 +407,10 @@ class AdvancedContentExtractor:
             return "unknown"
     
     def _calculate_content_quality(self, text: str, title: str, links: List[Dict]) -> float:
-        """Calcule un score de qualité du contenu"""
+        """Calculates a content quality score"""
         score = 0.0
         
-        # Longueur du contenu
+        # Content length
         if len(text) > 1000:
             score += 3.0
         elif len(text) > 500:
@@ -418,47 +418,47 @@ class AdvancedContentExtractor:
         elif len(text) > 100:
             score += 1.0
         
-        # Qualité du titre
+        # Title quality
         if title and len(title) > 10:
             score += 1.0
         
-        # Nombre de liens
+        # Number of links
         if len(links) > 10:
             score += 2.0
         elif len(links) > 5:
             score += 1.0
         
-        # Ratio texte/liens (éviter le spam)
+        # Text/link ratio (avoid spam)
         if len(links) > 0:
             text_link_ratio = len(text) / len(links)
             if text_link_ratio > 100:
                 score += 1.0
         
-        # Présence de structure (sections, headers)
-        if re.search(r'\n\s*\n', text):  # Paragraphes
+        # Presence of structure (sections, headers)
+        if re.search(r'\n\s*\n', text):  # Paragraphs
             score += 1.0
         
         return min(score, 10.0)
 
 class AdvancedWebNavigator:
-    """Navigateur web avancé pour l'API Gemini"""
+    """Advanced web navigator for artificial intelligence API GOOGLE GEMINI 2.0 FLASH"""
     
     def __init__(self):
         self.session = requests.Session()
         self.content_extractor = AdvancedContentExtractor()
         
-        # Configuration des headers
+        # Header configuration
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8',
             'Accept-Encoding': 'gzip, deflate, br',
             'DNT': '1',
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1'
         })
         
-        # Répertoires de stockage
+        # Storage directories
         self.data_dir = Path("data/advanced_web_navigation")
         self.data_dir.mkdir(parents=True, exist_ok=True)
         
@@ -468,11 +468,11 @@ class AdvancedWebNavigator:
         self.navigation_logs_dir = self.data_dir / "navigation_logs"
         self.navigation_logs_dir.mkdir(parents=True, exist_ok=True)
         
-        # Cache en mémoire
+        # In-memory cache
         self.content_cache: Dict[str, WebPageContent] = {}
         self.url_blacklist: Set[str] = set()
         
-        logger.info("✅ Navigateur web avancé initialisé")
+        logger.info("✅ Advanced web navigator initialized")
     
     def navigate_deep(self, start_url: str, 
                      max_depth: int = 3, 
@@ -480,17 +480,17 @@ class AdvancedWebNavigator:
                      navigation_strategy: str = 'breadth_first',
                      content_filter: Optional[callable] = None) -> NavigationPath:
         """
-        Navigation en profondeur dans un site web
+        Deep navigation within a website
         
         Args:
-            start_url: URL de départ
-            max_depth: Profondeur maximale de navigation
-            max_pages: Nombre maximum de pages à visiter
+            start_url: Starting URL
+            max_depth: Maximum navigation depth
+            max_pages: Maximum number of pages to visit
             navigation_strategy: 'breadth_first', 'depth_first', 'quality_first'
-            content_filter: Fonction de filtrage du contenu
+            content_filter: Content filtering function
         """
         session_id = f"nav_{int(time.time())}"
-        logger.info(f"🚀 Début de navigation profonde: {start_url} (session: {session_id})")
+        logger.info(f"🚀 Starting deep navigation: {start_url} (session: {session_id})")
         
         navigation_path = NavigationPath(
             start_url=start_url,
@@ -502,14 +502,14 @@ class AdvancedWebNavigator:
             created_at=datetime.now()
         )
         
-        # Queue de navigation avec priorité
+        # Navigation queue with priority
         navigation_queue = [(start_url, 0)]  # (url, depth)
         visited_urls = set()
         
         while navigation_queue and len(navigation_path.visited_pages) < max_pages:
-            # Sélectionner la prochaine URL selon la stratégie
+            # Select the next URL according to the strategy
             if navigation_strategy == 'quality_first':
-                # Trier par qualité potentielle (à implémenter)
+                # Sort by potential quality (to be implemented)
                 navigation_queue.sort(key=lambda x: self._estimate_url_quality(x[0]), reverse=True)
             
             current_url, current_depth = navigation_queue.pop(0)
@@ -517,67 +517,67 @@ class AdvancedWebNavigator:
             if current_url in visited_urls or current_depth > max_depth:
                 continue
             
-            logger.info(f"📄 Navigation vers: {current_url} (profondeur: {current_depth})")
+            logger.info(f"📄 Navigating to: {current_url} (depth: {current_depth})")
             
-            # Extraire le contenu de la page
+            # Extract page content
             page_content = self.extract_page_content(current_url)
             
             if page_content.success:
                 visited_urls.add(current_url)
                 
-                # Appliquer le filtre de contenu si fourni
+                # Apply content filter if provided
                 if content_filter is None or content_filter(page_content):
                     navigation_path.visited_pages.append(page_content)
                     navigation_path.total_content_extracted += len(page_content.cleaned_text)
                     navigation_path.navigation_depth = max(navigation_path.navigation_depth, current_depth)
                     
-                    # Sauvegarder le contenu
+                    # Save content
                     self._save_page_content(page_content, session_id)
                     
-                    logger.info(f"✅ Contenu extrait: {len(page_content.cleaned_text)} caractères")
+                    logger.info(f"✅ Content extracted: {len(page_content.cleaned_text)} characters")
                     
-                    # Ajouter les liens intéressants à la queue
+                    # Add interesting links to the queue
                     if current_depth < max_depth:
                         interesting_links = self._select_navigation_links(page_content, visited_urls)
-                        for link_url in interesting_links[:5]:  # Max 5 liens par page
+                        for link_url in interesting_links[:5]:  # Max 5 links per page
                             navigation_queue.append((link_url, current_depth + 1))
                 else:
-                    logger.info("❌ Contenu filtré, page ignorée")
+                    logger.info("❌ Content filtered, page skipped")
             else:
-                logger.warning(f"⚠️ Échec de l'extraction: {page_content.error_message}")
+                logger.warning(f"⚠️ Extraction failed: {page_content.error_message}")
             
-            # Délai entre les requêtes
+            # Delay between requests
             time.sleep(0.5)
         
-        # Sauvegarder le chemin de navigation
+        # Save navigation path
         self._save_navigation_path(navigation_path)
         
-        logger.info(f"🏁 Navigation terminée: {len(navigation_path.visited_pages)} pages visitées")
+        logger.info(f"🏁 Navigation finished: {len(navigation_path.visited_pages)} pages visited")
         return navigation_path
     
     def extract_page_content(self, url: str) -> WebPageContent:
-        """Extrait le contenu détaillé d'une page web"""
-        # Vérifier le cache
+        """Extracts detailed content from a web page"""
+        # Check cache
         if url in self.content_cache:
-            logger.info(f"📋 Contenu récupéré du cache: {url}")
+            logger.info(f"📋 Content retrieved from cache: {url}")
             return self.content_cache[url]
         
         try:
-            logger.info(f"🔍 Extraction du contenu: {url}")
+            logger.info(f"🔍 Extracting content: {url}")
             
             response = self.session.get(url, timeout=10, allow_redirects=True)
             response.raise_for_status()
             
-            # Extraire le contenu
+            # Extract content
             page_content = self.content_extractor.extract_page_content(response.text, url)
             
-            # Mettre en cache
+            # Cache content
             self.content_cache[url] = page_content
             
             return page_content
             
         except Exception as e:
-            logger.error(f"❌ Erreur lors de l'extraction de {url}: {str(e)}")
+            logger.error(f"❌ Error during extraction from {url}: {str(e)}")
             return WebPageContent(
                 url=url,
                 title="",
@@ -599,15 +599,15 @@ class AdvancedWebNavigator:
             )
     
     def search_and_navigate(self, query: str, search_engine: str = "duckduckgo") -> List[NavigationPath]:
-        """Recherche et navigate dans les résultats"""
-        logger.info(f"🔎 Recherche et navigation pour: {query}")
+        """Searches and navigates through results"""
+        logger.info(f"🔎 Searching and navigating for: {query}")
         
-        # TODO: Intégrer avec Searx pour la recherche
-        # Pour l'instant, on simule des résultats
+        # TODO: Integrate with Searx for search
+        # For now, simulating results
         search_results = self._simulate_search_results(query)
         
         navigation_paths = []
-        for result_url in search_results[:3]:  # Naviguer dans les 3 premiers résultats
+        for result_url in search_results[:3]:  # Navigate through the first 3 results
             try:
                 nav_path = self.navigate_deep(
                     start_url=result_url,
@@ -617,12 +617,12 @@ class AdvancedWebNavigator:
                 )
                 navigation_paths.append(nav_path)
             except Exception as e:
-                logger.error(f"Erreur lors de la navigation de {result_url}: {str(e)}")
+                logger.error(f"Error during navigation of {result_url}: {str(e)}")
         
         return navigation_paths
     
     def _select_navigation_links(self, page_content: WebPageContent, visited_urls: Set[str]) -> List[str]:
-        """Sélectionne les liens les plus intéressants pour la navigation"""
+        """Selects the most interesting links for navigation"""
         interesting_links = []
         
         base_domain = urlparse(page_content.url).netloc
@@ -631,60 +631,60 @@ class AdvancedWebNavigator:
             link_url = link['url']
             link_text = link['text'].lower()
             
-            # Ignorer les liens déjà visités
+            # Ignore already visited links
             if link_url in visited_urls:
                 continue
             
-            # Privilégier les liens du même domaine
+            # Prioritize links from the same domain
             if urlparse(link_url).netloc != base_domain:
                 continue
             
-            # Ignorer certains types de liens
+            # Ignore certain types of links
             if any(ignored in link_url.lower() for ignored in 
                    ['.pdf', '.jpg', '.png', '.gif', 'mailto:', 'javascript:', '#']):
                 continue
             
-            # Score du lien basé sur le texte
+            # Link score based on text
             link_score = 0
             
-            # Mots-clés intéressants dans le texte du lien
+            # Interesting keywords in link text
             interesting_keywords = [
-                'détail', 'plus', 'voir', 'lire', 'article', 'page', 'section',
-                'chapitre', 'guide', 'tutoriel', 'formation', 'cours', 'about',
-                'contact', 'service', 'produit', 'information'
+                'detail', 'more', 'view', 'read', 'article', 'page', 'section',
+                'chapter', 'guide', 'tutorial', 'training', 'course', 'about',
+                'contact', 'service', 'product', 'information'
             ]
             
             for keyword in interesting_keywords:
                 if keyword in link_text:
                     link_score += 1
             
-            # Éviter les liens de navigation générique
-            generic_links = ['accueil', 'home', 'menu', 'recherche', 'search']
+            # Avoid generic navigation links
+            generic_links = ['home', 'menu', 'search']
             if any(generic in link_text for generic in generic_links):
                 link_score -= 2
             
             if link_score > 0:
                 interesting_links.append(link_url)
         
-        # Trier par score potentiel
+        # Sort by potential score
         return interesting_links[:10]
     
     def _estimate_url_quality(self, url: str) -> float:
-        """Estime la qualité potentielle d'une URL"""
+        """Estimates the potential quality of a URL"""
         score = 0.0
         
-        # Longueur de l'URL (ni trop courte ni trop longue)
+        # URL length (neither too short nor too long)
         url_length = len(url)
         if 20 < url_length < 100:
             score += 1.0
         
-        # Présence de mots-clés dans l'URL
+        # Presence of keywords in the URL
         quality_keywords = ['article', 'guide', 'tutorial', 'about', 'detail', 'info']
         for keyword in quality_keywords:
             if keyword in url.lower():
                 score += 0.5
         
-        # Éviter les URLs de spam
+        # Avoid spam URLs
         spam_indicators = ['ad', 'ads', 'popup', 'redirect', 'track']
         for indicator in spam_indicators:
             if indicator in url.lower():
@@ -693,24 +693,24 @@ class AdvancedWebNavigator:
         return max(score, 0.0)
     
     def _simulate_search_results(self, query: str) -> List[str]:
-        """Simule des résultats de recherche (à remplacer par Searx)"""
-        # Simulation simple - à remplacer par l'intégration Searx
+        """Simulates search results (to be replaced by Searx)"""
+        # Simple simulation - to be replaced by Searx integration
         return [
-            "https://fr.wikipedia.org/wiki/Intelligence_artificielle",
-            "https://www.futura-sciences.com/tech/definitions/informatique-intelligence-artificielle-555/",
-            "https://www.lebigdata.fr/intelligence-artificielle-definition"
+            "https://en.wikipedia.org/wiki/Artificial_intelligence",
+            "https://www.ibm.com/cloud/what-is-artificial-intelligence",
+            "https://www.techtarget.com/whatis/definition/artificial-intelligence-AI"
         ]
     
     def _save_page_content(self, page_content: WebPageContent, session_id: str):
-        """Sauvegarde le contenu d'une page"""
+        """Saves page content"""
         try:
-            # Créer un nom de fichier basé sur l'URL
+            # Create a filename based on the URL
             url_hash = hashlib.md5(page_content.url.encode()).hexdigest()[:12]
             filename = f"{session_id}_{url_hash}.json"
             
             filepath = self.content_cache_dir / filename
             
-            # Sérialiser le contenu
+            # Serialize content
             content_data = {
                 'url': page_content.url,
                 'title': page_content.title,
@@ -734,13 +734,13 @@ class AdvancedWebNavigator:
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(content_data, f, ensure_ascii=False, indent=2)
             
-            logger.info(f"💾 Contenu sauvegardé: {filepath}")
+            logger.info(f"💾 Content saved: {filepath}")
             
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde: {str(e)}")
+            logger.error(f"Error during saving: {str(e)}")
     
     def _save_navigation_path(self, navigation_path: NavigationPath):
-        """Sauvegarde le chemin de navigation"""
+        """Saves the navigation path"""
         try:
             filename = f"navigation_{navigation_path.session_id}.json"
             filepath = self.navigation_logs_dir / filename
@@ -759,39 +759,39 @@ class AdvancedWebNavigator:
             with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(path_data, f, ensure_ascii=False, indent=2)
             
-            logger.info(f"🗺️ Chemin de navigation sauvegardé: {filepath}")
+            logger.info(f"🗺️ Navigation path saved: {filepath}")
             
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde du chemin: {str(e)}")
+            logger.error(f"Error saving path: {str(e)}")
 
-# Instance globale
+# Global instance
 advanced_navigator = AdvancedWebNavigator()
 
 def navigate_website_deep(url: str, max_depth: int = 3, max_pages: int = 10) -> NavigationPath:
-    """Interface publique pour la navigation profonde"""
+    """Public interface for deep navigation"""
     return advanced_navigator.navigate_deep(url, max_depth, max_pages)
 
 def extract_website_content(url: str) -> WebPageContent:
-    """Interface publique pour l'extraction de contenu"""
+    """Public interface for content extraction"""
     return advanced_navigator.extract_page_content(url)
 
 def search_and_navigate_websites(query: str) -> List[NavigationPath]:
-    """Interface publique pour recherche et navigation"""
+    """Public interface for search and navigation"""
     return advanced_navigator.search_and_navigate(query)
 
 if __name__ == "__main__":
-    print("=== Test du Système de Navigation Web Avancé ===")
+    print("=== Advanced Web Navigation System Test ===")
     
-    # Test d'extraction de contenu
-    test_url = "https://fr.wikipedia.org/wiki/Intelligence_artificielle"
-    print(f"Test d'extraction: {test_url}")
+    # Content extraction test
+    test_url = "https://en.wikipedia.org/wiki/Artificial_intelligence"
+    print(f"Extraction test: {test_url}")
     
     content = extract_website_content(test_url)
     if content.success:
-        print(f"✅ Titre: {content.title}")
-        print(f"✅ Contenu: {len(content.cleaned_text)} caractères")
-        print(f"✅ Résumé: {content.summary[:200]}...")
-        print(f"✅ Mots-clés: {content.keywords[:5]}")
-        print(f"✅ Score de qualité: {content.content_quality_score}")
+        print(f"✅ Title: {content.title}")
+        print(f"✅ Content: {len(content.cleaned_text)} characters")
+        print(f"✅ Summary: {content.summary[:200]}...")
+        print(f"✅ Keywords: {content.keywords[:5]}")
+        print(f"✅ Quality score: {content.content_quality_score}")
     else:
-        print(f"❌ Erreur: {content.error_message}")
+        print(f"❌ Error: {content.error_message}")
