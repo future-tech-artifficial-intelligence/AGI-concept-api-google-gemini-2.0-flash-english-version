@@ -1,7 +1,9 @@
 """
-Module de gestion de la mémoire textuelle pour les conversations.
-Ce module permet de stocker et récupérer des conversations sous forme de fichiers texte,
-en complément du stockage SQLite.
+Textual Memory Management Module for Artificial Intelligence Conversations
+GOOGLE GEMINI 2.0 FLASH API
+
+This module allows storing and retrieving conversations as text files,
+complementing SQLite storage.
 """
 
 import os
@@ -11,38 +13,38 @@ from datetime import datetime
 import pathlib
 from typing import Dict, List, Any, Optional, Union
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("text_memory_manager")
 
-# Dossier de base pour les conversations textuelles
+# Base directory for textual conversations
 BASE_CONVERSATIONS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
                                      'data', 'conversations_text')
                                      
-# Dossier pour les uploads d'images
+# Directory for image uploads
 UPLOADS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
                           'data', 'uploads')
 
-# Créer les dossiers s'ils n'existent pas
+# Create directories if they don't exist
 os.makedirs(BASE_CONVERSATIONS_DIR, exist_ok=True)
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 class TextMemoryManager:
     """
-    Gestionnaire de mémoire textuelle qui permet de stocker et récupérer
-    des conversations sous forme de fichiers texte.
+    Textual memory manager that allows storing and retrieving
+    conversations as text files.
     """
     
     @staticmethod
     def get_user_dir(user_id: int) -> str:
         """
-        Obtient le chemin du dossier utilisateur pour les conversations textuelles.
+        Gets the path to the user's directory for text conversations.
         
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
             
         Returns:
-            Chemin du dossier utilisateur
+            Path to the user directory
         """
         user_dir = os.path.join(BASE_CONVERSATIONS_DIR, str(user_id))
         os.makedirs(user_dir, exist_ok=True)
@@ -51,14 +53,14 @@ class TextMemoryManager:
     @staticmethod
     def get_conversation_file_path(user_id: int, session_id: str) -> str:
         """
-        Obtient le chemin du fichier de conversation.
+        Gets the path to the conversation file.
         
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
+            user_id: User ID
+            session_id: Session ID
             
         Returns:
-            Chemin du fichier de conversation
+            Path to the conversation file
         """
         user_dir = TextMemoryManager.get_user_dir(user_id)
         return os.path.join(user_dir, f"{session_id}.txt")
@@ -71,41 +73,41 @@ class TextMemoryManager:
                     image_path: Optional[str] = None,
                     title: Optional[str] = None) -> bool:
         """
-        Sauvegarde un message dans le fichier de conversation.
+        Saves a message to the conversation file.
         
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
-            message_type: Type de message ('user' ou 'assistant')
-            content: Contenu du message
-            image_path: Chemin de l'image (optionnel)
-            title: Titre de la conversation (optionnel, pour la première entrée)
+            user_id: User ID
+            session_id: Session ID
+            message_type: Message type ('user' or 'assistant')
+            content: Message content
+            image_path: Image path (optional)
+            title: Conversation title (optional, for the first entry)
             
         Returns:
-            True si le message a été sauvegardé avec succès
+            True if the message was saved successfully
         """
         file_path = TextMemoryManager.get_conversation_file_path(user_id, session_id)
         file_exists = os.path.exists(file_path)
         
         try:
             with open(file_path, 'a', encoding='utf-8') as f:
-                # Si le fichier vient d'être créé, ajouter un en-tête
+                # If the file was just created, add a header
                 if not file_exists:
-                    conversation_title = title or f"Conversation du {datetime.now().strftime('%d/%m/%Y')}"
+                    conversation_title = title or f"Conversation from {datetime.now().strftime('%d/%m/%Y')}"
                     f.write(f"# {conversation_title}\n")
                     f.write(f"Session ID: {session_id}\n")
                     f.write(f"User ID: {user_id}\n")
-                    f.write(f"Date de création: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n\n")
+                    f.write(f"Creation date: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\n\n")
                     f.write("---\n\n")
                 
-                # Formater le message
+                # Format the message
                 timestamp = datetime.now().strftime('%H:%M:%S')
-                prefix = "Utilisateur" if message_type == "user" else "Assistant"
+                prefix = "User" if message_type == "user" else "Assistant"
                 
                 f.write(f"**{prefix}** ({timestamp}):\n")
                 f.write(f"{content}\n\n")
                 
-                # Ajouter une référence à l'image si présente
+                # Add a reference to the image if present
                 if image_path:
                     f.write(f"[Image: {os.path.basename(image_path)}]\n\n")
                     
@@ -113,20 +115,20 @@ class TextMemoryManager:
             
             return True
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde du message: {e}")
+            logger.error(f"Error saving message: {e}")
             return False
 
     @staticmethod
     def read_conversation(user_id: int, session_id: str) -> Optional[str]:
         """
-        Lit le contenu d'une conversation depuis un fichier texte.
+        Reads the content of a conversation from a text file.
         
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
+            user_id: User ID
+            session_id: Session ID
             
         Returns:
-            Contenu de la conversation ou None si le fichier n'existe pas
+            Conversation content or None if the file does not exist
         """
         file_path = TextMemoryManager.get_conversation_file_path(user_id, session_id)
         
@@ -137,19 +139,19 @@ class TextMemoryManager:
             with open(file_path, 'r', encoding='utf-8') as f:
                 return f.read()
         except Exception as e:
-            logger.error(f"Erreur lors de la lecture de la conversation: {e}")
+            logger.error(f"Error reading conversation: {e}")
             return None
     
     @staticmethod
     def list_conversations(user_id: int) -> List[Dict[str, Any]]:
         """
-        Liste toutes les conversations d'un utilisateur.
+        Lists all conversations for a user.
         
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
             
         Returns:
-            Liste des conversations de l'utilisateur
+            List of user conversations
         """
         user_dir = TextMemoryManager.get_user_dir(user_id)
         conversations = []
@@ -160,12 +162,12 @@ class TextMemoryManager:
                     session_id = file_name.replace('.txt', '')
                     file_path = os.path.join(user_dir, file_name)
                     
-                    # Obtenir les métadonnées du fichier
+                    # Get file metadata
                     file_stats = os.stat(file_path)
                     creation_time = datetime.fromtimestamp(file_stats.st_ctime)
                     modification_time = datetime.fromtimestamp(file_stats.st_mtime)
                     
-                    # Lire le titre depuis le fichier
+                    # Read title from file
                     title = ""
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
@@ -183,25 +185,25 @@ class TextMemoryManager:
                         'file_path': file_path
                     })
             
-            # Trier par date de modification (plus récent d'abord)
+            # Sort by modification date (most recent first)
             conversations.sort(key=lambda x: x['last_updated'], reverse=True)
             
             return conversations
         except Exception as e:
-            logger.error(f"Erreur lors du listing des conversations: {e}")
+            logger.error(f"Error listing conversations: {e}")
             return []
 
     @staticmethod
     def delete_conversation(user_id: int, session_id: str) -> bool:
         """
-        Supprime une conversation.
+        Deletes a conversation.
         
         Args:
-            user_id: ID de l'utilisateur
-            session_id: ID de la session
+            user_id: User ID
+            session_id: Session ID
             
         Returns:
-            True si la suppression a réussi
+            True if deletion was successful
         """
         file_path = TextMemoryManager.get_conversation_file_path(user_id, session_id)
         
@@ -210,21 +212,21 @@ class TextMemoryManager:
                 os.remove(file_path)
                 return True
             except Exception as e:
-                logger.error(f"Erreur lors de la suppression de la conversation: {e}")
+                logger.error(f"Error deleting conversation: {e}")
                 return False
         return False
 
     @staticmethod
     def search_conversations(user_id: int, query: str) -> List[Dict[str, Any]]:
         """
-        Recherche dans les conversations d'un utilisateur.
+        Searches conversations for a user.
         
         Args:
-            user_id: ID de l'utilisateur
-            query: Texte à rechercher
+            user_id: User ID
+            query: Text to search
             
         Returns:
-            Liste des conversations contenant la requête
+            List of conversations containing the query
         """
         conversations = TextMemoryManager.list_conversations(user_id)
         results = []
@@ -235,7 +237,7 @@ class TextMemoryManager:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
                     if query.lower() in content.lower():
-                        # Ajouter un extrait avec le contexte
+                        # Add an excerpt with context
                         lines = content.split('\n')
                         matching_lines = []
                         for i, line in enumerate(lines):
@@ -245,23 +247,23 @@ class TextMemoryManager:
                                 context = '\n'.join(lines[start:end])
                                 matching_lines.append(context)
                         
-                        conversation['matching_excerpts'] = matching_lines[:5]  # Limiter à 5 extraits
+                        conversation['matching_excerpts'] = matching_lines[:5]  # Limit to 5 excerpts
                         results.append(conversation)
             except Exception as e:
-                logger.error(f"Erreur lors de la recherche dans {file_path}: {e}")
+                logger.error(f"Error searching in {file_path}: {e}")
         
         return results
         
     @staticmethod
     def get_user_uploads_dir(user_id: int) -> str:
         """
-        Obtient le dossier des uploads d'un utilisateur.
+        Gets the user's uploads directory.
         
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
             
         Returns:
-            Chemin du dossier des uploads de l'utilisateur
+            Path to the user's uploads directory
         """
         user_uploads_dir = os.path.join(UPLOADS_DIR, str(user_id))
         os.makedirs(user_uploads_dir, exist_ok=True)
@@ -270,15 +272,15 @@ class TextMemoryManager:
     @staticmethod
     def save_uploaded_image(user_id: int, image_data: str, filename: Optional[str] = None) -> Optional[str]:
         """
-        Sauvegarde une image téléchargée.
+        Saves an uploaded image.
         
         Args:
-            user_id: ID de l'utilisateur
-            image_data: Données de l'image en base64
-            filename: Nom de fichier (optionnel)
+            user_id: User ID
+            image_data: Image data in base64
+            filename: Filename (optional)
             
         Returns:
-            Chemin relatif de l'image sauvegardée ou None en cas d'erreur
+            Relative path of the saved image or None on error
         """
         import base64
         
@@ -291,47 +293,47 @@ class TextMemoryManager:
         file_path = os.path.join(user_uploads_dir, filename)
         
         try:
-            # Vérifier si les données d'image sont vides
+            # Check if image data is empty
             if not image_data:
-                logger.error("Données d'image vides")
+                logger.error("Empty image data")
                 return None
                 
-            # Vérifier si c'est déjà au format base64 ou si c'est un format URI Data
+            # Check if it's already in base64 format or if it's a Data URI format
             if isinstance(image_data, str):
-                # Extraire les données binaires de l'image (retirer le préfixe data:image/xxx;base64,)
+                # Extract binary image data (remove the data:image/xxx;base64, prefix)
                 if ',' in image_data:
                     image_data = image_data.split(',', 1)[1]
-                # Nettoyer les caractères non base64 qui pourraient causer des problèmes
+                # Clean non-base64 characters that might cause problems
                 image_data = image_data.strip()
                 
-                # Décoder et sauvegarder l'image
+                # Decode and save the image
                 try:
                     with open(file_path, 'wb') as f:
                         f.write(base64.b64decode(image_data, validate=True))
-                    logger.info(f"Image sauvegardée avec succès à {file_path}")
+                    logger.info(f"Image saved successfully at {file_path}")
                 except Exception as decode_error:
-                    logger.error(f"Erreur de décodage base64: {str(decode_error)}")
+                    logger.error(f"Base64 decoding error: {str(decode_error)}")
                     return None
             else:
-                logger.error("Format d'image non supporté")
+                logger.error("Unsupported image format")
                 return None
                 
-            # Retourner le chemin relatif
+            # Return the relative path
             return os.path.relpath(file_path, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         except Exception as e:
-            logger.error(f"Erreur lors de la sauvegarde de l'image: {str(e)}")
+            logger.error(f"Error saving image: {str(e)}")
             return None
 
     @staticmethod
     def list_uploaded_images(user_id: int) -> List[Dict[str, Any]]:
         """
-        Liste les images téléchargées par un utilisateur.
+        Lists images uploaded by a user.
         
         Args:
-            user_id: ID de l'utilisateur
+            user_id: User ID
             
         Returns:
-            Liste des images téléchargées
+            List of uploaded images
         """
         user_uploads_dir = TextMemoryManager.get_user_uploads_dir(user_id)
         images = []
@@ -352,5 +354,5 @@ class TextMemoryManager:
             
             return images
         except Exception as e:
-            logger.error(f"Erreur lors du listing des images: {e}")
+            logger.error(f"Error listing images: {e}")
             return []
