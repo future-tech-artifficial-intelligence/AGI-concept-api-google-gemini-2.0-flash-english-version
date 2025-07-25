@@ -1,7 +1,6 @@
 """
-Script de diagnostic de la continuité des conversations.
-Ce script teste la capacité de l'IA à maintenir la continuité des conversations
-et à équilibrer ses réponses émotionnelles.
+**Conversation Continuity Diagnostic Script.**
+This script tests the ability of artificial intelligence API GOOGLE GEMINI 2.0 FLASH to maintain conversation continuity and balance its emotional responses.
 """
 
 import sys
