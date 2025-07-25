@@ -1,39 +1,40 @@
+```batch
 @echo off
-echo Commandes à exécuter dans le terminal pour transférer votre projet vers GitHub
-echo Copiez et collez ces commandes une par une dans votre terminal
+echo Commands to execute in the terminal to transfer your project to GitHub
+echo Copy and paste these commands one by one into your terminal
 
 echo.
-echo Initialisation du dépôt Git...
+echo Initializing the Git repository...
 git init
 
 echo.
-echo Ajout de TOUS les fichiers au suivi Git...
+echo Adding ALL files to Git tracking...
 git add -A
 
 echo.
-echo Vérification des fichiers qui seront commités...
+echo Checking files that will be committed...
 git status
 
 echo.
-echo Création du commit initial...
-git commit -m "Upload complet du projet AGI-ASI-AI"
+echo Creating the initial commit...
+git commit -m "AGI-concept-api-google-gemini-2.0-flash-english-version.git"
 
 echo.
-echo Configuration du dépôt distant...
-git remote add origin https://github.com/univers-artifficial-intelligence/Project-AGI-ASI-AI-google-gemini-2.0-flash1.git
+echo Configuring the remote repository...
+git remote add origin https://github.com/future-tech-artifficial-intelligence/AGI-concept-api-google-gemini-2.0-flash-english-version.git
 
 echo.
-echo Envoi du code vers GitHub...
+echo Pushing code to GitHub...
 git push -u origin main
 
 echo.
-echo Si l'envoi échoue, essayez avec l'option force:
+echo If the push fails, try with the force option:
 echo git push -u -f origin main
 
 echo.
-echo Note: Si votre branche principale s'appelle "master" au lieu de "main", utilisez:
+echo Note: If your main branch is called "master" instead of "main", use:
 echo git push -u origin master
 
 echo.
-echo Terminé! Votre code a été transféré vers GitHub.
+echo Done! Your code has been transferred to GitHub.
 pause
