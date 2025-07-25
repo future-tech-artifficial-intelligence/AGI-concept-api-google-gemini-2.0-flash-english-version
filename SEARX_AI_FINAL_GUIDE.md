@@ -1,116 +1,116 @@
-# 🚀 SEARX AI - SYSTÈME DE RECHERCHE AUTONOME
+# 🚀 SEARX artificial intelligence API GOOGLE GEMINI 2.0 FLASH - AUTONOMOUS SEARCH SYSTEM
 
-## 📋 ÉTAT DU SYSTÈME : OPÉRATIONNEL ✅
+## 📋 SYSTEM STATUS: OPERATIONAL ✅
 
-Votre système Searx AI est maintenant **largement fonctionnel** avec **5/6 tests réussis** !
+Your Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH system is now **largely functional** with **5/6 tests successful**!
 
 ---
 
-## 🎯 DÉMARRAGE RAPIDE
+## 🎯 QUICK START
 
-### Option 1 : Démarrage automatique (Recommandé)
+### Option 1: Automatic Startup (Recommended)
 ```bash
-# Double-cliquez sur :
+# Double-click:
 finalize_searx_setup.bat
 ```
 
-### Option 2 : Démarrage manuel
+### Option 2: Manual Startup
 ```bash
-# 1. Démarrez Docker Desktop
-# 2. Puis lancez :
+# 1. Start Docker Desktop
+# 2. Then launch:
 python searx_smart_start.py
 ```
 
-### Option 3 : Interface complète
+### Option 3: Full Interface
 ```bash
 start_searx_ai.bat
 ```
 
 ---
 
-## 🏗️ ARCHITECTURE DU SYSTÈME
+## 🏗️ SYSTEM ARCHITECTURE
 
-### 🧠 Composants Intelligents
-- **✅ Port Manager** : Gestion automatique des conflits de ports
-- **✅ Searx Interface** : Interface de recherche avec parsing HTML
-- **✅ Visual Capture** : Capture d'écran pour analyse visuelle
-- **✅ Smart Start** : Démarrage intelligent avec auto-configuration
-- **✅ Gemini Integration** : Intégration prête pour l'API Gemini
+### 🧠 Intelligent Components
+- **✅ Port Manager**: Automatic management of port conflicts
+- **✅ Searx Interface**: Search interface with HTML parsing
+- **✅ Visual Capture**: Screenshot capture for visual analysis
+- **✅ Smart Start**: Intelligent startup with auto-configuration
+- **✅ Gemini Integration**: Integration ready for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-### 📂 Fichiers Principaux
+### 📂 Main Files
 ```
 🎯 CORE SYSTEM
-├── port_manager.py              ✅ Gestionnaire de ports intelligent
-├── searx_interface.py           ✅ Interface Searx avec capture visuelle
-├── searx_smart_start.py         ✅ Script de démarrage intelligent
-└── searx_visual_capture.py      ✅ Système de capture visuelle
+├── port_manager.py              ✅ Intelligent port manager
+├── searx_interface.py           ✅ Searx interface with visual capture
+├── searx_smart_start.py         ✅ Intelligent startup script
+└── searx_visual_capture.py      ✅ Visual capture system
 
 🐳 DOCKER CONFIGS
-├── docker-compose.searx.yml     ✅ Configuration Docker principale
-├── docker-compose.searx-alt.yml ✅ Configuration alternative (port 8081)
-└── docker-compose.searx-port-8080.yml ✅ Config générée automatiquement
+├── docker-compose.searx.yml     ✅ Main Docker configuration
+├── docker-compose.searx-alt.yml ✅ Alternative configuration (port 8081)
+└── docker-compose.searx-port-8080.yml ✅ Automatically generated config
 
-🚀 SCRIPTS WINDOWS
-├── finalize_searx_setup.bat     ✅ Finalisation et démarrage
-├── start_searx_ai.bat           ✅ Interface complète de gestion
-├── searx_manager.bat            ✅ Gestionnaire avancé
-└── free_port_8080.bat           ✅ Libération de port
+🚀 WINDOWS SCRIPTS
+├── finalize_searx_setup.bat     ✅ Finalization and startup
+├── start_searx_ai.bat           ✅ Full management interface
+├── searx_manager.bat            ✅ Advanced manager
+└── free_port_8080.bat           ✅ Port release
 
 🧪 TESTS & DOCS
-├── test_searx_complete.py       ✅ Tests complets du système
-├── test_searx_system.py         ✅ Tests de validation
-└── requirements.txt             ✅ Dépendances Python
+├── test_searx_complete.py       ✅ Complete system tests
+├── test_searx_system.py         ✅ Validation tests
+└── requirements.txt             ✅ Python dependencies
 ```
 
 ---
 
-## 🔧 FONCTIONNALITÉS AVANCÉES
+## 🔧 ADVANCED FEATURES
 
-### 🤖 Gestion Intelligente des Ports
-- **Auto-détection** des ports disponibles
-- **Libération automatique** des ports en conflit
-- **Configuration dynamique** des conteneurs Docker
-- **Sauvegarde** des configurations pour réutilisation
+### 🤖 Intelligent Port Management
+-   **Auto-detection** of available ports
+-   **Automatic release** of conflicting ports
+-   **Dynamic configuration** of Docker containers
+-   **Saving** configurations for reuse
 
-### 🔍 Interface de Recherche Sophistiquée
-- **Parsing HTML** des résultats Searx
-- **Support multi-moteurs** (Google, Bing, DuckDuckGo, etc.)
-- **Filtrage par catégories** (général, IT, vidéos)
-- **Gestion des erreurs** et retry automatique
+### 🔍 Sophisticated Search Interface
+-   **HTML parsing** of Searx results
+-   **Multi-engine support** (Google, Bing, DuckDuckGo, etc.)
+-   **Category filtering** (general, IT, videos)
+-   **Error management** and automatic retry
 
-### 📸 Capture Visuelle pour IA
-- **Screenshots automatiques** des pages de résultats
-- **Annotations visuelles** pour l'IA
-- **Extraction de contexte** visuel
-- **Optimisation des images** pour l'analyse
+### 📸 Visual Capture for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   **Automatic screenshots** of results pages
+-   **Visual annotations** for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   **Extraction of visual context**
+-   **Image optimization** for analysis
 
-### 🚀 Démarrage Ultra-Intelligent
-- **Détection automatique** de l'état du système
-- **Configuration adaptative** selon l'environnement
-- **Gestion des dépendances** en temps réel
-- **Recovery automatique** en cas d'erreur
-
----
-
-## 🐳 DOCKER - DERNIÈRE ÉTAPE
-
-**Le seul élément manquant :** Docker Desktop doit être démarré.
-
-### Solutions :
-1. **Démarrage automatique** : `finalize_searx_setup.bat` le fait pour vous
-2. **Démarrage manuel** : Lancez Docker Desktop depuis le menu Démarrer
-3. **Vérification** : `docker ps` doit fonctionner sans erreur
+### 🚀 Ultra-Intelligent Startup
+-   **Automatic detection** of system status
+-   **Adaptive configuration** based on environment
+-   **Real-time dependency management**
+-   **Automatic recovery** in case of error
 
 ---
 
-## 🎮 UTILISATION APRÈS INSTALLATION
+## 🐳 DOCKER - LAST STEP
 
-### 1. Recherches Autonomes
+**The only missing element:** Docker Desktop needs to be started.
+
+### Solutions:
+1.  **Automatic startup**: `finalize_searx_setup.bat` does it for you
+2.  **Manual startup**: Launch Docker Desktop from the Start menu
+3.  **Verification**: `docker ps` should work without error
+
+---
+
+## 🎮 USAGE AFTER INSTALLATION
+
+### 1. Autonomous Searches
 ```python
 from searx_interface import get_searx_interface
 
 searx = get_searx_interface()
-results = searx.search("intelligence artificielle", max_results=10)
+results = searx.search("artificial intelligence", max_results=10)
 
 for result in results:
     print(f"📄 {result.title}")
@@ -118,100 +118,100 @@ for result in results:
     print(f"📝 {result.content[:100]}...")
 ```
 
-### 2. Recherches avec Capture Visuelle
+### 2. Searches with Visual Capture
 ```python
-# Recherche avec analyse visuelle pour l'IA
+# Search with visual analysis for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 visual_results = searx.search_with_visual(
-    "tutoriels Python avancés", 
+    "advanced Python tutorials",
     category="it"
 )
 
 if visual_results['has_visual']:
-    print("📸 Capture visuelle disponible")
+    print("📸 Visual capture available")
     print(f"🖼️ Screenshot: {visual_results['visual_data']['screenshot_path']}")
 ```
 
-### 3. Intégration avec Gemini (Prêt)
+### 3. Integration with Gemini (Ready)
 ```python
-# Dans gemini_api_adapter.py - déjà intégré !
-# L'API Gemini détectera automatiquement les requêtes de recherche
-# et utilisera Searx pour obtenir des informations à jour
+# In gemini_api_adapter.py - already integrated!
+# The artificial intelligence API GOOGLE GEMINI 2.0 FLASH will automatically detect search queries
+# and use Searx to get up-to-date information
 ```
 
 ---
 
-## 📊 RAPPORT DES TESTS
+## 📊 TEST REPORT
 
 ```
-🏆 SCORE GLOBAL: 5/6 tests réussis (83% - EXCELLENT)
+🏆 OVERALL SCORE: 5/6 tests successful (83% - EXCELLENT)
 
-✅ SUCCÈS - Imports Python          (Toutes les dépendances OK)
-✅ SUCCÈS - Gestionnaire de ports   (Intelligent et fonctionnel)
-✅ SUCCÈS - Interface Searx         (Avec capture visuelle)
-❌ ÉCHEC  - Docker                  (À démarrer manuellement)
-✅ SUCCÈS - Fichiers système        (Tous présents)
-✅ SUCCÈS - Démarrage intelligent   (Scripts opérationnels)
+✅ SUCCESS - Python Imports          (All dependencies OK)
+✅ SUCCESS - Port Manager           (Intelligent and functional)
+✅ SUCCESS - Searx Interface         (With visual capture)
+❌ FAILED  - Docker                  (To be started manually)
+✅ SUCCESS - System Files            (All present)
+✅ SUCCESS - Intelligent Startup     (Scripts operational)
 ```
 
 ---
 
-## 🎯 PROCHAINES ACTIONS
+## 🎯 NEXT ACTIONS
 
-### Immédiat (pour finaliser) :
-1. **Lancez** : `finalize_searx_setup.bat`
-2. **Ou démarrez Docker Desktop** puis `python searx_smart_start.py`
-3. **Testez** l'interface web quand l'URL s'affiche
+### Immediate (to finalize):
+1.  **Launch**: `finalize_searx_setup.bat`
+2.  **Or start Docker Desktop** then `python searx_smart_start.py`
+3.  **Test** the web interface when the URL appears
 
-### Pour l'intégration complète :
-1. **Lancez l'application principale** : `python app.py`
-2. **L'API Gemini** utilisera automatiquement Searx pour les recherches
-3. **Profitez** des recherches autonomes avec analyse visuelle !
+### For full integration:
+1.  **Launch the main application**: `python app.py`
+2.  **The artificial intelligence API GOOGLE GEMINI 2.0 FLASH** will automatically use Searx for searches
+3.  **Enjoy** autonomous searches with visual analysis!
 
 ---
 
-## 🌟 FONCTIONNALITÉS UNIQUES
+## 🌟 UNIQUE FEATURES
 
-### 🧠 Intelligence Artificielle
-- **Détection automatique** des requêtes nécessitant une recherche web
-- **Parsing intelligent** des résultats pour extraction d'informations
-- **Analyse visuelle** des pages pour contexte enrichi
-- **Intégration transparente** avec l'API Gemini
+### 🧠 Artificial Intelligence
+-   **Automatic detection** of queries requiring a web search
+-   **Intelligent parsing** of results for information extraction
+-   **Visual analysis** of pages for enriched context
+-   **Seamless integration** with the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-### 🔄 Robustesse
-- **Gestion d'erreurs** sophistiquée avec retry automatique
-- **Recovery** automatique en cas de panne de service
-- **Configurations multiples** pour haute disponibilité
-- **Monitoring** continu de l'état du système
+### 🔄 Robustness
+-   **Sophisticated error handling** with automatic retry
+-   **Automatic recovery** in case of service failure
+-   **Multiple configurations** for high availability
+-   **Continuous monitoring** of system status
 
 ### 🎯 Performance
-- **Cache intelligent** des configurations
-- **Optimisation** des requêtes et du parsing
-- **Gestion mémoire** efficace pour les captures d'écran
-- **Parallélisation** des opérations quand possible
+-   **Intelligent caching** of configurations
+-   **Optimization** of queries and parsing
+-   **Efficient memory management** for screenshots
+-   **Parallelization** of operations when possible
 
 ---
 
-## 🆘 SUPPORT ET DÉPANNAGE
+## 🆘 SUPPORT AND TROUBLESHOOTING
 
-### Logs et Diagnostics
-- **Logs détaillés** : `searx_smart_start.log`
-- **Tests complets** : `python test_searx_complete.py`
-- **État du système** : `python searx_smart_start.py status`
+### Logs and Diagnostics
+-   **Detailed logs**: `searx_smart_start.log`
+-   **Full tests**: `python test_searx_complete.py`
+-   **System status**: `python searx_smart_start.py status`
 
-### Problèmes Courants
-- **Port 8080 occupé** → `free_port_8080.bat` ou le système le gère automatiquement
-- **Docker non actif** → `finalize_searx_setup.bat` le démarre
-- **Dépendances manquantes** → `pip install -r requirements.txt`
+### Common Problems
+-   **Port 8080 busy** → `free_port_8080.bat` or the system handles it automatically
+-   **Docker not active** → `finalize_searx_setup.bat` starts it
+-   **Missing dependencies** → `pip install -r requirements.txt`
 
 ---
 
-## 🎉 FÉLICITATIONS !
+## 🎉 CONGRATULATIONS!
 
-Vous avez maintenant un **système Searx AI de niveau professionnel** avec :
-- 🧠 **Intelligence artificielle** intégrée
-- 🔄 **Gestion automatique** des conflits
-- 📸 **Analyse visuelle** avancée  
-- 🚀 **Démarrage ultra-intelligent**
-- 🐳 **Déploiement containerisé** robuste
+You now have a **professional-grade Searx artificial intelligence API GOOGLE GEMINI 2.0 FLASH system** with:
+-   🧠 **Integrated artificial intelligence**
+-   🔄 **Automatic conflict management**
+-   📸 **Advanced visual analysis**
+-   🚀 **Ultra-intelligent startup**
+-   🐳 **Robust containerized deployment**
 
-**Votre IA peut maintenant effectuer des recherches autonomes avec analyse visuelle !** 🎯
+**Your artificial intelligence API GOOGLE GEMINI 2.0 FLASH can now perform autonomous searches with visual analysis!** 🎯
