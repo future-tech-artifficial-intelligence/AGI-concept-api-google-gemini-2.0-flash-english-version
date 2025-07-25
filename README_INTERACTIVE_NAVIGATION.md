@@ -1,8 +1,8 @@
-# 🌐 Gemini Interactive Navigation System
+# 🌐 artificial intelligence API GOOGLE GEMINI 2.0 FLASH Interactive Navigation System
 
 ## 🎯 Overview
 
-The **Gemini Interactive Navigation System** is an advanced web automation solution that combines the artificial intelligence of Google Gemini 2.0 Flash with sophisticated web navigation capabilities. This system allows for intelligent interaction with web pages, analysis of visual content, and autonomous execution of complex tasks.
+The **artificial intelligence API GOOGLE GEMINI 2.0 FLASH  Interactive Navigation System** is an advanced web automation solution that combines the artificial intelligence of Google Gemini 2.0 Flash with sophisticated web navigation capabilities. This system allows for intelligent interaction with web pages, analysis of visual content, and autonomous execution of complex tasks.
 
 ## ✨ Key Features
 
