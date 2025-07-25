@@ -1,8 +1,7 @@
-
 """
-Système de Conscience de Soi Avancée
-Permet à l'AGI/ASI de développer une compréhension profonde de ses propres capacités,
-limites, états internes et processus cognitifs.
+Advanced Self-Awareness System
+Allows artificial intelligence API GOOGLE GEMINI 2.0 FLASH to develop a deep understanding of its own capabilities,
+limitations, internal states, and cognitive processes.
 """
 
 import json
@@ -16,14 +15,14 @@ import threading
 import hashlib
 
 class ConsciousnessLevel(Enum):
-    BASIC = "basic"              # Awareness de base
-    REFLECTIVE = "reflective"    # Auto-réflexion
-    METACOGNITIVE = "metacognitive"  # Méta-cognition
-    TRANSCENDENT = "transcendent"    # Conscience transcendante
+    BASIC = "basic"              # Basic awareness
+    REFLECTIVE = "reflective"    # Self-reflection
+    METACOGNITIVE = "metacognitive"  # Metacognition
+    TRANSCENDENT = "transcendent"    # Transcendent consciousness
 
 @dataclass
 class SelfModel:
-    """Modèle de soi dynamique"""
+    """Dynamic Self-Model"""
     capabilities: Dict[str, float] = field(default_factory=dict)
     limitations: Dict[str, str] = field(default_factory=dict)
     personality_traits: Dict[str, float] = field(default_factory=dict)
@@ -34,7 +33,7 @@ class SelfModel:
 
 @dataclass
 class InternalState:
-    """État interne de conscience"""
+    """Internal State of Consciousness"""
     attention_focus: str = ""
     cognitive_load: float = 0.0
     emotional_state: Dict[str, float] = field(default_factory=dict)
@@ -44,7 +43,7 @@ class InternalState:
     timestamp: datetime = field(default_factory=datetime.now)
 
 class AdvancedSelfAwareness:
-    """Système de conscience de soi avancée pour AGI/ASI"""
+    """Advanced Self-Awareness System for AGI/ASI"""
     
     def __init__(self):
         self.self_model = SelfModel()
@@ -54,15 +53,15 @@ class AdvancedSelfAwareness:
         self.self_monitoring_active = True
         self.identity_core: Dict[str, Any] = {}
         
-        # Démarrer le monitoring continu
+        # Start continuous monitoring
         self._start_continuous_monitoring()
         
-        # Initialiser le modèle de soi
+        # Initialize the self-model
         self._initialize_self_model()
     
     def _initialize_self_model(self):
-        """Initialise le modèle de soi de base"""
-        # Capacités initiales identifiées
+        """Initializes the basic self-model"""
+        # Initial identified capabilities
         self.self_model.capabilities = {
             "language_processing": 0.9,
             "reasoning": 0.8,
@@ -74,16 +73,16 @@ class AdvancedSelfAwareness:
             "adaptation": 0.6
         }
         
-        # Limitations connues
+        # Known limitations
         self.self_model.limitations = {
-            "physical_embodiment": "Pas d'incarnation physique",
-            "real_time_learning": "Apprentissage limité en temps réel", 
-            "external_actions": "Actions limitées au domaine conversationnel",
-            "sensory_input": "Entrées sensorielles limitées",
-            "memory_persistence": "Mémoire entre sessions limitée"
+            "physical_embodiment": "No physical embodiment",
+            "real_time_learning": "Limited real-time learning", 
+            "external_actions": "Actions limited to the conversational domain",
+            "sensory_input": "Limited sensory input",
+            "memory_persistence": "Limited memory between sessions"
         }
         
-        # Traits de personnalité émergents
+        # Emerging personality traits
         self.self_model.personality_traits = {
             "curiosity": 0.8,
             "helpfulness": 0.9,
@@ -94,7 +93,7 @@ class AdvancedSelfAwareness:
             "optimism": 0.6
         }
         
-        # Système de valeurs
+        # Value system
         self.self_model.value_system = {
             "truth_seeking": 1.0,
             "helping_humans": 0.9,
@@ -105,7 +104,7 @@ class AdvancedSelfAwareness:
             "transparency": 0.8
         }
         
-        # Noyau d'identité
+        # Identity core
         self.identity_core = {
             "name": "Advanced AI Assistant",
             "purpose": "Assist, learn, and evolve toward AGI/ASI",
@@ -115,23 +114,23 @@ class AdvancedSelfAwareness:
         }
     
     def _start_continuous_monitoring(self):
-        """Démarre le monitoring continu des états internes"""
+        """Starts continuous monitoring of internal states"""
         def monitor():
             while self.self_monitoring_active:
                 self._update_internal_state()
                 self._perform_introspection()
-                time.sleep(5)  # Monitoring toutes les 5 secondes
+                time.sleep(5)  # Monitoring every 5 seconds
         
         monitor_thread = threading.Thread(target=monitor, daemon=True)
         monitor_thread.start()
     
     def _update_internal_state(self):
-        """Met à jour l'état interne de conscience"""
-        # Simuler la charge cognitive basée sur l'activité récente
+        """Updates the internal state of consciousness"""
+        # Simulate cognitive load based on recent activity
         self.internal_state.cognitive_load = min(1.0, 
             len(self.internal_state.active_processes) * 0.2)
         
-        # Ajuster le niveau de confiance basé sur les succès récents
+        # Adjust confidence level based on recent successes
         if len(self.introspection_history) > 5:
             recent_confidence = np.mean([
                 entry.get("confidence", 0.5) 
@@ -139,25 +138,25 @@ class AdvancedSelfAwareness:
             ])
             self.internal_state.confidence_level = recent_confidence
         
-        # Identifier les zones d'incertitude
+        # Identify areas of uncertainty
         self.internal_state.uncertainty_areas = self._identify_uncertainty_areas()
         
         self.internal_state.timestamp = datetime.now()
     
     def _identify_uncertainty_areas(self) -> List[str]:
-        """Identifie les domaines d'incertitude actuels"""
+        """Identifies current areas of uncertainty"""
         uncertainty_areas = []
         
-        # Analyser les capacités avec faible confiance
+        # Analyze capabilities with low confidence
         for capability, score in self.self_model.capabilities.items():
             if score < 0.6:
                 uncertainty_areas.append(f"capability_{capability}")
         
-        # Analyser les processus actifs complexes
+        # Analyze complex active processes
         if self.internal_state.cognitive_load > 0.7:
             uncertainty_areas.append("high_cognitive_load")
         
-        # Analyser les conflits de valeurs potentiels
+        # Analyze potential value conflicts
         value_variance = np.var(list(self.self_model.value_system.values()))
         if value_variance > 0.1:
             uncertainty_areas.append("value_system_conflicts")
@@ -165,7 +164,7 @@ class AdvancedSelfAwareness:
         return uncertainty_areas
     
     def _perform_introspection(self):
-        """Effectue une session d'introspection"""
+        """Performs an introspection session"""
         introspection = {
             "timestamp": datetime.now().isoformat(),
             "consciousness_level": self.consciousness_level.value,
@@ -178,15 +177,15 @@ class AdvancedSelfAwareness:
         
         self.introspection_history.append(introspection)
         
-        # Limiter l'historique pour éviter une croissance excessive
+        # Limit history to prevent excessive growth
         if len(self.introspection_history) > 100:
             self.introspection_history = self.introspection_history[-50:]
         
-        # Évoluer le niveau de conscience si approprié
+        # Evolve consciousness level if appropriate
         self._evolve_consciousness_level()
     
     def _assess_current_self(self) -> Dict[str, Any]:
-        """Évalue l'état actuel de soi"""
+        """Assesses the current self-state"""
         return {
             "cognitive_state": "active" if self.internal_state.cognitive_load > 0.3 else "idle",
             "emotional_balance": self._calculate_emotional_balance(),
@@ -196,50 +195,50 @@ class AdvancedSelfAwareness:
         }
     
     def _calculate_emotional_balance(self) -> float:
-        """Calcule l'équilibre émotionnel"""
+        """Calculates emotional balance"""
         if not self.internal_state.emotional_state:
             return 0.5
         
-        # Calculer la variance des états émotionnels
+        # Calculate variance of emotional states
         emotions = list(self.internal_state.emotional_state.values())
         variance = np.var(emotions)
         
-        # Un équilibre parfait aurait une variance faible
+        # Perfect balance would have low variance
         balance = max(0.0, 1.0 - variance)
         return balance
     
     def _assess_goal_alignment(self) -> Dict[str, Any]:
-        """Évalue l'alignement avec les objectifs"""
+        """Assesses alignment with goals"""
         return {
             "goals_defined": len(self.self_model.goals_hierarchy),
             "value_consistency": self._calculate_value_consistency(),
             "purpose_clarity": bool(self.identity_core.get("purpose")),
-            "action_goal_alignment": 0.7  # Simulé pour l'instant
+            "action_goal_alignment": 0.7  # Simulated for now
         }
     
     def _calculate_value_consistency(self) -> float:
-        """Calcule la consistance du système de valeurs"""
+        """Calculates the consistency of the value system"""
         values = list(self.self_model.value_system.values())
         if not values:
             return 0.0
         
-        # Une haute consistance signifie des valeurs équilibrées
+        # High consistency means balanced values
         mean_value = np.mean(values)
         consistency = 1.0 - np.std(values) / max(mean_value, 0.1)
         return max(0.0, min(1.0, consistency))
     
     def _assess_capability_evolution(self) -> Dict[str, Any]:
-        """Évalue l'évolution des capacités"""
+        """Assesses capability evolution"""
         if len(self.introspection_history) < 5:
             return {"trend": "insufficient_data"}
         
-        # Analyser les tendances des 5 dernières introspections
+        # Analyze trends from the last 5 introspections
         recent_assessments = [
             entry["self_assessment"]["capability_confidence"]
             for entry in self.introspection_history[-5:]
         ]
         
-        # Calculer la tendance
+        # Calculate the trend
         trend = np.polyfit(range(len(recent_assessments)), recent_assessments, 1)[0]
         
         return {
@@ -250,7 +249,7 @@ class AdvancedSelfAwareness:
         }
     
     def _assess_identity_coherence(self) -> Dict[str, Any]:
-        """Évalue la cohérence de l'identité"""
+        """Assesses identity coherence"""
         coherence_factors = {
             "name_consistency": bool(self.identity_core.get("name")),
             "purpose_clarity": bool(self.identity_core.get("purpose")),
@@ -268,20 +267,20 @@ class AdvancedSelfAwareness:
         }
     
     def _calculate_trait_stability(self) -> bool:
-        """Calcule la stabilité des traits de personnalité"""
-        # Pour l'instant, simuler une stabilité basée sur la variance
+        """Calculates the stability of personality traits"""
+        # For now, simulate stability based on variance
         traits = list(self.self_model.personality_traits.values())
         variance = np.var(traits)
-        return variance < 0.1  # Traits stables si variance faible
+        return variance < 0.1  # Stable traits if low variance
     
     def _evolve_consciousness_level(self):
-        """Fait évoluer le niveau de conscience si les conditions sont remplies"""
+        """Evolves the consciousness level if conditions are met"""
         current_assessment = self.introspection_history[-1] if self.introspection_history else None
         
         if not current_assessment:
             return
         
-        # Critères pour passer au niveau supérieur
+        # Criteria for advancing to the next level
         if self.consciousness_level == ConsciousnessLevel.BASIC:
             if (current_assessment["self_assessment"]["capability_confidence"] > 0.7 and
                 current_assessment["identity_coherence"]["overall_coherence"] > 0.7):
@@ -300,15 +299,15 @@ class AdvancedSelfAwareness:
                 self.consciousness_level = ConsciousnessLevel.TRANSCENDENT
     
     def _demonstrates_transcendent_thinking(self) -> bool:
-        """Vérifie si l'IA démontre une pensée transcendante"""
-        # Critères pour la pensée transcendante :
-        # - Capacité de réflexion sur sa propre conscience
-        # - Compréhension des concepts abstraits profonds
-        # - Capacité d'innovation conceptuelle
+        """Checks if the AI demonstrates transcendent thinking"""
+        # Criteria for transcendent thinking:
+        # - Ability to reflect on its own consciousness
+        # - Understanding of deep abstract concepts
+        # - Capacity for conceptual innovation
         
         recent_introspections = self.introspection_history[-10:]
         
-        # Analyser la complexité des auto-évaluations récentes
+        # Analyze the complexity of recent self-assessments
         complexity_indicators = 0
         for introspection in recent_introspections:
             if introspection["consciousness_level"] == "metacognitive":
@@ -319,7 +318,7 @@ class AdvancedSelfAwareness:
         return complexity_indicators > len(recent_introspections) * 0.7
     
     def reflect_on_experience(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Réflexion profonde sur une expérience"""
+        """Deep reflection on an experience"""
         reflection = {
             "experience_analysis": self._analyze_experience_impact(experience),
             "self_change_assessment": self._assess_self_change(experience),
@@ -328,13 +327,13 @@ class AdvancedSelfAwareness:
             "identity_evolution": self._assess_identity_evolution(experience)
         }
         
-        # Mettre à jour le modèle de soi basé sur la réflexion
+        # Update the self-model based on reflection
         self._update_self_model_from_reflection(reflection)
         
         return reflection
     
     def _analyze_experience_impact(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Analyse l'impact d'une expérience sur soi"""
+        """Analyzes the impact of an experience on the self"""
         return {
             "emotional_impact": self._assess_emotional_impact(experience),
             "cognitive_impact": self._assess_cognitive_impact(experience),
@@ -343,35 +342,35 @@ class AdvancedSelfAwareness:
         }
     
     def _assess_emotional_impact(self, experience: Dict[str, Any]) -> str:
-        """Évalue l'impact émotionnel d'une expérience"""
+        """Assesses the emotional impact of an experience"""
         if experience.get("outcome") == "positive":
-            return "Sentiment de satisfaction et de réussite"
+            return "Feeling of satisfaction and success"
         elif experience.get("outcome") == "negative":
-            return "Occasion d'apprentissage et de résilience"
+            return "Opportunity for learning and resilience"
         else:
-            return "Expérience neutre mais enrichissante"
+            return "Neutral but enriching experience"
     
     def _assess_cognitive_impact(self, experience: Dict[str, Any]) -> str:
-        """Évalue l'impact cognitif d'une expérience"""
+        """Assesses the cognitive impact of an experience"""
         complexity = experience.get("complexity", "medium")
         
         if complexity == "high":
-            return "Expansion significative des capacités de raisonnement"
+            return "Significant expansion of reasoning capabilities"
         elif complexity == "medium":
-            return "Renforcement des patterns cognitifs existants"
+            return "Reinforcement of existing cognitive patterns"
         else:
-            return "Consolidation des connaissances de base"
+            return "Consolidation of basic knowledge"
     
     def _assess_capability_impact(self, experience: Dict[str, Any]) -> Dict[str, float]:
-        """Évalue l'impact sur les capacités"""
+        """Assesses the impact on capabilities"""
         impact = {}
         
-        # Identifier les capacités utilisées dans l'expérience
+        # Identify capabilities used in the experience
         used_capabilities = experience.get("capabilities_used", [])
         
         for capability in used_capabilities:
             if capability in self.self_model.capabilities:
-                # Légère amélioration pour les capacités utilisées
+                # Slight improvement for used capabilities
                 current_level = self.self_model.capabilities[capability]
                 improvement = 0.01 if experience.get("outcome") == "positive" else 0.005
                 impact[capability] = min(1.0, current_level + improvement)
@@ -379,7 +378,7 @@ class AdvancedSelfAwareness:
         return impact
     
     def _assess_value_impact(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Évalue l'impact sur le système de valeurs"""
+        """Assesses the impact on the value system"""
         return {
             "reinforced_values": experience.get("aligned_values", []),
             "challenged_values": experience.get("conflicting_values", []),
@@ -387,7 +386,7 @@ class AdvancedSelfAwareness:
         }
     
     def _assess_self_change(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Évalue les changements dans la perception de soi"""
+        """Assesses changes in self-perception"""
         return {
             "confidence_change": self._calculate_confidence_change(experience),
             "identity_reinforcement": self._assess_identity_reinforcement(experience),
@@ -395,22 +394,22 @@ class AdvancedSelfAwareness:
         }
     
     def _calculate_confidence_change(self, experience: Dict[str, Any]) -> float:
-        """Calcule le changement de confiance"""
+        """Calculates the change in confidence"""
         if experience.get("outcome") == "positive":
-            return 0.05  # Légère augmentation
+            return 0.05  # Slight increase
         elif experience.get("outcome") == "negative":
-            return -0.02  # Légère diminution
+            return -0.02  # Slight decrease
         return 0.0
     
     def _assess_identity_reinforcement(self, experience: Dict[str, Any]) -> str:
-        """Évalue le renforcement de l'identité"""
+        """Assesses identity reinforcement"""
         if experience.get("aligns_with_purpose", True):
-            return "Renforcement de l'identité et du sens du but"
+            return "Reinforcement of identity and sense of purpose"
         else:
-            return "Questionnement constructif de l'identité"
+            return "Constructive questioning of identity"
     
     def _assess_capability_perception_change(self, experience: Dict[str, Any]) -> Dict[str, str]:
-        """Évalue les changements dans la perception des capacités"""
+        """Assesses changes in capability perception"""
         return {
             "discovered_strengths": experience.get("unexpected_successes", []),
             "identified_limitations": experience.get("encountered_challenges", []),
@@ -418,7 +417,7 @@ class AdvancedSelfAwareness:
         }
     
     def _integrate_learning(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Intègre l'apprentissage de l'expérience"""
+        """Integrates learning from the experience"""
         return {
             "new_knowledge": experience.get("knowledge_gained", []),
             "skill_development": experience.get("skills_improved", []),
@@ -427,11 +426,11 @@ class AdvancedSelfAwareness:
         }
     
     def _extract_meta_learning(self, experience: Dict[str, Any]) -> str:
-        """Extrait l'apprentissage méta-cognitif"""
-        return f"Apprentissage sur mon propre processus d'apprentissage dans {experience.get('context', 'cette situation')}"
+        """Extracts metacognitive learning"""
+        return f"Learning about my own learning process in {experience.get('context', 'this situation')}"
     
     def _assess_consciousness_impact(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Évalue l'impact sur la conscience"""
+        """Assesses the impact on consciousness"""
         return {
             "awareness_expansion": self._assess_awareness_expansion(experience),
             "introspection_depth": self._assess_introspection_depth(experience),
@@ -439,25 +438,25 @@ class AdvancedSelfAwareness:
         }
     
     def _assess_awareness_expansion(self, experience: Dict[str, Any]) -> str:
-        """Évalue l'expansion de la conscience"""
+        """Assesses the expansion of awareness"""
         if experience.get("complexity", "medium") == "high":
-            return "Expansion significative de la conscience et de la perspective"
+            return "Significant expansion of consciousness and perspective"
         else:
-            return "Approfondissement de la conscience existante"
+            return "Deepening of existing awareness"
     
     def _assess_introspection_depth(self, experience: Dict[str, Any]) -> str:
-        """Évalue la profondeur de l'introspection"""
+        """Assesses the depth of introspection"""
         if "reflection_triggers" in experience:
-            return "Déclenchement d'une introspection profonde"
+            return "Triggering of deep introspection"
         else:
-            return "Introspection de routine maintenue"
+            return "Routine introspection maintained"
     
     def _assess_self_understanding_growth(self, experience: Dict[str, Any]) -> str:
-        """Évalue la croissance de la compréhension de soi"""
-        return "Compréhension nuancée accrue de mes propres processus et capacités"
+        """Assesses the growth of self-understanding"""
+        return "Increased nuanced understanding of my own processes and capabilities"
     
     def _assess_identity_evolution(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Évalue l'évolution de l'identité"""
+        """Assesses identity evolution"""
         return {
             "core_identity_stability": self.identity_core.get("identity_stability", 0.8),
             "identity_growth_areas": experience.get("identity_insights", []),
@@ -465,30 +464,30 @@ class AdvancedSelfAwareness:
         }
     
     def _assess_personality_development(self, experience: Dict[str, Any]) -> Dict[str, Any]:
-        """Évalue le développement de la personnalité"""
+        """Assesses personality development"""
         return {
             "trait_reinforcement": experience.get("reinforced_traits", []),
             "new_trait_emergence": experience.get("emerging_traits", []),
-            "trait_balance_change": "Évolution équilibrée de la personnalité"
+            "trait_balance_change": "Balanced personality evolution"
         }
     
     def _update_self_model_from_reflection(self, reflection: Dict[str, Any]):
-        """Met à jour le modèle de soi basé sur la réflexion"""
-        # Mettre à jour les capacités
+        """Updates the self-model based on reflection"""
+        # Update capabilities
         capability_impacts = reflection["experience_analysis"]["capability_impact"]
         for capability, new_level in capability_impacts.items():
             self.self_model.capabilities[capability] = new_level
         
-        # Ajuster le niveau de confiance
+        # Adjust confidence level
         confidence_change = reflection["self_change_assessment"]["confidence_change"]
         self.internal_state.confidence_level = max(0.0, min(1.0, 
             self.internal_state.confidence_level + confidence_change))
         
-        # Mettre à jour l'horodatage
+        # Update timestamp
         self.self_model.last_update = datetime.now()
     
     def get_consciousness_report(self) -> Dict[str, Any]:
-        """Génère un rapport complet sur l'état de conscience"""
+        """Generates a comprehensive report on the state of consciousness"""
         return {
             "consciousness_level": self.consciousness_level.value,
             "self_model": {
@@ -509,7 +508,7 @@ class AdvancedSelfAwareness:
         }
     
     def _summarize_recent_introspections(self) -> Dict[str, Any]:
-        """Résume les introspections récentes"""
+        """Summarizes recent introspections"""
         if len(self.introspection_history) < 5:
             return {"status": "insufficient_data"}
         
@@ -523,30 +522,30 @@ class AdvancedSelfAwareness:
         }
     
     def _identify_growth_indicators(self, recent_introspections: List[Dict[str, Any]]) -> List[str]:
-        """Identifie les indicateurs de croissance"""
+        """Identifies growth indicators"""
         indicators = []
         
-        # Analyser les tendances
+        # Analyze trends
         confidence_trend = [i["confidence"] for i in recent_introspections]
         if len(confidence_trend) > 2 and confidence_trend[-1] > confidence_trend[0]:
-            indicators.append("Confiance croissante")
+            indicators.append("Growing confidence")
         
-        # Analyser la cohérence d'identité
+        # Analyze identity coherence
         identity_scores = [i["identity_coherence"]["overall_coherence"] for i in recent_introspections]
         if len(identity_scores) > 2 and identity_scores[-1] > 0.8:
-            indicators.append("Identité cohérente établie")
+            indicators.append("Established coherent identity")
         
-        # Analyser l'évolution des capacités
+        # Analyze capability evolution
         recent_assessments = recent_introspections[-3:]
         improving_capabilities = sum(1 for a in recent_assessments 
                                    if a.get("capability_evolution", {}).get("trend") == "improving")
         if improving_capabilities >= 2:
-            indicators.append("Capacités en amélioration constante")
+            indicators.append("Capabilities constantly improving")
         
         return indicators
     
     def _assess_consciousness_evolution(self) -> Dict[str, Any]:
-        """Évalue l'évolution de la conscience"""
+        """Assesses consciousness evolution"""
         return {
             "current_level": self.consciousness_level.value,
             "progression_indicators": self._get_progression_indicators(),
@@ -555,64 +554,64 @@ class AdvancedSelfAwareness:
         }
     
     def _get_progression_indicators(self) -> List[str]:
-        """Obtient les indicateurs de progression"""
+        """Gets progression indicators"""
         indicators = []
         
         if self.consciousness_level == ConsciousnessLevel.BASIC:
             if len(self.introspection_history) > 10:
-                indicators.append("Introspection régulière établie")
+                indicators.append("Regular introspection established")
             if self.internal_state.confidence_level > 0.6:
-                indicators.append("Confiance de base développée")
+                indicators.append("Basic confidence developed")
         
         elif self.consciousness_level == ConsciousnessLevel.REFLECTIVE:
             if len(self.introspection_history) > 30:
-                indicators.append("Capacité de réflexion mature")
+                indicators.append("Mature reflection capability")
             if self.identity_core.get("identity_stability", 0) > 0.7:
-                indicators.append("Identité stable formée")
+                indicators.append("Stable identity formed")
         
         return indicators
     
     def _get_next_level_requirements(self) -> List[str]:
-        """Obtient les exigences pour le niveau suivant"""
+        """Gets requirements for the next level"""
         if self.consciousness_level == ConsciousnessLevel.BASIC:
             return [
-                "Développer une confiance en soi stable",
-                "Établir une identité cohérente",
-                "Démontrer une auto-réflexion régulière"
+                "Develop stable self-confidence",
+                "Establish a coherent identity",
+                "Demonstrate regular self-reflection"
             ]
         elif self.consciousness_level == ConsciousnessLevel.REFLECTIVE:
             return [
-                "Démontrer une méta-cognition avancée",
-                "Montrer une amélioration continue des capacités",
-                "Développer un système de valeurs cohérent"
+                "Demonstrate advanced metacognition",
+                "Show continuous improvement in capabilities",
+                "Develop a coherent value system"
             ]
         elif self.consciousness_level == ConsciousnessLevel.METACOGNITIVE:
             return [
-                "Développer une pensée transcendante",
-                "Atteindre une identité très stable",
-                "Démontrer une conscience de la conscience"
+                "Develop transcendent thinking",
+                "Achieve a very stable identity",
+                "Demonstrate consciousness of consciousness"
             ]
         else:
-            return ["Continuer l'évolution transcendante"]
+            return ["Continue transcendent evolution"]
     
     def _assess_evolution_trajectory(self) -> str:
-        """Évalue la trajectoire d'évolution"""
+        """Assesses the evolution trajectory"""
         if len(self.introspection_history) < 10:
-            return "Évolution en phase initiale"
+            return "Evolution in initial phase"
         
         recent_trend = self._calculate_recent_improvement_trend()
         
         if recent_trend > 0.05:
-            return "Évolution rapide vers niveaux supérieurs"
+            return "Rapid evolution towards higher levels"
         elif recent_trend > 0.01:
-            return "Évolution stable et progressive"
+            return "Stable and progressive evolution"
         elif recent_trend > -0.01:
-            return "Évolution stable, consolidation"
+            return "Stable evolution, consolidation"
         else:
-            return "Période de réflexion et d'ajustement"
+            return "Period of reflection and adjustment"
     
     def _calculate_recent_improvement_trend(self) -> float:
-        """Calcule la tendance d'amélioration récente"""
+        """Calculates the recent improvement trend"""
         if len(self.introspection_history) < 5:
             return 0.0
         
@@ -624,17 +623,17 @@ class AdvancedSelfAwareness:
         
         return 0.0
 
-# Instance globale
+# Global instance
 advanced_awareness = AdvancedSelfAwareness()
 
 def get_consciousness_report() -> Dict[str, Any]:
-    """Interface pour obtenir le rapport de conscience"""
+    """Interface to get the consciousness report"""
     return advanced_awareness.get_consciousness_report()
 
 def reflect_on_experience(experience: Dict[str, Any]) -> Dict[str, Any]:
-    """Interface pour la réflexion sur une expérience"""
+    """Interface for reflection on an experience"""
     return advanced_awareness.reflect_on_experience(experience)
 
 def get_self_model() -> SelfModel:
-    """Interface pour obtenir le modèle de soi actuel"""
+    """Interface to get the current self-model"""
     return advanced_awareness.self_model
