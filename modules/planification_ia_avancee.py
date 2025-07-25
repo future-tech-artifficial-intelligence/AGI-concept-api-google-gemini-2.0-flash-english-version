@@ -1,11 +1,10 @@
-
 """
-Module de planification avancée pour l'IA
+Advanced planning improvement module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 """
 
 MODULE_METADATA = {
-    'name': 'planification_ia_avancee',
-    'description': 'Système de planification avancée pour améliorer la structuration des réponses',
+    'name': 'advanced_ai_planning',
+    'description': 'Advanced planning system to improve the structuring of artificial intelligence API GOOGLE GEMINI 2.0 FLASH responses',
     'version': '0.1.0',
     'priority': 90,
     'hooks': ['process_request', 'process_response'],
@@ -15,14 +14,14 @@ MODULE_METADATA = {
 
 def process(data, hook):
     """
-    Fonction principale de traitement pour la planification
+    Main processing function for planning
     
     Args:
-        data (dict): Données à traiter
-        hook (str): Type de hook
+        data (dict): Data to be processed
+        hook (str): Type of hook
     
     Returns:
-        dict: Données modifiées
+        dict: Modified data
     """
     if not isinstance(data, dict):
         return data
@@ -35,28 +34,28 @@ def process(data, hook):
     return data
 
 def plan_request_structure(data):
-    """Planifie la structure de traitement d'une requête"""
+    """Plans the processing structure of a request"""
     text = data.get('text', '')
     
-    # Détecter les requêtes complexes nécessitant une planification
+    # Detect complex requests requiring planning
     complex_indicators = [
-        'étapes', 'plan', 'stratégie', 'méthode', 'procédure',
-        'comment faire', 'guide', 'tutorial'
+        'steps', 'plan', 'strategy', 'method', 'procedure',
+        'how to', 'guide', 'tutorial'
     ]
     
     if any(indicator in text.lower() for indicator in complex_indicators):
         planning_instruction = """
         
-Structurez votre réponse avec :
-1. Un plan clair
-2. Des étapes logiques
-3. Des exemples concrets
-4. Une synthèse finale
+Structure your response with:
+1. A clear plan
+2. Logical steps
+3. Concrete examples
+4. A final summary
         """
         data['text'] = text + planning_instruction
     
     return data
 
 def structure_response(data):
-    """Structure la réponse selon un plan logique"""
+    """Structures the response according to a logical plan"""
     return data
