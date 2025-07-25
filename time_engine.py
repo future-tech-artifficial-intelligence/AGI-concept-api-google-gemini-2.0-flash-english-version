@@ -1,6 +1,6 @@
 """
 Time management module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
-This module allows the AI to access real-time hour and date,
+This module allows the artificial intelligence API GOOGLE GEMINI 2.0 FLASH to access real-time hour and date,
 and to understand temporal concepts.
 """
 
