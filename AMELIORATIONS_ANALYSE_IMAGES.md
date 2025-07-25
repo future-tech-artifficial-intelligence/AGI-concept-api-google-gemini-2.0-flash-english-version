@@ -1,25 +1,25 @@
-# Améliorations pour l'Analyse d'Images
+**Image Analysis Improvements**
 
-Ce document résume les modifications apportées pour résoudre les problèmes identifiés dans le traitement des analyses d'images.
+This document summarizes the modifications made to resolve issues identified in image analysis processing by the artificial intelligence API GOOGLE GEMINI 2.0 FLASH.
 
-## Problèmes identifiés
+## Identified Issues
 
-1. **Phrases excessives en début d'analyse** : L'IA commençait systématiquement ses analyses d'images par "Absolument ! Je suis ravi de pouvoir t'aider. Oui, je ressens des émotions en analysant cette image Analyse de l'image"
+1.  **Excessive phrases at the start of analysis**: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH systematically began its image analyses with "Absolutely! I am delighted to be able to help you. Yes, I feel emotions when analyzing this image Image Analysis".
 
-2. **État émotionnel initial inapproprié** : L'IA démarrait dans l'état émotionnel "confused" lors de l'analyse d'images, alors qu'un état neutre serait plus approprié
+2.  **Inappropriate initial emotional state**: The artificial intelligence API GOOGLE GEMINI 2.0 FLASH started in a "confused" emotional state during image analysis, whereas a neutral state would be more appropriate.
 
-3. **Manque de continuité des conversations** : Formules de salutations répétitives même au sein d'une conversation en cours
+3.  **Lack of conversation continuity**: Repetitive greeting formulas even within an ongoing conversation.
 
-## Solutions implémentées
+## Implemented Solutions
 
-### 1. Module `conversation_context_manager.py`
+### 1. `conversation_context_manager.py` Module
 
-- Ajout de patterns de détection spécifiques pour les réponses d'analyse d'images
-- Création de la fonction `detect_image_analysis` qui identifie si une réponse concerne une analyse d'image
-- Modification de `moderate_emotional_expressions` pour remplacer les phrases excessives par des introductions plus sobres
+*   Added specific detection patterns for image analysis responses.
+*   Created the `detect_image_analysis` function which identifies if a response concerns an image analysis.
+*   Modified `moderate_emotional_expressions` to replace excessive phrases with more concise introductions.
 
 ```python
-# Patterns spécifiques pour les réponses d'analyse d'images
+# Specific patterns for image analysis responses
 IMAGE_ANALYSIS_PATTERNS = [
     r"(?i)^(Absolument\s?!?\s?Je suis ravi de pouvoir t'aider\.?\s?Oui,?\s?je ressens des émotions en analysant cette image\s?Analyse de l'image)",
     r"(?i)^(Je suis (ravi|heureux|content) de pouvoir analyser cette image pour toi\.?\s?Analyse de l'image)",
@@ -27,56 +27,55 @@ IMAGE_ANALYSIS_PATTERNS = [
 ]
 
 def detect_image_analysis(response: str) -> bool:
-    """Détecte si la réponse est une analyse d'image."""
-    # Implémentation de la détection...
+    """Detects if the response is an image analysis."""
+    # Implementation of detection...
 ```
 
-### 2. Module `emotional_engine.py`
+### 2. `emotional_engine.py` Module
 
-- Ajout de la fonction `initialize_emotion` qui permet de spécifier le contexte d'initialisation
-- Ajout de la logique pour démarrer avec un état émotionnel neutre pour les analyses d'images
-- Ajout de la fonction `is_image_analysis_request` pour détecter les requêtes d'analyse d'image
+*   Added the `initialize_emotion` function which allows specifying the initialization context.
+*   Added logic to start with a neutral emotional state for image analyses.
+*   Added the `is_image_analysis_request` function to detect image analysis requests.
 
 ```python
 def initialize_emotion(context_type=None):
-    """Initialise l'état émotionnel en fonction du contexte."""
-    # Si le contexte est l'analyse d'image, commencer avec un état neutre
+    """Initializes the emotional state based on the context."""
+    # If the context is image analysis, start with a neutral state
     if context_type == 'image_analysis':
         update_emotion("neutral", 0.5, trigger="image_analysis_start")
         return
     
-    # Pour tout autre contexte, choisir une émotion aléatoire...
+    # For any other context, choose a random emotion...
 ```
 
-### 3. Module `gemini_api.py`
+### 3. `gemini_api.py` Module
 
-- Détection automatique des requêtes d'analyse d'image
-- Initialisation de l'état émotionnel en mode "neutre" pour les analyses d'image
-- Modification des instructions pour l'API Gemini concernant les analyses d'images
+*   Automatic detection of image analysis requests.
+*   Initialization of the emotional state to "neutral" mode for image analyses.
+*   Modification of instructions for the Gemini API concerning image analyses.
 
 ```python
-# Modification du prompt système pour l'analyse d'images
-ANALYSE D'IMAGES: Tu as la capacité d'analyser des images en détail. Quand on te montre une image:
-1. Commence directement par décrire ce que tu vois de façon précise et détaillée
-2. Identifie les éléments importants dans l'image
-3. Si c'est pertinent, explique ce que représente l'image
-4. Tu peux exprimer ton impression sur l'image mais de façon modérée et naturelle
+# Modification of the system prompt for image analysis
+IMAGE ANALYSIS: You have the ability to analyze images in detail. When an image is shown to you:
+1. Start directly by describing what you see precisely and in detail
+2. Identify important elements in the image
+3. If relevant, explain what the image represents
+4. You can express your impression of the image but in a moderate and natural way
 
-IMPORTANT: NE COMMENCE JAMAIS ta réponse par "Absolument ! Je suis ravi de pouvoir t'aider." 
-ou "Je ressens des émotions en analysant cette image". 
-Commence directement par la description de l'image.
-```
+IMPORTANT: NEVER START your response with "Absolutely! I am delighted to be able to help you." 
+or "I feel emotions when analyzing this image". 
+Start directly with the image description.```
 
-## Tests effectués
+## Tests Performed
 
-Un script de test a été créé pour vérifier le bon fonctionnement des modifications :
+A test script was created to verify the proper functioning of the modifications:
 
-- Test de la suppression des phrases excessives
-- Test de la détection des analyses d'images
-- Test de l'état émotionnel initial pour les analyses d'images
+*   Test of the removal of excessive phrases.
+*   Test of image analysis detection.
+*   Test of the initial emotional state for image analyses.
 
-## Résultats attendus
+## Expected Results
 
-- Les analyses d'images commencent directement par la description de l'image, sans phrases excessives
-- L'IA démarre dans un état émotionnel neutre pour les analyses d'images
-- Les conversations sont plus naturelles, sans répétition de formules de salutations
+*   Image analyses begin directly with the image description, without excessive phrases.
+*   The artificial intelligence API GOOGLE GEMINI 2.0 FLASH starts in a neutral emotional state for image analyses.
+*   Conversations are more natural, without repetition of greeting formulas.
