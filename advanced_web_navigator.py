@@ -1,7 +1,6 @@
 """
-Système de Navigation Web Avancé pour l'API Gemini
-Ce module permet à l'API Gemini de naviguer à l'intérieur des sites web
-et d'extraire du contenu détaillé, pas seulement les liens.
+**Advanced Web Navigation System for artificial intelligence API GOOGLE GEMINI 2.0 FLASH**
+This module allows artificial intelligence API GOOGLE GEMINI 2.0 FLASH to navigate within websites and extract detailed content, not just links.
 """
 
 import requests
