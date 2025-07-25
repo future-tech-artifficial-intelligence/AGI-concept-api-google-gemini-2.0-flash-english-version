@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Script pour lister tous les utilisateurs de la base de données GeminiChat
+Script to list all users in the GeminiChat website  database
 """
 
 import sqlite3
 import os
 from datetime import datetime
 
-# Chemin vers la base de données
+# Path to the database
 DB_PATH = 'gemini_chat.db'
 
 def list_all_users():
     """
-    Affiche la liste de tous les utilisateurs enregistrés dans la base de données
+    Displays a list of all registered users in the database
     """
     if not os.path.exists(DB_PATH):
-        print(f"❌ Base de données non trouvée : {DB_PATH}")
+        print(f"❌ Database not found: {DB_PATH}")
         return
     
     try:
         conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row  # Pour avoir accès aux colonnes par nom
+        conn.row_factory = sqlite3.Row  # To access columns by name
         cursor = conn.cursor()
         
-        # Récupérer tous les utilisateurs
+        # Retrieve all users
         cursor.execute("""
             SELECT id, username, email, created_at 
             FROM users 
@@ -34,16 +34,16 @@ def list_all_users():
         users = cursor.fetchall()
         
         if not users:
-            print("📭 Aucun utilisateur trouvé dans la base de données.")
+            print("📭 No users found in the database.")
             return
         
-        print("👥 LISTE DES UTILISATEURS")
+        print("👥 USER LIST")
         print("=" * 60)
-        print(f"{'ID':<5} {'Nom d\'utilisateur':<20} {'Email':<25} {'Date création':<15}")
+        print(f"{'ID':<5} {'Username':<20} {'Email':<25} {'Creation Date':<15}")
         print("-" * 60)
         
         for user in users:
-            # Formater la date
+            # Format the date
             date_str = user['created_at']
             if date_str:
                 try:
@@ -57,22 +57,22 @@ def list_all_users():
             print(f"{user['id']:<5} {user['username']:<20} {user['email']:<25} {date_formatted:<15}")
         
         print("-" * 60)
-        print(f"📊 Total : {len(users)} utilisateur(s)")
+        print(f"📊 Total: {len(users)} user(s)")
         
     except sqlite3.Error as e:
-        print(f"❌ Erreur de base de données : {e}")
+        print(f"❌ Database error: {e}")
     except Exception as e:
-        print(f"❌ Erreur : {e}")
+        print(f"❌ Error: {e}")
     finally:
         if conn:
             conn.close()
 
 def get_user_details(user_id):
     """
-    Affiche les détails d'un utilisateur spécifique
+    Displays the details of a specific user
     """
     if not os.path.exists(DB_PATH):
-        print(f"❌ Base de données non trouvée : {DB_PATH}")
+        print(f"❌ Database not found: {DB_PATH}")
         return
     
     try:
@@ -80,26 +80,26 @@ def get_user_details(user_id):
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        # Récupérer les informations de l'utilisateur
+        # Retrieve user information
         cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
         user = cursor.fetchone()
         
         if not user:
-            print(f"❌ Utilisateur avec ID {user_id} non trouvé.")
+            print(f"❌ User with ID {user_id} not found.")
             return
         
-        print(f"👤 DÉTAILS DE L'UTILISATEUR (ID: {user_id})")
+        print(f"👤 USER DETAILS (ID: {user_id})")
         print("=" * 50)
-        print(f"Nom d'utilisateur : {user['username']}")
+        print(f"Username        : {user['username']}")
         print(f"Email           : {user['email']}")
-        print(f"Date création   : {user['created_at']}")
+        print(f"Creation Date   : {user['created_at']}")
         
-        # Compter les conversations de l'utilisateur
+        # Count user conversations
         cursor.execute("SELECT COUNT(*) FROM conversation_sessions WHERE user_id = ?", (user_id,))
         conv_count = cursor.fetchone()[0]
         print(f"Conversations   : {conv_count}")
         
-        # Compter les messages de l'utilisateur
+        # Count user messages
         cursor.execute("""
             SELECT COUNT(*) 
             FROM messages m 
@@ -110,19 +110,19 @@ def get_user_details(user_id):
         print(f"Messages        : {msg_count}")
         
     except sqlite3.Error as e:
-        print(f"❌ Erreur de base de données : {e}")
+        print(f"❌ Database error: {e}")
     except Exception as e:
-        print(f"❌ Erreur : {e}")
+        print(f"❌ Error: {e}")
     finally:
         if conn:
             conn.close()
 
 def search_users(search_term):
     """
-    Recherche des utilisateurs par nom d'utilisateur ou email
+    Searches for users by username or email
     """
     if not os.path.exists(DB_PATH):
-        print(f"❌ Base de données non trouvée : {DB_PATH}")
+        print(f"❌ Database not found: {DB_PATH}")
         return
     
     try:
@@ -140,12 +140,12 @@ def search_users(search_term):
         users = cursor.fetchall()
         
         if not users:
-            print(f"🔍 Aucun utilisateur trouvé pour '{search_term}'")
+            print(f"🔍 No users found for '{search_term}'")
             return
         
-        print(f"🔍 RÉSULTATS DE RECHERCHE POUR '{search_term}'")
+        print(f"🔍 SEARCH RESULTS FOR '{search_term}'")
         print("=" * 60)
-        print(f"{'ID':<5} {'Nom d\'utilisateur':<20} {'Email':<25} {'Date création':<15}")
+        print(f"{'ID':<5} {'Username':<20} {'Email':<25} {'Creation Date':<15}")
         print("-" * 60)
         
         for user in users:
@@ -154,12 +154,12 @@ def search_users(search_term):
             print(f"{user['id']:<5} {user['username']:<20} {user['email']:<25} {date_formatted:<15}")
         
         print("-" * 60)
-        print(f"📊 {len(users)} résultat(s) trouvé(s)")
+        print(f"📊 {len(users)} result(s) found")
         
     except sqlite3.Error as e:
-        print(f"❌ Erreur de base de données : {e}")
+        print(f"❌ Database error: {e}")
     except Exception as e:
-        print(f"❌ Erreur : {e}")
+        print(f"❌ Error: {e}")
     finally:
         if conn:
             conn.close()
@@ -168,18 +168,18 @@ if __name__ == "__main__":
     import sys
     
     if len(sys.argv) == 1:
-        # Aucun argument - lister tous les utilisateurs
+        # No argument - list all users
         list_all_users()
     elif len(sys.argv) == 2:
         arg = sys.argv[1]
         if arg.isdigit():
-            # Argument numérique - afficher les détails de l'utilisateur
+            # Numeric argument - display user details
             get_user_details(int(arg))
         else:
-            # Argument texte - rechercher des utilisateurs
+            # Text argument - search users
             search_users(arg)
     else:
         print("Usage:")
-        print("  python list_users.py                 # Lister tous les utilisateurs")
-        print("  python list_users.py <ID>            # Détails d'un utilisateur")
-        print("  python list_users.py <terme_recherche> # Rechercher des utilisateurs")
+        print("  python list_users.py                 # List all users")
+        print("  python list_users.py <ID>            # User details")
+        print("  python list_users.py <search_term> # Search users")
