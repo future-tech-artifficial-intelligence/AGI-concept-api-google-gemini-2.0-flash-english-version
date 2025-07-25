@@ -1,104 +1,103 @@
-# Améliorations pour l'Analyse de Tous Types d'Images
+**Improvements for Analyzing All Types of Images**
 
-## Problèmes identifiés
+## Identified Problems
 
-1. **Descriptions répétitives et génériques** : L'IA tendait à fournir des descriptions standardisées pour les images de même catégorie, sans prendre en compte les spécificités uniques de chaque image.
+1. **Repetitive and Generic Descriptions:** The GOOGLE GEMINI 2.0 FLASH API tended to provide standardized descriptions for images in the same category, without taking into account the unique specificities of each image.
 
-2. **Manque de personnalisation** : Les analyses ne s'adaptaient pas suffisamment au contexte de la question posée par l'utilisateur.
+2. **Lack of Personalization:** Analyses did not adapt sufficiently to the context of the question posed by the user.
 
-3. **Détection limitée** : Le système ne détectait pas efficacement certains types d'images et de requêtes d'analyse d'images.
+3. **Limited Detection:** The system did not effectively detect certain types of images and image analysis requests.
 
-## Solutions implémentées
+## Implemented Solutions
 
-### 1. Module `gemini_api.py`
+### 1. `gemini_api.py` Module
 
-- Instructions généralisées pour tous les types d'images, encourageant des descriptions uniques et personnalisées
-- Directives spécifiques par catégorie d'images (astronomie, art, paysages, etc.)
-- Consignes pour adapter systématiquement la réponse à la question posée
+- Generalized instructions for all types of images, encouraging unique and personalized descriptions.
+- Specific directives per image category (astronomy, art, landscapes, etc.).
+- Guidelines to systematically adapt the response to the question asked.
 
 ```python
-ANALYSE D'IMAGES: Tu as la capacité d'analyser des images en détail. Pour TOUT type d'image:
-1. ÉVITE ABSOLUMENT les formulations répétitives et génériques quelle que soit la catégorie d'image
-2. Commence directement par décrire ce que tu vois de façon précise, détaillée et PERSONNALISÉE
-3. Concentre-toi sur les ÉLÉMENTS SPÉCIFIQUES DE CETTE IMAGE PARTICULIÈRE et non sur des généralités
-4. Adapte ta réponse à la QUESTION POSÉE plutôt que de faire une description générique standard
-5. Mentionne les caractéristiques uniques ou intéressantes propres à cette image précise
-6. Identifie les éléments importants qui distinguent cette image des autres images similaires
+IMAGE ANALYSIS: You have the ability to analyze images in detail. For ANY type of image:
+1. ABSOLUTELY AVOID repetitive and generic formulations regardless of the image category
+2. Start directly by describing what you see in a precise, detailed, and PERSONALIZED way
+3. Focus on the SPECIFIC ELEMENTS OF THIS PARTICULAR IMAGE and not on generalities
+4. Adapt your answer to the QUESTION ASKED rather than making a generic standard description
+5. Mention the unique or interesting characteristics specific to this precise image
+6. Identify the important elements that distinguish this image from other similar images
 
-TYPES D'IMAGES SPÉCIFIQUES:
-- Images astronomiques: Focalise-toi sur les constellations précises, planètes, positions relatives des objets célestes
-- Œuvres d'art: Identifie le style, la technique, les éléments symboliques particuliers à cette œuvre
-- Paysages: Décris les éléments géographiques spécifiques, la lumière, l'atmosphère unique de ce lieu
-- Personnes: Concentre-toi sur les expressions, postures, actions et contexte particuliers
-- Documents/textes: Analyse le contenu spécifique visible, la mise en page et les informations pertinentes
-- Schémas/diagrammes: Explique la structure spécifique et les informations représentées
+SPECIFIC IMAGE TYPES:
+- Astronomical Images: Focus on the precise constellations, planets, relative positions of celestial objects
+- Works of Art: Identify the style, technique, symbolic elements particular to this work
+- Landscapes: Describe the specific geographic elements, the light, the unique atmosphere of this place
+- People: Focus on the expressions, postures, actions, and particular context
+- Documents/Texts: Analyze the specific visible content, the layout, and relevant information
+- Schemas/Diagrams: Explain the specific structure and the information represented
 ```
 
-### 2. Module `conversation_context_manager.py`
+### 2. `conversation_context_manager.py` Module
 
-- Extension majeure des patterns de détection pour couvrir tous les types d'images
-- Organisation des mots-clés par catégories (astronomie, art, nature, technique, etc.)
-- Amélioration de la détection des formulations variées décrivant une image
+- Major extension of detection patterns to cover all types of images.
+- Organization of keywords by category (astronomy, art, nature, technical, etc.).
+- Improved detection of varied formulations describing an image.
 
 ```python
-# Mots-clés génériques pour les analyses d'images
+# Generic keywords for image analyses
 image_keywords = [
-    r"(?i)(cette image montre)",
-    r"(?i)(dans cette image,)",
-    r"(?i)(l'image présente)",
-    // ...et plusieurs autres patterns
+    r"(?i)(this image shows)",
+    r"(?i)(in this image,)",
+    r"(?i)(the image presents)",
+    // ...and several other patterns
 ]
 
-# Mots-clés par catégories d'images
+# Keywords by image category
 category_keywords = {
-    # Images astronomiques
-    "astronomie": [
-        r"(?i)(constellation[s]? (de|du|des))",
-        // ...autres patterns astronomiques
+    # Astronomical Images
+    "astronomy": [
+        r"(?i)(constellation[s]? (of|from|the))",
+        // ...other astronomical patterns
     ],
-    # Œuvres d'art et images créatives
+    # Works of Art and Creative Images
     "art": [
-        r"(?i)(tableau|peinture|œuvre d'art)",
-        // ...autres patterns artistiques
+        r"(?i)(painting|artwork)",
+        // ...other artistic patterns
     ],
-    // ...et d'autres catégories
+    // ...and other categories
 }
 ```
 
-### 3. Module `emotional_engine.py`
+### 3. `emotional_engine.py` Module
 
-- Extension considérable des patterns de détection des requêtes d'analyse d'images
-- Ajout de nombreux patterns pour couvrir différentes façons de demander l'analyse d'une image
-- Catégorisation des requêtes (analyse générale, questions spécifiques, demandes d'information, contextualisation)
+- Considerable extension of detection patterns for image analysis requests.
+- Addition of numerous patterns to cover different ways of requesting an image analysis.
+- Categorization of requests (general analysis, specific questions, information requests, contextualization).
 
 ```python
-# Mots-clés généraux pour la détection de requêtes d'analyse d'image
+# General keywords for detecting image analysis requests
 image_request_keywords = [
-    # Requêtes d'analyse générale
-    r"(?i)(analyse[r]? (cette|l'|l'|une|des|la) image)",
-    // ...plusieurs autres patterns
+    # General analysis requests
+    r"(?i)(analy[zs]e (this|the|a|an) image)",
+    // ...several other patterns
     
-    # Questions spécifiques sur l'image
-    r"(?i)(qu'est-ce que (c'est|tu vois|représente|montre) (cette|l'|la) image)",
-    // ...autres types de questions
+    # Specific questions about the image
+    r"(?i)(what (is|do you see|does it represent|does it show) (this|the) image)",
+    // ...other types of questions
     
-    # Demandes de contextualisation
-    r"(?i)(comment (interprètes-tu|comprends-tu) cette image)",
-    // ...autres patterns de contextualisation
-]
-```
+    # Contextualization requests
+    r"(?i)(how (do you interpret|do you understand) this image)",
+    // ...other contextualization patterns
+]```
 
-## Résultats attendus
+## Expected Results
 
-- Analyses d'images plus variées, précises et personnalisées pour tous les types d'images
-- Meilleure adaptation des réponses au contexte spécifique de chaque question
-- Détection améliorée des requêtes d'analyse d'images
-- Expérience utilisateur plus naturelle et conversations plus équilibrées
+- More varied, precise, and personalized image analyses for all types of images.
+- Better adaptation of responses to the specific context of each question.
+- Improved detection of image analysis requests.
+- More natural user experience and more balanced conversations.
 
-## Tests recommandés
+## Recommended Tests
 
-Pour vérifier que les modifications sont efficaces:
-1. Présenter à l'IA des images de différentes catégories (astronomie, art, nature, documents, etc.)
-2. Poser diverses questions sur chaque image
-3. Vérifier que les descriptions ne sont pas répétitives et qu'elles s'adaptent bien à la question
-4. Confirmer que l'IA se concentre sur les éléments spécifiques et uniques de chaque image
+To verify that the modifications are effective:
+1. Present the GOOGLE GEMINI 2.0 FLASH API with images from different categories (astronomy, art, nature, documents, etc.).
+2. Ask various questions about each image.
+3. Verify that the descriptions are not repetitive and that they adapt well to the question.
+4. Confirm that the GOOGLE GEMINI 2.0 FLASH API focuses on the specific and unique elements of each image.
