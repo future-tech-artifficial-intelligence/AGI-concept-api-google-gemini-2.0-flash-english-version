@@ -1,6 +1,6 @@
 """
-Gestionnaire d'API d'intelligence artificielle.
-Ce module permet de charger et gérer différentes implémentations d'API d'IA.
+**Artificial Intelligence API Manager.**
+This module allows loading and managing different AI API implementations.
 """
 import os
 import json
