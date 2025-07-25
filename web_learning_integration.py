@@ -1,7 +1,11 @@
 """
-Intégration Simplifiée du Web Scraping Autonome
-Ce module gère l'intégration directe du web scraping avec l'IA.
-Toutes les données sont sauvegardées automatiquement dans des fichiers texte.
+Simplified Autonomous Web Scraping Integration
+This module manages the direct integration of web scraping with artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+All data is automatically saved to text files. artificial intelligence API GOOGLE GEMINI 2.0 FLASH no
+longer uses this web scraping module. artificial intelligence API GOOGLE GEMINI 2.0 FLASH uses the Searx engine, which allows artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+to learn autonomously during its searches. The Searx search engine is more powerful than simple HTML page extraction like web scraping;
+it allows artificial intelligence API GOOGLE GEMINI 2.0 FLASH to search on search engines like Google, Bing, and others
+for searches with better accuracy.
 """
 
 import logging
@@ -15,44 +19,44 @@ from autonomous_web_scraper import autonomous_web_scraper
 logger = logging.getLogger(__name__)
 
 class SimpleWebLearningIntegration:
-    """Intégration simplifiée pour l'apprentissage web autonome"""
+    """Simplified integration for autonomous web learning"""
 
     def __init__(self):
         self.integration_active = True
         self.auto_learning_enabled = True
-        self.learning_interval = 300  # 5 minutes entre les sessions autonomes
+        self.learning_interval = 300  # 5 minutes between autonomous sessions
         self.last_learning_session = None
 
-        # Répertoire de monitoring
+        # Monitoring directory
         self.monitor_dir = Path("data/web_learning_monitor")
         self.monitor_dir.mkdir(parents=True, exist_ok=True)
 
-        logger.info("Intégration Web-Apprentissage Simplifiée initialisée")
+        logger.info("Simplified Web-Learning Integration initialized")
 
     def trigger_autonomous_learning_if_needed(self) -> Dict[str, Any]:
-        """Déclenche l'apprentissage autonome si nécessaire"""
+        """Triggers autonomous learning if needed"""
 
         if not self.auto_learning_enabled:
-            return {"triggered": False, "reason": "Apprentissage automatique désactivé"}
+            return {"triggered": False, "reason": "Automatic learning disabled"}
 
         current_time = time.time()
 
-        # L'IA peut maintenant apprendre quand elle le souhaite
-        # Plus de limitation temporelle stricte
-        if (self.last_learning_session and 
-            current_time - self.last_learning_session < 60):  # Seulement 1 minute minimum
+        # The AI can now learn whenever it wishes
+        # No more strict time limitation
+        if (self.last_learning_session and
+            current_time - self.last_learning_session < 60):  # Only 1 minute minimum
             return {
-                "triggered": True,  # Autorisé même si récent
-                "reason": "Apprentissage autonome autorisé en continu"
+                "triggered": True,  # Allowed even if recent
+                "reason": "Autonomous learning allowed continuously"
             }
 
-        # Déclencher une session d'apprentissage
-        logger.info("Déclenchement d'une session d'apprentissage autonome")
+        # Trigger a learning session
+        logger.info("Triggering an autonomous learning session")
 
         session_result = autonomous_web_scraper.start_autonomous_learning()
         self.last_learning_session = current_time
 
-        # Enregistrer l'activité
+        # Log activity
         self._log_learning_activity(session_result)
 
         return {
@@ -62,8 +66,8 @@ class SimpleWebLearningIntegration:
         }
 
     def force_learning_session(self) -> Dict[str, Any]:
-        """Force le déclenchement d'une session d'apprentissage"""
-        logger.info("Session d'apprentissage forcée")
+        """Forces the triggering of a learning session"""
+        logger.info("Forcing learning session")
 
         session_result = autonomous_web_scraper.start_autonomous_learning()
         self.last_learning_session = time.time()
@@ -76,35 +80,35 @@ class SimpleWebLearningIntegration:
         }
 
     def _log_learning_activity(self, session_result: Dict[str, Any]) -> None:
-        """Enregistre l'activité d'apprentissage"""
+        """Logs learning activity"""
 
         activity_file = self.monitor_dir / "learning_activity.txt"
 
         try:
             with open(activity_file, 'a', encoding='utf-8') as f:
                 f.write(f"\n{'='*60}\n")
-                f.write(f"SESSION D'APPRENTISSAGE AUTONOME\n")
+                f.write(f"AUTONOMOUS LEARNING SESSION\n")
                 f.write(f"Date: {datetime.now().isoformat()}\n")
-                f.write(f"ID de session: {session_result.get('session_id', 'Non défini')}\n")
-                f.write(f"Succès: {session_result.get('success', False)}\n")
-                f.write(f"Pages traitées: {session_result.get('pages_processed', 0)}\n")
-                f.write(f"Domaine principal: {session_result.get('domain_focus', 'Non spécifié')}\n")
+                f.write(f"Session ID: {session_result.get('session_id', 'Not defined')}\n")
+                f.write(f"Success: {session_result.get('success', False)}\n")
+                f.write(f"Pages processed: {session_result.get('pages_processed', 0)}\n")
+                f.write(f"Main domain: {session_result.get('domain_focus', 'Not specified')}\n")
 
                 if session_result.get('files_created'):
-                    f.write(f"Fichiers créés: {len(session_result['files_created'])}\n")
+                    f.write(f"Files created: {len(session_result['files_created'])}\n")
                     for file_path in session_result['files_created']:
                         f.write(f"  - {file_path}\n")
 
                 if session_result.get('error'):
-                    f.write(f"Erreur: {session_result['error']}\n")
+                    f.write(f"Error: {session_result['error']}\n")
 
                 f.write(f"{'='*60}\n")
 
         except Exception as e:
-            logger.error(f"Erreur lors de l'enregistrement de l'activité: {str(e)}")
+            logger.error(f"Error logging activity: {str(e)}")
 
     def get_integration_status(self) -> Dict[str, Any]:
-        """Retourne le statut de l'intégration"""
+        """Returns the integration status"""
 
         scraper_status = autonomous_web_scraper.get_learning_status()
 
@@ -118,64 +122,64 @@ class SimpleWebLearningIntegration:
         }
 
     def enable_auto_learning(self) -> Dict[str, Any]:
-        """Active l'apprentissage automatique"""
+        """Enables automatic learning"""
         self.auto_learning_enabled = True
-        logger.info("Apprentissage automatique activé")
-        return {"status": "Apprentissage automatique activé"}
+        logger.info("Automatic learning enabled")
+        return {"status": "Automatic learning enabled"}
 
     def disable_auto_learning(self) -> Dict[str, Any]:
-        """Désactive l'apprentissage automatique"""
+        """Disables automatic learning"""
         self.auto_learning_enabled = False
-        logger.info("Apprentissage automatique désactivé")
-        return {"status": "Apprentissage automatique désactivé"}
+        logger.info("Automatic learning disabled")
+        return {"status": "Automatic learning disabled"}
 
     def set_learning_interval(self, hours: float) -> Dict[str, Any]:
-        """Définit l'intervalle entre les sessions d'apprentissage"""
+        """Sets the interval between learning sessions"""
         self.learning_interval = int(hours * 3600)
-        logger.info(f"Intervalle d'apprentissage défini à {hours} heures")
-        return {"status": f"Intervalle défini à {hours} heures"}
+        logger.info(f"Learning interval set to {hours} hours")
+        return {"status": f"Interval set to {hours} hours"}
 
-# Instance globale
+# Global instance
 web_learning_integration = SimpleWebLearningIntegration()
 
-# Fonctions d'interface publique
+# Public interface functions
 def trigger_autonomous_learning() -> Dict[str, Any]:
-    """Interface publique pour déclencher l'apprentissage autonome"""
+    """Public interface to trigger autonomous learning"""
     return web_learning_integration.trigger_autonomous_learning_if_needed()
 
 def force_web_learning_session() -> Dict[str, Any]:
-    """Interface publique pour forcer une session d'apprentissage"""
+    """Public interface to force a learning session"""
     return web_learning_integration.force_learning_session()
 
 def get_web_learning_integration_status() -> Dict[str, Any]:
-    """Interface publique pour obtenir le statut d'intégration"""
+    """Public interface to get integration status"""
     return web_learning_integration.get_integration_status()
 
 def enable_autonomous_learning() -> Dict[str, Any]:
-    """Interface publique pour activer l'apprentissage autonome"""
+    """Public interface to enable autonomous learning"""
     return web_learning_integration.enable_auto_learning()
 
 def disable_autonomous_learning() -> Dict[str, Any]:
-    """Interface publique pour désactiver l'apprentissage autonome"""
+    """Public interface to disable autonomous learning"""
     return web_learning_integration.disable_auto_learning()
 
 if __name__ == "__main__":
-    print("=== Test de l'Intégration Web-Apprentissage Simplifiée ===")
+    print("=== Simple Web-Learning Integration Test ===")
 
-    # Forcer une session d'apprentissage
+    # Force a learning session
     result = force_web_learning_session()
-    print(f"Session forcée: {result.get('forced', False)}")
+    print(f"Session forced: {result.get('forced', False)}")
 
     if result.get('session_result', {}).get('success'):
         session = result['session_result']
-        print(f"✓ Pages traitées: {session['pages_processed']}")
-        print(f"✓ Domaine: {session.get('domain_focus', 'Non spécifié')}")
-        print(f"✓ Fichiers créés: {len(session.get('files_created', []))}")
+        print(f"✓ Pages processed: {session['pages_processed']}")
+        print(f"✓ Domain: {session.get('domain_focus', 'Not specified')}")
+        print(f"✓ Files created: {len(session.get('files_created', []))}")
 
-    # Afficher le statut
+    # Display status
     status = get_web_learning_integration_status()
-    print(f"\n=== Statut de l'Intégration ===")
-    print(f"Intégration active: {status['integration_active']}")
-    print(f"Apprentissage auto: {status['auto_learning_enabled']}")
-    print(f"Intervalle: {status['learning_interval_hours']} heures")
-    print(f"Sessions completées: {status['scraper_status']['sessions_completed']}")
+    print(f"\n=== Integration Status ===")
+    print(f"Integration active: {status['integration_active']}")
+    print(f"Auto learning: {status['auto_learning_enabled']}")
+    print(f"Interval: {status['learning_interval_hours']} hours")
+    print(f"Sessions completed: {status['scraper_status']['sessions_completed']}")
