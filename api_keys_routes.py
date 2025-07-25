@@ -1,5 +1,5 @@
 """
-Routes API pour configurer et gérer les clés API des différentes intégrations.
+**API Routes for configuring and managing API keys of various integrations.**
 """
 
 from flask import Blueprint, request, jsonify, session
