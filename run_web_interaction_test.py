@@ -1,5 +1,5 @@
 """
-Script de lancement rapide pour tester les capacités d'interaction web de Gemini
+Quick launch script to test artificial intelligence API GOOGLE GEMINI 2.0 FLASH's web interaction capabilities
 Usage: python run_web_interaction_test.py
 """
 
@@ -9,10 +9,10 @@ import os
 from pathlib import Path
 
 def main():
-    print("🌐 Test des Capacités d'Interaction Web de l'API Gemini")
+    print("🌐 Testing artificial intelligence API GOOGLE GEMINI 2.0 FLASH's Web Interaction Capabilities")
     print("=" * 60)
     
-    # Vérifier que nous sommes dans le bon répertoire
+    # Check that we are in the correct directory
     current_dir = Path.cwd()
     required_files = [
         'test_gemini_web_interaction.py',
@@ -27,32 +27,32 @@ def main():
             missing_files.append(file)
     
     if missing_files:
-        print(f"❌ Fichiers manquants: {', '.join(missing_files)}")
-        print("Assurez-vous d'être dans le répertoire racine du projet.")
+        print(f"❌ Missing files: {', '.join(missing_files)}")
+        print("Make sure you are in the project root directory.")
         return 1
     
-    print("✅ Tous les fichiers requis sont présents")
-    print("🚀 Lancement du test d'interaction web...")
+    print("✅ All required files are present")
+    print("🚀 Launching web interaction test...")
     print()
     
     try:
-        # Importer et lancer le test
+        # Import and launch the test
         from test_gemini_web_interaction import main as test_main
         asyncio.run(test_main())
         
         print()
-        print("🎉 Tests terminés avec succès!")
-        print("📁 Consultez le dossier 'test_results_web_interaction' pour les rapports détaillés")
+        print("🎉 Tests completed successfully!")
+        print("📁 Consult the 'test_results_web_interaction' folder for detailed reports")
         
     except KeyboardInterrupt:
-        print("\n⚠️  Test interrompu par l'utilisateur")
+        print("\n⚠️  Test interrupted by user")
         return 1
     except Exception as e:
-        print(f"❌ Erreur lors de l'exécution: {str(e)}")
-        print("Vérifiez :")
-        print("1. Que votre clé API Gemini est configurée dans ai_api_config.json")
-        print("2. Que Chrome/Chromium est installé pour Selenium")
-        print("3. Que toutes les dépendances sont installées")
+        print(f"❌ Error during execution: {str(e)}")
+        print("Check :")
+        print("1. That your artificial intelligence API GOOGLE GEMINI 2.0 FLASH API key is configured in ai_api_config.json")
+        print("2. That Chrome/Chromium is installed for Selenium")
+        print("3. That all dependencies are installed")
         return 1
     
     return 0
