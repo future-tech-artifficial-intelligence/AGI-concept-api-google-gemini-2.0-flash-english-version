@@ -1,10 +1,10 @@
 """
-Adaptateur pour le module de planification IA avancée
+Adapter for the advanced GOOGLE GEMINI 2.0 FLASH API artificial intelligence planning module
 """
 
 MODULE_METADATA = {
     'name': 'planification_ia_avancee_adapter',
-    'description': 'Adaptateur pour le système de planification avancée',
+    'description': 'Adapter for the advanced planning system',
     'version': '0.1.0',
     'priority': 95,
     'hooks': ['process_request', 'process_response'],
@@ -14,32 +14,32 @@ MODULE_METADATA = {
 
 def process(data, hook):
     """
-    Fonction principale d'adaptation
+    Main adaptation function
 
     Args:
-        data (dict): Données à traiter
-        hook (str): Type de hook
+        data (dict): Data to process
+        hook (str): Type of hook
 
     Returns:
-        dict: Données modifiées
+        dict: Modified data
     """
     if not isinstance(data, dict):
         return data
 
     try:
-        # Import local pour éviter les erreurs circulaires
+        # Local import to avoid circular errors
         from . import planification_ia_avancee
 
-        # Déléguer le traitement au module principal
+        # Delegate processing to the main module
         return planification_ia_avancee.process(data, hook)
     except ImportError:
-        # Si le module principal n'est pas disponible, retourner les données inchangées
+        # If the main module is not available, return unchanged data
         return data
 
 def adapt_planning_request(data):
-    """Adapte les requêtes de planification"""
+    """Adapts planning requests"""
     return data
 
 def adapt_planning_response(data):
-    """Adapte les réponses de planification"""
+    """Adapts planning responses"""
     return data
