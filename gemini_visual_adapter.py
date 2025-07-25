@@ -1,6 +1,6 @@
 """
-Adaptateur Vision Avancé pour l'API Gemini
-Permet à Gemini de "voir" et analyser visuellement l'intérieur des sites web
+Advanced Vision Adapter for the Google Gemini 2.0 Flash AI API
+Allows Google Gemini 2.0 Flash AI to "see" and visually analyze the interior of websites
 """
 
 import base64
@@ -13,28 +13,28 @@ from typing import Dict, List, Any, Optional, Union, Tuple
 import os
 from datetime import datetime
 
-# Configuration du logger
+# Logger configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class GeminiVisualAdapter:
-    """Adaptateur pour les capacités visuelles avancées de Gemini"""
+    """Adapter for the advanced visual capabilities of Google Gemini 2.0 Flash AI"""
     
     def __init__(self, api_key: str = None):
         """
-        Initialise l'adaptateur vision Gemini
+        Initializes the Google Gemini 2.0 Flash AI vision adapter
         
         Args:
-            api_key: Clé API Gemini (utilise la clé par défaut si non spécifiée)
+            api_key: Google Gemini 2.0 Flash AI API key (uses default key if not specified)
         """
         self.api_key = api_key or "AIzaSyDdWKdpPqgAVLet6_mchFxmG_GXnfPx2aQ"
         self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
         
-        # Configuration pour l'optimisation d'images
-        self.max_image_size = (1024, 1024)  # Taille max pour l'IA
-        self.image_quality = 85  # Qualité JPEG pour optimiser
+        # Configuration for image optimization
+        self.max_image_size = (1024, 1024)  # Max size for the AI
+        self.image_quality = 85  # JPEG quality for optimization
         
-        # Statistiques
+        # Statistics
         self.stats = {
             'images_processed': 0,
             'successful_analyses': 0,
@@ -42,42 +42,42 @@ class GeminiVisualAdapter:
             'total_processing_time': 0
         }
         
-        logger.info("🤖 Adaptateur Vision Gemini initialisé")
+        logger.info("🤖 Google Gemini 2.0 Flash AI Vision Adapter initialized")
     
     def encode_image_for_gemini(self, image_path: str) -> Optional[str]:
         """
-        Encode une image pour l'API Gemini multimodale
+        Encodes an image for the Google Gemini 2.0 Flash AI multimodal API
         
         Args:
-            image_path: Chemin vers l'image à encoder
+            image_path: Path to the image to encode
             
         Returns:
-            Image encodée en base64 ou None si erreur
+            Base64 encoded image or None if error
         """
         try:
-            # Ouvrir et optimiser l'image
+            # Open and optimize the image
             with Image.open(image_path) as img:
-                # Convertir en RGB si nécessaire
+                # Convert to RGB if necessary
                 if img.mode != 'RGB':
                     img = img.convert('RGB')
                 
-                # Redimensionner si trop grande
+                # Resize if too large
                 if img.size[0] > self.max_image_size[0] or img.size[1] > self.max_image_size[1]:
                     img.thumbnail(self.max_image_size, Image.Resampling.LANCZOS)
-                    logger.info(f"📏 Image redimensionnée: {img.size}")
+                    logger.info(f"📏 Image resized: {img.size}")
                 
-                # Sauvegarder en mémoire
+                # Save to memory
                 buffer = io.BytesIO()
                 img.save(buffer, format='JPEG', quality=self.image_quality, optimize=True)
                 
-                # Encoder en base64
+                # Encode to base64
                 image_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
                 
-                logger.info(f"✅ Image encodée: {len(image_data)} caractères")
+                logger.info(f"✅ Image encoded: {len(image_data)} characters")
                 return image_data
                 
         except Exception as e:
-            logger.error(f"❌ Erreur encodage image {image_path}: {e}")
+            logger.error(f"❌ Image encoding error {image_path}: {e}")
             return None
     
     def analyze_website_screenshot(self, 
@@ -85,51 +85,51 @@ class GeminiVisualAdapter:
                                  analysis_prompt: str,
                                  context: Optional[str] = None) -> Dict[str, Any]:
         """
-        Analyse une capture d'écran de site web avec Gemini Vision
+        Analyzes a website screenshot with Google Gemini 2.0 Flash AI Vision
         
         Args:
-            image_path: Chemin vers la capture d'écran
-            analysis_prompt: Prompt d'analyse spécifique
-            context: Contexte textuel additionnel
+            image_path: Path to the screenshot
+            analysis_prompt: Specific analysis prompt
+            context: Additional textual context
             
         Returns:
-            Résultat de l'analyse avec métadonnées
+            Analysis result with metadata
         """
         start_time = datetime.now()
         
         try:
-            # Encoder l'image
+            # Encode the image
             encoded_image = self.encode_image_for_gemini(image_path)
             if not encoded_image:
                 return {
                     'success': False,
-                    'error': 'Impossible d\'encoder l\'image',
+                    'error': 'Could not encode image',
                     'analysis': None
                 }
             
-            # Construire le prompt d'analyse visuelle
-            context_text = context or "Analyse générale d'un site web"
-            visual_prompt = f"""🤖 ANALYSE VISUELLE D'UN SITE WEB
+            # Build the visual analysis prompt
+            context_text = context or "General website analysis"
+            visual_prompt = f"""🤖 VISUAL ANALYSIS OF A WEBSITE
 
-**CONTEXTE**: {context_text}
+**CONTEXT**: {context_text}
 
-**INSTRUCTIONS D'ANALYSE**:
+**ANALYSIS INSTRUCTIONS**:
 {analysis_prompt}
 
-**TÂCHES SPÉCIFIQUES**:
-1. 📋 **Structure et Layout**: Décrivez la structure générale, navigation, zones principales
-2. 🎨 **Design et UX**: Analysez les couleurs, polices, espacement, lisibilité
-3. 📝 **Contenu Visible**: Identifiez et résumez le contenu textuel principal
-4. 🔗 **Éléments Interactifs**: Boutons, liens, formulaires, menus visibles
-5. 📱 **Responsive Design**: Indices sur l'adaptation mobile/desktop
-6. ⚡ **Problèmes Potentiels**: Erreurs, éléments cassés, problèmes d'accessibilité
-7. 🎯 **Objectif du Site**: Déterminez le but principal de la page
-8. 💡 **Recommandations**: Suggestions d'amélioration UX/UI
+**SPECIFIC TASKS**:
+1. 📋 **Structure and Layout**: Describe the general structure, navigation, main areas
+2. 🎨 **Design and UX**: Analyze colors, fonts, spacing, readability
+3. 📝 **Visible Content**: Identify and summarize the main textual content
+4. 🔗 **Interactive Elements**: Visible buttons, links, forms, menus
+5. 📱 **Responsive Design**: Clues on mobile/desktop adaptation
+6. ⚡ **Potential Issues**: Errors, broken elements, accessibility issues
+7. 🎯 **Site Objective**: Determine the main purpose of the page
+8. 💡 **Recommendations**: Suggestions for UX/UI improvement
 
-**FORMAT DE RÉPONSE**: Structurez votre analyse avec ces sections et utilisez des emojis pour la lisibilité.
+**RESPONSE FORMAT**: Structure your analysis with these sections and use emojis for readability.
 """
 
-            # Préparer la requête multimodale
+            # Prepare the multimodal request
             headers = {
                 'Content-Type': 'application/json'
             }
@@ -149,35 +149,35 @@ class GeminiVisualAdapter:
                     ]
                 }],
                 "generationConfig": {
-                    "temperature": 0.4,  # Plus bas pour analyses précises
+                    "temperature": 0.4,  # Lower for precise analyses
                     "topK": 32,
                     "topP": 0.8,
-                    "maxOutputTokens": 3000,  # Plus élevé pour analyses détaillées
+                    "maxOutputTokens": 3000,  # Higher for detailed analyses
                 }
             }
             
-            # Envoyer la requête
+            # Send the request
             url = f"{self.api_url}?key={self.api_key}"
-            logger.info("📤 Envoi requête d'analyse visuelle à Gemini...")
+            logger.info("📤 Sending visual analysis request to Google Gemini 2.0 Flash AI...")
             
             response = requests.post(url, headers=headers, json=data, timeout=120)
             
-            # Traiter la réponse
+            # Process the response
             if response.status_code == 200:
                 response_data = response.json()
                 
                 if 'candidates' in response_data and response_data['candidates']:
                     analysis = response_data['candidates'][0]['content']['parts'][0]['text']
                     
-                    # Calculer les métriques
+                    # Calculate metrics
                     processing_time = (datetime.now() - start_time).total_seconds()
                     
-                    # Mettre à jour les statistiques
+                    # Update statistics
                     self.stats['images_processed'] += 1
                     self.stats['successful_analyses'] += 1
                     self.stats['total_processing_time'] += processing_time
                     
-                    logger.info(f"✅ Analyse visuelle réussie en {processing_time:.2f}s")
+                    logger.info(f"✅ Visual analysis successful in {processing_time:.2f}s")
                     
                     return {
                         'success': True,
@@ -189,7 +189,7 @@ class GeminiVisualAdapter:
                         'timestamp': datetime.now().isoformat()
                     }
                 else:
-                    error_msg = "Aucune réponse valide de Gemini"
+                    error_msg = "No valid response from Google Gemini 2.0 Flash AI"
                     logger.error(f"❌ {error_msg}")
                     self.stats['failed_analyses'] += 1
                     
@@ -199,7 +199,7 @@ class GeminiVisualAdapter:
                         'analysis': None
                     }
             else:
-                error_msg = f"Erreur API Gemini: {response.status_code} - {response.text}"
+                error_msg = f"Google Gemini 2.0 Flash AI API error: {response.status_code} - {response.text}"
                 logger.error(f"❌ {error_msg}")
                 self.stats['failed_analyses'] += 1
                 
@@ -210,7 +210,7 @@ class GeminiVisualAdapter:
                 }
                 
         except Exception as e:
-            error_msg = f"Erreur analyse visuelle: {str(e)}"
+            error_msg = f"Visual analysis error: {str(e)}"
             logger.error(f"❌ {error_msg}")
             self.stats['failed_analyses'] += 1
             
@@ -225,47 +225,47 @@ class GeminiVisualAdapter:
                               image_path_after: str,
                               comparison_context: str = "") -> Dict[str, Any]:
         """
-        Compare deux captures d'écran pour détecter les changements
+        Compares two screenshots to detect changes
         
         Args:
-            image_path_before: Capture avant
-            image_path_after: Capture après
-            comparison_context: Contexte de la comparaison
+            image_path_before: Screenshot before
+            image_path_after: Screenshot after
+            comparison_context: Comparison context
             
         Returns:
-            Analyse comparative
+            Comparative analysis
         """
         try:
-            # Encoder les deux images
+            # Encode both images
             encoded_before = self.encode_image_for_gemini(image_path_before)
             encoded_after = self.encode_image_for_gemini(image_path_after)
             
             if not encoded_before or not encoded_after:
                 return {
                     'success': False,
-                    'error': 'Impossible d\'encoder une ou plusieurs images',
+                    'error': 'Could not encode one or more images',
                     'comparison': None
                 }
             
-            # Prompt de comparaison
-            comparison_prompt = f"""🔍 COMPARAISON VISUELLE DE SITES WEB
+            # Comparison prompt
+            comparison_prompt = f"""🔍 VISUAL COMPARISON OF WEBSITES
 
-**CONTEXTE**: {comparison_context}
+**CONTEXT**: {comparison_context}
 
 **INSTRUCTIONS**:
-Comparez ces deux captures d'écran et identifiez:
+Compare these two screenshots and identify:
 
-1. 🆚 **Différences Visuelles**: Changements de layout, couleurs, éléments
-2. ➕ **Nouveaux Éléments**: Ce qui a été ajouté
-3. ➖ **Éléments Supprimés**: Ce qui a disparu
-4. 🔄 **Modifications**: Éléments modifiés (texte, position, style)
-5. 📊 **Impact UX**: Comment ces changements affectent l'expérience utilisateur
-6. ⚖️ **Évaluation Globale**: Les changements sont-ils positifs ou négatifs?
+1. 🆚 **Visual Differences**: Changes in layout, colors, elements
+2. ➕ **New Elements**: What has been added
+3. ➖ **Removed Elements**: What has disappeared
+4. 🔄 **Modifications**: Modified elements (text, position, style)
+5. 📊 **UX Impact**: How these changes affect the user experience
+6. ⚖️ **Overall Evaluation**: Are the changes positive or negative?
 
-**PREMIÈRE IMAGE (AVANT)**:
+**FIRST IMAGE (BEFORE)**:
 """
 
-            # Construire la requête avec les deux images
+            # Build the request with both images
             data = {
                 "contents": [{
                     "parts": [
@@ -276,14 +276,14 @@ Comparez ces deux captures d'écran et identifiez:
                                 "data": encoded_before
                             }
                         },
-                        {"text": "\n\n**DEUXIÈME IMAGE (APRÈS)**:"},
+                        {"text": "\n\n**SECOND IMAGE (AFTER)**:"},
                         {
                             "inline_data": {
                                 "mime_type": "image/jpeg", 
                                 "data": encoded_after
                             }
                         },
-                        {"text": "\n\nVeuillez maintenant effectuer la comparaison détaillée."}
+                        {"text": "\n\nPlease now perform the detailed comparison."}
                     ]
                 }],
                 "generationConfig": {
@@ -297,7 +297,7 @@ Comparez ces deux captures d'écran et identifiez:
             headers = {'Content-Type': 'application/json'}
             url = f"{self.api_url}?key={self.api_key}"
             
-            logger.info("🔍 Envoi requête de comparaison visuelle...")
+            logger.info("🔍 Sending visual comparison request...")
             response = requests.post(url, headers=headers, json=data, timeout=120)
             
             if response.status_code == 200:
@@ -306,7 +306,7 @@ Comparez ces deux captures d'écran et identifiez:
                 if 'candidates' in response_data and response_data['candidates']:
                     comparison = response_data['candidates'][0]['content']['parts'][0]['text']
                     
-                    logger.info("✅ Comparaison visuelle réussie")
+                    logger.info("✅ Visual comparison successful")
                     
                     return {
                         'success': True,
@@ -318,67 +318,67 @@ Comparez ces deux captures d'écran et identifiez:
             
             return {
                 'success': False,
-                'error': f"Erreur API: {response.status_code}",
+                'error': f"API Error: {response.status_code}",
                 'comparison': None
             }
             
         except Exception as e:
             return {
                 'success': False,
-                'error': f"Erreur comparaison: {str(e)}",
+                'error': f"Comparison error: {str(e)}",
                 'comparison': None
             }
     
     def analyze_ui_elements(self, image_path: str, element_types: List[str] = None) -> Dict[str, Any]:
         """
-        Analyse spécifique des éléments UI dans une capture d'écran
+        Specific analysis of UI elements in a screenshot
         
         Args:
-            image_path: Chemin vers la capture
-            element_types: Types d'éléments à analyser (buttons, forms, navigation, etc.)
+            image_path: Path to the capture
+            element_types: Types of elements to analyze (buttons, forms, navigation, etc.)
             
         Returns:
-            Analyse détaillée des éléments UI
+            Detailed analysis of UI elements
         """
         if element_types is None:
             element_types = ['buttons', 'forms', 'navigation', 'content', 'images', 'links']
         
         elements_list = ", ".join(element_types)
         
-        ui_prompt = f"""🎯 ANALYSE SPÉCIALISÉE DES ÉLÉMENTS UI
+        ui_prompt = f"""🎯 SPECIALIZED UI ELEMENTS ANALYSIS
 
-**FOCUS SUR**: {elements_list}
+**FOCUS ON**: {elements_list}
 
-**INSTRUCTIONS DÉTAILLÉES**:
-1. 🔘 **Boutons**: Identifiez tous les boutons (CTA, navigation, action)
-2. 📝 **Formulaires**: Champs, labels, validation, accessibilité
-3. 🧭 **Navigation**: Menus, breadcrumbs, liens de navigation
-4. 📄 **Contenu**: Hiérarchie, lisibilité, organisation
-5. 🖼️ **Images**: Pertinence, qualité, optimisation
-6. 🔗 **Liens**: Visibilité, différenciation, call-to-action
+**DETAILED INSTRUCTIONS**:
+1. 🔘 **Buttons**: Identify all buttons (CTA, navigation, action)
+2. 📝 **Forms**: Fields, labels, validation, accessibility
+3. 🧭 **Navigation**: Menus, breadcrumbs, navigation links
+4. 📄 **Content**: Hierarchy, readability, organization
+5. 🖼️ **Images**: Relevance, quality, optimization
+6. 🔗 **Links**: Visibility, differentiation, call-to-action
 
-**POUR CHAQUE ÉLÉMENT**:
-- Position et visibilité
-- État (actif, hover, disabled)
-- Accessibilité (contraste, taille)
-- Cohérence avec le design system
-- Recommandations d'amélioration
+**FOR EACH ELEMENT**:
+- Position and visibility
+- State (active, hover, disabled)
+- Accessibility (contrast, size)
+- Consistency with the design system
+- Improvement recommendations
 
-**FORMAT**: Organisez par type d'élément avec évaluation de 1-5 ⭐
+**FORMAT**: Organize by element type with 1-5 ⭐ rating
 """
 
         return self.analyze_website_screenshot(
             image_path=image_path,
             analysis_prompt=ui_prompt,
-            context=f"Analyse UI spécialisée - Focus sur: {elements_list}"
+            context=f"Specialized UI Analysis - Focus on: {elements_list}"
         )
     
     def get_statistics(self) -> Dict[str, Any]:
         """
-        Retourne les statistiques d'utilisation de l'adaptateur
+        Returns adapter usage statistics
         
         Returns:
-            Dictionnaire avec les statistiques
+            Dictionary with statistics
         """
         avg_processing_time = (
             self.stats['total_processing_time'] / max(self.stats['images_processed'], 1)
@@ -398,48 +398,48 @@ Comparez ces deux captures d'écran et identifiez:
         }
     
     def reset_statistics(self):
-        """Remet à zéro les statistiques"""
+        """Resets statistics"""
         self.stats = {
             'images_processed': 0,
             'successful_analyses': 0,
             'failed_analyses': 0,
             'total_processing_time': 0
         }
-        logger.info("📊 Statistiques remises à zéro")
+        logger.info("📊 Statistics reset")
 
-# Instance globale pour utilisation facile
+# Global instance for easy use
 gemini_visual_adapter = None
 
 def initialize_gemini_visual_adapter(api_key: str = None) -> GeminiVisualAdapter:
     """
-    Initialise l'adaptateur vision Gemini global
+    Initializes the global Google Gemini 2.0 Flash AI vision adapter
     
     Args:
-        api_key: Clé API optionnelle
+        api_key: Optional API key
         
     Returns:
-        Instance de l'adaptateur
+        Adapter instance
     """
     global gemini_visual_adapter
     
     if gemini_visual_adapter is None:
         gemini_visual_adapter = GeminiVisualAdapter(api_key)
-        logger.info("🚀 Adaptateur Vision Gemini global initialisé")
+        logger.info("🚀 Global Google Gemini 2.0 Flash AI Vision Adapter initialized")
     
     return gemini_visual_adapter
 
 def get_gemini_visual_adapter() -> Optional[GeminiVisualAdapter]:
     """
-    Retourne l'instance globale de l'adaptateur vision
+    Returns the global vision adapter instance
     
     Returns:
-        Instance de l'adaptateur ou None si non initialisé
+        Adapter instance or None if not initialized
     """
     global gemini_visual_adapter
     return gemini_visual_adapter
 
 if __name__ == "__main__":
-    # Test de l'adaptateur
+    # Adapter test
     adapter = initialize_gemini_visual_adapter()
-    print("🧪 Adaptateur Vision Gemini prêt pour les tests")
-    print(f"📊 Statistiques: {adapter.get_statistics()}")
+    print("🧪 Google Gemini 2.0 Flash AI Vision Adapter ready for tests")
+    print(f"📊 Statistics: {adapter.get_statistics()}")
