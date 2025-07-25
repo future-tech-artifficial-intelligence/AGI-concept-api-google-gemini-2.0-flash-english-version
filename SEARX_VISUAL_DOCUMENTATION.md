@@ -1,175 +1,174 @@
-# 📸 Système de Capture Visuelle Searx pour l'IA
+# 📸 Searx Visual Capture System for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## Vue d'ensemble
+## Overview
 
-Le système de capture visuelle permet à l'API Gemini de "voir" les résultats de recherche Searx exactement comme un humain le ferait. Cette technologie révolutionnaire combine :
+The visual capture system allows the artificial intelligence API GOOGLE GEMINI 2.0 FLASH to "see" Searx search results exactly as a human would. This revolutionary technology combines:
 
-- **Navigation web automatisée** avec Selenium
-- **Capture d'écran intelligente** des résultats de recherche
-- **Traitement d'images optimisé** pour l'IA
-- **Analyse multimodale** avec l'API Gemini
+-   **Automated web navigation** with Selenium
+-   **Intelligent screenshot capture** of search results
+-   **Optimized image processing** for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   **Multimodal analysis** with the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-## 🎯 Fonctionnalités visuelles
+## 🎯 Visual Features
 
-### ✅ Capture automatique
-- Screenshots haute résolution des pages de résultats
-- Optimisation automatique pour l'analyse IA
-- Annotations visuelles pour guider l'IA
-- Extraction du contexte textuel visible
+### ✅ Automatic Capture
+-   High-resolution screenshots of results pages
+-   Automatic optimization for artificial intelligence API GOOGLE GEMINI 2.0 FLASH analysis
+-   Visual annotations to guide the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   Extraction of visible textual context
 
-### ✅ Traitement intelligent
-- Redimensionnement adaptatif
-- Amélioration du contraste
-- Conversion base64 pour l'API
-- Nettoyage automatique des fichiers
+### ✅ Intelligent Processing
+-   Adaptive resizing
+-   Contrast enhancement
+-   Base64 conversion for the API
+-   Automatic file cleanup
 
-### ✅ Intégration multimodale
-- Combinaison texte + image pour l'IA
-- Analyse contextuelle enrichie
-- Réponses plus précises et visuellement informées
+### ✅ Multimodal Integration
+-   Combination of text + image for the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   Enriched contextual analysis
+-   More precise and visually informed responses
 
-## 🚀 Installation et configuration
+## 🚀 Installation and Configuration
 
-### Prérequis
-- Système Searx fonctionnel (voir SEARX_DOCUMENTATION.md)
-- Google Chrome ou Microsoft Edge installé
-- Python 3.8+ avec pip
-- 8GB RAM recommandés pour les captures
+### Prerequisites
+-   Functional Searx system (see SEARX_DOCUMENTATION.md)
+-   Google Chrome or Microsoft Edge installed
+-   Python 3.8+ with pip
+-   8GB RAM recommended for captures
 
-### Installation rapide
+### Quick Installation
 ```cmd
-# Installation complète avec capture visuelle
+# Full installation with visual capture
 start_with_searx_visual.bat
 
-# Installation manuelle des dépendances
+# Manual dependency installation
 python install_searx_visual_deps.py
 ```
 
-### Dépendances automatiques
-Le système installe automatiquement :
-- `selenium` - Automation du navigateur
-- `webdriver-manager` - Gestion des drivers
-- `Pillow` - Traitement d'images
-- `ChromeDriver` ou `EdgeDriver` - Selon le navigateur disponible
+### Automatic Dependencies
+The system automatically installs:
+-   `selenium` - Browser automation
+-   `webdriver-manager` - Driver management
+-   `Pillow` - Image processing
+-   `ChromeDriver` or `EdgeDriver` - Depending on available browser
 
-## 🔧 Architecture technique
+## 🔧 Technical Architecture
 
-### Flux de capture visuelle
+### Visual Capture Flow
 
 ```
-Requête utilisateur
+User request
        ↓
-Détection besoin de recherche
+Detection of search need
        ↓
-Lancement Selenium (headless)
+Selenium launch (headless)
        ↓
-Navigation vers Searx
+Navigation to Searx
        ↓
-Capture d'écran complète
+Full screenshot capture
        ↓
-Optimisation pour IA
+Optimization for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
        ↓
-Extraction texte visible
+Visible text extraction
        ↓
-Annotations visuelles
+Visual annotations
        ↓
-Analyse multimodale Gemini
+Gemini multimodal analysis
        ↓
-Réponse enrichie
+Enriched response
 ```
 
-### Composants principaux
+### Main Components
 
 #### 1. SearxVisualCapture (`searx_visual_capture.py`)
 ```python
-# Capture simple
+# Simple capture
 capture = SearxVisualCapture()
 result = capture.capture_search_results("Python AI", "it")
 
-# Capture avec annotations
-result = capture.capture_with_annotations("actualités IA", "general")
+# Capture with annotations
+result = capture.capture_with_annotations("AI news", "general")
 ```
 
-#### 2. Intégration SearxInterface
+#### 2. SearxInterface Integration
 ```python
-# Recherche avec vision
+# Search with vision
 searx = get_searx_interface()
-result = searx.search_with_visual("tutoriel machine learning", max_results=5)
+result = searx.search_with_visual("machine learning tutorial", max_results=5)
 
-# Résumé pour l'IA
+# Summary for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 summary = searx.get_visual_search_summary(result)
 ```
 
-#### 3. API Gemini multimodale
+#### 3. artificial intelligence API GOOGLE GEMINI 2.0 FLASH Multimodal API
 ```python
-# L'IA reçoit automatiquement :
-# - Résultats textuels
-# - Capture d'écran optimisée
-# - Contexte visuel extrait
-# - Annotations guidantes
+# The artificial intelligence API GOOGLE GEMINI 2.0 FLASH automatically receives:
+# - Textual results
+# - Optimized screenshot
+# - Extracted visual context
+# - Guiding annotations
 ```
 
-## 📸 Types de captures
+## 📸 Capture Types
 
-### 1. Capture standard
-- Screenshot complet de la page
-- Résolution adaptée (max 1920x1080)
-- Format PNG optimisé
-- Métadonnées complètes
+### 1. Standard Capture
+-   Full page screenshot
+-   Adapted resolution (max 1920x1080)
+-   Optimized PNG format
+-   Complete metadata
 
-### 2. Capture annotée
-- Titre informatif ajouté
-- Timestamp visible
-- Indicateurs visuels
-- Encodage base64 pour l'API
+### 2. Annotated Capture
+-   Informative title added
+-   Visible timestamp
+-   Visual indicators
+-   Base64 encoding for the API
 
-### 3. Capture optimisée IA
-- Redimensionnement intelligent
-- Amélioration du contraste
-- Compression optimale
-- Format compatible multimodal
+### 3. artificial intelligence API GOOGLE GEMINI 2.0 FLASH Optimized Capture
+-   Intelligent resizing
+-   Contrast enhancement
+-   Optimal compression
+-   Multimodal compatible format
 
-## 🎯 Utilisation avec l'IA
+## 🎯 Usage with artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 
-### Déclencheurs automatiques
-L'IA active automatiquement la capture visuelle pour :
-- "Montre-moi des résultats sur..."
-- "Capture et analyse..."
-- "Recherche visuelle de..."
-- "Analyse les résultats de recherche..."
+### Automatic Triggers
+The artificial intelligence API GOOGLE GEMINI 2.0 FLASH automatically activates visual capture for:
+-   "Show me results on..."
+-   "Capture and analyze..."
+-   "Visual search for..."
+-   "Analyze search results..."
 
-### Exemple d'interaction
+### Example Interaction```
+User: "Search and visually show me information about artificial intelligence"
+
+artificial intelligence API GOOGLE GEMINI 2.0 FLASH:
+🔍 I am performing a search with visual capture...
+📸 Screenshot of Searx results taken
+🤖 Multimodal analysis in progress...
+
+Based on my vision of the search results, here's what I can see:
+[Detailed analysis including visual and textual elements]
 ```
-Utilisateur: "Recherche et montre-moi visuellement des informations sur l'IA"
 
-IA: 
-🔍 J'effectue une recherche avec capture visuelle...
-📸 Capture d'écran des résultats Searx réalisée
-🤖 Analyse multimodale en cours...
+## 📊 Performance and Optimization
 
-Basé sur ma vision des résultats de recherche, voici ce que je peux voir :
-[Analyse détaillée incluant éléments visuels et textuels]
-```
+### Typical Metrics
+-   Capture time: 3-8 seconds
+-   Image size: 200KB-2MB
+-   Resolution: 1024x768 (optimized)
+-   Browser: Headless mode for performance
 
-## 📊 Performance et optimisation
+### Automatic Optimizations
+-   WebDriver sessions caching
+-   Automatic cleanup of old files
+-   Intelligent image compression
+-   Parallel textual extraction
 
-### Métriques typiques
-- Temps de capture : 3-8 secondes
-- Taille d'image : 200KB-2MB
-- Résolution : 1024x768 (optimisée)
-- Navigateur : Mode headless pour performance
+## 🔧 Advanced Configuration
 
-### Optimisations automatiques
-- Cache des WebDriver sessions
-- Nettoyage automatique des fichiers anciens
-- Compression intelligente des images
-- Extraction textuelle parallèle
-
-## 🔧 Configuration avancée
-
-### Personnalisation capture
+### Customizing Capture
 ```python
-# Configuration personnalisée
+# Custom configuration
 capture = SearxVisualCapture()
 capture.webdriver_options = {
     'window_size': (1920, 1080),
@@ -178,102 +177,102 @@ capture.webdriver_options = {
 }
 ```
 
-### Gestion mémoire
+### Memory Management
 ```python
-# Nettoyage automatique
-searx.cleanup_visual_data()  # Supprime fichiers > 24h
+# Automatic cleanup
+searx.cleanup_visual_data()  # Deletes files > 24h
 
-# Fermeture propre
-searx.close_visual_capture()  # Libère WebDriver
+# Proper closure
+searx.close_visual_capture()  # Releases WebDriver
 ```
 
-## 🛠️ Dépannage
+## 🛠️ Troubleshooting
 
-### Problèmes courants
+### Common Problems
 
-#### 1. WebDriver non trouvé
+#### 1. WebDriver not found
 ```
-❌ Erreur: WebDriver not found
+❌ Error: WebDriver not found
 Solutions:
-- Installer Chrome/Edge
-- Redémarrer après installation
-- Vérifier les permissions
+- Install Chrome/Edge
+- Restart after installation
+- Check permissions
 ```
 
-#### 2. Timeout de capture
+#### 2. Capture Timeout
 ```
-❌ Erreur: Screenshot timeout
+❌ Error: Screenshot timeout
 Solutions:
-- Vérifier connectivité Searx
-- Augmenter timeout
-- Redémarrer navigateur
+- Check Searx connectivity
+- Increase timeout
+- Restart browser
 ```
 
-#### 3. Images corrompues
+#### 3. Corrupted Images
 ```
-❌ Erreur: Invalid image data
+❌ Error: Invalid image data
 Solutions:
-- Vérifier espace disque
-- Redémarrer système
-- Nettoyer cache navigateur
+- Check disk space
+- Restart system
+- Clear browser cache
 ```
 
-### Diagnostic rapide
+### Quick Diagnosis
 ```cmd
-# Test complet du système
+# Full system test
 python test_searx_visual_system.py
 
-# Test WebDriver uniquement
+# WebDriver test only
 python -c "from searx_visual_capture import SearxVisualCapture; c=SearxVisualCapture(); print(c._initialize_webdriver())"
 
-# Vérifier captures existantes
+# Check existing captures
 dir searx_screenshots
 ```
 
-## 🔒 Sécurité et confidentialité
+## 🔒 Security and Privacy
 
-### Mesures de protection
-- Mode headless (pas d'interface visible)
-- Pas de stockage de cookies
-- Nettoyage automatique des données
-- Captures locales uniquement
+### Protection Measures
+-   Headless mode (no visible interface)
+-   No cookie storage
+-   Automatic data cleanup
+-   Local captures only
 
-### Données collectées
-- ✅ Screenshots anonymes des résultats
-- ✅ Métadonnées techniques
-- ❌ Pas d'historique personnel
-- ❌ Pas de tracking utilisateur
+### Collected Data
+-   ✅ Anonymous screenshots of results
+-   ✅ Technical metadata
+-   ❌ No personal history
+-   ❌ No user tracking
 
-## 📈 Avantages du système visuel
+## 📈 Advantages of the Visual System
 
-### Pour l'IA
-- **Vision complète** des résultats comme un humain
-- **Contexte visuel enrichi** (mise en page, images, etc.)
-- **Analyse multimodale** plus précise
-- **Compréhension spatiale** des informations
+### For the artificial intelligence API GOOGLE GEMINI 2.0 FLASH
+-   **Full vision** of results like a human
+-   **Enriched visual context** (layout, images, etc.)
+-   **More precise multimodal analysis**
+-   **Spatial understanding** of information
 
-### Pour l'utilisateur
-- **Réponses plus précises** basées sur le visuel
-- **Analyses complètes** des pages web
-- **Transparence** sur ce que l'IA "voit"
-- **Expérience naturelle** de recherche
+### For the User
+-   **More precise responses** based on visual input
+-   **Comprehensive analyses** of web pages
+-   **Transparency** on what the artificial intelligence API GOOGLE GEMINI 2.0 FLASH "sees"
+-   **Natural search experience**
 
-## 🚀 Évolutions futures
+## 🚀 Future Evolutions
 
-### Fonctionnalités prévues
-- Reconnaissance OCR avancée
-- Détection d'éléments spécifiques
-- Analyse de graphiques et tableaux
-- Capture vidéo des interactions
+### Planned Features
+-   Advanced OCR recognition
+-   Detection of specific elements
+-   Analysis of graphs and tables
+-   Video capture of interactions
 
-### Intégrations possibles
-- Google Vision API
-- Azure Computer Vision
-- OpenAI GPT-4 Vision
-- Modèles de vision locale
+### Possible Integrations
+-   Google Vision API
+-   Azure Computer Vision
+-   OpenAI GPT-4 Vision
+-   Local vision models
 
 ---
 
-**Version**: 1.0  
-**Date**: Juillet 2025  
-**Compatibilité**: Windows 10+, Chrome/Edge, Selenium 4.0+
+**Version**: 1.0
+**Date**: July 2025
+**Compatibility**: Windows 10+, Chrome/Edge, Selenium 4.0+
