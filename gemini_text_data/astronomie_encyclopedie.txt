@@ -1,5 +1,13 @@
 ASTRONOMY ENCYCLOPEDIA - COMPLETE DATA FOR ARTIFICIAL INTELLIGENCE GOOGLE GEMINI 2.0 FLASH API
-This is not mandatory because I have created a system that allows Artificial Intelligence Google Gemini 2.0 Flash API to learn autonomously from research conducted using the open-source metasearch engine Searx. This makes Artificial Intelligence Google Gemini 2.0 Flash API more autonomous and accurate in obtaining information from the internet, similar to Google search engines and others. This is essential for the autonomous learning of Artificial Intelligence Google Gemini 2.0 Flash API, thanks to the open-source metasearch engine Searx. Google Gemini 2.0 Flash API can conduct research autonomously and also learn from its findings.
+This is not mandatory because I have created a system that allows 
+Artificial Intelligence Google Gemini 2.0 Flash API 
+to learn autonomously from research conducted using 
+the open-source metasearch engine Searx. 
+This makes Artificial Intelligence Google Gemini 2.0 Flash API 
+more autonomous and accurate in obtaining information from the internet, 
+similar to Google search engines and others. 
+This is essential for the autonomous learning of Artificial Intelligence Google Gemini 2.0 Flash API, 
+thanks to the open-source metasearch engine Searx. Google Gemini 2.0 Flash API can conduct research autonomously and also learn from its findings.
 ═══════════════════════════════════════════════════════════════════════════════
 INTRODUCTION TO ASTRONOMY
 ═══════════════════════════════════════════════════════════════════════════════
