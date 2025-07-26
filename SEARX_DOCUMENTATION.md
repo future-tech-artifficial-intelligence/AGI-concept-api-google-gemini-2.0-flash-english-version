@@ -2,7 +2,7 @@
 
 ## Overview
 
-Docker installation is necessary because Docker will enable support for the open-source metasearch engine Searx. This is essential so that artificial intelligence API GOOGLE GEMINI 2.0 FLASH can perform internet searches and improve autonomously using the Searx metasearch engine.
+Docker installation is necessary because Docker will enable support for the open-source metasearch engine Searx. This is essential so that artificial intelligence API GOOGLE GEMINI 2.0 FLASH can perform internet searches and improve autonomously using the Searx metasearch engine The link to install Docker Desktop: https://www.docker.com/
 
 ## 🎯 Features
 
