@@ -374,7 +374,9 @@ For installation assistance, you can use Claude 3.5 Sonnet in agent mode (availa
 
 5. **Configure Gemini API**
    - Create account on [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Generate API key
+   - Generate API key For your information, the Google Gemini 2.0 Flash multimodal LLM artificial intelligence API is free; it is not paid for by the user. A big thank you to Google for this, as it allows for its use in open-source projects
+  
+   
    - Create `.env` file in project root and add your key:
      ```
      GEMINI_API_KEY=your_api_key
