@@ -8,67 +8,67 @@
     "overall_status": "PASSED"
   },
   "test_results": {
-    "Import Navigateur Web Avancé": {
+    "Advanced Web Browser Import": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T13:35:21.728602"
     },
-    "Import Intégration Gemini-Web": {
+    "artificial intelligence API GOOGLE GEMINI 2.0 FLASH Web Integration Import": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T13:35:21.773769"
     },
-    "Import Adaptateur Navigation Gemini": {
+    "artificial intelligence API GOOGLE GEMINI 2.0 FLASH Navigation Adapter Import": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T13:35:21.792713"
     },
-    "Import API REST Navigation Web": {
+    "Web Navigation REST API Import": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T13:35:22.333491"
     },
-    "Import Adaptateur Gemini Original": {
+    "Original artificial intelligence API GOOGLE GEMINI 2.0 FLASH Adapter Import": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T13:35:27.817829"
     },
-    "Import Global": {
+    "Global Import": {
       "success": true,
-      "message": "5/5 modules importés",
+      "message": "5/5 modules imported",
       "data": null,
       "timestamp": "2025-07-24T13:35:27.817829"
     },
-    "Création Instance Gemini": {
+    "artificial intelligence API GOOGLE GEMINI 2.0 FLASH Instance Creation": {
       "success": true,
-      "message": "API Gemini créée",
+      "message": "artificial intelligence API GOOGLE GEMINI 2.0 FLASH created",
       "data": null,
       "timestamp": "2025-07-24T13:35:28.095274"
     },
-    "Initialisation Adaptateur Navigation": {
+    "Navigation Adapter Initialization": {
       "success": true,
-      "message": "Adaptateur initialisé",
+      "message": "Adapter initialized",
       "data": null,
       "timestamp": "2025-07-24T13:35:28.106954"
     },
-    "Vérification Intégration": {
+    "Integration Verification": {
       "success": true,
-      "message": "Intégration active",
+      "message": "Integration active",
       "data": null,
       "timestamp": "2025-07-24T13:35:28.106954"
     },
-    "Détection Navigation": {
+    "Navigation Detection": {
       "success": false,
-      "message": "Taux de réussite: 66.7% (4/6)",
+      "message": "Success rate: 66.7% (4/6)",
       "data": {
         "results": [
           {
-            "prompt": "Recherche et navigue sur l'intelligence artificielle",
+            "prompt": "Search and navigate artificial intelligence",
             "expected_navigation": true,
             "detected_navigation": true,
             "expected_type": "search_and_navigate",
@@ -78,7 +78,7 @@
             "status": "✅"
           },
           {
-            "prompt": "Extrait le contenu de https://example.com",
+            "prompt": "Extract content from https://example.com",
             "expected_navigation": true,
             "detected_navigation": true,
             "expected_type": "content_extraction",
@@ -88,7 +88,7 @@
             "status": "✅"
           },
           {
-            "prompt": "Explore le site https://wikipedia.org en profondeur",
+            "prompt": "Deeply explore https://wikipedia.org",
             "expected_navigation": true,
             "detected_navigation": true,
             "expected_type": "deep_navigation",
@@ -98,7 +98,7 @@
             "status": "✅"
           },
           {
-            "prompt": "Simule un parcours d'achat sur ce site",
+            "prompt": "Simulate a shopping journey on this site",
             "expected_navigation": true,
             "detected_navigation": false,
             "expected_type": "user_journey",
@@ -108,7 +108,7 @@
             "status": "❌"
           },
           {
-            "prompt": "Qu'est-ce que l'apprentissage automatique ?",
+            "prompt": "What is machine learning?",
             "expected_navigation": true,
             "detected_navigation": true,
             "expected_type": "search_and_navigate",
@@ -118,7 +118,7 @@
             "status": "✅"
           },
           {
-            "prompt": "Bonjour, comment allez-vous ?",
+            "prompt": "Hello, how are you?",
             "expected_navigation": false,
             "detected_navigation": true,
             "expected_type": null,
@@ -132,16 +132,16 @@
       },
       "timestamp": "2025-07-24T13:35:28.114678"
     },
-    "Extraction Web": {
+    "Web Extraction": {
       "success": true,
-      "message": "Taux de réussite: 100.0% (2/2)",
+      "message": "Success rate: 100.0% (2/2)",
       "data": {
         "results": [
           {
             "url": "https://httpbin.org/json",
             "success": true,
             "details": {
-              "title": "Page sans titre",
+              "title": "Untitled Page",
               "content_length": 286,
               "quality_score": 2.0,
               "language": "en",
@@ -183,13 +183,13 @@
       },
       "timestamp": "2025-07-24T13:35:34.480009"
     },
-    "Intégration Complète Gemini": {
+    "Complete artificial intelligence API GOOGLE GEMINI 2.0 FLASH Integration": {
       "success": true,
-      "message": "Taux de réussite: 100.0% (3/3)",
+      "message": "Success rate: 100.0% (3/3)",
       "data": {
         "results": [
           {
-            "prompt": "Recherche des informations sur l'intelligence artificielle",
+            "prompt": "Search for information on artificial intelligence",
             "success": true,
             "details": {
               "response_length": 2222,
@@ -201,7 +201,7 @@
             "status": "✅"
           },
           {
-            "prompt": "Qu'est-ce que Python ?",
+            "prompt": "What is Python?",
             "success": true,
             "details": {
               "response_length": 1624,
@@ -213,7 +213,7 @@
             "status": "✅"
           },
           {
-            "prompt": "Extrait le contenu de https://httpbin.org/json",
+            "prompt": "Extract content from https://httpbin.org/json",
             "success": true,
             "details": {
               "response_length": 1138,
@@ -228,9 +228,9 @@
       },
       "timestamp": "2025-07-24T13:36:21.216940"
     },
-    "API REST Endpoints": {
+    "REST API Endpoints": {
       "success": true,
-      "message": "Taux de réussite: 100.0% (4/4)",
+      "message": "Success rate: 100.0% (4/4)",
       "data": {
         "results": [
           {
@@ -261,7 +261,7 @@
           {
             "method": "GET",
             "endpoint": "/api/web-navigation/stats",
-            "description": "Statistiques",
+            "description": "Statistics",
             "success": true,
             "details": {
               "status_code": 200,
@@ -274,7 +274,7 @@
           {
             "method": "POST",
             "endpoint": "/api/web-navigation/create-session",
-            "description": "Création Session",
+            "description": "Session Creation",
             "success": true,
             "details": {
               "status_code": 200,
@@ -290,7 +290,7 @@
     },
     "Benchmark Performance": {
       "success": true,
-      "message": "Temps moyen: 0.04s, Réussite: 100.0%",
+      "message": "Average time: 0.04s, Success: 100.0%",
       "data": {
         "metrics": {
           "total_requests": 3,
@@ -320,6 +320,16 @@
               "processing_time": 0.0,
               "content_length": 3594,
               "quality_score": 4.0,
+              "language": "en",
+              "links_count": 0,
+              "images_count": 0,
+              "keywords": [
+                "had",
+                "old",
+                "blacksmith",
+                "was",
+                "now"
+              ],
               "extraction_rate": 0
             },
             "status": "✅"
@@ -341,6 +351,6 @@
     }
   },
   "errors": [
-    "Détection Navigation: Taux de réussite: 66.7% (4/6)"
+    "Navigation Detection: Success rate: 66.7% (4/6)"
   ]
 }
