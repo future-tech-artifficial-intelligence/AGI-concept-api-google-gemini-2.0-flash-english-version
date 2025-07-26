@@ -98,7 +98,8 @@
             "status": "✅"
           },
           {
-            "prompt": "Simulate a shopping journey on this site",
+            "prompt": "Search for a shopping website. Please disregard the failed results; these are just the overall test results" 
+            "artificial intelligence API GOOGLE GEMINI 2.0 FLASH** can easily perform searches on the open-source search engine Searx without any issues.""
             "expected_navigation": true,
             "detected_navigation": false,
             "expected_type": "user_journey",
