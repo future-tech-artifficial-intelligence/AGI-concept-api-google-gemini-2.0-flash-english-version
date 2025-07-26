@@ -2,7 +2,7 @@
 
 ## Overview
 
-The integrated Searx search system allows the artificial intelligence API GOOGLE GEMINI 2.0 FLASH to perform autonomous real-time searches using HTML parsing instead of traditional web scraping. This approach offers superior performance and better reliability.
+Docker installation is necessary because Docker will enable support for the open-source metasearch engine Searx. This is essential so that artificial intelligence API GOOGLE GEMINI 2.0 FLASH can perform internet searches and improve autonomously using the Searx metasearch engine.
 
 ## 🎯 Features
 
