@@ -1,28 +1,21 @@
-🇫🇷 FRANÇAIS / FRENCH
-═══════════════════════════════════════════════════════════════════════════════
+---
 
-DOSSIER DE DONNÉES TEXTUELLES POUR l'intelligence artificielle api google gemini 2.0 flash version conscience est emotion 
+**TEXTUAL DATA FOLDER for Artificial Intelligence API Google Gemini 2.0 Flash version modified
 
-Ce dossier contient des fichiers texte qui seront utilisés par api google gemini 2.0 flash pour l'apprentissage et l'amélioration autonome.
+This folder contains text files that will be used by API Google Gemini 2.0 Flash for autonomous learning and improvement.
 
-Instructions d'utilisation:
-1. Placez uniquement des fichiers .txt dans ce dossier
-2. Nommez vos fichiers de manière descriptive (ex: physique_quantique.txt, histoire_france.txt)
-3. Ne supprimez pas ce fichier README.txt
+This file is no longer necessary because I have created a system that allows 
+Artificial Intelligence API Google Gemini 2.0 Flash to learn autonomously using searches 
+from the open-source Searx search engine. With the open-source Searx search engine, 
+Artificial Intelligence API Google Gemini 2.0 Flash has access to the world of the internet, 
+making it more powerful than improving 
+Artificial Intelligence LLM API Google Gemini 2.0 Flash solely with textual data. 
+However, this file can still be useful if needed, 
+though it's not mandatory, as the integrated Searx search engine enables Artificial Intelligence API Google Gemini 2.0 Flash to learn autonomously from the entire internet.
 
-l'intelligence artificielle api google gemini 2.0 flash pourra accéder à ces fichiers via le module direct_file_access.py et apprendre de leur contenu.
+**Usage Instructions:**
+1. Place only .txt files in this folder.
+2. Name your files descriptively (e.g., quantum_physics.txt, history_of_france.txt).
+3. Do not delete this README.txt file.
 
-═══════════════════════════════════════════════════════════════════════════════
-🇬🇧 ENGLISH / ANGLAIS
-═══════════════════════════════════════════════════════════════════════════════
-
-TEXT DATA FOLDER FOR google gemini 2.0 flash artificial intelligence API consciousness and emotion version
-
-This folder contains text files that will be used by google gemini 2.0 flash API for autonomous learning and improvement.
-
-Usage instructions:
-1. Place only .txt files in this folder
-2. Name your files descriptively (e.g., quantum_physics.txt, france_history.txt)
-3. Do not delete this README.txt file
-
-The google gemini 2.0 flash artificial intelligence API will be able to access these files via the direct_file_access.py module and learn from their content.
+Artificial Intelligence API Google Gemini 2.0 Flash will be able to access these files via the `direct_file_access.py` module and learn from their content.
