@@ -8,195 +8,195 @@
     "system_ready": true
   },
   "test_results": {
-    "Import Adaptateur Vision Gemini": {
+    "Import artificial intelligence API GOOGLE GEMINI 2.0 FLASH Vision Adapter": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T14:22:41.722820"
     },
-    "Import Système de Capture Intelligent": {
+    "Import Intelligent Capture System": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T14:22:41.848328"
     },
-    "Import Intégration Vision Web": {
+    "Import Web Vision Integration": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.356280"
     },
-    "Import API REST Vision": {
+    "Import Vision REST API": {
       "success": true,
-      "message": "Module importé avec succès",
+      "message": "Module imported successfully",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.797989"
     },
-    "Import Global Vision": {
+    "Import Global Vision Modules": {
       "success": true,
-      "message": "4/4 modules importés",
+      "message": "4/4 modules imported",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.797989"
     },
-    "Création Adaptateur Visual": {
+    "artificial intelligence API GOOGLE GEMINI 2.0 FLASH Vision Adapter Creation": {
       "success": true,
-      "message": "Adaptateur créé",
+      "message": "Adapter created",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.797989"
     },
-    "Vérification Adaptateur Global": {
+    "Global Adapter Verification": {
       "success": true,
-      "message": "Adaptateur accessible",
+      "message": "Adapter accessible",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.797989"
     },
-    "Statistiques Adaptateur": {
+    "Adapter Statistics": {
       "success": true,
-      "message": "Stats récupérées: 6 métriques",
+      "message": "Stats retrieved: 6 metrics",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.876216"
     },
-    "Création Système Capture": {
+    "Capture System Creation": {
       "success": true,
-      "message": "Système créé",
+      "message": "System created",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.816147"
     },
-    "Vérification Capture Globale": {
+    "Global Capture Verification": {
       "success": true,
-      "message": "Système accessible",
+      "message": "System accessible",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.817149"
     },
-    "Statistiques Capture": {
+    "Capture Statistics": {
       "success": true,
-      "message": "Stats récupérées: 6 métriques",
+      "message": "Stats retrieved: 6 metrics",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.876216"
     },
-    "Création Intégration Vision": {
+    "Vision Integration Creation": {
       "success": true,
-      "message": "Intégration créée",
+      "message": "Integration created",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.829288"
     },
-    "Vérification Intégration Globale": {
+    "Global Integration Verification": {
       "success": true,
-      "message": "Intégration accessible",
+      "message": "Integration accessible",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.830289"
     },
-    "Statistiques Intégration": {
+    "Integration Statistics": {
       "success": true,
-      "message": "Stats récupérées: 8 métriques",
+      "message": "Stats retrieved: 8 metrics",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.876216"
     },
-    "Création Session Vision": {
+    "Vision Session Creation": {
       "success": true,
-      "message": "Session créée: test_vision_session_1753359768",
+      "message": "Session created: test_vision_session_1753359768",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.838705"
     },
-    "Vérification Session Active": {
+    "Active Session Verification": {
       "success": true,
-      "message": "Session trouvée dans les sessions actives",
+      "message": "Session found in active sessions",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.839714"
     },
-    "Fermeture Session": {
+    "Session Closure": {
       "success": true,
-      "message": "Session fermée avec succès",
+      "message": "Session closed successfully",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.840761"
     },
-    "Validation Config Desktop": {
+    "Desktop Config Validation": {
       "success": true,
-      "message": "Configuration valide",
+      "message": "Configuration valid",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.840761"
     },
-    "Validation Config Mobile": {
+    "Mobile Config Validation": {
       "success": true,
-      "message": "Configuration valide",
+      "message": "Configuration valid",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.845838"
     },
-    "Validation Config Tablet": {
+    "Tablet Config Validation": {
       "success": true,
-      "message": "Configuration valide",
+      "message": "Configuration valid",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.845838"
     },
-    "Capture Simulation Globale": {
+    "Global Capture Simulation": {
       "success": true,
-      "message": "Taux de réussite: 100.0% (3/3)",
+      "message": "Success rate: 100.0% (3/3)",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.846837"
     },
-    "Validation Analyse UI": {
+    "UI Analysis Validation": {
       "success": true,
-      "message": "Prompt valide",
+      "message": "Prompt valid",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.850741"
     },
-    "Validation Analyse Contenu": {
+    "Content Analysis Validation": {
       "success": true,
-      "message": "Prompt valide",
+      "message": "Prompt valid",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.850741"
     },
-    "Validation Analyse Design": {
+    "Design Analysis Validation": {
       "success": true,
-      "message": "Prompt valide",
+      "message": "Prompt valid",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.850741"
     },
-    "Analyse Visuelle Simulation": {
+    "Visual Analysis Simulation": {
       "success": true,
-      "message": "Taux de réussite: 100.0% (3/3)",
+      "message": "Success rate: 100.0% (3/3)",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.850741"
     },
-    "Création API Vision": {
+    "Vision API Creation": {
       "success": true,
-      "message": "API créée",
+      "message": "API created",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.870640"
     },
-    "Vérification API Globale": {
+    "Global API Verification": {
       "success": true,
       "message": "API accessible",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.876216"
     },
-    "Vérification App Flask": {
+    "Flask App Verification": {
       "success": true,
-      "message": "Application Flask initialisée",
+      "message": "Flask application initialized",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.876216"
     },
-    "Intégration Système Complète": {
+    "Complete System Integration": {
       "success": true,
-      "message": "Tous les composants fonctionnels (3/3)",
+      "message": "All components functional (3/3)",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.876216"
     },
-    "Gestion Session Inexistante": {
+    "Non-existent Session Handling": {
       "success": true,
-      "message": "Erreur correctement gérée",
+      "message": "Error handled correctly",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.886259"
     },
-    "Gestion Paramètres Invalides": {
+    "Invalid Parameters Handling": {
       "success": false,
-      "message": "Paramètres invalides non détectés",
+      "message": "Invalid parameters not detected",
       "data": null,
       "timestamp": "2025-07-24T14:22:48.887588"
     }
   },
   "errors": [
-    "Gestion Paramètres Invalides: Paramètres invalides non détectés"
+    "Invalid Parameters Handling: Invalid parameters not detected"
   ],
   "timestamp": "2025-07-24T14:22:48.887588"
 }
