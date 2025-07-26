@@ -1,5 +1,5 @@
 """
-Test du module d'amélioration de la récupération de mémoire
+Test for the memory retrieval enhancement module for artificial intelligence API GOOGLE GEMINI 2.0 FLASH
 """
 
 import unittest
@@ -9,7 +9,7 @@ import json
 from typing import Dict, Any
 import datetime
 
-# Ajouter le répertoire parent au chemin pour l'import des modules
+# Add parent directory to path for module import
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from modules.memory_retrieval_enhancer import enhance_memory_instructions, enrich_system_prompt, process
@@ -19,8 +19,8 @@ class MockMemoryEngine:
     def get_recent_conversations(self, **kwargs):
         return [
             {
-                'content': 'Ceci est une conversation test',
-                'time_ago': 'il y a 5 minutes'
+                'content': 'This is a test conversation',
+                'time_ago': '5 minutes ago'
             }
         ]
     
@@ -28,83 +28,83 @@ class MockMemoryEngine:
         return [
             {
                 'category': 'preference',
-                'content': 'L\'utilisateur préfère le bleu'
+                'content': 'The user prefers blue'
             }
         ]
     
     def get_memory_context(self, **kwargs):
-        return "Mémoire des conversations récentes:\n1. il y a 5 minutes: Ceci est une conversation test"
+        return "Recent conversations memory:\n1. 5 minutes ago: This is a test conversation"
 
 class TestMemoryRetrievalEnhancer(unittest.TestCase):
     
     def setUp(self):
-        # Remplacer temporairement l'instance de MemoryEngine par notre mock
+        # Temporarily replace the MemoryEngine instance with our mock
         import modules.memory_retrieval_enhancer as module
         self.original_memory_engine = module.memory_engine
         module.memory_engine = MockMemoryEngine()
         
     def tearDown(self):
-        # Restaurer l'instance originale
+        # Restore the original instance
         import modules.memory_retrieval_enhancer as module
         module.memory_engine = self.original_memory_engine
     
     def test_enhance_memory_instructions(self):
-        # Préparer les données de test
+        # Prepare test data
         data = {
             'user_id': 1,
             'session_id': 'test_session',
             'context': {}
         }
         
-        # Appeler la fonction à tester
+        # Call the function to test
         result = enhance_memory_instructions(data)
         
-        # Vérifier les résultats
+        # Verify results
         self.assertTrue('instructions' in result['context'])
         self.assertTrue(isinstance(result['context']['instructions'], list))
         self.assertTrue(len(result['context']['instructions']) > 0)
         self.assertTrue('memory_instructions_enhanced' in result['context'])
         self.assertTrue(result['context']['memory_instructions_enhanced'])
         
-        # Vérifier le contenu des instructions
+        # Verify instruction content
         found_memory_instruction = False
         for instruction in result['context']['instructions']:
-            if "INSTRUCTION CRITIQUE DE MÉMOIRE" in instruction:
+            if "CRITICAL MEMORY INSTRUCTION" in instruction:
                 found_memory_instruction = True
                 break
                 
         self.assertTrue(found_memory_instruction)
         
     def test_enrich_system_prompt(self):
-        # Préparer les données de test
+        # Prepare test data
         data = {
             'user_id': 1,
-            'system_prompt': 'Instruction système originale'
+            'system_prompt': 'Original system instruction'
         }
         
-        # Appeler la fonction à tester
+        # Call the function to test
         result = enrich_system_prompt(data)
         
-        # Vérifier les résultats
+        # Verify results
         self.assertTrue('system_prompt' in result)
-        self.assertIn("INSTRUCTION CRITIQUE DE MÉMOIRE", result['system_prompt'])
+        self.assertIn("CRITICAL MEMORY INSTRUCTION", result['system_prompt'])
         self.assertTrue(result['metadata']['memory_prompt_enriched'])
         
     def test_process_function(self):
-        # Préparer les données de test
+        # Prepare test data
         data = {
             'user_id': 1,
             'session_id': 'test_session',
             'context': {},
-            'system_prompt': 'Instruction système originale'
+            'system_prompt': 'Original system instruction'
         }
         
-        # Appeler la fonction à tester
+        # Call the function to test
         result = process(data, 'process_request')
         
-        # Vérifier les résultats
+        # Verify results
         self.assertTrue('instructions' in result['context'])
-        self.assertIn("INSTRUCTION CRITIQUE DE MÉMOIRE", result['system_prompt'])
+        self.assertIn("CRITICAL MEMORY INSTRUCTION", result['system_prompt'])
         self.assertTrue(result['context']['memory_instructions_enhanced'])
         self.assertTrue(result['metadata']['memory_prompt_enriched'])
         
