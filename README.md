@@ -341,7 +341,9 @@ You can install the project using Visual Studio Code, available on Windows, Linu
 - **VS Code**: https://code.visualstudio.com/
 - **GitHub Copilot**: https://github.com/features/copilot
 
-For installation assistance, you can use Claude 3.5 Sonnet in agent mode (available in free version).
+For installation assistance, you can use Claude 3.5 Sonnet in agent mode (available in free version)
+
+GitHub Copilot has a paid version at €10 per month. The price is very interesting because the coding artificial intelligence models, such as Claude Sonnet 4 from Anthropic or other coding AI models, are unlimited. I find the price to be very good because it's unlimited to use the coding-specialized artificial intelligence model Claude Sonnet 4 from Anthropic. The Claude Sonnet 4 model from Anthropic is more powerful than Claude Sonnet 3.5, which is logical because Claude Sonnet 4 from Anthropic is an improved version
 
 ### Installation Steps
 
